@@ -7,6 +7,7 @@ as FCS opponents, not silently added to the ranked FBS universe.
 import json
 from pathlib import Path
 
+from .cfp import simulate_cfp
 from .ingestion import IngestedGame
 from .model import ModelSettings
 from .predictions import predict
@@ -83,7 +84,19 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
             "home_win_probability": result.model_home_probability,
             "confidence": result.confidence,
         })
+    cfp = simulate_cfp(
+        {t.name: {"conference": t.conference,
+                  "rating": ratings[t.name].adaptive_rating,
+                  "wins": ratings[t.name].wins,
+                  "conference_wins": conference_wins[t.name]} for t in teams},
+        [{"home": g.home, "away": g.away, "neutral_site": g.neutral_site}
+         for g in games if not g.completed],
+        scale=settings.win_probability_scale,
+        home_edge=settings.home_field_advantage,
+        fcs_rating=settings.fcs_opponent_rating,
+    )
     return {
+        "cfp": cfp,
         "season": season, "source": snapshot.get("source"),
         "retrieved_at": snapshot.get("retrieved_at"),
         "summary": {"teams": len(teams), "completed_games": len(completed),
