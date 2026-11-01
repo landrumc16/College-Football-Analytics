@@ -117,6 +117,15 @@ jobs:
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
+          if "DEMO" not in (report.get("source") or ""):
+            from datetime import datetime, timezone
+            generated = report.get("generated_at")
+            assert generated, "Live report missing forecast generation timestamp"
+            generated_time = datetime.fromisoformat(generated.replace("Z", "+00:00"))
+            assert generated_time.tzinfo is not None, "Generation timestamp must be timezone-aware"
+            retrieved_time = datetime.fromisoformat(report["retrieved_at"].replace("Z", "+00:00"))
+            assert generated_time >= retrieved_time, "Forecast generated before its source snapshot"
+
           if "schedule" in report:
             ids = {g["game_id"] for g in report["schedule"]}
             assert len(ids) == len(report["schedule"]), "Duplicate schedule games"
