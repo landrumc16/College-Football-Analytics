@@ -28,11 +28,15 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.refresh --season "$SEASON"
+      - name: Build season rankings and predictions
+        env:
+          SEASON: ${{ github.event.inputs.season || '2026' }}
+        run: python -m cfb_analytics.report --season "$SEASON"
       - name: Commit changed snapshot
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/cfbd-*-games.json
+          git add data/cfbd-*-games.json data/season-*-report.json
           if ! git diff --cached --quiet; then
             git commit -m "Refresh CFBD season snapshot"
             git push
