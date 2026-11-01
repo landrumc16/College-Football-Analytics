@@ -74,7 +74,8 @@ def main():
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
                 continue
-            history[key] = {**prediction, "forecast_recorded_at": previous_retrieved,
+            history[key] = {**prediction, "forecast_recorded_at": previous_generated,
+                            "source_retrieved_at": previous_retrieved,
                             "source": "previously_published_forecast"}
 
     if len(roster) != 138:
