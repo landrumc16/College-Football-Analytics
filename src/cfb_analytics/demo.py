@@ -21,12 +21,12 @@ def main():
     scored = {}
     for game in completed:
         key = (game["home"], game["away"])
-        if key in scored:
-            raise ValueError(f"Duplicate completed matchup {key}")
-        scored[key] = game
+        scored.setdefault(key, []).append(game)
     records = []
     for index, game in enumerate(schedule, 1):
-        match = scored.get((game["home"], game["away"]))
+        key = (game["home"], game["away"])
+        matches = scored.get(key, [])
+        match = matches.pop(0) if game["completed"] and matches else None
         if game["completed"] and match is None:
             raise ValueError(f"Missing result for completed game {game}")
         records.append({
@@ -37,6 +37,9 @@ def main():
             "away_score": match["away_score"] if match else None,
             "neutral_site": False,
         })
+    remaining = sum(len(matches) for matches in scored.values())
+    if remaining:
+        raise ValueError(f"{remaining} completed results unmatched to schedule")
     report = build_season_report(
         {"season": 2026, "source": "FROZEN 2026 WEEK 7 DEMO - NOT LIVE",
          "games": records},
