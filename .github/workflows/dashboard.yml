@@ -57,6 +57,15 @@ jobs:
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
+          # Never silently label a frozen fixture as a current CFBD report.
+          source = report.get("source") or ""
+          assert source, "Report source must be identified"
+          if "DEMO" not in source:
+            from datetime import datetime
+            assert "collegefootballdata.com" in source, "Unknown live report source"
+            retrieved_at = report.get("retrieved_at")
+            assert retrieved_at, "Live report requires retrieval timestamp"
+            datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
           assert report["cfp"]["simulations"] == 10000
           assert report["cfp"]["scenario"] == "current_model_probabilities"
           assert len(report["cfp"]["teams"]) == report["summary"]["teams"]
