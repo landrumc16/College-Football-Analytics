@@ -17,7 +17,7 @@ function App() {
   const [week, setWeek] = useState('all')
 
   useEffect(() => {
-    fetch('./season-report.json', { cache: 'no-store' })
+    fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('No published season report is available yet.'); return r.json() })
       .then((data: Report) => {
         if (!Array.isArray(data.rankings) || !Array.isArray(data.predictions)) throw new Error('Invalid report format')
