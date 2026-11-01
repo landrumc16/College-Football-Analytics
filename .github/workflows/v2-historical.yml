@@ -44,4 +44,11 @@ jobs:
       - name: Historical provenance and evaluation tests
         run: python -m pytest -q tests/test_historical_schema.py tests/test_historical_adapter.py tests/test_historical_evaluation.py tests/test_historical_cli.py
       - name: Full Python regression suite
-        run: python -m pytest -q
+        run: python -m pytest -q --junitxml=v2-pytest-results.xml
+      - name: Preserve V2 test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-pytest-results
+          path: v2-pytest-results.xml
+          if-no-files-found: warn
