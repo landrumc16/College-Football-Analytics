@@ -44,13 +44,22 @@ jobs:
           test -f data/season-2026-report.json || test -s web/public/season-report.json
       - name: Spreadsheet numerical parity audit (diagnostic)
         run: |
-          # Report real discrepancies without blocking dashboard publication
+          # Keep an auditable discrepancy report without blocking the dashboard
           # until the frozen week-7 baseline has been reconciled.
-          if python -m cfb_analytics.parity --strict --tolerance 0.001; then
+          set -o pipefail
+          if python -m cfb_analytics.parity --strict --tolerance 0.001 2>&1 | tee parity-report.txt; then
             echo "Spreadsheet numerical parity passed."
           else
-            echo "::warning::Spreadsheet numerical parity is not yet verified; inspect the discrepancy report above."
+            echo "::warning::Spreadsheet numerical parity is not yet verified; see parity-report artifact."
           fi
+      - name: Upload spreadsheet parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spreadsheet-parity-report
+          path: parity-report.txt
+          if-no-files-found: warn
+          retention-days: 30
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
