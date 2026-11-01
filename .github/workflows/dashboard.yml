@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
       - 'data/season-*-report.json'
       - '.github/workflows/dashboard.yml'
 
