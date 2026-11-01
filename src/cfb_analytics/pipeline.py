@@ -22,7 +22,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         raise ValueError("Snapshot contains games from a different season")
     if len({g.game_id for g in games}) != len(games):
         raise ValueError("Snapshot contains duplicate game ids")
-    teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
+    if any(g.completed and (g.home_score is None or g.away_score is None) for g in games):\n        raise ValueError("Completed game missing score")\n    teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
     known = {t.name for t in teams}
     conferences = {t.name: t.conference for t in teams}
     completed = [
