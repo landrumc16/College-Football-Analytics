@@ -3,7 +3,10 @@
 Each game is predicted using only results from earlier weeks. Games within
 the same week are predicted from the same pre-week snapshot.
 """
+import argparse
+import json
 from math import log
+from pathlib import Path
 
 from .model import ModelSettings, win_probability_from_rating_gap
 from .ratings import Game, Team, calculate_ratings
@@ -63,3 +66,26 @@ def backtest_weeks(teams: list[Team], games: list[Game],
         }
     return {"games": len(scored), "model": metrics(0),
             "preseason_baseline": metrics(1)}
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Leakage-free weekly backtest on frozen workbook games")
+    parser.add_argument("--output", type=Path, help="Optional JSON results file")
+    args = parser.parse_args(argv)
+    from .parity import load_baseline
+    roster, results = load_baseline()
+    teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
+    games = [Game(g["home"], g["away"], g["home_score"],
+                  g["away_score"], g["week"]) for g in results]
+    if len(teams) != 138 or len(games) != 510:
+        parser.error(f"Incomplete historical fixture: {len(teams)} teams, {len(games)} games")
+    report = backtest_weeks(teams, games)
+    print(json.dumps(report, indent=2))
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, indent=2) + "\\n", encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
