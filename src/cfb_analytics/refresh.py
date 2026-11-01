@@ -24,6 +24,8 @@ def refresh(season: int, output: Path, api_key: str):
     raw = fetch_cfbd_games(season, api_key)
     games = normalize_cfbd_games(raw, season)
     summary = snapshot_summary(games)
+    if not isinstance(raw, list):
+        raise RuntimeError("Unexpected CFBD response: expected a list of games")
     if len(raw) != summary["scheduled"]:
         raise RuntimeError("Unexpected game records omitted during normalization")
     if summary["scheduled"] == 0:
@@ -37,8 +39,12 @@ def refresh(season: int, output: Path, api_key: str):
     }
     # Do not rewrite snapshots just because the retrieval timestamp changed.
     if output.exists():
-        existing = json.loads(output.read_text(encoding="utf-8"))
-        comparable = {key: value for key, value in existing.items() if key != "retrieved_at"}
+        try:
+            existing = json.loads(output.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            existing = None
+        comparable = ({key: value for key, value in existing.items() if key != "retrieved_at"}
+                      if isinstance(existing, dict) else None)
         incoming = {key: value for key, value in payload.items() if key != "retrieved_at"}
         if comparable == incoming:
             return summary
