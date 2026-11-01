@@ -27,3 +27,5 @@
 @media(max-width:650px){.app{padding:24px 14px 48px}header h1{font-size:clamp(28px,7vw,38px);line-height:1.12;letter-spacing:-1.4px}header p{margin-bottom:24px}.stats{gap:8px;margin-bottom:20px}.stats article{padding:13px 12px;border-radius:10px}.stats small{font-size:10px;letter-spacing:.7px}.stats strong{font-size:clamp(23px,6vw,31px);margin-top:6px}.toolbar{margin-bottom:14px}}
 
 .data-timestamp{font-size:12px;line-height:1.5;color:#aebfd4;margin:0 0 12px;overflow-wrap:anywhere}
+
+.accuracy-summary{padding:14px 16px;margin:0 0 16px;border:1px solid rgba(165,190,220,.25);border-radius:12px}.accuracy-summary p{margin:7px 0;font-size:14px;line-height:1.5}.accuracy-summary small{font-size:11px;opacity:.75}
