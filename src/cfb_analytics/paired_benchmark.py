@@ -47,6 +47,22 @@ def paired_scorecard(games: list[HistoricalGame],
         }
 
     baseline, challenger = metrics(2), metrics(3)
+    seasons = sorted({row[0] for row in scored})
+    by_season = {}
+    for season in seasons:
+        rows = [row for row in scored if row[0] == season]
+        def season_metrics(column):
+            n = len(rows)
+            values = [(row[column], row[1]) for row in rows]
+            return {
+                "games": n,
+                "winner_accuracy": sum((p >= 0.5) == bool(y) for p, y in values) / n,
+                "brier_score": sum((p - y) ** 2 for p, y in values) / n,
+                "log_loss": -sum(y * log(max(1e-15, p)) +
+                                 (1-y) * log(max(1e-15, 1-p)) for p, y in values) / n,
+            }
+        by_season[str(season)] = {"workbook": season_metrics(2),
+                                  "candidate": season_metrics(3)}
     return {
         "paired_games": len(scored),
         "workbook": baseline,
@@ -54,6 +70,7 @@ def paired_scorecard(games: list[HistoricalGame],
         "candidate_minus_workbook": None if not scored else {
             metric: challenger[metric] - baseline[metric]
             for metric in ("winner_accuracy", "brier_score", "log_loss")},
+        "by_season": by_season,
         "by_season_counts": {
             str(season): sum(row[0] == season for row in scored)
             for season in sorted({row[0] for row in scored})},
