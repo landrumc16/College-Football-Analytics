@@ -97,6 +97,15 @@ jobs:
           assert report["conference_strength"]
           assert all("most_likely_seed" in team for team in report["cfp"]["teams"])
           assert all("average_seed_when_selected" in team for team in report["cfp"]["teams"])
+          if "prediction_accuracy" in report:
+            accuracy = report["prediction_accuracy"]
+            assert isinstance(accuracy["games_evaluated"], int) and accuracy["games_evaluated"] >= 0
+            assert 0 <= accuracy["correct_winners"] <= accuracy["games_evaluated"]
+            if accuracy["games_evaluated"]:
+              assert 0 <= accuracy["winner_accuracy"] <= 1
+              assert 0 <= accuracy["brier_score"] <= 1
+            else:
+              assert accuracy["winner_accuracy"] is None and accuracy["brier_score"] is None
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
