@@ -6,7 +6,7 @@ The V2 evaluator consumes two JSON arrays and **does not manufacture retrospecti
 
 `games.json`: one row per historical game with `schema_version` (default 1), `season`, `game_id`, `home`, `away`, `home_division`, `away_division`, `kickoff`, `source_retrieved_at`, `source`, and completed `home_score`/`away_score` (or both null). Division values: `FBS`, `FCS`, `OTHER`, `UNKNOWN`. The roster must be season-specific. Times must be offset-aware ISO 8601.
 
-`forecasts.json`: one row per archived forecast with `season`, `game_id`, `home_win_probability`, and `generated_at` (offset-aware ISO 8601). Forecasts must have been generated before kickoff, after the referenced source snapshot. Missing or unverified forecast timestamps are excluded rather than reconstructed.
+`forecasts.json`: one row per archived forecast with `season`, `game_id`, `home_win_probability`, and `generated_at` (offset-aware ISO 8601). Forecasts must include `input_retrieved_at` (timezone-aware), the timestamp of the **forecast input snapshot**. The input snapshot must be retrieved no later than forecast generation, and generation must precede kickoff. The completed-game `source_retrieved_at` may be postgame and is not used to establish forecast validity. Missing or unverified forecast input timestamps are excluded rather than reconstructed.
 
 Run:
 
