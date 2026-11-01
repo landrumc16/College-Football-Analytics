@@ -61,9 +61,11 @@ def test_reject_completed_game_with_missing_score():
 def test_report_preserves_data_provenance():
     report = build_season_report({"season": 2026, "source": "test-source",
                                   "retrieved_at": "2026-10-31T00:00:00+00:00",
+                                  "data_changed_at": "2026-10-30T00:00:00+00:00",
                                   "games": []}, ROSTER)
     assert report["source"] == "test-source"
     assert report["retrieved_at"] == "2026-10-31T00:00:00+00:00"
+    assert report["data_changed_at"] == "2026-10-30T00:00:00+00:00"
 
 
 def test_reject_empty_roster():
