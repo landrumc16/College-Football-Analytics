@@ -1,5 +1,7 @@
 # College Football Analytics
 
+> **Latest project handoff (2026-11-01):** [Chat closeout and next-session startup](docs/chat-handoffs/2026-11-01-college-football-analytics-closeout.md). Read this before continuing; the original baseline plan below is historical and does not reflect all implemented features.
+
 A reproducible college-football ranking, prediction, and season-simulation platform. The [existing Google Sheet](https://docs.google.com/spreadsheets/d/1kpCF_5_BNQx43IywvwpUra5-o6kcdMZBHwed1pDVJ54/edit) remains the reference until parity testing succeeds.
 
 ## Target stack
