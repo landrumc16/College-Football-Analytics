@@ -1,3 +1,4 @@
+import pytest
 from cfb_analytics.cfp import simulate_cfp
 
 
@@ -14,8 +15,8 @@ def test_cfp_simulation_deterministic_and_probabilities():
     assert sum(x["cfp_field"] for x in a["teams"]) == 12
     assert sum(x["first_round_bye"] for x in a["teams"]) == 4
     assert sum(x["quarterfinal"] for x in a["teams"]) == 8
-    assert sum(x["semifinal"] for x in a["teams"]) == 4
-    assert sum(x["final"] for x in a["teams"]) == 2
+    assert sum(x["semifinal"] for x in a["teams"]) == pytest.approx(4)
+    assert sum(x["final"] for x in a["teams"]) == pytest.approx(2)
     assert abs(sum(x["national_title"] for x in a["teams"]) - 1) < 0.01
     assert all(0 <= x["national_title"] <= x["cfp_field"] <= 1 for x in a["teams"])
 
