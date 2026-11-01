@@ -25,3 +25,9 @@ This confirms numerical parity for the eight iterative passes with the frozen so
 - Publish complete discrepancy counts and a verified CI run link.
 
 **Important:** The independent calculation was executed in the tool runtime, not by running the committed Python package. Do not represent this report as a successful Python or CI test run.
+
+## Additional independent reconciliation (2026-10-31)
+
+Using the same frozen 138 teams and 510 completed games, six derived metrics per team (adaptive rating, SOS, wins, losses, quality wins and bad losses) were independently compared: **828 comparisons, zero differences above 1e-6**. This revealed and corrected a mistaken SOS column reference: Games!AJ/AK use Teams Rating_7, not Rating_8 (commit f06b85d).
+
+The FullSchedule tab was frozen as **888 scheduled games**. Independent expected-win calculations matched all **138** Teams!AP values with zero differences above 0.001; maximum observed difference was approximately 3.55e-15. The committed Python parity CLI now checks projected wins as well. Its CI run has not yet been verified.
