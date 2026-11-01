@@ -159,3 +159,30 @@ def test_performance_rejects_wrong_matchup_and_invalid_probability():
         rows = build_performance_against_expectations(snapshot, ROSTER, {"1": bad})
         assert rows["A"]["games_with_forecasts"] == 0
         assert rows["A"]["wins_above_expected"] is None
+
+
+def test_prediction_accuracy_only_uses_archived_completed_forecasts():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    snapshot = {"games": [
+        game(1, "A", "B", completed=True, hs=21, ass=14),
+        game(2, "B", "A", completed=True, hs=7, ass=17),
+        game(3, "A", "B", completed=True, hs=28, ass=7),
+        game(4, "A", "B", completed=False),
+    ]}
+    history = {
+        "1": {"home": "A", "away": "B", "home_win_probability": 0.8},
+        "2": {"home": "B", "away": "A", "home_win_probability": 0.7},
+        "3": {"home": "B", "away": "A", "home_win_probability": 0.9},
+        "4": {"home": "A", "away": "B", "home_win_probability": 0.9},
+    }
+    result = build_prediction_accuracy(snapshot, history)
+    assert result == {"games_evaluated": 2, "correct_winners": 1,
+                      "winner_accuracy": 0.5, "brier_score": 0.265}
+
+
+def test_prediction_accuracy_empty_history_has_no_misleading_percentage():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    result = build_prediction_accuracy({"games": [game(1, "A", "B", completed=True, hs=21, ass=14)]}, {})
+    assert result["games_evaluated"] == 0
+    assert result["winner_accuracy"] is None
+    assert result["brier_score"] is None
