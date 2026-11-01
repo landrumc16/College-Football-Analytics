@@ -28,8 +28,10 @@ def refresh(season: int, output: Path, api_key: str):
     summary = snapshot_summary(games)
     if any(row.get("season") != season for row in raw):
         raise RuntimeError("Unexpected cross-season records in CFBD response")
-    if len({row.get("id") for row in raw}) != summary["scheduled"]:
-        raise RuntimeError("Unexpected game records omitted during normalization")
+    eligible_ids = {row.get("id") for row in raw
+                    if row.get("home_team") and row.get("away_team")}
+    if len(eligible_ids) != summary["scheduled"]:
+        raise RuntimeError("Unexpected games with known participants omitted during normalization")
     if summary["scheduled"] == 0:
         raise RuntimeError("Refusing to publish an empty season snapshot")
     payload = {
