@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'pipe' });
+const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'ignore', detached: true });
 let browser;
 try {
   let ready = false;
@@ -19,6 +19,7 @@ try {
   await mkdir('web/mobile-evidence', { recursive: true });
   for (const width of [375, 390, 768]) {
     const page = await browser.newPage({ viewport: { width, height: 844 }, deviceScaleFactor: 1 });
+    page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
@@ -60,5 +61,11 @@ try {
   }
 } finally {
   await browser?.close();
-  server.kill('SIGTERM');
+  // npm launches Vite as a child; terminate the entire process group so
+  // inherited handles cannot keep the GitHub Actions job alive.
+  if (server.pid) {
+    try { process.kill(-server.pid, 'SIGTERM'); } catch (error) {
+      if (error.code !== 'ESRCH') throw error;
+    }
+  }
 }
