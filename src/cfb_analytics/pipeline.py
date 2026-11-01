@@ -81,7 +81,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
     ]
     predictions = []
     for g in games:
-        if g.completed:
+        if g.completed or g.home not in known or g.away not in known:
             continue
         home_rating = ratings[g.home].adaptive_rating if g.home in known else settings.fcs_opponent_rating
         away_rating = ratings[g.away].adaptive_rating if g.away in known else settings.fcs_opponent_rating
