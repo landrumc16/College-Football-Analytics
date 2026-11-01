@@ -22,7 +22,7 @@ try {
     await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
-    await page.getByText('Waiting for live data').count().then(count => { if (count) throw new Error('Dashboard failed to load season report'); });
+    if (await page.getByText('Waiting for live data').count()) throw new Error('Dashboard failed to load season report');
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
@@ -30,10 +30,17 @@ try {
       if (await page.getByLabel('Choose dashboard section').inputValue() !== section) {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
+      const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+      if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
     console.log(`Mobile navigation smoke passed at ${width}px`);
     await page.close();
+    const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
+    await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));
+    await failedPage.goto('http://127.0.0.1:4178/');
+    await failedPage.getByText('Waiting for live data').waitFor();
+    await failedPage.close();
   }
 } finally {
   await browser?.close();
