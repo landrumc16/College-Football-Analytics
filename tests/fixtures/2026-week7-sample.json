@@ -1,0 +1,399 @@
+{
+  "source": "2026 Week 7 spreadsheet reference; partial fixture",
+  "teams": [
+    {
+      "name": "Boston College",
+      "conference": "ACC",
+      "initial_rating": -3.7322531,
+      "rating_passes": [
+        -4.465188663636364,
+        -3.952604174675903,
+        -3.5248470830892273,
+        -3.008796024940374,
+        -2.5779544906737133,
+        -2.178627572299941,
+        -1.827017520271292,
+        -1.51104686632358
+      ],
+      "adaptive_rating": -1.827017520271292,
+      "wins": 3,
+      "losses": 3,
+      "sos": 1.3163278711879511,
+      "quality_wins": 2,
+      "bad_losses": 0
+    },
+    {
+      "name": "California",
+      "conference": "ACC",
+      "initial_rating": -0.3246622000000001,
+      "rating_passes": [
+        -4.598998391666667,
+        -2.466789214791295,
+        -2.3140153045370444,
+        -1.718788977279921,
+        -1.3537654319568162,
+        -0.9779427792206645,
+        -0.6534420164062459,
+        -0.35381173030246443
+      ],
+      "adaptive_rating": -0.6534420164062459,
+      "wins": 3,
+      "losses": 4,
+      "sos": 2.4622553561510734,
+      "quality_wins": 2,
+      "bad_losses": 1
+    },
+    {
+      "name": "Clemson",
+      "conference": "ACC",
+      "initial_rating": 10.0050715,
+      "rating_passes": [
+        3.654945490909091,
+        5.675518334483876,
+        6.159617513949834,
+        6.711647910888282,
+        7.149545094054283,
+        7.546212556421477,
+        7.90132020815635,
+        8.22161042253021
+      ],
+      "adaptive_rating": 7.90132020815635,
+      "wins": 4,
+      "losses": 2,
+      "sos": 4.211762400753236,
+      "quality_wins": 1,
+      "bad_losses": 0
+    },
+    {
+      "name": "Duke",
+      "conference": "ACC",
+      "initial_rating": 2.0129449,
+      "rating_passes": [
+        6.347255490909091,
+        5.66124617966294,
+        6.3398486537820835,
+        6.762907858781026,
+        7.204714570719295,
+        7.58435298731764,
+        7.929913202938826,
+        8.238396596458044
+      ],
+      "adaptive_rating": 7.929913202938826,
+      "wins": 4,
+      "losses": 2,
+      "sos": -2.7640241137124058,
+      "quality_wins": 2,
+      "bad_losses": 0
+    },
+    {
+      "name": "Florida State",
+      "conference": "ACC",
+      "initial_rating": 8.989027,
+      "rating_passes": [
+        6.9005161416666665,
+        8.662904447077393,
+        8.982773924076227,
+        9.47916632223496,
+        9.888295885378213,
+        10.275613649396416,
+        10.626193665586348,
+        10.945555862515013
+      ],
+      "adaptive_rating": 10.626193665586348,
+      "wins": 3,
+      "losses": 4,
+      "sos": 6.751393229552464,
+      "quality_wins": 1,
+      "bad_losses": 0
+    },
+    {
+      "name": "Georgia Tech",
+      "conference": "ACC",
+      "initial_rating": 4.7993673999999995,
+      "rating_passes": [
+        -0.28834253636363627,
+        0.6120760562469617,
+        0.9604483567066741,
+        1.5693805630375974,
+        2.038078007735156,
+        2.482174429572353,
+        2.865431208443727,
+        3.208656352331074
+      ],
+      "adaptive_rating": 2.865431208443727,
+      "wins": 2,
+      "losses": 4,
+      "sos": 0.6927666887214846,
+      "quality_wins": 1,
+      "bad_losses": 1
+    },
+    {
+      "name": "Louisville",
+      "conference": "ACC",
+      "initial_rating": 6.785917599999999,
+      "rating_passes": [
+        10.163310141666665,
+        10.997612891521838,
+        11.583716791487424,
+        12.048387983501323,
+        12.510426323607563,
+        12.91774232749389,
+        13.290959677576604,
+        13.62585369422088
+      ],
+      "adaptive_rating": 13.290959677576604,
+      "wins": 4,
+      "losses": 3,
+      "sos": 5.348410512476808,
+      "quality_wins": 3,
+      "bad_losses": 0
+    },
+    {
+      "name": "Miami (FL)",
+      "conference": "ACC",
+      "initial_rating": 17.3243368,
+      "rating_passes": [
+        23.157885063636364,
+        22.653704710448064,
+        23.302517384054088,
+        23.606739461533927,
+        23.97307136070967,
+        24.300540956092696,
+        24.611303025040147,
+        24.897409803935474
+      ],
+      "adaptive_rating": 24.611303025040147,
+      "wins": 6,
+      "losses": 0,
+      "sos": -2.1486598166704542,
+      "quality_wins": 3,
+      "bad_losses": 0
+    },
+    {
+      "name": "North Carolina",
+      "conference": "ACC",
+      "initial_rating": -0.4283258000000002,
+      "rating_passes": [
+        4.394851999999999,
+        4.88245755466294,
+        5.700537117765326,
+        6.299623967892751,
+        6.797325479382686,
+        7.229623249140735,
+        7.604795888766225,
+        7.93718085166991
+      ],
+      "adaptive_rating": 7.604795888766225,
+      "wins": 4,
+      "losses": 2,
+      "sos": 6.884805937509351,
+      "quality_wins": 3,
+      "bad_losses": 0
+    },
+    {
+      "name": "NC State",
+      "conference": "ACC",
+      "initial_rating": 7.107207099999999,
+      "rating_passes": [
+        2.333239145454545,
+        3.4989922357924157,
+        3.603872665914329,
+        4.127821068556378,
+        4.527047978259161,
+        4.9268076759564,
+        5.281706757864006,
+        5.606180846586995
+      ],
+      "adaptive_rating": 5.281706757864006,
+      "wins": 3,
+      "losses": 3,
+      "sos": 1.498361844857339,
+      "quality_wins": 1,
+      "bad_losses": 0
+    },
+    {
+      "name": "Pittsburgh",
+      "conference": "ACC",
+      "initial_rating": 5.8100830000000006,
+      "rating_passes": [
+        7.234366125000001,
+        8.300493492468805,
+        8.801399417045017,
+        9.292458889705548,
+        9.721784474637587,
+        10.10541926357421,
+        10.450058169590458,
+        10.760022330381332
+      ],
+      "adaptive_rating": 10.450058169590458,
+      "wins": 5,
+      "losses": 2,
+      "sos": -1.5817042541052733,
+      "quality_wins": 3,
+      "bad_losses": 1
+    },
+    {
+      "name": "SMU",
+      "conference": "ACC",
+      "initial_rating": 9.5695786,
+      "rating_passes": [
+        8.144428136363636,
+        8.615903945021067,
+        8.873743888410472,
+        9.349064290030684,
+        9.735331502477159,
+        10.112896889922759,
+        10.451191288228882,
+        10.760784747171703
+      ],
+      "adaptive_rating": 10.451191288228882,
+      "wins": 5,
+      "losses": 1,
+      "sos": -1.270173920737361,
+      "quality_wins": 2,
+      "bad_losses": 0
+    }
+  ],
+  "games": [
+    {
+      "week": 1,
+      "home": "TCU",
+      "away": "North Carolina",
+      "home_score": 10,
+      "away_score": 15
+    },
+    {
+      "week": 1,
+      "home": "USC",
+      "away": "San José State",
+      "home_score": 42,
+      "away_score": 26
+    },
+    {
+      "week": 1,
+      "home": "Virginia",
+      "away": "NC State",
+      "home_score": 34,
+      "away_score": 8
+    },
+    {
+      "week": 1,
+      "home": "North Dakota State",
+      "away": "Jacksonville State",
+      "home_score": 33,
+      "away_score": 7
+    },
+    {
+      "week": 1,
+      "home": "Eastern Michigan",
+      "away": "Sacramento State",
+      "home_score": 28,
+      "away_score": 17
+    },
+    {
+      "week": 1,
+      "home": "Stanford",
+      "away": "Hawai'i",
+      "home_score": 37,
+      "away_score": 27
+    },
+    {
+      "week": 1,
+      "home": "Florida State",
+      "away": "New Mexico State",
+      "home_score": 34,
+      "away_score": 17
+    },
+    {
+      "week": 1,
+      "home": "UNLV",
+      "away": "Memphis",
+      "home_score": 21,
+      "away_score": 27
+    },
+    {
+      "week": 1,
+      "home": "Rutgers",
+      "away": "Massachusetts",
+      "home_score": 21,
+      "away_score": 37
+    },
+    {
+      "week": 1,
+      "home": "Wake Forest",
+      "away": "Akron",
+      "home_score": 38,
+      "away_score": 16
+    },
+    {
+      "week": 1,
+      "home": "Kennesaw State",
+      "away": "West Georgia",
+      "home_score": 47,
+      "away_score": 0
+    },
+    {
+      "week": 1,
+      "home": "Buffalo",
+      "away": "UAlbany",
+      "home_score": 21,
+      "away_score": 17
+    },
+    {
+      "week": 1,
+      "home": "UCF",
+      "away": "Bethune-Cookman",
+      "home_score": 73,
+      "away_score": 6
+    },
+    {
+      "week": 1,
+      "home": "Delaware",
+      "away": "Merrimack",
+      "home_score": 42,
+      "away_score": 7
+    },
+    {
+      "week": 1,
+      "home": "Missouri",
+      "away": "Arkansas-Pine Bluff",
+      "home_score": 54,
+      "away_score": 14
+    },
+    {
+      "week": 1,
+      "home": "Minnesota",
+      "away": "Eastern Illinois",
+      "home_score": 59,
+      "away_score": 7
+    },
+    {
+      "week": 1,
+      "home": "Georgia Tech",
+      "away": "Colorado",
+      "home_score": 13,
+      "away_score": 14
+    },
+    {
+      "week": 1,
+      "home": "Illinois",
+      "away": "UAB",
+      "home_score": 42,
+      "away_score": 23
+    },
+    {
+      "week": 1,
+      "home": "Utah",
+      "away": "Idaho",
+      "home_score": 66,
+      "away_score": 14
+    },
+    {
+      "week": 1,
+      "home": "Eastern Michigan",
+      "away": "San José State",
+      "home_score": 21,
+      "away_score": 27
+    }
+  ]
+}
