@@ -34,3 +34,15 @@ def test_incomplete_scores_rejected():
                               "home_team": "A", "away_team": "B",
                               "completed": True, "home_points": None,
                               "away_points": 3}], 2026)
+
+
+def test_cfbd_scores_without_completed_field_are_final():
+    row = {"id": 3, "season": 2026, "week": 1, "home_team": "A",
+           "away_team": "B", "home_points": 31, "away_points": 17}
+    assert normalize_cfbd_games([row], 2026)[0].completed
+
+
+def test_zero_zero_placeholder_is_not_final():
+    row = {"id": 4, "season": 2026, "week": 1, "home_team": "A",
+           "away_team": "B", "home_points": 0, "away_points": 0}
+    assert not normalize_cfbd_games([row], 2026)[0].completed
