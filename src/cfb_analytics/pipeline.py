@@ -253,7 +253,7 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
     return performance
 
 
-def build_prediction_accuracy(snapshot: dict, history: dict) -> dict:
+def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set[str] | None = None) -> dict:
     """Score only completed games with genuine archived pregame probabilities."""
     games = 0
     correct = 0
@@ -270,6 +270,8 @@ def build_prediction_accuracy(snapshot: dict, history: dict) -> dict:
             continue
         home = aliases.get(game["home"], game["home"])
         away = aliases.get(game["away"], game["away"])
+        if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
+            continue
         probability = forecast.get("home_win_probability")
         if (forecast.get("home") != home or forecast.get("away") != away
                 or isinstance(probability, bool)
