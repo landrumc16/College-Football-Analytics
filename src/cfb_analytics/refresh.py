@@ -35,6 +35,13 @@ def refresh(season: int, output: Path, api_key: str):
         "summary": summary,
         "games": [g.__dict__ for g in games],
     }
+    # Do not rewrite snapshots just because the retrieval timestamp changed.
+    if output.exists():
+        existing = json.loads(output.read_text(encoding="utf-8"))
+        comparable = {key: value for key, value in existing.items() if key != "retrieved_at"}
+        incoming = {key: value for key, value in payload.items() if key != "retrieved_at"}
+        if comparable == incoming:
+            return summary
     output.parent.mkdir(parents=True, exist_ok=True)
     temp = output.with_suffix(output.suffix + ".tmp")
     try:
