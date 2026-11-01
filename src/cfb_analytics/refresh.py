@@ -39,7 +39,7 @@ def refresh(season: int, output: Path, api_key: str):
         "summary": summary,
         "games": [g.__dict__ for g in games],
     }
-    # Do not rewrite snapshots just because the retrieval timestamp changed.
+    # Preserve the snapshot when unchanged; its timestamp records the last data change.
     if output.exists():
         try:
             existing = json.loads(output.read_text(encoding="utf-8"))
