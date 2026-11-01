@@ -29,7 +29,8 @@ def refresh(season: int, output: Path, api_key: str):
     if any(row.get("season") != season for row in raw):
         raise RuntimeError("Unexpected cross-season records in CFBD response")
     eligible_ids = {row.get("id") for row in raw
-                    if row.get("home_team") and row.get("away_team")}
+                    if row.get("homeTeam", row.get("home_team"))
+                    and row.get("awayTeam", row.get("away_team"))}
     if len(eligible_ids) != summary["scheduled"]:
         raise RuntimeError("Unexpected games with known participants omitted during normalization")
     if summary["scheduled"] == 0:
