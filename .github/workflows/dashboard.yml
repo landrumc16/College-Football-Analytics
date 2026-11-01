@@ -28,7 +28,8 @@ jobs:
           python-version: '3.11'
       - name: Build frozen-data demo if live report absent
         run: |
-          python -m pip install -e .
+          python -m pip install -e '.[dev]'
+          pytest -q
           if [ ! -f data/season-2026-report.json ]; then
             python -m cfb_analytics.demo
           fi
@@ -45,6 +46,7 @@ jobs:
           if [ -f data/season-2026-report.json ]; then
             cp data/season-2026-report.json web/dist/season-report.json
           fi
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist
