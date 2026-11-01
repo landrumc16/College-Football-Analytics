@@ -12,11 +12,11 @@ def test_paired_comparison_excludes_unmatched_and_postgame():
                        source_retrieved_at="2025-09-01T16:00:00Z",
                        source="fixture", home_score=21, away_score=14)
         for i in (1, 2, 3)]
-    workbook = [ArchivedForecast(2025, i, 0.6, "2025-09-01T18:00:00Z")
+    workbook = [ArchivedForecast(2025, i, 0.6, "2025-09-01T18:00:00Z", "2025-09-01T17:00:00Z")
                 for i in (1, 2, 3)]
     candidate = [
-        ArchivedForecast(2025, 1, 0.8, "2025-09-01T19:00:00Z"),
-        ArchivedForecast(2025, 2, 0.8, "2025-09-01T20:00:00Z")]
+        ArchivedForecast(2025, 1, 0.8, "2025-09-01T19:00:00Z", "2025-09-01T17:00:00Z"),
+        ArchivedForecast(2025, 2, 0.8, "2025-09-01T20:00:00Z", "2025-09-01T17:00:00Z")]
     result = paired_scorecard(games, workbook, candidate)
     assert result["paired_games"] == 1
     assert result["workbook"]["brier_score"] == 0.16
