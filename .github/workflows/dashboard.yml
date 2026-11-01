@@ -42,6 +42,31 @@ jobs:
             python -m cfb_analytics.demo
           fi
           test -f data/season-2026-report.json || test -s web/public/season-report.json
+      - name: Execute historical prediction backtest
+        run: |
+          python -m cfb_analytics.backtest --output historical-backtest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path("historical-backtest.json").read_text())
+          assert result["games"] > 0, "No historical games evaluated"
+          for label in ("model", "preseason_baseline"):
+              scores = result[label]
+              assert 0 <= scores["winner_accuracy"] <= 1, label
+              assert 0 <= scores["brier_score"] <= 1, label
+              assert scores["log_loss"] >= 0, label
+          print("Historical games evaluated:", result["games"])
+          print("Model:", result["model"])
+          print("Preseason baseline:", result["preseason_baseline"])
+          PY
+      - name: Upload historical backtest results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-backtest-results
+          path: historical-backtest.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Spreadsheet numerical parity audit (diagnostic)
         run: |
           # Keep an auditable discrepancy report without blocking the dashboard
