@@ -1,3 +1,4 @@
+import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -15,6 +16,7 @@ try {
   }
   if (!ready) throw new Error('Dashboard development server did not start');
   browser = await chromium.launch({ headless: true });
+  await mkdir('web/mobile-evidence', { recursive: true });
   for (const width of [375, 390, 768]) {
     const page = await browser.newPage({ viewport: { width, height: 844 }, deviceScaleFactor: 1 });
     const errors = [];
@@ -32,6 +34,9 @@ try {
       }
       const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
       if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
+      if (section === 'rankings' || section === 'predictions' || section === 'cfp') {
+        await page.screenshot({ path: `web/mobile-evidence/${section}-${width}.png`, fullPage: true });
+      }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
     console.log(`Mobile navigation smoke passed at ${width}px`);
