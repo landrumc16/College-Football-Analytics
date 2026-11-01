@@ -9,7 +9,7 @@ Reproduce the existing spreadsheet's college-football rating, ranking and game-p
 - [x] Confirm workbook and its 26 tabs.
 - [x] Identify key tabs: Teams, Games, PreseasonPrior, Model Settings, Rankings, Predictions, Top 25.
 - [x] Inspect representative live formulas and settings.
-- [ ] Export all 138 FBS team rows (inputs and reference outputs), completed game rows, preseason priors, model settings, rankings and predictions into versioned, sanitized test fixtures.
+- [x] Export all 138 team rows (selected rating outputs and ranking inputs) and 510 completed game rows into frozen JSON fixtures.\n- [ ] Add full preseason-prior, settings, schedule and prediction fixtures.
 - [ ] Inventory all named ranges and formulas, including remaining-schedule/projected-wins rank key, all iterative Games contribution columns, and neutral-site handling.
 - [ ] Inspect Apps Script source and recent weeklyUpdate executions if access is provided. Do not infer a confirmed root cause from stale results alone.
 - [ ] Record workbook date, game count, maximum week and fixture hashes.
@@ -25,7 +25,7 @@ Reproduce the existing spreadsheet's college-football rating, ranking and game-p
 
 ## Workstream C — Verification and operational readiness
 - [x] Add initial pytest unit tests for primitive calculations.
-- [ ] Build end-to-end parity tests against frozen Sheets reference data; publish a discrepancy report by team and game.\n- [x] Add initial ranking and prediction unit tests.
+- [x] Add a CLI to compare frozen Sheets team-rating reference values and list discrepancies (not yet run/verified).\n- [ ] Execute reconciliation, fix discrepancies, extend to projections/rankings/predictions, and publish verified parity report.\n- [x] Add initial ranking and prediction unit tests.
 - [ ] Require exact win/loss/game counts, matching ranking order (with documented tie policy), and numeric tolerances for ratings/probabilities.
 - [ ] Run full tests in GitHub Actions on push and pull requests.
 - [ ] Add a CLI that produces local rankings and predictions from frozen fixtures, without API credentials.
