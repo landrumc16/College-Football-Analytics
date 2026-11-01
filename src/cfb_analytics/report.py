@@ -28,14 +28,21 @@ def main():
     history = json.loads(history_path.read_text()) if history_path.exists() else {}
     previous = json.loads(output.read_text()) if output.exists() else {}
     snapshot_data = json.loads(snapshot.read_text())
-    completed_ids = {g["game_id"] for g in snapshot_data["games"] if g["completed"]}
+    completed_games = {g["game_id"]: g for g in snapshot_data["games"] if g["completed"]}
+    completed_ids = set(completed_games)
     previous_retrieved = previous.get("retrieved_at")
     previous_pending = {g["game_id"] for g in previous.get("schedule", [])
                         if not g["completed"]}
+    aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
+               "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_ids and key not in history
                 and previous_retrieved and prediction["game_id"] in previous_pending):
+            game = completed_games[prediction["game_id"]]
+            if (prediction["home"] != aliases.get(game["home"], game["home"]) or
+                    prediction["away"] != aliases.get(game["away"], game["away"])):
+                continue
             history[key] = {**prediction, "forecast_recorded_at": previous_retrieved,
                             "source": "previously_published_forecast"}
 
@@ -49,8 +56,8 @@ def main():
         from .pipeline import build_performance_against_expectations
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
-        output.write_text(json.dumps(result, indent=2) + "\\n", encoding="utf-8")
-        history_path.write_text(json.dumps(history, indent=2) + "\\n", encoding="utf-8")
+        output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+        history_path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
     finally:
         roster_path.unlink(missing_ok=True)
     print(json.dumps({"output": str(output), "summary": result["summary"]}))
