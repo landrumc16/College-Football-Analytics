@@ -66,6 +66,8 @@ jobs:
           # Never silently label a frozen fixture as a current CFBD report.
           source = report.get("source") or ""
           assert source, "Report source must be identified"
+          if "${{ github.event_name }}" == "workflow_run":
+            assert "DEMO" not in source, "A successful live refresh must not deploy demo data"
           if "DEMO" not in source:
             from datetime import datetime
             assert "collegefootballdata.com" in source, "Unknown live report source"
