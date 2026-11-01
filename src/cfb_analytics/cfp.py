@@ -76,7 +76,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
             return a if rng.random() < p else b
         # Seeds 5-12, 6-11, 7-10, 8-9; winners play 4,3,2,1.
         round_one = [game(field[a-1],field[b-1]) for a,b in ((5,12),(6,11),(7,10),(8,9))]
-        for n in round_one:
+        for n in field[:4] + round_one:
             totals[n]["quarterfinal"] += 1
         quarter = [game(field[a-1],n) for a,n in zip((4,3,2,1),round_one)]
         for n in quarter:
