@@ -33,11 +33,20 @@ def test_refresh_does_not_overwrite_on_invalid_response(tmp_path):
     assert output.read_text() == "previous-good-snapshot"
 
 
-def test_refresh_rejects_duplicate_api_ids(tmp_path):
+def test_refresh_deduplicates_identical_api_ids(tmp_path):
     output = tmp_path / "snapshot.json"
     row = sample_game()
     with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[row, row]):
-        with pytest.raises(RuntimeError):
+        result = refresh(2026, output, "test-key")
+    assert result["scheduled"] == 1
+    assert len(json.loads(output.read_text())["games"]) == 1
+
+
+def test_refresh_rejects_cross_season_rows(tmp_path):
+    output = tmp_path / "snapshot.json"
+    with patch("cfb_analytics.refresh.fetch_cfbd_games",
+               return_value=[sample_game(), {**sample_game(), "id": 101, "season": 2025}]):
+        with pytest.raises(RuntimeError, match="cross-season"):
             refresh(2026, output, "test-key")
     assert not output.exists()
 
