@@ -73,12 +73,13 @@ class HistoricalGame:
                 and self.home_score is not None
                 and self.home_score != self.away_score)
 
-    def verified_pregame(self, generated_at: str | None) -> bool:
+    def verified_pregame(self, generated_at: str | None, input_retrieved_at: str | None = None) -> bool:
+        """Validate forecast provenance independently of game-result retrieval."""
         generated = utc_instant(generated_at)
         kickoff = utc_instant(self.kickoff)
-        retrieved = utc_instant(self.source_retrieved_at)
-        return (generated is not None and retrieved is not None
-                and retrieved <= generated < kickoff)
+        inputs = utc_instant(input_retrieved_at)
+        return (generated is not None and inputs is not None
+                and inputs <= generated < kickoff)
 
 
 def validate_unique_games(games: list[HistoricalGame]) -> None:
