@@ -31,6 +31,9 @@ def test_complete_season_pipeline():
     a = next(r for r in report["rankings"] if r["team"] == "A")
     assert a["wins"] == 1
     assert a["projected_conference_wins"] > 1
+    assert len(report["projected_bracket"]["seeds"]) == 12
+    assert len(report["projected_bracket"]["first_round"]) == 4
+    assert sum(seed["bid"] == "automatic" for seed in report["projected_bracket"]["seeds"]) == 5
     assert len(report["predictions"]) == 2
     assert all(0 <= p["home_win_probability"] <= 1 for p in report["predictions"])
 
