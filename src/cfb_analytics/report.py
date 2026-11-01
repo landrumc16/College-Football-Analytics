@@ -36,21 +36,27 @@ def main():
     eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
-    # The normalized snapshot currently has no kickoff timestamps. A previous
-    # pending status alone does not prove that the forecast preceded kickoff.
-    # Fail closed rather than creating a potentially hindsight-biased record.
-    has_verified_kickoff = all(
-        isinstance(game.get("start_date"), str) and game["start_date"]
-        for game in completed_games.values()
-    )
+    from datetime import datetime, timezone
+    def parse_utc(value):
+        if not isinstance(value, str):
+            return None
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return parsed.astimezone(timezone.utc) if parsed.tzinfo else None
+        except ValueError:
+            return None
+    previous_time = parse_utc(previous_retrieved)
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_games and key not in history
-                and has_verified_kickoff
-                and previous_retrieved and prediction["game_id"] in previous_pending
+                and previous_time is not None
+                and prediction["game_id"] in previous_pending
                 and prediction.get("home") in eligible_fbs
                 and prediction.get("away") in eligible_fbs):
             game = completed_games[prediction["game_id"]]
+            kickoff = parse_utc(game.get("start_date"))
+            if kickoff is None or previous_time >= kickoff:
+                continue
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
                 continue
