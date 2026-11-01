@@ -41,3 +41,11 @@
 .prediction-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}.prediction-metrics>div{display:flex;flex-direction:column;gap:5px}.prediction-metrics strong{font-size:19px}
 .bracket-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:10px;margin:18px 0 24px}
 .bracket-team{display:flex;align-items:center;gap:14px;padding:14px}.bracket-seed{font-size:23px;font-weight:850;color:#8de2c8;min-width:48px}.bracket-team strong{display:block;font-size:16px}.bracket-team small{display:block;color:#b4c7d9;margin-top:5px;line-height:1.4}
+
+/* Tap-friendly autocomplete for the game prediction team finder. */
+.team-search{position:relative;flex:1 1 240px;min-width:180px;max-width:420px}
+.team-search input{width:100%;min-width:0}
+.team-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;max-height:320px;overflow-y:auto;background:#19263a;border:1px solid #405675;border-radius:10px;box-shadow:0 14px 28px #0008;padding:4px}
+.team-suggestions button{display:block;width:100%;text-align:left;padding:12px 14px;color:#e8edf7;font-weight:600;border-radius:6px}
+.team-suggestions button:hover,.team-suggestions button:focus-visible{background:#2c425a;color:#fff;outline:2px solid #70d7b8;outline-offset:-2px}
+@media(max-width:700px){.team-search{flex-basis:100%;max-width:none}.team-suggestions button{min-height:44px}}
