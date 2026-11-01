@@ -74,3 +74,16 @@ def test_changed_score_updates_snapshot(tmp_path):
     changed = json.loads(output.read_text())
     assert changed["games"][0]["home_score"] == 35
     assert changed["data_changed_at"] == changed["retrieved_at"]
+
+
+def test_legacy_snapshot_preserves_original_change_time(tmp_path):
+    output = tmp_path / "snapshot.json"
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[sample_game()]):
+        refresh(2026, output, "test-key")
+        legacy = json.loads(output.read_text())
+        original_time = legacy.pop("data_changed_at")
+        output.write_text(json.dumps(legacy))
+        refresh(2026, output, "test-key")
+    updated = json.loads(output.read_text())
+    assert updated["data_changed_at"] == original_time
+    assert updated["games"] == legacy["games"]
