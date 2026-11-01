@@ -17,3 +17,10 @@ All fifteen recomputed outputs match workbook values to floating-point precision
 Important provenance issue to address before historical scoring: a completed-game record may be retrieved after kickoff, so `HistoricalGame.source_retrieved_at` must **not** be used as the timestamp for the pregame prediction's input snapshot. Forecast-input provenance needs a separate timestamp and source identity; otherwise valid archived forecasts can be incorrectly excluded. Do not publish a multi-season accuracy claim until this is fixed and tested.
 
 CI remains unverified: the available GitHub connector only retrieves pull-request-associated workflow runs; absence of those is not evidence of a passing or failing branch push workflow.
+
+
+## Direct workbook archive audit — 2026 weeks 7–8 (2026-11-01)
+
+Read `PredictionHistory!A2:P1000` as stored values, filtered to numeric week >=7 and both final scores present. **115 completed records**. Displayed probability in column E: **68/115 = 59.13%** winner accuracy, Brier **0.23827**. Independent model probability in column P: **66/115 = 57.39%**, Brier **0.24113**. Only **29/115** rows have numeric closing spreads in column O; model-only accuracy on those 29 is **15/29 = 51.72%**. This is a small, nonrandom subset, not a market comparison. Weeks 2–6 are intentionally excluded due to known post-result contamination noted in the workbook. The archive lacks explicit forecast-generation and input-retrieval timestamps, so these results are **observational archive checks**, not certified pregame backtests. Do not compare column E directly against the market as an independent model.
+
+Workbook `Accuracy!N4:P10` separately claims a 2022–2025 2,998-game holdout: 71.7% tuned-model accuracy, 73.2% market accuracy. That underlying game-level dataset was not established by this audit and remains **unverified**.
