@@ -251,3 +251,35 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
             row["wins_above_expected"] = round(
                 row["actual_wins"] - row["expected_wins"], 3)
     return performance
+
+
+def build_prediction_accuracy(snapshot: dict, history: dict) -> dict:
+    """Score only completed games with genuine archived pregame probabilities."""
+    games = 0
+    correct = 0
+    brier_total = 0.0
+    aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
+               "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
+    for game in snapshot["games"]:
+        if not game["completed"] or game["home_score"] is None or game["away_score"] is None:
+            continue
+        if game["home_score"] == game["away_score"]:
+            continue
+        forecast = history.get(str(game["game_id"]))
+        if not forecast:
+            continue
+        home = aliases.get(game["home"], game["home"])
+        away = aliases.get(game["away"], game["away"])
+        probability = forecast.get("home_win_probability")
+        if (forecast.get("home") != home or forecast.get("away") != away
+                or isinstance(probability, bool)
+                or not isinstance(probability, (float, int))
+                or not 0 <= probability <= 1):
+            continue
+        outcome = int(game["home_score"] > game["away_score"])
+        games += 1
+        correct += int((probability >= 0.5) == bool(outcome))
+        brier_total += (probability - outcome) ** 2
+    return {"games_evaluated": games, "correct_winners": correct,
+            "winner_accuracy": round(correct / games, 4) if games else None,
+            "brier_score": round(brier_total / games, 4) if games else None}
