@@ -15,13 +15,26 @@ def test_adjusted_margin_caps_at_45():
     assert adjusted_home_margin(100, 0, ModelSettings()) == 45
 
 
-def test_preseason_prior_matches_boston_college():
+def test_preseason_prior_matches_full_workbook_coefficients():
+    # Model Settings!B16:B21 and PreseasonPrior!B3:E3 (California).
     assert preseason_prior(
-        -6.25, -0.088, -0.939, False,
+        -3.76, 0.588, 0.59, True,
         intercept=0.9847, previous_weight=0.4569,
-        talent_weight=4.0926, returning_weight=0,
-        coach_weight=0, missing_previous_rating=-12,
-    ) == pytest.approx(0.9847 + 0.4569 * -6.25 + 4.0926 * -0.088)  # partial coefficient fixture
+        talent_weight=4.0926, returning_weight=1.5987,
+        coach_weight=-2.9411, missing_previous_rating=-12,
+    ) == pytest.approx(
+        0.9847 + 0.4569 * -3.76 + 4.0926 * 0.588
+        + 1.5987 * 0.59 - 2.9411
+    )
+
+
+def test_preseason_prior_missing_values_follow_sheet_fallback():
+    assert preseason_prior(
+        None, None, None, False,
+        intercept=0.9847, previous_weight=0.4569,
+        talent_weight=4.0926, returning_weight=1.5987,
+        coach_weight=-2.9411, missing_previous_rating=-12,
+    ) == pytest.approx(0.9847 - 12 * 0.4569)
 
 
 def test_prediction_margin_matches_delaware():
