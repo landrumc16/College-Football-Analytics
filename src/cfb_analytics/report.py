@@ -50,6 +50,7 @@ def main():
     snapshot_data = json.loads(snapshot.read_text())
     completed_games = {g["game_id"]: g for g in snapshot_data["games"] if g["completed"]}
     previous_retrieved = previous.get("retrieved_at")
+    previous_generated = previous.get("generated_at")
     # Published predictions are the authoritative set of games forecast while pending.
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
     previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
@@ -65,6 +66,11 @@ def main():
             game = completed_games[prediction["game_id"]]
             if not verified_pregame(previous_retrieved, game.get("start_date")):
                 continue
+            # A snapshot's retrieval time does not prove when its forecast
+            # was computed. Only archive reports with an explicit generation
+            # timestamp strictly preceding kickoff.
+            if not verified_pregame(previous_generated, game.get("start_date")):
+                continue
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
                 continue
@@ -79,6 +85,8 @@ def main():
         roster_path.write_text(json.dumps(roster), encoding="utf-8")
         result = run_snapshot(snapshot, roster_path, output)
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
+        from datetime import datetime, timezone
+        result["generated_at"] = datetime.now(timezone.utc).isoformat()
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
         # Measure the FBS model only on games between schools in its rating universe.
