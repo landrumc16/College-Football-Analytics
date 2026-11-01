@@ -49,6 +49,9 @@ def test_conference_championship_matchups_and_title_totals():
     assert all(len(c["most_common_matchup"]) == 2 for c in result["conference_championships"])
     assert all(c["matchup_probability"] == 1 for c in result["conference_championships"])
     assert sum(row["conference_title"] for row in result["teams"]) == 5
+    # Five simulated title games add exactly five wins per season.
+    assert sum(row["average_wins"] for row in result["teams"]) == pytest.approx(15 * 7 + 5)
+
 
 
 def test_cfp_seed_distribution_and_input_validation():
