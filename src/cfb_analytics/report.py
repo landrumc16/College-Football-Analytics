@@ -30,9 +30,12 @@ def main():
     snapshot_data = json.loads(snapshot.read_text())
     completed_ids = {g["game_id"] for g in snapshot_data["games"] if g["completed"]}
     previous_retrieved = previous.get("retrieved_at")
+    previous_pending = {g["game_id"] for g in previous.get("schedule", [])
+                        if not g["completed"]}
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
-        if prediction["game_id"] in completed_ids and key not in history and previous_retrieved:
+        if (prediction["game_id"] in completed_ids and key not in history
+                and previous_retrieved and prediction["game_id"] in previous_pending):
             history[key] = {**prediction, "forecast_recorded_at": previous_retrieved,
                             "source": "previously_published_forecast"}
 
