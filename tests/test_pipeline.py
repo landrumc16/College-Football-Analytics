@@ -205,3 +205,30 @@ def test_prediction_accuracy_reconciles_miami_alias():
     assert result["games_evaluated"] == 1
     assert result["correct_winners"] == 1
     assert result["brier_score"] == 0.0625
+
+
+def test_prediction_accuracy_fbs_only_excludes_unmodeled_matchups():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    snapshot = {"games": [
+        game(101, "A", "B", completed=True, hs=28, ass=14),
+        game(102, "A", "Unmodeled College", completed=True, hs=7, ass=21),
+        game(103, "Unmodeled College", "B", completed=True, hs=21, ass=7),
+    ]}
+    history = {
+        "101": {"home": "A", "away": "B", "home_win_probability": 0.75},
+        "102": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.75},
+        "103": {"home": "Unmodeled College", "away": "B", "home_win_probability": 0.75},
+    }
+    result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
+    assert result == {"games_evaluated": 1, "correct_winners": 1,
+                      "winner_accuracy": 1.0, "brier_score": 0.0625}
+
+
+def test_prediction_accuracy_fbs_only_empty_sample_is_not_zero_percent():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    snapshot = {"games": [game(104, "A", "Unmodeled College", completed=True, hs=21, ass=14)]}
+    history = {"104": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.7}}
+    result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
+    assert result["games_evaluated"] == 0
+    assert result["winner_accuracy"] is None
+    assert result["brier_score"] is None
