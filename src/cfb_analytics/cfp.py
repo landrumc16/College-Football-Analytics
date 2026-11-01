@@ -1,8 +1,7 @@
 """Deterministic 10,000-season Monte Carlo CFP forecast.
 
-Model approximation: conference champions are regular-season conference-win leaders
-(ties use seeded random choice). Conference title games and committee judgment
-are not yet modeled. The five highest-ranked champions receive automatic bids,
+Model approximation: top-two conference-win finishers play neutral-site title games.
+Conference-specific tiebreakers and committee judgment are not modeled. The five highest-ranked champions receive automatic bids,
 then seven at-large teams. All twelve seeds follow simulated projected-win/rating
 scores. Four highest seeds receive byes. Playoff games use neutral-site ratings.
 """
@@ -23,8 +22,12 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         raise ValueError("at least one team is required")
     if scale <= 0:
         raise ValueError("probability scale must be positive")
+    if len(teams) < 12:
+        raise ValueError("CFP simulation requires at least 12 eligible teams")
     rng = Random(seed)
     names = sorted(teams)
+    if len(names) != len(set(names)):
+        raise ValueError("duplicate team names")
     conferences = defaultdict(list)
     for name in names:
         conf = teams[name]["conference"]
@@ -37,6 +40,8 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     prepared = []
     for game in games:
         home, away = game["home"], game["away"]
+        if home == away:
+            raise ValueError("self-matchup in remaining schedule")
         gap = (teams[home]["rating"] if home in teams else fcs_rating) - (teams[away]["rating"] if away in teams else fcs_rating)
         if not game.get("neutral_site", False):
             gap += home_edge
@@ -47,6 +52,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     sum_wins = Counter()
     win_histograms = defaultdict(Counter)
     title_counts = Counter()
+    seed_counts = defaultdict(Counter)
     for _ in range(simulations):
         wins = {n: teams[n]["wins"] for n in names}
         conf_wins = {n: teams[n]["conference_wins"] for n in names}
@@ -82,6 +88,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         others = sorted((n for n in names if n not in automatic), key=lambda n: (-scores[n], n))
         field = sorted(automatic + others[:7], key=lambda n: (-scores[n], n))
         for i, n in enumerate(field):
+            seed_counts[n][i + 1] += 1
             totals[n]["cfp_field"] += 1
             if i < 4:
                 totals[n]["first_round_bye"] += 1
@@ -125,6 +132,8 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
              "average_wins": round(sum_wins[n]/simulations, 3),
              "wins_p10": percentile_win(win_histograms[n], 0.10),
              "wins_p90": percentile_win(win_histograms[n], 0.90),
+             "most_likely_seed": (max(seed_counts[n], key=lambda seed: (seed_counts[n][seed], -seed)) if seed_counts[n] else None),
+             "average_seed_when_selected": (round(sum(seed * count for seed, count in seed_counts[n].items()) / sum(seed_counts[n].values()), 2) if seed_counts[n] else None),
              "bowl_eligible": round(sum(count for wins, count in win_histograms[n].items() if wins >= 6) / simulations, 4),
              **{k: round(totals[n][k]/simulations, 4) for k in ("conference_title","cfp_field","first_round_bye","quarterfinal","semifinal","final")},
              "national_title": round(title_counts[n]/simulations, 4)}
