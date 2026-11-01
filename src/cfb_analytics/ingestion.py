@@ -31,7 +31,16 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
         if not home or not away or home == away:
             raise ValueError(f"Invalid participants for game {game_id}")
         hs, ass = row.get("home_points"), row.get("away_points")
-        # CFBD /games generally exposes scores, not a completed flag.\n        # A 0-0 placeholder is not evidence that a game has finished.\n        state = row.get("status")\n        if row.get("completed") is not None:\n            completed = row["completed"] is True\n        elif state is not None:\n            completed = str(state).lower() in ("final", "completed")\n        else:\n            completed = (isinstance(hs, int) and isinstance(ass, int)\n                         and (hs != 0 or ass != 0))
+        # CFBD /games generally exposes scores, not a completed flag.
+        # A 0-0 placeholder is not evidence that a game has finished.
+        state = row.get("status")
+        if row.get("completed") is not None:
+            completed = row["completed"] is True
+        elif state is not None:
+            completed = str(state).lower() in ("final", "completed")
+        else:
+            completed = (isinstance(hs, int) and isinstance(ass, int)
+                         and (hs != 0 or ass != 0))
         if completed and (not isinstance(hs, int) or not isinstance(ass, int)):
             raise ValueError(f"Completed game {game_id} missing integer scores")
         if completed and (hs < 0 or ass < 0):
