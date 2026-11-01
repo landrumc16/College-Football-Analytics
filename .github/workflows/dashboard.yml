@@ -36,6 +36,7 @@ jobs:
           if [ ! -f data/season-2026-report.json ]; then
             python -m cfb_analytics.demo
           fi
+          test -f data/season-2026-report.json || test -s web/public/season-report.json
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
