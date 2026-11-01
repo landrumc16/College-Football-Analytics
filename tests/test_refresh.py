@@ -19,6 +19,7 @@ def test_refresh_publishes_validated_snapshot(tmp_path):
         result = refresh(2026, output, "test-key")
     assert result == {"scheduled": 1, "completed": 1, "pending": 0}
     saved = json.loads(output.read_text())
+    assert saved["data_changed_at"] == saved["retrieved_at"]
     assert saved["games"][0]["home"] == "A"
     assert saved["games"][0]["home_score"] == 31
     assert not output.with_suffix(".json.tmp").exists()
@@ -55,9 +56,12 @@ def test_unchanged_refresh_preserves_original_snapshot(tmp_path):
     output = tmp_path / "snapshot.json"
     with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[sample_game()]):
         refresh(2026, output, "test-key")
-        before = output.read_bytes()
+        before = json.loads(output.read_text())
         refresh(2026, output, "test-key")
-    assert output.read_bytes() == before
+    after = json.loads(output.read_text())
+    assert after["games"] == before["games"]
+    assert after["data_changed_at"] == before["data_changed_at"]
+    assert after["retrieved_at"] >= before["retrieved_at"]
 
 
 def test_changed_score_updates_snapshot(tmp_path):
@@ -67,4 +71,6 @@ def test_changed_score_updates_snapshot(tmp_path):
     with patch("cfb_analytics.refresh.fetch_cfbd_games",
                return_value=[{**sample_game(), "home_points": 35}]):
         refresh(2026, output, "test-key")
-    assert json.loads(output.read_text())["games"][0]["home_score"] == 35
+    changed = json.loads(output.read_text())
+    assert changed["games"][0]["home_score"] == 35
+    assert changed["data_changed_at"] == changed["retrieved_at"]
