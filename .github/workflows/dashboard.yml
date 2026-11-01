@@ -192,6 +192,19 @@ jobs:
           html = Path("/tmp/cfb-index.html").read_text()
           report = json.loads(Path("/tmp/cfb-report.json").read_text())
           assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
+          from html.parser import HTMLParser
+          class Assets(HTMLParser):
+            def __init__(self):
+              super().__init__()
+              self.scripts = []
+            def handle_starttag(self, tag, attrs):
+              fields = dict(attrs)
+              if tag == "script" and fields.get("type") == "module" and fields.get("src"):
+                self.scripts.append(fields["src"])
+          assets = Assets()
+          assets.feed(html)
+          assert assets.scripts, "Published dashboard has no JavaScript entrypoint"
+          Path("/tmp/cfb-script-path.txt").write_text(assets.scripts[0])
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
           if "DEMO" not in (report.get("source") or ""):
             assert report.get("retrieved_at"), "Published live report has no retrieval timestamp"
@@ -204,6 +217,14 @@ jobs:
             assert 0 <= accuracy["correct_winners"] <= accuracy["games_evaluated"]
           print("Published dashboard and season report are reachable")
           PY
+              script_path="$(cat /tmp/cfb-script-path.txt)"
+              case "$script_path" in
+                https://*) script_url="$script_path" ;;
+                /*) script_url="https://landrumc16.github.io$script_path" ;;
+                *) script_url="${base}$script_path" ;;
+              esac
+              curl --fail --location --silent --show-error "$script_url" -o /tmp/cfb-bundle.js
+              test -s /tmp/cfb-bundle.js
               exit 0
             fi
             sleep 10
