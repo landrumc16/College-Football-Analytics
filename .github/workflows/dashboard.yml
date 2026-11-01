@@ -217,15 +217,17 @@ jobs:
             assert 0 <= accuracy["correct_winners"] <= accuracy["games_evaluated"]
           print("Published dashboard and season report are reachable")
           PY
-              script_path="$(cat /tmp/cfb-script-path.txt)"
-              case "$script_path" in
-                https://*) script_url="$script_path" ;;
-                /*) script_url="https://landrumc16.github.io$script_path" ;;
-                *) script_url="${base}$script_path" ;;
-              esac
-              curl --fail --location --silent --show-error "$script_url" -o /tmp/cfb-bundle.js
-              test -s /tmp/cfb-bundle.js
-              exit 0
+              script_url="$(python - <<'PY'
+          import os
+          from pathlib import Path
+          from urllib.parse import urljoin
+          base = os.environ["PAGE_URL"].rstrip("/") + "/"
+          print(urljoin(base, Path("/tmp/cfb-script-path.txt").read_text().strip()))
+          PY
+              )"
+              if curl --fail --location --silent --show-error "$script_url" -o /tmp/cfb-bundle.js && test -s /tmp/cfb-bundle.js; then
+                exit 0
+              fi
             fi
             sleep 10
           done
