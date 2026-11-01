@@ -25,7 +25,7 @@ Reproduce the existing spreadsheet's college-football rating, ranking and game-p
 
 ## Workstream C — Verification and operational readiness
 - [x] Add initial pytest unit tests for primitive calculations.
-- [x] Add a CLI to compare frozen Sheets team-rating reference values and list discrepancies (not yet run/verified).\n- [ ] Execute reconciliation, fix discrepancies, extend to projections/rankings/predictions, and publish verified parity report.\n- [x] Add initial ranking and prediction unit tests.
+- [x] Add a CLI to compare frozen Sheets team-rating reference values and list discrepancies (not yet run/verified).\n- [x] Independently verify all eight rating passes against the 138-team, 510-game baseline: 1,104 comparisons, zero above 0.001. See docs/milestone-1-rating-parity-report.md.\n- [x] Add Python end-to-end rating parity regression gate (CI execution not yet confirmed).\n- [ ] Execute full Python reconciliation, fix any derived-metric discrepancies, and extend parity to projections/rankings/predictions.\n- [x] Add initial ranking and prediction unit tests.
 - [ ] Require exact win/loss/game counts, matching ranking order (with documented tie policy), and numeric tolerances for ratings/probabilities.
 - [ ] Run full tests in GitHub Actions on push and pull requests.
 - [ ] Add a CLI that produces local rankings and predictions from frozen fixtures, without API credentials.
