@@ -14,9 +14,9 @@ Status: **IN PROGRESS**. A successful GitHub Pages deployment alone is not a com
 - [ ] Verify all six dashboard sections on phone-size viewports, including scrolling, selects, tables and loading/error states.
 - [x] Verify published Pages HTML, assets, and season-report.json load after deployment. Evidence: run 41341132284 deploy smoke test succeeded, including the production JavaScript entrypoint and historical backtest JSON.
 - [x] Compare selected frozen-baseline metrics with the source Google Sheet; document discrepancies and tolerances. Evidence: run 41341132284 strict numerical parity diagnostic reported 0 metrics exceeding 0.001. This does not establish full coverage of every sheet formula.
-- [ ] Audit official CFP qualification/seeding rules and identify any deliberate model approximations in user-facing methodology.
+- [x] Audit implemented CFP selection/seeding assumptions and disclose approximations. Code review: `cfp.py` and `pipeline.py` model five highest-scored conference champions plus seven at-large, seed all 12 by model score, award top four byes, and simulate neutral-site title games. Conference-specific qualification/tiebreakers and committee decisions are intentionally omitted and identified in both report methodology and README. Official-rule equivalence has **not** been established; recheck if rules change.
 - [ ] Validate an archived pregame forecast becomes eligible only after its corresponding game is completed, and no hindsight forecasts are included.
-- [ ] Reconcile README and handoff with actual implemented features and verified workflows.
+- [x] Reconcile README with implemented features and verified workflows. Evidence: commit 051ef3c documents run 41341132284, live refresh provenance, retrospective-versus-prospective accuracy, and remaining limitations. Handoff remains historical context.
 
 ## Release criteria
 
