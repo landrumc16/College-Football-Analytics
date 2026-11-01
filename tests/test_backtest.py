@@ -49,3 +49,24 @@ def test_fcs_baseline_uses_fixed_opponent_rating_when_priors_weighted():
     result = backtest_weeks(TEAMS, [Game("A", "FCS", 21, 7, 1)], settings)
     assert result["games"] == 1
     assert result["model"] == result["preseason_baseline"]
+
+
+def test_improvement_metrics_and_weekly_coverage_are_consistent():
+    games = [Game("A", "B", 28, 14, 1),
+             Game("A", "FCS", 35, 7, 2),
+             Game("B", "A", 7, 21, 3)]
+    report = backtest_weeks(TEAMS, games)
+    assert report["weekly_coverage"] == [
+        {"week": 1, "games": 1},
+        {"week": 2, "games": 1},
+        {"week": 3, "games": 1},
+    ]
+    assert sum(row["games"] for row in report["weekly_coverage"]) == report["games"]
+    delta = report["improvement_vs_preseason"]
+    assert delta["winner_accuracy_percentage_points"] == pytest.approx(
+        100 * (report["model"]["winner_accuracy"] -
+               report["preseason_baseline"]["winner_accuracy"]))
+    assert delta["brier_score_reduction"] == pytest.approx(
+        report["preseason_baseline"]["brier_score"] - report["model"]["brier_score"])
+    assert delta["log_loss_reduction"] == pytest.approx(
+        report["preseason_baseline"]["log_loss"] - report["model"]["log_loss"])
