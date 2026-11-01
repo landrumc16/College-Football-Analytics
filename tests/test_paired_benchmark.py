@@ -19,6 +19,9 @@ def test_paired_comparison_excludes_unmatched_and_postgame():
         ArchivedForecast(2025, 2, 0.8, "2025-09-01T20:00:00Z", "2025-09-01T17:00:00Z")]
     result = paired_scorecard(games, workbook, candidate)
     assert result["paired_games"] == 1
+    assert result["eligible_completed_games"] == 3
+    assert result["excluded"]["missing_candidate"] == 1
+    assert result["excluded"]["not_verified_pregame"] == 1
     assert result["workbook"]["brier_score"] == 0.16
     assert round(result["candidate"]["brier_score"], 8) == 0.04
     assert result["by_season_counts"] == {"2025": 1}
