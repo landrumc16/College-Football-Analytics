@@ -55,6 +55,7 @@ def test_duplicate_forecasts_rejected():
         evaluate_forecasts([game()], [forecast(), forecast()])
 
 
-def test_invalid_probabilities_rejected():
+@pytest.mark.parametrize("probability", [-0.01, 1.1, float("nan"), float("inf"), -float("inf")])
+def test_invalid_probabilities_rejected(probability):
     with pytest.raises(ValueError):
-        forecast(probability=1.1)
+        forecast(probability=probability)
