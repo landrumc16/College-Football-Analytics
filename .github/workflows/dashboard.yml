@@ -141,6 +141,7 @@ jobs:
           report = json.loads(Path("/tmp/cfb-report.json").read_text())
           assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
+          assert report.get("retrieved_at"), "Published report has no retrieval timestamp"
           print("Published dashboard and season report are reachable")
           PY
               exit 0
