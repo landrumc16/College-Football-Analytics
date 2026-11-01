@@ -26,7 +26,9 @@ def refresh(season: int, output: Path, api_key: str):
         raise RuntimeError("Unexpected CFBD response: expected a list of games")
     games = normalize_cfbd_games(raw, season)
     summary = snapshot_summary(games)
-    if len(raw) != summary["scheduled"]:
+    if any(row.get("season") != season for row in raw):
+        raise RuntimeError("Unexpected cross-season records in CFBD response")
+    if len({row.get("id") for row in raw}) != summary["scheduled"]:
         raise RuntimeError("Unexpected game records omitted during normalization")
     if summary["scheduled"] == 0:
         raise RuntimeError("Refusing to publish an empty season snapshot")
