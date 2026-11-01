@@ -3,6 +3,7 @@
 Run: python -m cfb_analytics.parity
 This reports discrepancies; it does not claim the model has passed parity.
 """
+import argparse
 import json
 from pathlib import Path
 from .ratings import Team, Game, calculate_ratings
@@ -63,10 +64,26 @@ def compare():
     return discrepancies
 
 
-if __name__ == "__main__":
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Compare Python model against frozen Google Sheets results")
+    parser.add_argument("--tolerance", type=float, default=0.001,
+                        help="Maximum allowed absolute difference for each metric (default: 0.001)")
+    parser.add_argument("--strict", action="store_true",
+                        help="Exit nonzero when any metric exceeds tolerance (for CI)")
+    args = parser.parse_args(argv)
+    if not 0 <= args.tolerance < float("inf"):
+        parser.error("--tolerance must be finite and nonnegative")
     differences = compare()
+    failures = [row for row in differences if row[0] > args.tolerance]
     print("Compared", len(differences), "team metrics")
     print("Largest discrepancies (absolute):")
     for delta, team, field, expected, actual in differences[:25]:
         print(f"{team:25s} {field:15s} expected={expected:12.6f} actual={actual:12.6f} delta={delta:.6f}")
-    print("Metrics differing by >0.001:", sum(d[0] > 0.001 for d in differences))
+    print(f"Metrics exceeding tolerance {args.tolerance:g}:", len(failures))
+    if args.strict and failures:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
