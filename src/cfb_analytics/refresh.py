@@ -24,6 +24,8 @@ def refresh(season: int, output: Path, api_key: str):
     raw = fetch_cfbd_games(season, api_key)
     games = normalize_cfbd_games(raw, season)
     summary = snapshot_summary(games)
+    if len(raw) != summary["scheduled"]:
+        raise RuntimeError("Unexpected game records omitted during normalization")
     if summary["scheduled"] == 0:
         raise RuntimeError("Refusing to publish an empty season snapshot")
     payload = {
