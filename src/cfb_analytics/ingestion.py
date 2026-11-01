@@ -17,6 +17,7 @@ class IngestedGame:
     home_score: int | None
     away_score: int | None
     neutral_site: bool
+    start_date: str | None = None
 
 
 def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[IngestedGame]:
@@ -59,6 +60,7 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
             home_score=hs if completed else None,
             away_score=ass if completed else None,
             neutral_site=bool(row.get("neutralSite", row.get("neutral_site"))),
+            start_date=row.get("startDate", row.get("start_date")),
         )
         if game.game_id in games and games[game.game_id] != game:
             raise ValueError(f"Conflicting duplicate game id {game.game_id}")
