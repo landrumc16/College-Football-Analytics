@@ -26,3 +26,7 @@ The workbook's previously reported ~71.7% model and ~73.2% market accuracy are *
 ## Release decision
 
 Do not merge or claim improvement over betting lines unless the verified sample and metrics support it. A small or unavailable archived sample warrants a clearly labeled **research beta** rather than a validated accuracy release.
+
+## Source audit
+
+The connected spreadsheet contains aggregate 2022-2025 backtest claims, but its live Games and RatingHistory tabs cover 2026. No separate game-level historical forecast archive was found in the connected Drive search. The claimed 2,998-game comparison therefore remains unverified. A chronological reconstruction using historical games and season-specific divisions is required. Reconstructed forecasts must be labeled retrospective, never archived pregame.
