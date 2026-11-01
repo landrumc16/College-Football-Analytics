@@ -95,7 +95,41 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         home_edge=settings.home_field_advantage,
         fcs_rating=settings.fcs_opponent_rating,
     )
+    conference_records = {t.name: {"wins": 0, "losses": 0} for t in teams}
+    for g in games:
+        if not g.completed or g.home not in known or g.away not in known:
+            continue
+        if conferences[g.home] == conferences[g.away] and conferences[g.home] != "Independent":
+            winner = g.home if g.home_score > g.away_score else g.away
+            loser = g.away if winner == g.home else g.home
+            conference_records[winner]["wins"] += 1
+            conference_records[loser]["losses"] += 1
+    odds = {row["team"]: row for row in cfp["teams"]}
+    conference_standings = {}
+    for t in teams:
+        conference_standings.setdefault(t.conference, []).append({
+            "team": t.name, "conference": t.conference,
+            "conference_wins": conference_records[t.name]["wins"],
+            "conference_losses": conference_records[t.name]["losses"],
+            "wins": ratings[t.name].wins, "losses": ratings[t.name].losses,
+            "rating": ratings[t.name].adaptive_rating,
+            "projected_wins": projections[t.name].projected_wins,
+            "projected_conference_wins": projections[t.name].projected_conference_wins,
+            "conference_title_odds": odds[t.name]["conference_title"],
+            "cfp_odds": odds[t.name]["cfp_field"],
+        })
+    for rows in conference_standings.values():
+        rows.sort(key=lambda r: (-r["conference_wins"], r["conference_losses"], -r["rating"], r["team"]))
+    conference_strength = sorted(
+        [{"conference": conf, "teams": len(rows),
+          "average_rating": round(sum(r["rating"] for r in rows) / len(rows), 3),
+          "best_team": max(rows, key=lambda r: r["rating"])["team"]}
+         for conf, rows in conference_standings.items()],
+        key=lambda r: -r["average_rating"],
+    )
     return {
+        "conference_standings": conference_standings,
+        "conference_strength": conference_strength,
         "cfp": cfp,
         "season": season, "source": snapshot.get("source"),
         "retrieved_at": snapshot.get("retrieved_at"),
