@@ -45,11 +45,21 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Include season report
+      - name: Include and validate published season report
         run: |
           if [ -f data/season-2026-report.json ]; then
             cp data/season-2026-report.json web/dist/season-report.json
           fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("web/dist/season-report.json").read_text())
+          assert report["summary"]["teams"] == len(report["rankings"])
+          assert report["summary"]["upcoming_games"] == len(report["predictions"])
+          assert report["rankings"] and report["predictions"]
+          assert Path("web/dist/index.html").is_file()
+          print("Validated published dashboard and report")
+          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
