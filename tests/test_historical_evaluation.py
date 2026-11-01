@@ -9,8 +9,8 @@ def game(game_id=1, season=2025, away_division="FBS"):
     return HistoricalGame(
         season=season, game_id=game_id, home="A", away="B",
         home_division="FBS", away_division=away_division,
-        kickoff="2025-09-01T20:00:00Z",
-        source_retrieved_at="2025-09-01T17:00:00Z",
+        kickoff=f"{season}-09-01T20:00:00Z",
+        source_retrieved_at=f"{season}-09-01T17:00:00Z",
         source="CFBD", home_score=21, away_score=14)
 
 
