@@ -25,6 +25,12 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         raise ValueError("Snapshot contains duplicate game ids")
     if any(g.completed and (g.home_score is None or g.away_score is None) for g in games):
         raise ValueError("Completed game missing score")
+    # CFBD uses "Miami" for Miami (FL), while the baseline roster uses
+    # "Miami (FL)". Resolve this verified alias before model calculations.
+    aliases = {"Miami": "Miami (FL)"}
+    games = [IngestedGame(**{**g.__dict__,
+                           "home": aliases.get(g.home, g.home),
+                           "away": aliases.get(g.away, g.away)}) for g in games]
     teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
     if not teams:
         raise ValueError("Roster must contain teams")
