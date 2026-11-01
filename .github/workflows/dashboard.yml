@@ -232,6 +232,16 @@ jobs:
           assert assets.scripts, "Published dashboard has no JavaScript entrypoint"
           Path("/tmp/cfb-script-path.txt").write_text(assets.scripts[0])
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
+          # The deployed JSON must match the artifact built from the checked-in
+          # snapshot; a successful HTTP 200 is not sufficient.
+          import hashlib
+          import os
+          from urllib.request import urlopen
+          built = Path("web/dist/season-report.json").read_bytes()
+          deployed = Path("/tmp/cfb-report.json").read_bytes()
+          assert hashlib.sha256(built).digest() == hashlib.sha256(deployed).digest(), (
+            "Deployed report differs from the validated build artifact"
+          )
           source = report.get("source") or ""
           assert source, "Published report has no source"
           if "DEMO" not in source:
