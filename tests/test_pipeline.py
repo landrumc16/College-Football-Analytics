@@ -15,7 +15,8 @@ ROSTER = [
 def game(game_id, home, away, *, completed=False, hs=None, ass=None, neutral=False):
     return {"game_id": game_id, "season": 2026, "week": game_id,
             "home": home, "away": away, "completed": completed,
-            "home_score": hs, "away_score": ass, "neutral_site": neutral}
+            "home_score": hs, "away_score": ass, "neutral_site": neutral,
+            "start_date": "2026-11-01T18:00:00Z"}
 
 
 def test_complete_season_pipeline():
@@ -141,7 +142,7 @@ def test_performance_uses_archived_forecasts_only():
     snapshot = {"games": [game(1, "Miami", "A", completed=True, hs=24, ass=14),
                           game(2, "A", "B", completed=True, hs=10, ass=17)]}
     roster = ROSTER + [{"name": "Miami (FL)", "conference": "ACC", "prior": 10}]
-    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.3}}
+    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.3, "forecast_recorded_at": "2026-11-01T17:00:00Z"}}
     rows = build_performance_against_expectations(snapshot, roster, history)
     assert rows["Miami (FL)"]["actual_wins"] == 1
     assert rows["Miami (FL)"]["expected_wins"] == 0.3
@@ -154,8 +155,8 @@ def test_performance_uses_archived_forecasts_only():
 def test_performance_rejects_wrong_matchup_and_invalid_probability():
     from cfb_analytics.pipeline import build_performance_against_expectations
     snapshot = {"games": [game(1, "A", "B", completed=True, hs=21, ass=14)]}
-    for bad in ({"home": "B", "away": "A", "home_win_probability": 0.8},
-                {"home": "A", "away": "B", "home_win_probability": 1.2}):
+    for bad in ({"home": "B", "away": "A", "home_win_probability": 0.8, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+                {"home": "A", "away": "B", "home_win_probability": 1.2, "forecast_recorded_at": "2026-11-01T17:00:00Z"}):
         rows = build_performance_against_expectations(snapshot, ROSTER, {"1": bad})
         assert rows["A"]["games_with_forecasts"] == 0
         assert rows["A"]["wins_above_expected"] is None
@@ -170,10 +171,10 @@ def test_prediction_accuracy_only_uses_archived_completed_forecasts():
         game(4, "A", "B", completed=False),
     ]}
     history = {
-        "1": {"home": "A", "away": "B", "home_win_probability": 0.8},
-        "2": {"home": "B", "away": "A", "home_win_probability": 0.7},
-        "3": {"home": "B", "away": "A", "home_win_probability": 0.9},
-        "4": {"home": "A", "away": "B", "home_win_probability": 0.9},
+        "1": {"home": "A", "away": "B", "home_win_probability": 0.8, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+        "2": {"home": "B", "away": "A", "home_win_probability": 0.7, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+        "3": {"home": "B", "away": "A", "home_win_probability": 0.9, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+        "4": {"home": "A", "away": "B", "home_win_probability": 0.9, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
     }
     result = build_prediction_accuracy(snapshot, history)
     assert result == {"games_evaluated": 2, "correct_winners": 1,
@@ -191,7 +192,7 @@ def test_prediction_accuracy_empty_history_has_no_misleading_percentage():
 def test_prediction_accuracy_rejects_boolean_probability():
     from cfb_analytics.pipeline import build_prediction_accuracy
     snapshot = {"games": [game(1, "A", "B", completed=True, hs=21, ass=14)]}
-    history = {"1": {"home": "A", "away": "B", "home_win_probability": True}}
+    history = {"1": {"home": "A", "away": "B", "home_win_probability": True, "forecast_recorded_at": "2026-11-01T17:00:00Z"}}
     result = build_prediction_accuracy(snapshot, history)
     assert result["games_evaluated"] == 0
     assert result["winner_accuracy"] is None
@@ -200,7 +201,7 @@ def test_prediction_accuracy_rejects_boolean_probability():
 def test_prediction_accuracy_reconciles_miami_alias():
     from cfb_analytics.pipeline import build_prediction_accuracy
     snapshot = {"games": [game(1, "Miami", "A", completed=True, hs=31, ass=10)]}
-    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.75}}
+    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.75, "forecast_recorded_at": "2026-11-01T17:00:00Z"}}
     result = build_prediction_accuracy(snapshot, history)
     assert result["games_evaluated"] == 1
     assert result["correct_winners"] == 1
@@ -215,9 +216,9 @@ def test_prediction_accuracy_fbs_only_excludes_unmodeled_matchups():
         game(103, "Unmodeled College", "B", completed=True, hs=21, ass=7),
     ]}
     history = {
-        "101": {"home": "A", "away": "B", "home_win_probability": 0.75},
-        "102": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.75},
-        "103": {"home": "Unmodeled College", "away": "B", "home_win_probability": 0.75},
+        "101": {"home": "A", "away": "B", "home_win_probability": 0.75, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+        "102": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.75, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
+        "103": {"home": "Unmodeled College", "away": "B", "home_win_probability": 0.75, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
     }
     result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
     assert result == {"games_evaluated": 1, "correct_winners": 1,
@@ -227,7 +228,7 @@ def test_prediction_accuracy_fbs_only_excludes_unmodeled_matchups():
 def test_prediction_accuracy_fbs_only_empty_sample_is_not_zero_percent():
     from cfb_analytics.pipeline import build_prediction_accuracy
     snapshot = {"games": [game(104, "A", "Unmodeled College", completed=True, hs=21, ass=14)]}
-    history = {"104": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.7}}
+    history = {"104": {"home": "A", "away": "Unmodeled College", "home_win_probability": 0.7, "forecast_recorded_at": "2026-11-01T17:00:00Z"}}
     result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
     assert result["games_evaluated"] == 0
     assert result["winner_accuracy"] is None
