@@ -19,7 +19,7 @@ Reproduce the existing spreadsheet's college-football rating, ranking and game-p
 - [ ] Port opponent-adjusted iterative team ratings and conference shrink (all active passes).
 - [ ] Implement adaptive selection of rating iterations based on completed-game thresholds.
 - [ ] Port strength of schedule, quality wins, bad losses and resume calculations.
-- [x] Implement blended rank-score calculation from projected wins and rating (Teams!AW).\n- [ ] Port projected wins inputs and verify rank key, Top 25 and all-team ordering.
+- [x] Implement blended rank-score calculation from projected wins and rating (Teams!AW).\n- [x] Implement remaining-schedule projected wins, win variance and conference-win expectation.\n- [ ] Verify projected wins, rank key, Top 25 and all-team ordering against full workbook baseline.
 - [x] Implement game prediction functions with neutral-site home advantage and separate market/model probability paths; full-sheet parity pending.
 - [ ] Preserve FCS fallback behavior and handle missing/duplicate/neutral/tied games.
 
