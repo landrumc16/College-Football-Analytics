@@ -29,9 +29,6 @@ def test_valid_forecast_scores():
 
 def test_ineligible_forecasts_not_counted():
     result = evaluate_forecasts(
-        [game(), game(2, away_division="FCS")],
-        [forecast(), forecast(2), forecast(1, generated_at="2025-09-01T20:00:00Z")]
-    ) if False else evaluate_forecasts(
         [game(), game(2, away_division="FCS"), game(3)],
         [forecast(), forecast(2), forecast(3, generated_at="2025-09-01T20:00:00Z"),
          forecast(999)])
