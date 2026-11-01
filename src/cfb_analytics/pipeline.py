@@ -214,6 +214,22 @@ def run_snapshot(snapshot_path: Path, roster_path: Path, output_path: Path):
     return report
 
 
+def _has_verified_pregame_provenance(game: dict, forecast: dict) -> bool:
+    """Exclude historical forecasts unless publication demonstrably preceded kickoff."""
+    from datetime import datetime, timezone
+    def aware(value):
+        if not isinstance(value, str):
+            return None
+        try:
+            timestamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return timestamp.astimezone(timezone.utc) if timestamp.tzinfo else None
+        except ValueError:
+            return None
+    published = aware(forecast.get("forecast_recorded_at"))
+    kickoff = aware(game.get("start_date"))
+    return published is not None and kickoff is not None and published < kickoff
+
+
 def build_performance_against_expectations(snapshot: dict, roster: list[dict],
                                            history: dict) -> dict:
     """Only score completed games with an archived, previously published forecast."""
@@ -227,7 +243,7 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
         if not g["completed"] or g["home_score"] is None or g["away_score"] is None:
             continue
         forecast = history.get(str(g["game_id"]))
-        if not forecast:
+        if not forecast or not _has_verified_pregame_provenance(g, forecast):
             continue
         home = aliases.get(g["home"], g["home"])
         away = aliases.get(g["away"], g["away"])
@@ -266,7 +282,7 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
         if game["home_score"] == game["away_score"]:
             continue
         forecast = history.get(str(game["game_id"]))
-        if not forecast:
+        if not forecast or not _has_verified_pregame_provenance(game, forecast):
             continue
         home = aliases.get(game["home"], game["home"])
         away = aliases.get(game["away"], game["away"])
