@@ -54,6 +54,7 @@ jobs:
           import json
           from pathlib import Path
           report = json.loads(Path("web/dist/season-report.json").read_text())
+          assert report["season"] == 2026, "Only the 2026 season is supported"
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
