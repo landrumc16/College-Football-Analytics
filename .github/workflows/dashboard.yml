@@ -63,6 +63,18 @@ jobs:
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
+          if "schedule" in report:
+            ids = {g["game_id"] for g in report["schedule"]}
+            assert len(ids) == len(report["schedule"]), "Duplicate schedule games"
+            assert all(p["game_id"] in ids for p in report["predictions"]), "Forecast absent from schedule"
+          if "performance" in report:
+            assert len(report["performance"]) == report["summary"]["teams"]
+            for team, row in report["performance"].items():
+              assert row["games_with_forecasts"] >= 0, team
+              if row["games_with_forecasts"] == 0:
+                assert row["wins_above_expected"] is None, team
+              else:
+                assert 0 <= row["expected_wins"] <= row["games_with_forecasts"], team
           # Never silently label a frozen fixture as a current CFBD report.
           source = report.get("source") or ""
           assert source, "Report source must be identified"
