@@ -107,3 +107,17 @@ def test_refresh_still_rejects_same_team_on_both_sides(tmp_path):
         with pytest.raises(ValueError, match="Invalid participants"):
             refresh(2026, output, "test-key")
     assert not output.exists()
+
+
+def test_refresh_accepts_actual_cfbd_camelcase_fields(tmp_path):
+    output = tmp_path / "snapshot.json"
+    row = {"id": 401906048, "season": 2026, "week": 8,
+           "homeTeam": "A", "awayTeam": "B", "homePoints": 21,
+           "awayPoints": 14, "neutralSite": True, "completed": True}
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[row]):
+        result = refresh(2026, output, "test-key")
+    assert result == {"scheduled": 1, "completed": 1, "pending": 0}
+    saved = json.loads(output.read_text())["games"][0]
+    assert (saved["home"], saved["away"]) == ("A", "B")
+    assert (saved["home_score"], saved["away_score"]) == (21, 14)
+    assert saved["neutral_site"] is True
