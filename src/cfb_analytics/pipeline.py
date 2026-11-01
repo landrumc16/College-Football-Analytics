@@ -212,3 +212,38 @@ def run_snapshot(snapshot_path: Path, roster_path: Path, output_path: Path):
     finally:
         temp.unlink(missing_ok=True)
     return report
+
+
+def build_performance_against_expectations(snapshot: dict, roster: list[dict],
+                                           history: dict) -> dict:
+    """Only score completed games with an archived, previously published forecast."""
+    aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
+               "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
+    known = {t["name"] for t in roster}
+    performance = {name: {"actual_wins": 0, "expected_wins": 0.0,
+                          "games_with_forecasts": 0, "wins_above_expected": None}
+                   for name in known}
+    for g in snapshot["games"]:
+        if not g["completed"] or g["home_score"] is None or g["away_score"] is None:
+            continue
+        forecast = history.get(str(g["game_id"]))
+        if not forecast:
+            continue
+        home = aliases.get(g["home"], g["home"])
+        away = aliases.get(g["away"], g["away"])
+        probability = forecast["home_win_probability"]
+        for team, expected, won in (
+            (home, probability, g["home_score"] > g["away_score"]),
+            (away, 1 - probability, g["away_score"] > g["home_score"]),
+        ):
+            if team in performance:
+                row = performance[team]
+                row["games_with_forecasts"] += 1
+                row["expected_wins"] += expected
+                row["actual_wins"] += int(won)
+    for row in performance.values():
+        if row["games_with_forecasts"]:
+            row["expected_wins"] = round(row["expected_wins"], 3)
+            row["wins_above_expected"] = round(
+                row["actual_wins"] - row["expected_wins"], 3)
+    return performance
