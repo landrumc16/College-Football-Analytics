@@ -174,6 +174,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         "projected_bracket": projected_bracket,
         "season": season, "source": snapshot.get("source"),
         "retrieved_at": snapshot.get("retrieved_at"),
+        "data_changed_at": snapshot.get("data_changed_at", snapshot.get("retrieved_at")),
         "summary": {"teams": len(teams), "completed_games": len(completed),
                     "upcoming_games": len(predictions)},
         "rankings": ranking, "predictions": predictions,
