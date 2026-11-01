@@ -31,7 +31,7 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
         if not home or not away or home == away:
             raise ValueError(f"Invalid participants for game {game_id}")
         hs, ass = row.get("home_points"), row.get("away_points")
-        completed = bool(row.get("completed"))
+        completed = bool(row.get("completed")) or (row.get("completed") is None and isinstance(hs, int) and isinstance(ass, int))
         if completed and (not isinstance(hs, int) or not isinstance(ass, int)):
             raise ValueError(f"Completed game {game_id} missing integer scores")
         if completed and (hs < 0 or ass < 0):
