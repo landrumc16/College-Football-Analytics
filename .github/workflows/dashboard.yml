@@ -142,6 +142,10 @@ jobs:
           assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
           assert report.get("retrieved_at"), "Published report has no retrieval timestamp"
+          accuracy = report.get("prediction_accuracy")
+          if accuracy is not None:
+            assert isinstance(accuracy["games_evaluated"], int) and accuracy["games_evaluated"] >= 0
+            assert 0 <= accuracy["correct_winners"] <= accuracy["games_evaluated"]
           print("Published dashboard and season report are reachable")
           PY
               exit 0
