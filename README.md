@@ -4,14 +4,14 @@ Mobile-first college football rankings, game predictions, conference outlooks, p
 
 **Live dashboard:** https://landrumc16.github.io/College-Football-Analytics/
 
-**Release status:** Version 1.0 candidate — not yet signed off. See [release gates](docs/V1-RELEASE-GATES.md). The [November 1 deployment run 41341132284](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41341132284) passed 94 Python tests, TypeScript production build, published report validation and GitHub Pages smoke testing. Final mobile and release checks remain open.
+**Release status:** Version 1.0 application and visual acceptance verified; formal `v1.0.0` tag pending. See [release gates](docs/V1-RELEASE-GATES.md). [Deployment run 41345784302](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41345784302) passed the production build, report validation, mobile browser tests, Pages deployment and live-site smoke test.
 
 ## Current implementation
 
 - Python model for 2026 FBS rankings, remaining-game win probabilities and season projections.
 - 10,000-run CFP Monte Carlo forecasts, projected bracket, conference title matchups and conference standings/strength.
 - Responsive React/Vite dashboard: Rankings, Game Predictions, Conferences, CFP Forecast, School Schedule, What If?
-- Historical performance against expectations from archived pregame forecasts; winner accuracy and Brier Score are calculated for genuine completed-game forecasts only. The November 1 live report contains 20 eligible forecasts; this small sample is not the retrospective backtest. Zero eligible games means **no accuracy percentage**.
+- Historical performance against expectations from archived pregame forecasts; winner accuracy and Brier Score are calculated for genuine completed-game forecasts only. Earlier 20-game accuracy claims were not verified as FBS-only pregame forecasts and must not be used as validated performance. Zero eligible games means **no accuracy percentage**.
 - Separate retrospective weekly backtest against the preseason baseline, clearly distinguished from genuinely archived pregame forecasts. Optional AP and Coaches Poll comparison is displayed only when a verified poll snapshot is published; poll ingestion is not yet automated.
 - Daily scheduled and manual CFBD data-refresh workflow; separate GitHub Pages build and deployment workflow.
 - Published report includes data provenance and timestamps; UI distinguishes demo data from live data and warns on stale or invalid timestamps.
@@ -36,7 +36,7 @@ cd web && npm install && npm run build
 
 GitHub Actions: [Dashboard build/publish](https://github.com/landrumc16/College-Football-Analytics/actions/workflows/dashboard.yml) and [CFBD data refresh](https://github.com/landrumc16/College-Football-Analytics/actions/workflows/refresh-data.yml).
 
-Before Version 1.0 sign-off, complete the remaining [release gates](docs/V1-RELEASE-GATES.md), particularly deployed live-data provenance, mobile interaction checks, CFP methodology review and archived-forecast safeguards.
+Version 1.0 application and visual release gates are documented in [release gates](docs/V1-RELEASE-GATES.md); formal tagging and final HEAD verification remain.
 
 ## Project handoff
 
