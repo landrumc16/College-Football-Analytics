@@ -186,6 +186,12 @@ jobs:
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
+      - name: Preserve validated report for deployment verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-season-report
+          path: web/dist/season-report.json
+          if-no-files-found: error
       - uses: actions/configure-pages@v5
         with:
           enablement: true
@@ -200,6 +206,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Retrieve validated report
+        uses: actions/download-artifact@v4
+        with:
+          name: validated-season-report
+          path: /tmp/cfb-validated
       - id: deployment
         uses: actions/deploy-pages@v4
       - name: Smoke-test published dashboard
@@ -235,9 +246,7 @@ jobs:
           # The deployed JSON must match the artifact built from the checked-in
           # snapshot; a successful HTTP 200 is not sufficient.
           import hashlib
-          import os
-          from urllib.request import urlopen
-          built = Path("web/dist/season-report.json").read_bytes()
+          built = Path("/tmp/cfb-validated/season-report.json").read_bytes()
           deployed = Path("/tmp/cfb-report.json").read_bytes()
           assert hashlib.sha256(built).digest() == hashlib.sha256(deployed).digest(), (
             "Deployed report differs from the validated build artifact"
