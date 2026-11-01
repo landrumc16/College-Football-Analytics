@@ -36,6 +36,31 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.refresh --season "$SEASON"
+      - name: Verify live kickoff timestamps are available
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime
+          from pathlib import Path
+          snapshot = json.loads(Path("data/cfbd-2026-games.json").read_text())
+          games = snapshot["games"]
+          pending = [g for g in games if not g["completed"]]
+          valid = 0
+          for game in pending:
+              value = game.get("start_date")
+              if not value:
+                  continue
+              try:
+                  parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+              except ValueError:
+                  continue
+              valid += parsed.tzinfo is not None
+          assert valid > 0, (
+              "No upcoming games have timezone-aware kickoff timestamps; "
+              "refusing to publish forecasts without pregame provenance"
+          )
+          print(f"Upcoming games with verifiable kickoff: {valid}/{len(pending)}")
+          PY
       - name: Build season rankings and predictions
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
