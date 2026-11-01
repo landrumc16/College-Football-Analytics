@@ -26,3 +26,12 @@ def test_cfp_favors_stronger_team():
     result = simulate_cfp(teams, [], simulations=1000, seed=11)
     odds = {x["team"]: x["national_title"] for x in result["teams"]}
     assert odds["T0"] > odds["T14"]
+
+def test_season_win_ranges_and_bowl_probabilities():
+    teams = {f"T{i}": {"conference": f"C{i // 3}", "rating": 15-i,
+                        "wins": 6, "conference_wins": 3} for i in range(15)}
+    result = simulate_cfp(teams, [{"home": "T0", "away": "T1", "neutral_site": False}], simulations=100, seed=1)
+    for team in result["teams"]:
+        assert team["wins_p10"] <= team["average_wins"] <= team["wins_p90"]
+        assert 0 <= team["bowl_eligible"] <= 1
+    assert all(team["bowl_eligible"] == 1 for team in result["teams"])
