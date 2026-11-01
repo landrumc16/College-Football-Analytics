@@ -6,6 +6,7 @@ This reports discrepancies; it does not claim the model has passed parity.
 import argparse
 import json
 from pathlib import Path
+from collections import Counter
 from .ratings import Team, Game, calculate_ratings
 from .projections import ScheduledGame, project_season
 
@@ -80,6 +81,18 @@ def main(argv=None):
     for delta, team, field, expected, actual in differences[:25]:
         print(f"{team:25s} {field:15s} expected={expected:12.6f} actual={actual:12.6f} delta={delta:.6f}")
     print(f"Metrics exceeding tolerance {args.tolerance:g}:", len(failures))
+    if failures:
+        counts = Counter(field for _, _, field, _, _ in failures)
+        print("Discrepancies by metric:")
+        for field, count in counts.most_common():
+            largest = max(delta for delta, _, metric, _, _ in failures if metric == field)
+            print(f"  {field:18s} count={count:3d} max_delta={largest:.6f}")
+        print("Largest discrepancy per team:")
+        by_team = {}
+        for row in failures:
+            by_team.setdefault(row[1], row)
+        for delta, team, field, expected, actual in sorted(by_team.values(), reverse=True)[:20]:
+            print(f"  {team:25s} {field:15s} delta={delta:.6f}")
     if args.strict and failures:
         return 1
     return 0
