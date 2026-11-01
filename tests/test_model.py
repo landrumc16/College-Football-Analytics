@@ -55,3 +55,28 @@ def test_logistic(gap, expected):
 @pytest.mark.parametrize("p,label", [(0.5, "Toss-up"), (0.6, "Lean"), (0.7, "Likely"), (0.9, "Strong")])
 def test_confidence(p, label):
     assert confidence_label(p) == label
+
+
+@pytest.mark.parametrize(
+    "previous,talent,returning,new_coach,expected",
+    [
+        (-6.25, -0.088, -0.939, False, -3.7322531),  # Boston College
+        (-3.76, 0.588, 0.59, True, -0.3246622),      # California
+        (7.21, 1.405, -0.015, False, 10.0050715),    # Clemson
+        (5.58, -0.026, -0.885, False, 2.0129449),    # Duke
+        (9.28, 0.944, -0.062, False, 8.989027),      # Florida State
+        (6.76, 0.586, -1.046, False, 4.7993674),    # Georgia Tech
+        (9.1, 0.5, -0.252, False, 6.7859176),       # Louisville
+    ],
+)
+def test_preseason_prior_matches_live_spreadsheet_calculated_values(
+    previous, talent, returning, new_coach, expected
+):
+    """Golden values read from PreseasonPrior!B2:F8 on 2026-11-01."""
+    actual = preseason_prior(
+        previous, talent, returning, new_coach,
+        intercept=0.9847, previous_weight=0.4569,
+        talent_weight=4.0926, returning_weight=1.5987,
+        coach_weight=-2.9411, missing_previous_rating=-12,
+    )
+    assert actual == pytest.approx(expected, abs=1e-7)
