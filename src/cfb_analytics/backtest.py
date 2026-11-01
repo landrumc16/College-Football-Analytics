@@ -21,6 +21,7 @@ def backtest_weeks(teams: list[Team], games: list[Game],
     known = {team.name for team in teams}
     if len(known) != len(teams):
         raise ValueError("Duplicate team names")
+    priors = {t.name: settings.prior_year_weight * t.prior for t in teams}
     history = []
     scored = []
     for week in sorted({game.week for game in games}):
@@ -38,12 +39,10 @@ def backtest_weeks(teams: list[Team], games: list[Game],
             actual = int(game.home_score > game.away_score)
             if game.home_score == game.away_score:
                 raise ValueError("Historical completed games cannot be tied")
-            prior_home = (settings.prior_year_weight * next(
-                (t.prior for t in teams if t.name == game.home),
-                settings.fcs_opponent_rating))
-            prior_away = (settings.prior_year_weight * next(
-                (t.prior for t in teams if t.name == game.away),
-                settings.fcs_opponent_rating))
+            # Apply preseason weighting to FBS priors only. FCS opponents
+            # retain the same fixed rating used by the evolving model.
+            prior_home = priors.get(game.home, settings.fcs_opponent_rating)
+            prior_away = priors.get(game.away, settings.fcs_opponent_rating)
             baseline = win_probability_from_rating_gap(
                 prior_home - prior_away + settings.home_field_advantage,
                 settings.win_probability_scale)
