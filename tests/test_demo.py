@@ -17,3 +17,11 @@ def test_demo_generates_complete_dashboard_report(tmp_path, monkeypatch):
     assert len(report["rankings"]) == 138
     assert len(report["predictions"]) == 378
     assert {r["rank"] for r in report["rankings"]} == set(range(1, 139))
+
+    assert report["cfp"]["simulations"] == 10000
+    assert len(report["cfp"]["teams"]) == 138
+    assert len(report["projected_bracket"]["seeds"]) == 12
+    assert len(report["projected_bracket"]["first_round"]) == 4
+    assert sum(seed["bye"] for seed in report["projected_bracket"]["seeds"]) == 4
+    assert len(report["conference_standings"]) >= 10
+    assert report["conference_strength"]
