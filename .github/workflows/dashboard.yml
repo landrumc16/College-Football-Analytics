@@ -93,6 +93,10 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Publish historical backtest evidence
+        run: |
+          test -s historical-backtest.json
+          cp historical-backtest.json web/dist/historical-backtest.json
       - name: Include and validate published season report
         run: |
           if [ -f data/season-2026-report.json ]; then
@@ -149,6 +153,10 @@ jobs:
               assert 0 <= accuracy["brier_score"] <= 1
             else:
               assert accuracy["winner_accuracy"] is None and accuracy["brier_score"] is None
+          backtest = json.loads(Path("web/dist/historical-backtest.json").read_text())
+          assert backtest["games"] > 0
+          assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
+          assert backtest["evaluation_scope"].startswith("2026 frozen")
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
