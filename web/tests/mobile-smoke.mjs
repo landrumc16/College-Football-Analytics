@@ -8,7 +8,7 @@ try {
   let ready = false;
   for (let attempt = 0; attempt < 40; attempt++) {
     try {
-      const response = await fetch('http://127.0.0.1:4178/College-Football-Analytics/');
+      const response = await fetch('http://127.0.0.1:4178/');
       if (response.ok) { ready = true; break; }
     } catch {}
     await delay(500);
@@ -19,7 +19,7 @@ try {
     const page = await browser.newPage({ viewport: { width, height: 844 }, deviceScaleFactor: 1 });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('http://127.0.0.1:4178/College-Football-Analytics/', { waitUntil: 'networkidle' });
+    await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
