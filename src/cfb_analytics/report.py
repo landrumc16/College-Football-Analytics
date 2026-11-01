@@ -58,7 +58,7 @@ def main():
             snapshot_data, roster, history)
         # Measure the FBS model only on games between schools in its rating universe.
         # Preserve other archived forecasts, but never present their results as FBS accuracy.
-        fbs_teams = set(roster)
+        fbs_teams = {team['name'] for team in roster}
         result["prediction_accuracy"] = build_prediction_accuracy(
             snapshot_data, history, eligible_teams=fbs_teams)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
