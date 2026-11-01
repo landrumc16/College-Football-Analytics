@@ -87,3 +87,23 @@ def test_legacy_snapshot_preserves_original_change_time(tmp_path):
     updated = json.loads(output.read_text())
     assert updated["data_changed_at"] == original_time
     assert updated["games"] == legacy["games"]
+
+
+def test_refresh_skips_future_games_with_unknown_opponents(tmp_path):
+    output = tmp_path / "snapshot.json"
+    tbd = {**sample_game(), "id": 101, "home_team": None,
+           "away_team": "B", "home_points": None, "away_points": None}
+    with patch("cfb_analytics.refresh.fetch_cfbd_games",
+               return_value=[sample_game(), tbd]):
+        summary = refresh(2026, output, "test-key")
+    assert summary == {"scheduled": 1, "completed": 1, "pending": 0}
+    assert [g["game_id"] for g in json.loads(output.read_text())["games"]] == [100]
+
+
+def test_refresh_still_rejects_same_team_on_both_sides(tmp_path):
+    output = tmp_path / "snapshot.json"
+    bad = {**sample_game(), "away_team": "A"}
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[bad]):
+        with pytest.raises(ValueError, match="Invalid participants"):
+            refresh(2026, output, "test-key")
+    assert not output.exists()
