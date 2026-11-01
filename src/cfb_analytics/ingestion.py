@@ -28,7 +28,11 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
         if game_id is None:
             raise ValueError("CFBD game missing id")
         home, away = row.get("home_team"), row.get("away_team")
-        if not home or not away or home == away:
+        if not home or not away:
+            # CFBD includes future games with TBD participants. They cannot be
+            # modeled until both opponents are known.
+            continue
+        if home == away:
             raise ValueError(f"Invalid participants for game {game_id}")
         hs, ass = row.get("home_points"), row.get("away_points")
         # CFBD /games generally exposes scores, not a completed flag.
