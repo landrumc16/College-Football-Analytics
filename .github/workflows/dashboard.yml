@@ -140,7 +140,13 @@ jobs:
             assert "collegefootballdata.com" in source, "Unknown live report source"
             retrieved_at = report.get("retrieved_at")
             assert retrieved_at, "Live report requires retrieval timestamp"
-            datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+            from datetime import timezone, timedelta
+            updated = datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+            assert updated.tzinfo is not None, "Live report timestamp must include timezone"
+            age = datetime.now(timezone.utc) - updated.astimezone(timezone.utc)
+            assert -timedelta(hours=1) <= age <= timedelta(hours=72), (
+              f"Live report is stale or future-dated: {retrieved_at}"
+            )
           assert report["cfp"]["simulations"] == 10000
           assert report["cfp"]["scenario"] == "current_model_probabilities"
           assert len(report["cfp"]["teams"]) == report["summary"]["teams"]
