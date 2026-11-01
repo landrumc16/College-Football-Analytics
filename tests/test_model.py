@@ -80,3 +80,14 @@ def test_preseason_prior_matches_live_spreadsheet_calculated_values(
         coach_weight=-2.9411, missing_previous_rating=-12,
     )
     assert actual == pytest.approx(expected, abs=1e-7)
+
+
+@pytest.mark.parametrize("gap,expected", [(1000000, 1.0), (-1000000, 0.0)])
+def test_extreme_rating_gaps_remain_valid_probabilities(gap, expected):
+    assert win_probability_from_rating_gap(gap) == expected
+
+
+@pytest.mark.parametrize("scale", [0, -1, float("nan"), float("inf")])
+def test_invalid_probability_scale_rejected(scale):
+    with pytest.raises(ValueError):
+        win_probability_from_rating_gap(10, scale)
