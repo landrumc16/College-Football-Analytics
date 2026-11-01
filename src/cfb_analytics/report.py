@@ -29,15 +29,18 @@ def main():
     previous = json.loads(output.read_text()) if output.exists() else {}
     snapshot_data = json.loads(snapshot.read_text())
     completed_games = {g["game_id"]: g for g in snapshot_data["games"] if g["completed"]}
-    completed_ids = set(completed_games)
     previous_retrieved = previous.get("retrieved_at")
     previous_pending = {g["game_id"] for g in previous.get("schedule", [])
                         if not g["completed"]}
+    # Legacy reports have predictions but no schedule: a prediction itself
+    # establishes that the game was pending at the previous publication.
+    if "schedule" not in previous:
+        previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
-        if (prediction["game_id"] in completed_ids and key not in history
+        if (prediction["game_id"] in completed_games and key not in history
                 and previous_retrieved and prediction["game_id"] in previous_pending):
             game = completed_games[prediction["game_id"]]
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
