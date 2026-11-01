@@ -28,12 +28,14 @@ def test_conflicting_duplicates_are_rejected():
         normalize_cfbd_games([row, {**row, "home_points": 8}], 2026)
 
 
-def test_incomplete_scores_rejected():
-    with pytest.raises(ValueError):
-        normalize_cfbd_games([{"id": 1, "season": 2026, "week": 1,
-                              "home_team": "A", "away_team": "B",
-                              "completed": True, "home_points": None,
-                              "away_points": 3}], 2026)
+def test_incomplete_scores_are_unresolved():
+    games = normalize_cfbd_games([{"id": 1, "season": 2026, "week": 1,
+                                  "home_team": "A", "away_team": "B",
+                                  "completed": True, "home_points": None,
+                                  "away_points": 3}], 2026)
+    assert len(games) == 1
+    assert games[0].completed is False
+    assert games[0].home_score is None and games[0].away_score is None
 
 
 def test_cfbd_scores_without_completed_field_are_final():
