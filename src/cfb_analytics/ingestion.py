@@ -48,7 +48,9 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
             completed = (isinstance(hs, int) and isinstance(ass, int)
                          and (hs != 0 or ass != 0))
         if completed and (not isinstance(hs, int) or not isinstance(ass, int)):
-            raise ValueError(f"Completed game {game_id} missing integer scores")
+            # Some CFBD records are marked complete without a usable result.
+            # Keep the matchup, but never credit a win without both scores.
+            completed = False
         if completed and (hs < 0 or ass < 0):
             raise ValueError(f"Negative score for game {game_id}")
         game = IngestedGame(
