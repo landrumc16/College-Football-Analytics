@@ -105,7 +105,7 @@ def calculate_ratings(teams: list[Team], games: list[Game],
                 continue
             is_home = team.name == game.home
             opponent = game.away if is_home else game.home
-            opp_rating = final.get(opponent, settings.fcs_opponent_rating)
+            opp_rating = passes[8].get(opponent, settings.fcs_opponent_rating)
             opponents.append(opp_rating)
             margin = game.home_score - game.away_score
             team_margin = margin if is_home else -margin
