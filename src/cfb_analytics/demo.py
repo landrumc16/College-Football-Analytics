@@ -20,13 +20,13 @@ def main():
         raise RuntimeError("Incomplete frozen schedule")
     scored = {}
     for game in completed:
-        key = (game["week"], game["home"], game["away"])
+        key = (game["home"], game["away"])
         if key in scored:
             raise ValueError(f"Duplicate completed matchup {key}")
         scored[key] = game
     records = []
     for index, game in enumerate(schedule, 1):
-        match = scored.get((game["week"], game["home"], game["away"]))
+        match = scored.get((game["home"], game["away"]))
         if game["completed"] and match is None:
             raise ValueError(f"Missing result for completed game {game}")
         records.append({
