@@ -57,6 +57,14 @@ jobs:
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
+          assert report["cfp"]["simulations"] == 10000
+          assert report["cfp"]["scenario"] == "current_model_probabilities"
+          assert len(report["cfp"]["teams"]) == report["summary"]["teams"]
+          assert len(report["projected_bracket"]["seeds"]) == 12
+          assert len(report["projected_bracket"]["first_round"]) == 4
+          assert sum(seed["bye"] for seed in report["projected_bracket"]["seeds"]) == 4
+          assert report["conference_standings"]
+          assert report["conference_strength"]
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
