@@ -35,6 +35,12 @@ jobs:
           assert 'NOT LIVE' in data['source']
           assert len(data['rankings']) == 138
           assert len(data['predictions']) == 378
+          assert data['cfp']['simulations'] == 10000
+          assert data['cfp']['scenario'] == 'current_model_probabilities'
+          assert len(data['projected_bracket']['seeds']) == 12
+          assert len(data['projected_bracket']['first_round']) == 4
+          assert data['conference_standings']
+          assert data['conference_strength']
           PY
       - uses: actions/setup-node@v4
         with:
