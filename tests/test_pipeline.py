@@ -76,3 +76,19 @@ def test_reject_empty_roster():
 def test_reject_self_matchup():
     with pytest.raises(ValueError, match="self-matchup"):
         build_season_report({"season": 2026, "games": [game(1, "A", "A")]}, ROSTER)
+
+
+def test_miami_cfbd_alias_counts_wins_for_miami_florida():
+    roster = ROSTER + [{"name": "Miami (FL)", "conference": "ACC", "prior": 15},
+                       {"name": "Miami (OH)", "conference": "MAC", "prior": 0}]
+    snapshot = {"season": 2026, "games": [
+        game(1, "Miami", "A", completed=True, hs=31, ass=14),
+        game(2, "Miami (OH)", "B", completed=True, hs=21, ass=10),
+        game(3, "B", "Miami"),
+    ]}
+    report = build_season_report(snapshot, roster)
+    rankings = {r["team"]: r for r in report["rankings"]}
+    assert rankings["Miami (FL)"]["wins"] == 1
+    assert rankings["Miami (FL)"]["projected_wins"] > 1
+    assert rankings["Miami (OH)"]["wins"] == 1
+    assert any(p["away"] == "Miami (FL)" for p in report["predictions"])
