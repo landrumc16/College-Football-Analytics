@@ -251,6 +251,14 @@ jobs:
           assert hashlib.sha256(built).digest() == hashlib.sha256(deployed).digest(), (
             "Deployed report differs from the validated build artifact"
           )
+          from datetime import datetime, timezone, timedelta
+          if "DEMO" not in (report.get("source") or ""):
+            updated = datetime.fromisoformat(report["retrieved_at"].replace("Z", "+00:00"))
+            assert updated.tzinfo is not None, "Published live report timestamp lacks timezone"
+            age = datetime.now(timezone.utc) - updated.astimezone(timezone.utc)
+            assert -timedelta(hours=1) <= age <= timedelta(hours=72), (
+              "Deployed live report is stale or future-dated"
+            )
           source = report.get("source") or ""
           assert source, "Published report has no source"
           if "DEMO" not in source:
