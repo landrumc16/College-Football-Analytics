@@ -62,12 +62,6 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
                 wins[winner] += 1
                 if same_conf:
                     conf_wins[winner] += 1
-        for n in names:
-            sum_wins[n] += wins[n]
-            win_histograms[n][wins[n]] += 1
-        mean = sum(wins.values()) / len(names)
-        std = sqrt(sum((wins[n]-mean)**2 for n in names)/len(names)) or 1
-        scores = {n: 0.5*(wins[n]-mean)/std + 0.5*rating_z[n] for n in names}
         champions = []
         for conference, members in conferences.items():
             # Model the two highest conference-win finishers in a neutral-site
@@ -84,6 +78,15 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
                 champion = finalists[0]
             champions.append(champion)
             totals[champion]["conference_title"] += 1
+            # Conference title games count toward final wins and selection scores.
+            if len(finalists) == 2:
+                wins[champion] += 1
+        for n in names:
+            sum_wins[n] += wins[n]
+            win_histograms[n][wins[n]] += 1
+        mean = sum(wins.values()) / len(names)
+        std = sqrt(sum((wins[n]-mean)**2 for n in names)/len(names)) or 1
+        scores = {n: 0.5*(wins[n]-mean)/std + 0.5*rating_z[n] for n in names}
         automatic = sorted(champions, key=lambda n: (-scores[n], n))[:5]
         others = sorted((n for n in names if n not in automatic), key=lambda n: (-scores[n], n))
         field = sorted(automatic + others[:7], key=lambda n: (-scores[n], n))
