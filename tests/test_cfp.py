@@ -48,3 +48,20 @@ def test_conference_championship_matchups_and_title_totals():
     assert all(len(c["most_common_matchup"]) == 2 for c in result["conference_championships"])
     assert all(c["matchup_probability"] == 1 for c in result["conference_championships"])
     assert sum(row["conference_title"] for row in result["teams"]) == 5
+
+
+def test_cfp_seed_distribution_and_input_validation():
+    import pytest
+    teams = {f"T{i}": {"conference": f"C{i // 3}", "rating": 30-i,
+                        "wins": 8, "conference_wins": 4} for i in range(15)}
+    report = simulate_cfp(teams, [], simulations=200, seed=42)
+    selected = [row for row in report["teams"] if row["cfp_field"] > 0]
+    assert all(1 <= row["most_likely_seed"] <= 12 for row in selected)
+    assert all(1 <= row["average_seed_when_selected"] <= 12 for row in selected)
+    assert all(row["most_likely_seed"] is None for row in report["teams"] if row["cfp_field"] == 0)
+    with pytest.raises(ValueError):
+        simulate_cfp(teams, [{"home": "T1", "away": "T1"}], simulations=10)
+    with pytest.raises(ValueError):
+        simulate_cfp({}, [], simulations=10)
+    with pytest.raises(ValueError):
+        simulate_cfp(teams, [], simulations=0)
