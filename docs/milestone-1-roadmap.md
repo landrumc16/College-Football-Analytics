@@ -19,13 +19,13 @@ Reproduce the existing spreadsheet's college-football rating, ranking and game-p
 - [ ] Port opponent-adjusted iterative team ratings and conference shrink (all active passes).
 - [ ] Implement adaptive selection of rating iterations based on completed-game thresholds.
 - [ ] Port strength of schedule, quality wins, bad losses and resume calculations.
-- [ ] Port projected wins and rank key; reproduce Top 25 and all-team ordering.
-- [ ] Port game predictions with neutral-site home advantage and separate market/model probability paths.
+- [x] Implement blended rank-score calculation from projected wins and rating (Teams!AW).\n- [ ] Port projected wins inputs and verify rank key, Top 25 and all-team ordering.
+- [x] Implement game prediction functions with neutral-site home advantage and separate market/model probability paths; full-sheet parity pending.
 - [ ] Preserve FCS fallback behavior and handle missing/duplicate/neutral/tied games.
 
 ## Workstream C — Verification and operational readiness
 - [x] Add initial pytest unit tests for primitive calculations.
-- [ ] Build end-to-end parity tests against frozen Sheets reference data; publish a discrepancy report by team and game.
+- [ ] Build end-to-end parity tests against frozen Sheets reference data; publish a discrepancy report by team and game.\n- [x] Add initial ranking and prediction unit tests.
 - [ ] Require exact win/loss/game counts, matching ranking order (with documented tie policy), and numeric tolerances for ratings/probabilities.
 - [ ] Run full tests in GitHub Actions on push and pull requests.
 - [ ] Add a CLI that produces local rankings and predictions from frozen fixtures, without API credentials.
