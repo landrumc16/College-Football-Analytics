@@ -121,3 +121,16 @@ def test_refresh_accepts_actual_cfbd_camelcase_fields(tmp_path):
     assert (saved["home"], saved["away"]) == ("A", "B")
     assert (saved["home_score"], saved["away_score"]) == (21, 14)
     assert saved["neutral_site"] is True
+
+
+def test_completed_cfbd_game_without_scores_is_not_counted_as_result(tmp_path):
+    output = tmp_path / "snapshot.json"
+    row = {"id": 401907219, "season": 2026, "week": 8,
+           "homeTeam": "A", "awayTeam": "B", "homePoints": None,
+           "awayPoints": None, "completed": True}
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[row]):
+        result = refresh(2026, output, "test-key")
+    assert result == {"scheduled": 1, "completed": 0, "pending": 1}
+    saved = json.loads(output.read_text())["games"][0]
+    assert saved["completed"] is False
+    assert saved["home_score"] is None and saved["away_score"] is None
