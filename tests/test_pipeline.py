@@ -43,3 +43,10 @@ def test_reject_duplicate_game_ids():
     g = game(1, "A", "B")
     with pytest.raises(ValueError):
         build_season_report({"season": 2026, "games": [g, g]}, ROSTER)
+
+
+def test_reject_completed_game_with_missing_score():
+    with pytest.raises(ValueError, match="missing score"):
+        build_season_report({"season": 2026, "games": [
+            game(1, "A", "B", completed=True, hs=None, ass=7)
+        ]}, ROSTER)
