@@ -43,6 +43,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         same_conf = home in teams and away in teams and teams[home]["conference"] == teams[away]["conference"] and teams[home]["conference"] != "Independent"
         prepared.append((home, away, win_probability_from_rating_gap(gap, scale), same_conf))
     totals = defaultdict(Counter)
+    conference_matchups = defaultdict(Counter)
     sum_wins = Counter()
     win_histograms = defaultdict(Counter)
     title_counts = Counter()
@@ -62,10 +63,19 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         std = sqrt(sum((wins[n]-mean)**2 for n in names)/len(names)) or 1
         scores = {n: 0.5*(wins[n]-mean)/std + 0.5*rating_z[n] for n in names}
         champions = []
-        for members in conferences.values():
-            best = max(conf_wins[n] for n in members)
-            tied = [n for n in members if conf_wins[n] == best]
-            champion = rng.choice(tied)
+        for conference, members in conferences.items():
+            # Model the two highest conference-win finishers in a neutral-site
+            # championship. Ties for finalists are resolved by model rating,
+            # then team name. Conference-specific tiebreakers are not modeled.
+            finalists = sorted(members, key=lambda n: (-conf_wins[n], -teams[n]["rating"], n))[:2]
+            if len(finalists) == 2:
+                a, b = finalists
+                conference_matchups[conference][tuple(sorted((a, b)))] += 1
+                probability = win_probability_from_rating_gap(
+                    teams[a]["rating"] - teams[b]["rating"], scale)
+                champion = a if rng.random() < probability else b
+            else:
+                champion = finalists[0]
             champions.append(champion)
             totals[champion]["conference_title"] += 1
         automatic = sorted(champions, key=lambda n: (-scores[n], n))[:5]
@@ -103,7 +113,13 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     return {
         "simulations": simulations, "seed": seed,
         "scenario": "current_model_probabilities",
-        "methodology": "Regular-season conference leaders; five highest-ranked champions plus seven at-large; seeded neutral-site playoff. Conference championship games and CFP committee decisions not modeled.",
+        "methodology": "Neutral-site championship games between each conference's two leading conference-win teams; ties resolved by model rating. Five highest-ranked champions plus seven at-large. Conference-specific qualification and tiebreak rules and CFP committee decisions not modeled.",
+        "conference_championships": [
+            {"conference": conference,
+             "most_common_matchup": list(max(matchups, key=matchups.get)) if matchups else [],
+             "matchup_probability": round(max(matchups.values()) / simulations, 4) if matchups else 0}
+            for conference, matchups in sorted(conference_matchups.items())
+        ],
         "teams": [
             {"team": n, "conference": teams[n]["conference"],
              "average_wins": round(sum_wins[n]/simulations, 3),
