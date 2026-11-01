@@ -4,7 +4,7 @@ This module is independent of the V1 published report and does not generate
 predictions from completed-game information.
 """
 from dataclasses import dataclass
-from math import log
+from math import isfinite, log
 from .historical import HistoricalGame, utc_instant, validate_unique_games
 
 
@@ -16,7 +16,7 @@ class ArchivedForecast:
     generated_at: str
 
     def __post_init__(self):
-        if not 0 <= self.home_win_probability <= 1:
+        if not isfinite(self.home_win_probability) or not 0 <= self.home_win_probability <= 1:
             raise ValueError("Probability must be between zero and one")
         if utc_instant(self.generated_at) is None:
             raise ValueError("Forecast timestamp must include timezone")
