@@ -25,6 +25,10 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
     if any(g.completed and (g.home_score is None or g.away_score is None) for g in games):
         raise ValueError("Completed game missing score")
     teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
+    if not teams:
+        raise ValueError("Roster must contain teams")
+    if any(g.home == g.away for g in games):
+        raise ValueError("Snapshot contains a self-matchup")
     known = {t.name for t in teams}
     conferences = {t.name: t.conference for t in teams}
     completed = [
@@ -81,6 +85,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         })
     return {
         "season": season, "source": snapshot.get("source"),
+        "retrieved_at": snapshot.get("retrieved_at"),
         "summary": {"teams": len(teams), "completed_games": len(completed),
                     "upcoming_games": len(predictions)},
         "rankings": ranking, "predictions": predictions,
