@@ -202,6 +202,7 @@ jobs:
           path: web/dist/season-report.json
           if-no-files-found: error
       - name: Browser smoke at mobile widths
+        timeout-minutes: 8
         run: |
           cd web
           npm install --no-save playwright
