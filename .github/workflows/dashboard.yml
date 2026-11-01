@@ -184,7 +184,8 @@ jobs:
           base="${PAGE_URL%/}/"
           for attempt in 1 2 3 4 5; do
             if curl --fail --location --silent --show-error "$base" -o /tmp/cfb-index.html && \
-               curl --fail --location --silent --show-error "${base}season-report.json" -o /tmp/cfb-report.json; then
+               curl --fail --location --silent --show-error "${base}season-report.json" -o /tmp/cfb-report.json && \
+               curl --fail --location --silent --show-error "${base}historical-backtest.json" -o /tmp/cfb-backtest.json; then
               python - <<'PY'
           import json
           from pathlib import Path
@@ -193,6 +194,9 @@ jobs:
           assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
           assert report.get("retrieved_at"), "Published report has no retrieval timestamp"
+          backtest = json.loads(Path("/tmp/cfb-backtest.json").read_text())
+          assert backtest["games"] > 0, "Published backtest has no evaluated games"
+          assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
           accuracy = report.get("prediction_accuracy")
           if accuracy is not None:
             assert isinstance(accuracy["games_evaluated"], int) and accuracy["games_evaluated"] >= 0
