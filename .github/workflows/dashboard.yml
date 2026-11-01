@@ -42,6 +42,15 @@ jobs:
             python -m cfb_analytics.demo
           fi
           test -f data/season-2026-report.json || test -s web/public/season-report.json
+      - name: Spreadsheet numerical parity audit (diagnostic)
+        run: |
+          # Report real discrepancies without blocking dashboard publication
+          # until the frozen week-7 baseline has been reconciled.
+          if python -m cfb_analytics.parity --strict --tolerance 0.001; then
+            echo "Spreadsheet numerical parity passed."
+          else
+            echo "::warning::Spreadsheet numerical parity is not yet verified; inspect the discrepancy report above."
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
