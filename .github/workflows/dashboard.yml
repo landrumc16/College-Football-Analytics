@@ -93,6 +93,13 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Browser smoke at mobile widths
+        run: |
+          cd web
+          npm install --no-save playwright
+          npx playwright install chromium
+          cd ..
+          node web/tests/mobile-smoke.mjs
       - name: Publish historical backtest evidence
         run: |
           test -s historical-backtest.json
