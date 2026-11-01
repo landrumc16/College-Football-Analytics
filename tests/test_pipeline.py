@@ -7,7 +7,7 @@ ROSTER = [
     {"name": "B", "conference": "ACC", "prior": -10},
     {"name": "C", "conference": "Independent", "prior": 0},
 ] + [
-    {"name": f"Fixture {i}", "conference": "Fixture League", "prior": -20}
+    {"name": f"Fixture {i}", "conference": f"Fixture League {i // 2}", "prior": -20}
     for i in range(9)
 ]
 
