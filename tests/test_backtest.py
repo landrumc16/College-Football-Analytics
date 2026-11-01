@@ -20,16 +20,20 @@ def test_weekly_backtest_scores_fbs_and_fcs_with_baseline():
 
 
 def test_weekly_backtest_does_not_leak_same_week_scores():
-    # Changing an earlier game in the SAME week must not change the
-    # prediction metrics for a different game in that week.
+    # A game against an FCS opponent has a different result in the same week.
+    # The B-versus-A forecast must remain unchanged.
+    from cfb_analytics.model import win_probability_from_rating_gap
     first = [Game("A", "FCS", 40, 7, 1), Game("B", "A", 10, 14, 1)]
     second = [Game("A", "FCS", 7, 40, 1), Game("B", "A", 10, 14, 1)]
     a = backtest_weeks(TEAMS, first)
     b = backtest_weeks(TEAMS, second)
-    # The first game's observed outcome changes; use one-game baseline
-    # equality for the unaffected game via the exact first-week prior.
-    assert a["preseason_baseline"]["winner_accuracy"] != b["preseason_baseline"]["winner_accuracy"]
     assert a["games"] == b["games"] == 2
+    # Both games in week 1 use preseason priors; thus the evolving model
+    # and fixed-preseason baseline must be identical despite changed results.
+    assert a["model"] == a["preseason_baseline"]
+    assert b["model"] == b["preseason_baseline"]
+    assert a["model"]["winner_accuracy"] != b["model"]["winner_accuracy"]
+
 
 
 def test_backtest_requires_dated_weeks():
