@@ -97,6 +97,11 @@ jobs:
         run: |
           test -s historical-backtest.json
           cp historical-backtest.json web/dist/historical-backtest.json
+      - name: Rebuild report from the checked-in live snapshot
+        run: |
+          if [ -f data/cfbd-2026-games.json ]; then
+            python -m cfb_analytics.report --season 2026
+          fi
       - name: Include and validate published season report
         run: |
           if [ -f data/season-2026-report.json ]; then
