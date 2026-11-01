@@ -23,13 +23,23 @@ def paired_scorecard(games: list[HistoricalGame],
     if len({(g.season, g.game_id) for g in games}) != len(games):
         raise ValueError("Duplicate historical games")
     scored = []
+    exclusions = {"ineligible_game": 0, "missing_workbook": 0,
+                  "missing_candidate": 0, "not_verified_pregame": 0}
     for game in sorted(games, key=lambda g: (g.season, g.game_id)):
         key = (game.season, game.game_id)
-        if not game.eligible_fbs_accuracy or key not in left or key not in right:
+        if not game.eligible_fbs_accuracy:
+            exclusions["ineligible_game"] += 1
+            continue
+        if key not in left:
+            exclusions["missing_workbook"] += 1
+        if key not in right:
+            exclusions["missing_candidate"] += 1
+        if key not in left or key not in right:
             continue
         a, b = left[key], right[key]
         if not all(game.verified_pregame(f.generated_at, f.input_retrieved_at)
                    for f in (a, b)):
+            exclusions["not_verified_pregame"] += 1
             continue
         scored.append((game.season, int(game.home_score > game.away_score),
                        a.home_win_probability, b.home_win_probability))
@@ -65,6 +75,8 @@ def paired_scorecard(games: list[HistoricalGame],
                                   "candidate": season_metrics(3)}
     return {
         "paired_games": len(scored),
+        "eligible_completed_games": sum(g.eligible_fbs_accuracy for g in games),
+        "excluded": exclusions,
         "workbook": baseline,
         "candidate": challenger,
         "candidate_minus_workbook": None if not scored else {
