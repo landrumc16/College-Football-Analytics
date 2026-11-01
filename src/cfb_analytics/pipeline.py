@@ -231,7 +231,11 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
             continue
         home = aliases.get(g["home"], g["home"])
         away = aliases.get(g["away"], g["away"])
-        probability = forecast["home_win_probability"]
+        if (forecast.get("home") != home or forecast.get("away") != away):
+            continue
+        probability = forecast.get("home_win_probability")
+        if not isinstance(probability, (float, int)) or not 0 <= probability <= 1:
+            continue
         for team, expected, won in (
             (home, probability, g["home_score"] > g["away_score"]),
             (away, 1 - probability, g["away_score"] > g["home_score"]),
