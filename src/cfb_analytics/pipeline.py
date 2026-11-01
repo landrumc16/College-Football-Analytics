@@ -189,6 +189,13 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         "data_changed_at": snapshot.get("data_changed_at", snapshot.get("retrieved_at")),
         "summary": {"teams": len(teams), "completed_games": len(completed),
                     "upcoming_games": len(predictions)},
+        "schedule": [
+            {"game_id": g.game_id, "week": g.week, "home": g.home,
+             "away": g.away, "neutral_site": g.neutral_site,
+             "completed": g.completed, "home_score": g.home_score,
+             "away_score": g.away_score}
+            for g in games if g.home in known or g.away in known
+        ],
         "rankings": ranking, "predictions": predictions,
     }
 
