@@ -14,3 +14,37 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Run tests
         run: python -m pytest -q
+  dashboard-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install model
+        run: python -m pip install -e '.[dev]'
+      - name: Generate historical demo
+        run: python -m cfb_analytics.demo
+      - name: Validate demo JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('web/public/season-report.json')
+          data = json.loads(p.read_text())
+          assert 'NOT LIVE' in data['source']
+          assert len(data['rankings']) == 138
+          assert len(data['predictions']) == 378
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build dashboard
+        working-directory: web
+        run: |
+          npm install
+          npm run build
+      - name: Validate published report
+        run: |
+          test -s web/dist/index.html
+          test -s web/dist/season-report.json
