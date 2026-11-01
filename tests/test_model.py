@@ -21,7 +21,7 @@ def test_preseason_prior_matches_boston_college():
         intercept=0.9847, previous_weight=0.4569,
         talent_weight=4.0926, returning_weight=0,
         coach_weight=0, missing_previous_rating=-12,
-    ) != 0  # full coefficients and parity fixtures still pending
+    ) == pytest.approx(0.9847 + 0.4569 * -6.25 + 4.0926 * -0.088)  # partial coefficient fixture
 
 
 def test_prediction_margin_matches_delaware():
