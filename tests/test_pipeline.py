@@ -232,3 +232,26 @@ def test_prediction_accuracy_fbs_only_empty_sample_is_not_zero_percent():
     assert result["games_evaluated"] == 0
     assert result["winner_accuracy"] is None
     assert result["brier_score"] is None
+
+
+def test_fcs_results_and_future_games_flow_through_full_report():
+    """Workbook parity: FCS scores affect FBS records and future FCS forecasts remain."""
+    snapshot = {"season": 2026, "source": "test", "games": [
+        game(1, "A", "FCS Visitor", completed=True, hs=55, ass=7),
+        game(2, "FCS Host", "B", completed=True, hs=21, ass=24),
+        game(3, "C", "FCS Future"),
+    ]}
+    report = build_season_report(snapshot, ROSTER)
+    ranked = {row["team"]: row for row in report["rankings"]}
+    assert ranked["A"]["wins"] == 1
+    assert ranked["B"]["wins"] == 1
+    assert report["summary"]["completed_games"] == 2
+    assert report["summary"]["upcoming_games"] == 1
+    assert report["predictions"][0]["away"] == "FCS Future"
+    assert any(row["away"] == "FCS Visitor" and row["home_score"] == 55
+               for row in report["schedule"])
+    assert any(row["home"] == "FCS Host" and row["away_score"] == 24
+               for row in report["schedule"])
+    assert all(row["team"] not in {"FCS Visitor", "FCS Host", "FCS Future"}
+               for row in report["rankings"])
+    assert ranked["C"]["projected_wins"] > ranked["C"]["wins"]
