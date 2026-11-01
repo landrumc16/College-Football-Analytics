@@ -42,10 +42,7 @@ def evaluate_forecasts(games: list[HistoricalGame],
         if not game.eligible_fbs_accuracy:
             exclusions["ineligible_game"] += 1
             continue
-        kickoff = utc_instant(game.kickoff)
-        generated = utc_instant(forecast.generated_at)
-        inputs = utc_instant(forecast.input_retrieved_at)
-        if not (inputs is not None and inputs <= generated < kickoff):
+        if not game.verified_pregame(forecast.generated_at, forecast.input_retrieved_at):
             exclusions["not_pregame"] += 1
             continue
         actual = int(game.home_score > game.away_score)
