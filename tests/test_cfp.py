@@ -35,3 +35,16 @@ def test_season_win_ranges_and_bowl_probabilities():
         assert team["wins_p10"] <= team["average_wins"] <= team["wins_p90"]
         assert 0 <= team["bowl_eligible"] <= 1
     assert all(team["bowl_eligible"] == 1 for team in result["teams"])
+
+
+def test_conference_championship_matchups_and_title_totals():
+    teams = {
+        f"T{i}": {"conference": f"C{i // 3}", "rating": 25 - i,
+                  "wins": 7, "conference_wins": 4}
+        for i in range(15)
+    }
+    result = simulate_cfp(teams, [], simulations=100, seed=2026)
+    assert len(result["conference_championships"]) == 5
+    assert all(len(c["most_common_matchup"]) == 2 for c in result["conference_championships"])
+    assert all(c["matchup_probability"] == 1 for c in result["conference_championships"])
+    assert sum(row["conference_title"] for row in result["teams"]) == 5
