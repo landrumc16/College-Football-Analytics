@@ -40,3 +40,22 @@ def test_refresh_rejects_duplicate_api_ids(tmp_path):
         with pytest.raises(RuntimeError):
             refresh(2026, output, "test-key")
     assert not output.exists()
+
+
+def test_unchanged_refresh_preserves_original_snapshot(tmp_path):
+    output = tmp_path / "snapshot.json"
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[sample_game()]):
+        refresh(2026, output, "test-key")
+        before = output.read_bytes()
+        refresh(2026, output, "test-key")
+    assert output.read_bytes() == before
+
+
+def test_changed_score_updates_snapshot(tmp_path):
+    output = tmp_path / "snapshot.json"
+    with patch("cfb_analytics.refresh.fetch_cfbd_games", return_value=[sample_game()]):
+        refresh(2026, output, "test-key")
+    with patch("cfb_analytics.refresh.fetch_cfbd_games",
+               return_value=[{**sample_game(), "home_points": 35}]):
+        refresh(2026, output, "test-key")
+    assert json.loads(output.read_text())["games"][0]["home_score"] == 35
