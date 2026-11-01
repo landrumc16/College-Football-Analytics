@@ -16,7 +16,8 @@ def game(game_id=1, season=2025, away_division="FBS"):
 
 def forecast(game_id=1, season=2025, probability=0.8,
              generated_at="2025-09-01T18:00:00Z"):
-    return ArchivedForecast(season, game_id, probability, generated_at, "2025-09-01T17:00:00Z" if season == 2025 else f"{season}-09-01T17:00:00Z")
+    return ArchivedForecast(season, game_id, probability, generated_at,
+                            f"{season}-09-01T17:00:00Z")
 
 
 def test_valid_forecast_scores():
@@ -46,6 +47,7 @@ def test_empty_sample_has_no_accuracy():
 def test_reordered_input_deterministic_and_multiseason():
     records = [game(2, season=2024), game(1)]
     predictions = [forecast(1), forecast(2, season=2024, probability=0.4)]
+    assert evaluate_forecasts(records, predictions)["games"] == 2
     assert evaluate_forecasts(records, predictions) == evaluate_forecasts(
         list(reversed(records)), list(reversed(predictions)))
 
