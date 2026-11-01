@@ -56,9 +56,10 @@ def main():
         roster_path.parent.mkdir(parents=True, exist_ok=True)
         roster_path.write_text(json.dumps(roster), encoding="utf-8")
         result = run_snapshot(snapshot, roster_path, output)
-        from .pipeline import build_performance_against_expectations
+        from .pipeline import build_performance_against_expectations, build_prediction_accuracy
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
+        result["prediction_accuracy"] = build_prediction_accuracy(snapshot_data, history)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         history_path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
     finally:
