@@ -186,3 +186,22 @@ def test_prediction_accuracy_empty_history_has_no_misleading_percentage():
     assert result["games_evaluated"] == 0
     assert result["winner_accuracy"] is None
     assert result["brier_score"] is None
+
+
+def test_prediction_accuracy_rejects_boolean_probability():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    snapshot = {"games": [game(1, "A", "B", completed=True, hs=21, ass=14)]}
+    history = {"1": {"home": "A", "away": "B", "home_win_probability": True}}
+    result = build_prediction_accuracy(snapshot, history)
+    assert result["games_evaluated"] == 0
+    assert result["winner_accuracy"] is None
+
+
+def test_prediction_accuracy_reconciles_miami_alias():
+    from cfb_analytics.pipeline import build_prediction_accuracy
+    snapshot = {"games": [game(1, "Miami", "A", completed=True, hs=31, ass=10)]}
+    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.75}}
+    result = build_prediction_accuracy(snapshot, history)
+    assert result["games_evaluated"] == 1
+    assert result["correct_winners"] == 1
+    assert result["brier_score"] == 0.0625
