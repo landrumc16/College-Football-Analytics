@@ -16,6 +16,8 @@ def game(game_id=1, season=2025, away_division="FBS"):
 
 def forecast(game_id=1, season=2025, probability=0.8,
              generated_at="2025-09-01T18:00:00Z"):
+    if season != 2025 and generated_at == "2025-09-01T18:00:00Z":
+        generated_at = f"{season}-09-01T18:00:00Z"
     return ArchivedForecast(season, game_id, probability, generated_at,
                             f"{season}-09-01T17:00:00Z")
 
