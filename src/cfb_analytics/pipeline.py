@@ -24,6 +24,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         raise ValueError("Snapshot contains duplicate game ids")
     teams = [Team(t["name"], t["conference"], t["prior"]) for t in roster]
     known = {t.name for t in teams}
+    conferences = {t.name: t.conference for t in teams}
     completed = [
         Game(g.home, g.away, g.home_score, g.away_score, g.week)
         for g in games if g.completed
@@ -33,10 +34,8 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
     for g in games:
         if not g.completed or g.home not in known or g.away not in known:
             continue
-        if (ratings[g.home].team and
-                next(t.conference for t in teams if t.name == g.home) ==
-                next(t.conference for t in teams if t.name == g.away) and
-                next(t.conference for t in teams if t.name == g.home) != "Independent"):
+        if (conferences[g.home] == conferences[g.away] and
+                conferences[g.home] != "Independent"):
             winner = g.home if g.home_score > g.away_score else g.away
             conference_wins[winner] += 1
     projections = project_season(
