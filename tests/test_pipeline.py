@@ -6,6 +6,9 @@ ROSTER = [
     {"name": "A", "conference": "ACC", "prior": 10},
     {"name": "B", "conference": "ACC", "prior": -10},
     {"name": "C", "conference": "Independent", "prior": 0},
+] + [
+    {"name": f"Fixture {i}", "conference": "Fixture League", "prior": -20}
+    for i in range(9)
 ]
 
 
@@ -22,9 +25,9 @@ def test_complete_season_pipeline():
         game(3, "C", "FCS", neutral=True),
     ]}
     report = build_season_report(snapshot, ROSTER)
-    assert report["summary"] == {"teams": 3, "completed_games": 1, "upcoming_games": 2}
-    assert len(report["rankings"]) == 3
-    assert {r["rank"] for r in report["rankings"]} == {1, 2, 3}
+    assert report["summary"] == {"teams": 12, "completed_games": 1, "upcoming_games": 2}
+    assert len(report["rankings"]) == 12
+    assert {r["rank"] for r in report["rankings"]} == set(range(1, 13))
     a = next(r for r in report["rankings"] if r["team"] == "A")
     assert a["wins"] == 1
     assert a["projected_conference_wins"] > 1
