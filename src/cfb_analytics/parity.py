@@ -6,6 +6,7 @@ This reports discrepancies; it does not claim the model has passed parity.
 import json
 from pathlib import Path
 from .ratings import Team, Game, calculate_ratings
+from .projections import ScheduledGame, project_season
 
 
 def load_baseline(folder=None):
@@ -44,6 +45,20 @@ def compare():
             observed = getattr(actual, field)
             discrepancies.append((abs(expected - observed), ref["name"], field,
                                   expected, observed))
+    schedule = []
+    for fixture in sorted((Path(__file__).resolve().parents[2] / 'tests' / 'fixtures').glob('2026-week7-schedule-[0-9][0-9].json')):
+        schedule.extend(json.loads(fixture.read_text(encoding='utf-8')))
+    if len(schedule) != 888:
+        raise RuntimeError(f'Incomplete schedule fixture: {len(schedule)} games')
+    projected = project_season(
+        {t['name']: (t['conference'], results[t['name']].adaptive_rating,
+                     results[t['name']].wins, 0) for t in teams},
+        [ScheduledGame(g['home'], g['away'], g['completed']) for g in schedule],
+    )
+    for ref in teams:
+        actual = projected[ref['name']].projected_wins
+        discrepancies.append((abs(ref['projected_wins'] - actual), ref['name'],
+                              'projected_wins', ref['projected_wins'], actual))
     discrepancies.sort(reverse=True)
     return discrepancies
 
