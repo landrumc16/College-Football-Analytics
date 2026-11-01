@@ -30,12 +30,9 @@ def main():
     snapshot_data = json.loads(snapshot.read_text())
     completed_games = {g["game_id"]: g for g in snapshot_data["games"] if g["completed"]}
     previous_retrieved = previous.get("retrieved_at")
-    previous_pending = {g["game_id"] for g in previous.get("schedule", [])
-                        if not g["completed"]}
-    # Legacy reports have predictions but no schedule: a prediction itself
-    # establishes that the game was pending at the previous publication.
-    if "schedule" not in previous:
-        previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
+    # Published predictions are the authoritative set of games forecast while pending.
+    # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
+    previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     for prediction in previous.get("predictions", []):
