@@ -92,3 +92,27 @@ def test_miami_cfbd_alias_counts_wins_for_miami_florida():
     assert rankings["Miami (FL)"]["projected_wins"] > 1
     assert rankings["Miami (OH)"]["wins"] == 1
     assert any(p["away"] == "Miami (FL)" for p in report["predictions"])
+
+
+def test_all_verified_cfbd_fbs_aliases_are_reconciled():
+    aliases = [("Miami", "Miami (FL)"),
+               ("App State", "Appalachian State"),
+               ("Sam Houston", "Sam Houston State"),
+               ("UL Monroe", "ULM")]
+    roster = ROSTER + [{"name": canonical, "conference": "ACC", "prior": 10}
+                       for _, canonical in aliases]
+    snapshot = {"season": 2026, "games": [
+        game(i + 1, feed, "A", completed=True, hs=28, ass=7)
+        for i, (feed, _) in enumerate(aliases)
+    ]}
+    report = build_season_report(snapshot, roster)
+    by_team = {row["team"]: row for row in report["rankings"]}
+    for _, canonical in aliases:
+        assert by_team[canonical]["wins"] == 1
+
+
+def test_live_cfbd_report_rejects_roster_team_missing_from_feed():
+    snapshot = {"season": 2026, "source": "collegefootballdata.com/games",
+                "games": [game(1, "A", "B", completed=True, hs=20, ass=10)]}
+    with pytest.raises(ValueError, match="FBS roster schools absent"):
+        build_season_report(snapshot, ROSTER)
