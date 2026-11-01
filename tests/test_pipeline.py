@@ -50,3 +50,21 @@ def test_reject_completed_game_with_missing_score():
         build_season_report({"season": 2026, "games": [
             game(1, "A", "B", completed=True, hs=None, ass=7)
         ]}, ROSTER)
+
+
+def test_report_preserves_data_provenance():
+    report = build_season_report({"season": 2026, "source": "test-source",
+                                  "retrieved_at": "2026-10-31T00:00:00+00:00",
+                                  "games": []}, ROSTER)
+    assert report["source"] == "test-source"
+    assert report["retrieved_at"] == "2026-10-31T00:00:00+00:00"
+
+
+def test_reject_empty_roster():
+    with pytest.raises(ValueError, match="Roster"):
+        build_season_report({"season": 2026, "games": []}, [])
+
+
+def test_reject_self_matchup():
+    with pytest.raises(ValueError, match="self-matchup"):
+        build_season_report({"season": 2026, "games": [game(1, "A", "A")]}, ROSTER)
