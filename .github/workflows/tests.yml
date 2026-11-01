@@ -48,3 +48,9 @@ jobs:
         run: |
           test -s web/dist/index.html
           test -s web/dist/season-report.json
+      - name: Upload previewable dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: college-football-dashboard-preview
+          path: web/dist
+          if-no-files-found: error
