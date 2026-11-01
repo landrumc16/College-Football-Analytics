@@ -33,12 +33,15 @@ def main():
     # Published predictions are the authoritative set of games forecast while pending.
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
     previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
+    eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_games and key not in history
-                and previous_retrieved and prediction["game_id"] in previous_pending):
+                and previous_retrieved and prediction["game_id"] in previous_pending
+                and prediction.get("home") in eligible_fbs
+                and prediction.get("away") in eligible_fbs):
             game = completed_games[prediction["game_id"]]
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
