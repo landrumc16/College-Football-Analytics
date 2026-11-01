@@ -18,9 +18,9 @@ def test_fbs_accuracy_and_provenance():
     record = game(source_retrieved_at="2025-10-11T14:00:00-04:00")
     assert record.classification == "fbs_vs_fbs"
     assert record.eligible_fbs_accuracy
-    assert record.verified_pregame("2025-10-11T18:59:59Z")
-    assert not record.verified_pregame("2025-10-11T19:00:00Z")
-    assert not record.verified_pregame("2025-10-11T17:00:00Z")
+    assert record.verified_pregame("2025-10-11T18:59:59Z", "2025-10-11T17:00:00Z")
+    assert not record.verified_pregame("2025-10-11T19:00:00Z", "2025-10-11T17:00:00Z")
+    assert not record.verified_pregame("2025-10-11T17:00:00Z", "2025-10-11T18:00:00Z")
 
 
 def test_fcs_context_not_fbs_accuracy():
@@ -62,3 +62,9 @@ def test_duplicate_ids_scoped_by_season():
 def test_utc_requires_timezone():
     assert utc_instant("2025-10-11T15:00:00-04:00") == utc_instant("2025-10-11T19:00:00Z")
     assert utc_instant("2025-10-11T19:00:00") is None
+
+
+def test_game_download_after_kickoff_does_not_affect_forecast_provenance():
+    record = game(source_retrieved_at="2025-10-12T00:00:00Z")
+    assert record.verified_pregame("2025-10-11T18:00:00Z", "2025-10-11T17:00:00Z")
+    assert not record.verified_pregame("2025-10-11T18:00:00Z")
