@@ -116,3 +116,21 @@ def test_live_cfbd_report_rejects_roster_team_missing_from_feed():
                 "games": [game(1, "A", "B", completed=True, hs=20, ass=10)]}
     with pytest.raises(ValueError, match="FBS roster schools absent"):
         build_season_report(snapshot, ROSTER)
+
+
+def test_schedule_includes_completed_and_future_games_with_canonical_names():
+    roster = ROSTER + [{"name": "Miami (FL)", "conference": "ACC", "prior": 15}]
+    snapshot = {"season": 2026, "games": [
+        game(1, "Miami", "A", completed=True, hs=31, ass=14),
+        game(2, "B", "Miami"),
+    ]}
+    report = build_season_report(snapshot, roster)
+    schedule = report["schedule"]
+    assert len(schedule) == 2
+    assert schedule[0]["home"] == "Miami (FL)"
+    assert schedule[0]["completed"] is True
+    assert schedule[0]["home_score"] == 31
+    assert schedule[1]["away"] == "Miami (FL)"
+    assert schedule[1]["completed"] is False
+    assert schedule[1]["home_score"] is None
+    assert any(p["game_id"] == schedule[1]["game_id"] for p in report["predictions"])
