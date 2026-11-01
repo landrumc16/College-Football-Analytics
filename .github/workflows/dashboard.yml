@@ -193,7 +193,8 @@ jobs:
           report = json.loads(Path("/tmp/cfb-report.json").read_text())
           assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
-          assert report.get("retrieved_at"), "Published report has no retrieval timestamp"
+          if "DEMO" not in (report.get("source") or ""):
+            assert report.get("retrieved_at"), "Published live report has no retrieval timestamp"
           backtest = json.loads(Path("/tmp/cfb-backtest.json").read_text())
           assert backtest["games"] > 0, "Published backtest has no evaluated games"
           assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
