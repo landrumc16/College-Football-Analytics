@@ -5,13 +5,21 @@ on:
     branches: [v2-development]
     paths:
       - 'src/cfb_analytics/historical*.py'
+      - 'src/cfb_analytics/workbook_prediction.py'
+      - 'src/cfb_analytics/paired_benchmark.py'
       - 'tests/test_historical*.py'
+      - 'tests/test_workbook_prediction.py'
+      - 'tests/test_paired_benchmark.py'
       - 'pyproject.toml'
       - '.github/workflows/v2-historical.yml'
   pull_request:
     paths:
       - 'src/cfb_analytics/historical*.py'
+      - 'src/cfb_analytics/workbook_prediction.py'
+      - 'src/cfb_analytics/paired_benchmark.py'
       - 'tests/test_historical*.py'
+      - 'tests/test_workbook_prediction.py'
+      - 'tests/test_paired_benchmark.py'
       - 'pyproject.toml'
       - '.github/workflows/v2-historical.yml'
   workflow_dispatch:
