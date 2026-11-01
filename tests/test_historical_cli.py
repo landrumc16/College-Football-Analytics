@@ -17,7 +17,8 @@ def test_cli_deterministic_multiseason(tmp_path, capsys):
         forecasts.append({
             "season": season, "game_id": game_id,
             "home_win_probability": 0.75,
-            "generated_at": f"{season}-09-01T18:00:00Z"})
+            "generated_at": f"{season}-09-01T18:00:00Z",
+            "input_retrieved_at": f"{season}-09-01T17:00:00Z"})
     game_file = tmp_path / "games.json"
     forecast_file = tmp_path / "forecasts.json"
     output = tmp_path / "results.json"
