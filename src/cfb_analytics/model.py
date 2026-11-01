@@ -1,7 +1,6 @@
 """Pure, testable primitives transcribed from the 2026 Google Sheets model.
 
-These functions do not yet reproduce the entire workbook. In particular, the
-multi-pass opponent rating model and projected-win rank key remain to be ported.
+The multi-pass ratings and projected-win calculations live in their own modules.
 """
 from dataclasses import dataclass
 from math import isfinite
@@ -52,9 +51,14 @@ def preseason_prior(
 
 def win_probability_from_rating_gap(rating_gap: float, scale: float = 18.0) -> float:
     """Workbook logistic mapping: 1/(1+10^(-gap/scale))."""
-    if not isfinite(rating_gap) or scale <= 0:
-        raise ValueError("Expected finite rating gap and positive scale")
-    return 1.0 / (1.0 + 10.0 ** (-rating_gap / scale))
+    if not isfinite(rating_gap) or not isfinite(scale) or scale <= 0:
+        raise ValueError("Expected finite rating gap and finite positive scale")
+    exponent = rating_gap / scale
+    if exponent >= 0:
+        odds = 10.0 ** (-exponent)
+        return 1.0 / (1.0 + odds)
+    odds = 10.0 ** exponent
+    return odds / (1.0 + odds)
 
 
 def model_home_margin(home_rating: float, away_rating: float, *, neutral: bool = False,
