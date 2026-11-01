@@ -39,17 +39,21 @@ def refresh(season: int, output: Path, api_key: str):
         "summary": summary,
         "games": [g.__dict__ for g in games],
     }
-    # Preserve the snapshot when unchanged; its timestamp records the last data change.
+    # Record both the last successful check and the last actual data change.
     if output.exists():
         try:
             existing = json.loads(output.read_text(encoding="utf-8"))
         except (ValueError, OSError):
             existing = None
-        comparable = ({key: value for key, value in existing.items() if key != "retrieved_at"}
+        comparable = ({key: value for key, value in existing.items() if key not in ("retrieved_at", "data_changed_at")}
                       if isinstance(existing, dict) else None)
         incoming = {key: value for key, value in payload.items() if key != "retrieved_at"}
         if comparable == incoming:
-            return summary
+            payload["data_changed_at"] = existing.get("data_changed_at", existing.get("retrieved_at", payload["retrieved_at"]))
+        else:
+            payload["data_changed_at"] = payload["retrieved_at"]
+    else:
+        payload["data_changed_at"] = payload["retrieved_at"]
     output.parent.mkdir(parents=True, exist_ok=True)
     temp = output.with_suffix(output.suffix + ".tmp")
     try:
