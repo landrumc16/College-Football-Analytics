@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-01T14:03:06.678059+00:00",
+  "retrieved_at": "2026-11-01T17:10:33.043673+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3678,
-    "completed": 2816,
-    "pending": 862
+    "completed": 2836,
+    "pending": 842
   },
   "games": [
     {
@@ -29395,9 +29395,9 @@
       "week": 9,
       "home": "Tiffin",
       "away": "Lake Erie",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 21,
       "neutral_site": false
     },
     {
@@ -29483,9 +29483,9 @@
       "week": 9,
       "home": "Roosevelt",
       "away": "Grand Valley State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 22,
+      "away_score": 45,
       "neutral_site": false
     },
     {
@@ -29494,9 +29494,9 @@
       "week": 9,
       "home": "Benedict",
       "away": "Savannah State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 23,
+      "away_score": 0,
       "neutral_site": false
     },
     {
@@ -29670,9 +29670,9 @@
       "week": 9,
       "home": "Sul Ross State",
       "away": "West Texas",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 33,
+      "away_score": 62,
       "neutral_site": false
     },
     {
@@ -30011,9 +30011,9 @@
       "week": 9,
       "home": "Carnegie Mellon",
       "away": "Dickinson",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 51,
+      "away_score": 54,
       "neutral_site": false
     },
     {
@@ -30187,9 +30187,9 @@
       "week": 9,
       "home": "Alfred",
       "away": "Brockport",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 3,
+      "away_score": 28,
       "neutral_site": false
     },
     {
@@ -30286,9 +30286,9 @@
       "week": 9,
       "home": "St. John Fisher",
       "away": "Utica",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 35,
       "neutral_site": false
     },
     {
@@ -30297,9 +30297,9 @@
       "week": 9,
       "home": "Huntingdon",
       "away": "LaGrange",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 15,
+      "away_score": 11,
       "neutral_site": false
     },
     {
@@ -30616,9 +30616,9 @@
       "week": 9,
       "home": "Redlands",
       "away": "Claremont Mudd Scripps",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 35,
       "neutral_site": false
     },
     {
@@ -30638,9 +30638,9 @@
       "week": 9,
       "home": "Curry",
       "away": "Husson",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 7,
+      "away_score": 17,
       "neutral_site": false
     },
     {
@@ -30715,9 +30715,9 @@
       "week": 9,
       "home": "Austin",
       "away": "Texas Lutheran",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 0,
+      "away_score": 23,
       "neutral_site": false
     },
     {
@@ -30737,9 +30737,9 @@
       "week": 9,
       "home": "Bridgewater State",
       "away": "Fitchburg State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 45,
+      "away_score": 22,
       "neutral_site": false
     },
     {
@@ -30759,9 +30759,9 @@
       "week": 9,
       "home": "Framingham State",
       "away": "Plymouth State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 0,
       "neutral_site": false
     },
     {
@@ -30770,9 +30770,9 @@
       "week": 9,
       "home": "Mass Maritime",
       "away": "Westfield State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 21,
+      "away_score": 7,
       "neutral_site": false
     },
     {
@@ -30792,9 +30792,9 @@
       "week": 9,
       "home": "WPI",
       "away": "Merchant Marine",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 26,
+      "away_score": 40,
       "neutral_site": false
     },
     {
@@ -30880,9 +30880,9 @@
       "week": 9,
       "home": "Olivet",
       "away": "Adrian",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 6,
+      "away_score": 76,
       "neutral_site": false
     },
     {
@@ -31056,9 +31056,9 @@
       "week": 9,
       "home": "Bowdoin",
       "away": "Wesleyan (CT)",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 0,
+      "away_score": 28,
       "neutral_site": false
     },
     {
@@ -31122,9 +31122,9 @@
       "week": 9,
       "home": "Christopher Newport",
       "away": "Rowan",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 13,
+      "away_score": 12,
       "neutral_site": false
     },
     {
@@ -31144,9 +31144,9 @@
       "week": 9,
       "home": "Salve Regina",
       "away": "Norwich",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 34,
+      "away_score": 6,
       "neutral_site": false
     },
     {
@@ -31276,9 +31276,9 @@
       "week": 9,
       "home": "Saint Vincent",
       "away": "Westminster (PA)",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 18,
+      "away_score": 40,
       "neutral_site": false
     },
     {
@@ -40467,5 +40467,5 @@
       "neutral_site": true
     }
   ],
-  "data_changed_at": "2026-11-01T13:17:00.617960+00:00"
+  "data_changed_at": "2026-11-01T17:10:33.043673+00:00"
 }

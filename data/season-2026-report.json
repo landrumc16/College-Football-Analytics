@@ -11,8 +11,8 @@
         "rating": 24.836217732592566,
         "projected_wins": 11.140024995510858,
         "projected_conference_wins": 8.823640138275573,
-        "conference_title_odds": 0.7698,
-        "cfp_odds": 1.0
+        "conference_title_odds": 0.763,
+        "cfp_odds": 0.9999
       },
       {
         "team": "Wake Forest",
@@ -24,8 +24,8 @@
         "rating": 16.024195792693238,
         "projected_wins": 10.144328725293896,
         "projected_conference_wins": 7.1474713232759655,
-        "conference_title_odds": 0.2069,
-        "cfp_odds": 0.5609
+        "conference_title_odds": 0.2127,
+        "cfp_odds": 0.5728
       },
       {
         "team": "Louisville",
@@ -37,8 +37,8 @@
         "rating": 14.060993784875981,
         "projected_wins": 7.561486893006651,
         "projected_conference_wins": 6.1173200837163275,
-        "conference_title_odds": 0.0134,
-        "cfp_odds": 0.008
+        "conference_title_odds": 0.0133,
+        "cfp_odds": 0.0078
       },
       {
         "team": "SMU",
@@ -50,8 +50,8 @@
         "rating": 11.455757447021702,
         "projected_wins": 8.143688528152333,
         "projected_conference_wins": 6.066564705762005,
-        "conference_title_odds": 0.0096,
-        "cfp_odds": 0.0058
+        "conference_title_odds": 0.0105,
+        "cfp_odds": 0.0049
       },
       {
         "team": "Duke",
@@ -63,8 +63,8 @@
         "rating": 10.413314983042735,
         "projected_wins": 7.570346590502979,
         "projected_conference_wins": 4.570346590502979,
-        "conference_title_odds": 0.0001,
-        "cfp_odds": 0.0001
+        "conference_title_odds": 0.0004,
+        "cfp_odds": 0.0004
       },
       {
         "team": "Clemson",
@@ -102,7 +102,7 @@
         "rating": 10.229258840835048,
         "projected_wins": 7.708773223348073,
         "projected_conference_wins": 4.708773223348073,
-        "conference_title_odds": 0.0001,
+        "conference_title_odds": 0.0,
         "cfp_odds": 0.0
       },
       {
@@ -234,8 +234,8 @@
         "rating": 4.8326470543074596,
         "projected_wins": 8.813801179093034,
         "projected_conference_wins": 6.813801179093034,
-        "conference_title_odds": 0.4547,
-        "cfp_odds": 0.0146
+        "conference_title_odds": 0.4552,
+        "cfp_odds": 0.0166
       },
       {
         "team": "UTSA",
@@ -247,8 +247,8 @@
         "rating": 4.295337964645938,
         "projected_wins": 9.757193586098612,
         "projected_conference_wins": 6.757193586098612,
-        "conference_title_odds": 0.3913,
-        "cfp_odds": 0.0369
+        "conference_title_odds": 0.3851,
+        "cfp_odds": 0.0364
       },
       {
         "team": "Memphis",
@@ -260,8 +260,8 @@
         "rating": 4.268116403115668,
         "projected_wins": 9.015336528644719,
         "projected_conference_wins": 6.015336528644719,
-        "conference_title_odds": 0.1029,
-        "cfp_odds": 0.0035
+        "conference_title_odds": 0.1119,
+        "cfp_odds": 0.0049
       },
       {
         "team": "Army",
@@ -273,8 +273,8 @@
         "rating": -1.3125900434289481,
         "projected_wins": 7.745901343248294,
         "projected_conference_wins": 6.020431773656229,
-        "conference_title_odds": 0.0467,
-        "cfp_odds": 0.0
+        "conference_title_odds": 0.0442,
+        "cfp_odds": 0.0001
       },
       {
         "team": "South Florida",
@@ -286,7 +286,7 @@
         "rating": 3.402610090086683,
         "projected_wins": 8.534839419723692,
         "projected_conference_wins": 4.534839419723693,
-        "conference_title_odds": 0.004,
+        "conference_title_odds": 0.0029,
         "cfp_odds": 0.0002
       },
       {
@@ -299,7 +299,7 @@
         "rating": -1.707688712134994,
         "projected_wins": 6.317031327739869,
         "projected_conference_wins": 4.317031327739869,
-        "conference_title_odds": 0.0004,
+        "conference_title_odds": 0.0006,
         "cfp_odds": 0.0
       },
       {
@@ -312,7 +312,7 @@
         "rating": -2.126415735229698,
         "projected_wins": 5.850207704024434,
         "projected_conference_wins": 3.8502077040244336,
-        "conference_title_odds": 0.0,
+        "conference_title_odds": 0.0001,
         "cfp_odds": 0.0
       },
       {
@@ -418,8 +418,8 @@
         "rating": 20.402220799787088,
         "projected_wins": 10.881998225424308,
         "projected_conference_wins": 7.881998225424308,
-        "conference_title_odds": 0.5551,
-        "cfp_odds": 0.9556
+        "conference_title_odds": 0.5443,
+        "cfp_odds": 0.9527
       },
       {
         "team": "Texas Tech",
@@ -431,8 +431,8 @@
         "rating": 18.172987404968406,
         "projected_wins": 9.922181574745101,
         "projected_conference_wins": 6.922181574745101,
-        "conference_title_odds": 0.3172,
-        "cfp_odds": 0.7067
+        "conference_title_odds": 0.3238,
+        "cfp_odds": 0.7016
       },
       {
         "team": "BYU",
@@ -444,8 +444,8 @@
         "rating": 16.69460005934271,
         "projected_wins": 9.452797423801517,
         "projected_conference_wins": 6.452797423801517,
-        "conference_title_odds": 0.0975,
-        "cfp_odds": 0.3167
+        "conference_title_odds": 0.096,
+        "cfp_odds": 0.3094
       },
       {
         "team": "Arizona",
@@ -457,8 +457,8 @@
         "rating": 15.751785410718657,
         "projected_wins": 8.671441769377331,
         "projected_conference_wins": 5.671441769377331,
-        "conference_title_odds": 0.0112,
-        "cfp_odds": 0.0303
+        "conference_title_odds": 0.013,
+        "cfp_odds": 0.0318
       },
       {
         "team": "Baylor",
@@ -470,8 +470,8 @@
         "rating": 14.820874638101447,
         "projected_wins": 7.073789427922301,
         "projected_conference_wins": 5.073789427922301,
-        "conference_title_odds": 0.0068,
-        "cfp_odds": 0.0061
+        "conference_title_odds": 0.0075,
+        "cfp_odds": 0.0074
       },
       {
         "team": "Houston",
@@ -483,8 +483,8 @@
         "rating": 14.779412258855993,
         "projected_wins": 8.905619466227272,
         "projected_conference_wins": 5.9056194662272725,
-        "conference_title_odds": 0.0113,
-        "cfp_odds": 0.0164
+        "conference_title_odds": 0.0141,
+        "cfp_odds": 0.0206
       },
       {
         "team": "Oklahoma State",
@@ -496,7 +496,7 @@
         "rating": 7.745858134221098,
         "projected_wins": 6.698344166728632,
         "projected_conference_wins": 4.698344166728632,
-        "conference_title_odds": 0.0009,
+        "conference_title_odds": 0.0013,
         "cfp_odds": 0.0001
       },
       {
@@ -628,8 +628,8 @@
         "rating": 13.733363587191722,
         "projected_wins": 10.356319246009628,
         "projected_conference_wins": 7.356319246009628,
-        "conference_title_odds": 0.0829,
-        "cfp_odds": 0.4121
+        "conference_title_odds": 0.0841,
+        "cfp_odds": 0.4198
       },
       {
         "team": "Indiana",
@@ -641,8 +641,8 @@
         "rating": 20.996256303527883,
         "projected_wins": 10.384741070846236,
         "projected_conference_wins": 7.3847410708462355,
-        "conference_title_odds": 0.3035,
-        "cfp_odds": 0.9418
+        "conference_title_odds": 0.3081,
+        "cfp_odds": 0.9399
       },
       {
         "team": "Ohio State",
@@ -654,8 +654,8 @@
         "rating": 26.26091565495623,
         "projected_wins": 9.391723127530538,
         "projected_conference_wins": 7.391723127530538,
-        "conference_title_odds": 0.5866,
-        "cfp_odds": 0.9585
+        "conference_title_odds": 0.5836,
+        "cfp_odds": 0.9601
       },
       {
         "team": "USC",
@@ -667,8 +667,8 @@
         "rating": 16.5304122767049,
         "projected_wins": 8.68376274842323,
         "projected_conference_wins": 5.68376274842323,
-        "conference_title_odds": 0.0105,
-        "cfp_odds": 0.0568
+        "conference_title_odds": 0.0104,
+        "cfp_odds": 0.0576
       },
       {
         "team": "Oregon",
@@ -680,8 +680,8 @@
         "rating": 18.11837013632079,
         "projected_wins": 7.6319680988978975,
         "projected_conference_wins": 5.6319680988978975,
-        "conference_title_odds": 0.0117,
-        "cfp_odds": 0.012
+        "conference_title_odds": 0.0101,
+        "cfp_odds": 0.0103
       },
       {
         "team": "Iowa",
@@ -693,8 +693,8 @@
         "rating": 15.095519973599297,
         "projected_wins": 8.627018527057146,
         "projected_conference_wins": 5.627018527057146,
-        "conference_title_odds": 0.0029,
-        "cfp_odds": 0.0068
+        "conference_title_odds": 0.003,
+        "cfp_odds": 0.0078
       },
       {
         "team": "Northwestern",
@@ -706,8 +706,8 @@
         "rating": 12.639912926297136,
         "projected_wins": 7.936782171164566,
         "projected_conference_wins": 4.936782171164566,
-        "conference_title_odds": 0.0008,
-        "cfp_odds": 0.0009
+        "conference_title_odds": 0.0003,
+        "cfp_odds": 0.0003
       },
       {
         "team": "Wisconsin",
@@ -719,7 +719,7 @@
         "rating": 10.01546125834493,
         "projected_wins": 7.793980412732508,
         "projected_conference_wins": 5.793980412732508,
-        "conference_title_odds": 0.0011,
+        "conference_title_odds": 0.0004,
         "cfp_odds": 0.0004
       },
       {
@@ -864,8 +864,8 @@
         "rating": 4.7265478032618224,
         "projected_wins": 10.467756246313913,
         "projected_conference_wins": 7.467756246313913,
-        "conference_title_odds": 0.7331,
-        "cfp_odds": 0.288
+        "conference_title_odds": 0.7262,
+        "cfp_odds": 0.2807
       },
       {
         "team": "Jacksonville State",
@@ -877,8 +877,8 @@
         "rating": -2.8473913950854373,
         "projected_wins": 8.703237661892826,
         "projected_conference_wins": 6.703237661892826,
-        "conference_title_odds": 0.2617,
-        "cfp_odds": 0.0001
+        "conference_title_odds": 0.2685,
+        "cfp_odds": 0.0
       },
       {
         "team": "Delaware",
@@ -890,7 +890,7 @@
         "rating": -5.844479301641093,
         "projected_wins": 6.166351206470759,
         "projected_conference_wins": 4.166351206470759,
-        "conference_title_odds": 0.0039,
+        "conference_title_odds": 0.0031,
         "cfp_odds": 0.0
       },
       {
@@ -916,7 +916,7 @@
         "rating": -10.703247227554764,
         "projected_wins": 4.2914668582225,
         "projected_conference_wins": 3.2914668582225,
-        "conference_title_odds": 0.0,
+        "conference_title_odds": 0.0006,
         "cfp_odds": 0.0
       },
       {
@@ -929,7 +929,7 @@
         "rating": -11.077315298089939,
         "projected_wins": 4.410518044378476,
         "projected_conference_wins": 3.410518044378476,
-        "conference_title_odds": 0.0,
+        "conference_title_odds": 0.0004,
         "cfp_odds": 0.0
       },
       {
@@ -942,7 +942,7 @@
         "rating": -11.7126986041978,
         "projected_wins": 5.56895492845141,
         "projected_conference_wins": 3.5689549284514093,
-        "conference_title_odds": 0.0002,
+        "conference_title_odds": 0.0001,
         "cfp_odds": 0.0
       },
       {
@@ -996,7 +996,7 @@
         "rating": 2.5921025055983185,
         "projected_wins": 8.850941513706543,
         "projected_conference_wins": 6.850941513706543,
-        "conference_title_odds": 0.4308,
+        "conference_title_odds": 0.4203,
         "cfp_odds": 0.0025
       },
       {
@@ -1009,8 +1009,8 @@
         "rating": 5.742642583104815,
         "projected_wins": 9.237755715300942,
         "projected_conference_wins": 5.673657642077109,
-        "conference_title_odds": 0.4572,
-        "cfp_odds": 0.0341
+        "conference_title_odds": 0.4653,
+        "cfp_odds": 0.0327
       },
       {
         "team": "Georgia Southern",
@@ -1022,7 +1022,7 @@
         "rating": -2.4760194596462455,
         "projected_wins": 6.161468983086756,
         "projected_conference_wins": 5.161468983086756,
-        "conference_title_odds": 0.0494,
+        "conference_title_odds": 0.0516,
         "cfp_odds": 0.0
       },
       {
@@ -1035,8 +1035,8 @@
         "rating": 0.6976364619865792,
         "projected_wins": 8.004105651483307,
         "projected_conference_wins": 5.004105651483308,
-        "conference_title_odds": 0.0454,
-        "cfp_odds": 0.0001
+        "conference_title_odds": 0.0464,
+        "cfp_odds": 0.0
       },
       {
         "team": "Arkansas State",
@@ -1048,7 +1048,7 @@
         "rating": -4.138483238535776,
         "projected_wins": 6.268273122185971,
         "projected_conference_wins": 4.268273122185971,
-        "conference_title_odds": 0.0048,
+        "conference_title_odds": 0.0034,
         "cfp_odds": 0.0
       },
       {
@@ -1061,7 +1061,7 @@
         "rating": -4.3336503984926855,
         "projected_wins": 7.450905681755921,
         "projected_conference_wins": 4.450905681755921,
-        "conference_title_odds": 0.006,
+        "conference_title_odds": 0.0061,
         "cfp_odds": 0.0
       },
       {
@@ -1074,7 +1074,7 @@
         "rating": -5.1897966860679565,
         "projected_wins": 5.903832775551239,
         "projected_conference_wins": 3.9038327755512388,
-        "conference_title_odds": 0.0011,
+        "conference_title_odds": 0.0022,
         "cfp_odds": 0.0
       },
       {
@@ -1087,7 +1087,7 @@
         "rating": -5.793867646042942,
         "projected_wins": 5.566204569124315,
         "projected_conference_wins": 3.5662045691243147,
-        "conference_title_odds": 0.0017,
+        "conference_title_odds": 0.0016,
         "cfp_odds": 0.0
       },
       {
@@ -1100,7 +1100,7 @@
         "rating": -7.21259150795168,
         "projected_wins": 4.502074394053,
         "projected_conference_wins": 3.5020743940530004,
-        "conference_title_odds": 0.0011,
+        "conference_title_odds": 0.001,
         "cfp_odds": 0.0
       },
       {
@@ -1113,7 +1113,7 @@
         "rating": -7.5498734826165705,
         "projected_wins": 4.387277864812434,
         "projected_conference_wins": 3.387277864812434,
-        "conference_title_odds": 0.0009,
+        "conference_title_odds": 0.0007,
         "cfp_odds": 0.0
       },
       {
@@ -1126,7 +1126,7 @@
         "rating": -8.307923014112735,
         "projected_wins": 6.884566261960921,
         "projected_conference_wins": 3.884566261960921,
-        "conference_title_odds": 0.0016,
+        "conference_title_odds": 0.0013,
         "cfp_odds": 0.0
       },
       {
@@ -1139,7 +1139,7 @@
         "rating": -4.26226922688813,
         "projected_wins": 5.917198766353179,
         "projected_conference_wins": 2.917198766353179,
-        "conference_title_odds": 0.0,
+        "conference_title_odds": 0.0001,
         "cfp_odds": 0.0
       },
       {
@@ -1180,8 +1180,8 @@
         "rating": 7.14967183599908,
         "projected_wins": 10.405664560915028,
         "projected_conference_wins": 7.405664560915028,
-        "conference_title_odds": 0.6855,
-        "cfp_odds": 0.4564
+        "conference_title_odds": 0.6918,
+        "cfp_odds": 0.4641
       },
       {
         "team": "Wyoming",
@@ -1193,7 +1193,7 @@
         "rating": -10.281534067379491,
         "projected_wins": 6.231122737364487,
         "projected_conference_wins": 4.96697013968704,
-        "conference_title_odds": 0.0036,
+        "conference_title_odds": 0.0034,
         "cfp_odds": 0.0
       },
       {
@@ -1206,8 +1206,8 @@
         "rating": 0.9998113806978601,
         "projected_wins": 9.303896902272392,
         "projected_conference_wins": 6.303896902272391,
-        "conference_title_odds": 0.2826,
-        "cfp_odds": 0.0047
+        "conference_title_odds": 0.2755,
+        "cfp_odds": 0.0044
       },
       {
         "team": "UNLV",
@@ -1219,7 +1219,7 @@
         "rating": -2.203335568916626,
         "projected_wins": 7.351946792483226,
         "projected_conference_wins": 5.351946792483226,
-        "conference_title_odds": 0.0249,
+        "conference_title_odds": 0.0258,
         "cfp_odds": 0.0
       },
       {
@@ -1232,7 +1232,7 @@
         "rating": -5.909106812016361,
         "projected_wins": 7.942613895554763,
         "projected_conference_wins": 4.668083465146829,
-        "conference_title_odds": 0.0013,
+        "conference_title_odds": 0.0014,
         "cfp_odds": 0.0
       },
       {
@@ -1245,7 +1245,7 @@
         "rating": -8.047227524239492,
         "projected_wins": 4.709377928126796,
         "projected_conference_wins": 3.709377928126796,
-        "conference_title_odds": 0.0006,
+        "conference_title_odds": 0.0008,
         "cfp_odds": 0.0
       },
       {
@@ -1258,7 +1258,7 @@
         "rating": -9.037222990158186,
         "projected_wins": 5.829576601360461,
         "projected_conference_wins": 3.8295766013604613,
-        "conference_title_odds": 0.0015,
+        "conference_title_odds": 0.0013,
         "cfp_odds": 0.0
       },
       {
@@ -1313,7 +1313,7 @@
         "projected_wins": 10.526703219080687,
         "projected_conference_wins": 0.0,
         "conference_title_odds": 0.0,
-        "cfp_odds": 0.9999
+        "cfp_odds": 0.9998
       },
       {
         "team": "UConn",
@@ -1340,7 +1340,7 @@
         "rating": -6.031567633635352,
         "projected_wins": 8.499370425450039,
         "projected_conference_wins": 6.499370425450039,
-        "conference_title_odds": 0.1932,
+        "conference_title_odds": 0.1896,
         "cfp_odds": 0.0
       },
       {
@@ -1353,7 +1353,7 @@
         "rating": -2.2654094232321764,
         "projected_wins": 8.40742579766118,
         "projected_conference_wins": 6.40742579766118,
-        "conference_title_odds": 0.3754,
+        "conference_title_odds": 0.382,
         "cfp_odds": 0.0
       },
       {
@@ -1366,8 +1366,8 @@
         "rating": -1.515377335707279,
         "projected_wins": 9.259349863371888,
         "projected_conference_wins": 6.259349863371887,
-        "conference_title_odds": 0.3975,
-        "cfp_odds": 0.0003
+        "conference_title_odds": 0.3959,
+        "cfp_odds": 0.0002
       },
       {
         "team": "Miami (OH)",
@@ -1379,7 +1379,7 @@
         "rating": -7.9501112806257686,
         "projected_wins": 7.24252209458001,
         "projected_conference_wins": 5.24252209458001,
-        "conference_title_odds": 0.0301,
+        "conference_title_odds": 0.0276,
         "cfp_odds": 0.0
       },
       {
@@ -1392,7 +1392,7 @@
         "rating": -14.388755283622725,
         "projected_wins": 6.713439270743665,
         "projected_conference_wins": 4.713439270743665,
-        "conference_title_odds": 0.0034,
+        "conference_title_odds": 0.0045,
         "cfp_odds": 0.0
       },
       {
@@ -1511,8 +1511,8 @@
         "rating": 9.11824875721397,
         "projected_wins": 9.481746952403999,
         "projected_conference_wins": 6.481746952403998,
-        "conference_title_odds": 0.6444,
-        "cfp_odds": 0.1743
+        "conference_title_odds": 0.6445,
+        "cfp_odds": 0.175
       },
       {
         "team": "Oregon State",
@@ -1524,7 +1524,7 @@
         "rating": 4.555238929848283,
         "projected_wins": 6.689314971926142,
         "projected_conference_wins": 4.689314971926142,
-        "conference_title_odds": 0.2658,
+        "conference_title_odds": 0.2708,
         "cfp_odds": 0.0
       },
       {
@@ -1537,7 +1537,7 @@
         "rating": -3.751649618818157,
         "projected_wins": 4.696444475288013,
         "projected_conference_wins": 3.6964444752880135,
-        "conference_title_odds": 0.0025,
+        "conference_title_odds": 0.0022,
         "cfp_odds": 0.0
       },
       {
@@ -1550,7 +1550,7 @@
         "rating": 3.9323023130168173,
         "projected_wins": 5.788569474694678,
         "projected_conference_wins": 3.788569474694678,
-        "conference_title_odds": 0.0563,
+        "conference_title_odds": 0.0498,
         "cfp_odds": 0.0
       },
       {
@@ -1563,7 +1563,7 @@
         "rating": 3.330024679073049,
         "projected_wins": 6.87661506979584,
         "projected_conference_wins": 3.8766150697958404,
-        "conference_title_odds": 0.0262,
+        "conference_title_odds": 0.0285,
         "cfp_odds": 0.0
       },
       {
@@ -1576,7 +1576,7 @@
         "rating": -3.286605358344574,
         "projected_wins": 4.005895433599203,
         "projected_conference_wins": 3.0058954335992034,
-        "conference_title_odds": 0.0048,
+        "conference_title_odds": 0.0042,
         "cfp_odds": 0.0
       },
       {
@@ -1617,8 +1617,8 @@
         "rating": 27.5014735235149,
         "projected_wins": 10.116354057837311,
         "projected_conference_wins": 7.135310291174401,
-        "conference_title_odds": 0.5182,
-        "cfp_odds": 0.9973
+        "conference_title_odds": 0.5137,
+        "cfp_odds": 0.9972
       },
       {
         "team": "Kentucky",
@@ -1630,8 +1630,8 @@
         "rating": 12.81416451685514,
         "projected_wins": 8.489279800713675,
         "projected_conference_wins": 5.933446610003998,
-        "conference_title_odds": 0.0139,
-        "cfp_odds": 0.019
+        "conference_title_odds": 0.0128,
+        "cfp_odds": 0.0171
       },
       {
         "team": "Alabama",
@@ -1643,8 +1643,8 @@
         "rating": 27.28756247364814,
         "projected_wins": 9.334475627532935,
         "projected_conference_wins": 6.33522137056299,
-        "conference_title_odds": 0.2785,
-        "cfp_odds": 0.9873
+        "conference_title_odds": 0.2803,
+        "cfp_odds": 0.9886
       },
       {
         "team": "Ole Miss",
@@ -1656,8 +1656,8 @@
         "rating": 22.040839468994292,
         "projected_wins": 8.878170030590933,
         "projected_conference_wins": 5.879628052782785,
-        "conference_title_odds": 0.0459,
-        "cfp_odds": 0.5581
+        "conference_title_odds": 0.0502,
+        "cfp_odds": 0.5511
       },
       {
         "team": "Texas",
@@ -1669,8 +1669,8 @@
         "rating": 25.47608789272706,
         "projected_wins": 8.650717111252852,
         "projected_conference_wins": 5.650717111252852,
-        "conference_title_odds": 0.0588,
-        "cfp_odds": 0.7116
+        "conference_title_odds": 0.0568,
+        "cfp_odds": 0.7053
       },
       {
         "team": "LSU",
@@ -1682,8 +1682,8 @@
         "rating": 24.449706829027427,
         "projected_wins": 8.520564876536806,
         "projected_conference_wins": 5.520564876536805,
-        "conference_title_odds": 0.0615,
-        "cfp_odds": 0.522
+        "conference_title_odds": 0.0646,
+        "cfp_odds": 0.5245
       },
       {
         "team": "Tennessee",
@@ -1695,8 +1695,8 @@
         "rating": 20.08569388150872,
         "projected_wins": 8.517036272408593,
         "projected_conference_wins": 5.517036272408592,
-        "conference_title_odds": 0.0189,
-        "cfp_odds": 0.1688
+        "conference_title_odds": 0.0176,
+        "cfp_odds": 0.1682
       },
       {
         "team": "Missouri",
@@ -1708,8 +1708,8 @@
         "rating": 18.108986955115526,
         "projected_wins": 7.959093507185209,
         "projected_conference_wins": 4.959093507185209,
-        "conference_title_odds": 0.0043,
-        "cfp_odds": 0.0243
+        "conference_title_odds": 0.004,
+        "cfp_odds": 0.0247
       },
       {
         "team": "Florida",
@@ -1722,7 +1722,7 @@
         "projected_wins": 7.70321901389243,
         "projected_conference_wins": 5.056235238386155,
         "conference_title_odds": 0.0,
-        "cfp_odds": 0.0
+        "cfp_odds": 0.0001
       },
       {
         "team": "South Carolina",
@@ -1897,7 +1897,7 @@
           "Miami (FL)",
           "Wake Forest"
         ],
-        "matchup_probability": 0.8534
+        "matchup_probability": 0.8622
       },
       {
         "conference": "American",
@@ -1905,7 +1905,7 @@
           "North Texas",
           "UTSA"
         ],
-        "matchup_probability": 0.6397
+        "matchup_probability": 0.6314
       },
       {
         "conference": "Big 12",
@@ -1913,7 +1913,7 @@
           "Texas Tech",
           "Utah"
         ],
-        "matchup_probability": 0.6774
+        "matchup_probability": 0.6737
       },
       {
         "conference": "Big Ten",
@@ -1921,7 +1921,7 @@
           "Indiana",
           "Ohio State"
         ],
-        "matchup_probability": 0.5352
+        "matchup_probability": 0.5262
       },
       {
         "conference": "Conference USA",
@@ -1929,7 +1929,7 @@
           "Jacksonville State",
           "Liberty"
         ],
-        "matchup_probability": 0.9743
+        "matchup_probability": 0.9718
       },
       {
         "conference": "MAC",
@@ -1937,7 +1937,7 @@
           "Toledo",
           "Western Michigan"
         ],
-        "matchup_probability": 0.4294
+        "matchup_probability": 0.4363
       },
       {
         "conference": "Mountain West",
@@ -1945,7 +1945,7 @@
           "New Mexico",
           "North Dakota State"
         ],
-        "matchup_probability": 0.8541
+        "matchup_probability": 0.858
       },
       {
         "conference": "Pac-12",
@@ -1953,7 +1953,7 @@
           "Boise State",
           "Oregon State"
         ],
-        "matchup_probability": 0.73
+        "matchup_probability": 0.7344
       },
       {
         "conference": "SEC",
@@ -1961,7 +1961,7 @@
           "Alabama",
           "Georgia"
         ],
-        "matchup_probability": 0.4817
+        "matchup_probability": 0.4818
       },
       {
         "conference": "Sun Belt",
@@ -1969,394 +1969,411 @@
           "James Madison",
           "Louisiana Tech"
         ],
-        "matchup_probability": 0.6913
+        "matchup_probability": 0.6869
       }
     ],
     "teams": [
       {
         "team": "Notre Dame",
         "conference": "Independent",
-        "average_wins": 10.538,
+        "average_wins": 10.518,
         "wins_p10": 10,
         "wins_p90": 11,
         "most_likely_seed": 2,
-        "average_seed_when_selected": 2.92,
+        "average_seed_when_selected": 2.96,
         "bowl_eligible": 1.0,
         "conference_title": 0.0,
-        "cfp_field": 0.9999,
-        "first_round_bye": 0.8506,
-        "quarterfinal": 0.9792,
-        "semifinal": 0.6425,
-        "final": 0.3815,
-        "national_title": 0.2218
+        "cfp_field": 0.9998,
+        "first_round_bye": 0.8391,
+        "quarterfinal": 0.9765,
+        "semifinal": 0.6382,
+        "final": 0.3675,
+        "national_title": 0.2151
       },
       {
         "team": "Georgia",
         "conference": "SEC",
-        "average_wins": 10.628,
+        "average_wins": 10.631,
         "wins_p10": 9,
         "wins_p90": 12,
         "most_likely_seed": 2,
-        "average_seed_when_selected": 3.41,
+        "average_seed_when_selected": 3.4,
         "bowl_eligible": 1.0,
-        "conference_title": 0.5182,
-        "cfp_field": 0.9973,
-        "first_round_bye": 0.718,
-        "quarterfinal": 0.9375,
-        "semifinal": 0.5887,
-        "final": 0.3399,
-        "national_title": 0.1963
+        "conference_title": 0.5137,
+        "cfp_field": 0.9972,
+        "first_round_bye": 0.7219,
+        "quarterfinal": 0.9425,
+        "semifinal": 0.6009,
+        "final": 0.3448,
+        "national_title": 0.1917
       },
       {
         "team": "Alabama",
         "conference": "SEC",
-        "average_wins": 9.609,
+        "average_wins": 9.611,
         "wins_p10": 9,
         "wins_p90": 11,
         "most_likely_seed": 7,
         "average_seed_when_selected": 5.77,
         "bowl_eligible": 1.0,
-        "conference_title": 0.2785,
-        "cfp_field": 0.9873,
-        "first_round_bye": 0.2876,
-        "quarterfinal": 0.8126,
-        "semifinal": 0.4755,
-        "final": 0.2684,
-        "national_title": 0.1489
+        "conference_title": 0.2803,
+        "cfp_field": 0.9886,
+        "first_round_bye": 0.2826,
+        "quarterfinal": 0.8141,
+        "semifinal": 0.4783,
+        "final": 0.2821,
+        "national_title": 0.1566
       },
       {
         "team": "Ohio State",
         "conference": "Big Ten",
-        "average_wins": 9.976,
+        "average_wins": 9.981,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 4,
         "average_seed_when_selected": 5.33,
         "bowl_eligible": 1.0,
-        "conference_title": 0.5866,
-        "cfp_field": 0.9585,
-        "first_round_bye": 0.4137,
-        "quarterfinal": 0.8201,
-        "semifinal": 0.4641,
-        "final": 0.25,
-        "national_title": 0.1253
+        "conference_title": 0.5836,
+        "cfp_field": 0.9601,
+        "first_round_bye": 0.416,
+        "quarterfinal": 0.8184,
+        "semifinal": 0.4611,
+        "final": 0.2501,
+        "national_title": 0.1276
       },
       {
         "team": "Miami (FL)",
         "conference": "ACC",
-        "average_wins": 11.906,
+        "average_wins": 11.911,
         "wins_p10": 11,
         "wins_p90": 13,
         "most_likely_seed": 1,
-        "average_seed_when_selected": 1.94,
+        "average_seed_when_selected": 1.95,
         "bowl_eligible": 1.0,
-        "conference_title": 0.7698,
-        "cfp_field": 1.0,
-        "first_round_bye": 0.9276,
-        "quarterfinal": 0.9855,
-        "semifinal": 0.5656,
-        "final": 0.2713,
-        "national_title": 0.1222
+        "conference_title": 0.763,
+        "cfp_field": 0.9999,
+        "first_round_bye": 0.9269,
+        "quarterfinal": 0.9863,
+        "semifinal": 0.5579,
+        "final": 0.2706,
+        "national_title": 0.1243
       },
       {
         "team": "Texas",
         "conference": "SEC",
-        "average_wins": 8.702,
+        "average_wins": 8.703,
         "wins_p10": 8,
         "wins_p90": 10,
         "most_likely_seed": 9,
-        "average_seed_when_selected": 8.2,
+        "average_seed_when_selected": 8.17,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0588,
-        "cfp_field": 0.7116,
-        "first_round_bye": 0.0513,
-        "quarterfinal": 0.4797,
-        "semifinal": 0.2433,
-        "final": 0.1247,
-        "national_title": 0.0596
+        "conference_title": 0.0568,
+        "cfp_field": 0.7053,
+        "first_round_bye": 0.051,
+        "quarterfinal": 0.4739,
+        "semifinal": 0.2347,
+        "final": 0.1203,
+        "national_title": 0.0564
       },
       {
         "team": "LSU",
         "conference": "SEC",
-        "average_wins": 8.577,
+        "average_wins": 8.595,
         "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": 10,
-        "average_seed_when_selected": 8.5,
+        "average_seed_when_selected": 8.44,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0615,
-        "cfp_field": 0.522,
-        "first_round_bye": 0.0414,
-        "quarterfinal": 0.3328,
-        "semifinal": 0.1562,
-        "final": 0.074,
-        "national_title": 0.0341
+        "conference_title": 0.0646,
+        "cfp_field": 0.5245,
+        "first_round_bye": 0.0442,
+        "quarterfinal": 0.3377,
+        "semifinal": 0.1595,
+        "final": 0.0736,
+        "national_title": 0.0336
       },
       {
         "team": "Utah",
         "conference": "Big 12",
-        "average_wins": 11.441,
+        "average_wins": 11.428,
         "wins_p10": 10,
         "wins_p90": 13,
         "most_likely_seed": 4,
-        "average_seed_when_selected": 4.94,
+        "average_seed_when_selected": 4.96,
         "bowl_eligible": 1.0,
-        "conference_title": 0.5551,
-        "cfp_field": 0.9556,
-        "first_round_bye": 0.4401,
-        "quarterfinal": 0.7501,
-        "semifinal": 0.2776,
-        "final": 0.095,
-        "national_title": 0.0319
+        "conference_title": 0.5443,
+        "cfp_field": 0.9527,
+        "first_round_bye": 0.4396,
+        "quarterfinal": 0.7473,
+        "semifinal": 0.281,
+        "final": 0.0988,
+        "national_title": 0.0315
       },
       {
         "team": "Indiana",
         "conference": "Big Ten",
-        "average_wins": 10.682,
+        "average_wins": 10.685,
         "wins_p10": 9,
         "wins_p90": 12,
         "most_likely_seed": 6,
-        "average_seed_when_selected": 6.34,
+        "average_seed_when_selected": 6.33,
         "bowl_eligible": 1.0,
-        "conference_title": 0.3035,
-        "cfp_field": 0.9418,
-        "first_round_bye": 0.209,
+        "conference_title": 0.3081,
+        "cfp_field": 0.9399,
+        "first_round_bye": 0.2153,
         "quarterfinal": 0.6272,
-        "semifinal": 0.2426,
-        "final": 0.0872,
-        "national_title": 0.027
+        "semifinal": 0.2413,
+        "final": 0.0846,
+        "national_title": 0.0261
       },
       {
         "team": "Ole Miss",
         "conference": "SEC",
-        "average_wins": 8.937,
+        "average_wins": 8.934,
         "wins_p10": 8,
         "wins_p90": 10,
         "most_likely_seed": 11,
-        "average_seed_when_selected": 9.14,
+        "average_seed_when_selected": 9.1,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0459,
-        "cfp_field": 0.5581,
-        "first_round_bye": 0.0186,
-        "quarterfinal": 0.2915,
-        "semifinal": 0.1088,
-        "final": 0.0458,
-        "national_title": 0.017
+        "conference_title": 0.0502,
+        "cfp_field": 0.5511,
+        "first_round_bye": 0.0203,
+        "quarterfinal": 0.2909,
+        "semifinal": 0.1181,
+        "final": 0.0481,
+        "national_title": 0.0208
       },
       {
         "team": "Texas Tech",
         "conference": "Big 12",
-        "average_wins": 10.246,
+        "average_wins": 10.236,
         "wins_p10": 9,
         "wins_p90": 12,
-        "most_likely_seed": 8,
-        "average_seed_when_selected": 8.02,
+        "most_likely_seed": 7,
+        "average_seed_when_selected": 8.03,
         "bowl_eligible": 1.0,
-        "conference_title": 0.3172,
-        "cfp_field": 0.7067,
-        "first_round_bye": 0.0271,
-        "quarterfinal": 0.3178,
-        "semifinal": 0.0899,
-        "final": 0.0271,
-        "national_title": 0.0061
+        "conference_title": 0.3238,
+        "cfp_field": 0.7016,
+        "first_round_bye": 0.0287,
+        "quarterfinal": 0.3123,
+        "semifinal": 0.0869,
+        "final": 0.0252,
+        "national_title": 0.0076
       },
       {
         "team": "Tennessee",
         "conference": "SEC",
-        "average_wins": 8.535,
+        "average_wins": 8.54,
         "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": 11,
         "average_seed_when_selected": 9.61,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0189,
-        "cfp_field": 0.1688,
-        "first_round_bye": 0.0011,
-        "quarterfinal": 0.0773,
-        "semifinal": 0.0267,
-        "final": 0.0086,
-        "national_title": 0.0032
+        "conference_title": 0.0176,
+        "cfp_field": 0.1682,
+        "first_round_bye": 0.001,
+        "quarterfinal": 0.0739,
+        "semifinal": 0.0264,
+        "final": 0.0087,
+        "national_title": 0.0026
       },
       {
         "team": "Wake Forest",
         "conference": "ACC",
-        "average_wins": 10.34,
+        "average_wins": 10.355,
         "wins_p10": 9,
         "wins_p90": 11,
         "most_likely_seed": 9,
         "average_seed_when_selected": 9.19,
         "bowl_eligible": 1.0,
-        "conference_title": 0.2069,
-        "cfp_field": 0.5609,
-        "first_round_bye": 0.0019,
-        "quarterfinal": 0.1824,
-        "semifinal": 0.0419,
-        "final": 0.0109,
-        "national_title": 0.0025
+        "conference_title": 0.2127,
+        "cfp_field": 0.5728,
+        "first_round_bye": 0.0024,
+        "quarterfinal": 0.1955,
+        "semifinal": 0.0439,
+        "final": 0.009,
+        "national_title": 0.0022
       },
       {
         "team": "BYU",
         "conference": "Big 12",
-        "average_wins": 9.562,
+        "average_wins": 9.544,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 11,
-        "average_seed_when_selected": 8.91,
+        "average_seed_when_selected": 8.92,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0975,
-        "cfp_field": 0.3167,
-        "first_round_bye": 0.0046,
-        "quarterfinal": 0.1176,
-        "semifinal": 0.0299,
-        "final": 0.0068,
-        "national_title": 0.0017
+        "conference_title": 0.096,
+        "cfp_field": 0.3094,
+        "first_round_bye": 0.0034,
+        "quarterfinal": 0.1114,
+        "semifinal": 0.0255,
+        "final": 0.0076,
+        "national_title": 0.0018
       },
       {
         "team": "UCLA",
         "conference": "Big Ten",
-        "average_wins": 10.426,
+        "average_wins": 10.437,
         "wins_p10": 9,
         "wins_p90": 12,
         "most_likely_seed": 10,
-        "average_seed_when_selected": 8.8,
+        "average_seed_when_selected": 8.76,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0829,
-        "cfp_field": 0.4121,
-        "first_round_bye": 0.0074,
-        "quarterfinal": 0.1203,
+        "conference_title": 0.0841,
+        "cfp_field": 0.4198,
+        "first_round_bye": 0.0076,
+        "quarterfinal": 0.1232,
         "semifinal": 0.0217,
-        "final": 0.0049,
-        "national_title": 0.0012
+        "final": 0.0041,
+        "national_title": 0.0008
       },
       {
         "team": "Missouri",
         "conference": "SEC",
-        "average_wins": 7.961,
+        "average_wins": 7.974,
         "wins_p10": 7,
         "wins_p90": 9,
-        "most_likely_seed": 11,
-        "average_seed_when_selected": 9.8,
+        "most_likely_seed": 10,
+        "average_seed_when_selected": 9.83,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0043,
-        "cfp_field": 0.0243,
+        "conference_title": 0.004,
+        "cfp_field": 0.0247,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0109,
+        "quarterfinal": 0.0099,
         "semifinal": 0.0029,
         "final": 0.0006,
         "national_title": 0.0003
       },
       {
-        "team": "Arizona",
-        "conference": "Big 12",
-        "average_wins": 8.67,
-        "wins_p10": 8,
+        "team": "Kentucky",
+        "conference": "SEC",
+        "average_wins": 8.492,
+        "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": 11,
-        "average_seed_when_selected": 10.38,
+        "average_seed_when_selected": 10.51,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0112,
-        "cfp_field": 0.0303,
+        "conference_title": 0.0128,
+        "cfp_field": 0.0171,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0104,
-        "semifinal": 0.0026,
-        "final": 0.0007,
-        "national_title": 0.0002
-      },
-      {
-        "team": "Boise State",
-        "conference": "Pac-12",
-        "average_wins": 10.13,
-        "wins_p10": 9,
-        "wins_p90": 11,
-        "most_likely_seed": 12,
-        "average_seed_when_selected": 11.98,
-        "bowl_eligible": 1.0,
-        "conference_title": 0.6444,
-        "cfp_field": 0.1743,
-        "first_round_bye": 0.0,
-        "quarterfinal": 0.0264,
-        "semifinal": 0.0035,
-        "final": 0.0005,
+        "quarterfinal": 0.0037,
+        "semifinal": 0.0008,
+        "final": 0.0003,
         "national_title": 0.0002
       },
       {
         "team": "New Mexico",
         "conference": "Mountain West",
-        "average_wins": 11.083,
+        "average_wins": 11.096,
         "wins_p10": 10,
         "wins_p90": 12,
         "most_likely_seed": 12,
-        "average_seed_when_selected": 11.76,
+        "average_seed_when_selected": 11.75,
         "bowl_eligible": 1.0,
-        "conference_title": 0.6855,
-        "cfp_field": 0.4564,
+        "conference_title": 0.6918,
+        "cfp_field": 0.4641,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0527,
-        "semifinal": 0.0047,
+        "quarterfinal": 0.0521,
+        "semifinal": 0.0055,
+        "final": 0.0005,
+        "national_title": 0.0002
+      },
+      {
+        "team": "Oregon",
+        "conference": "Big Ten",
+        "average_wins": 7.642,
+        "wins_p10": 7,
+        "wins_p90": 9,
+        "most_likely_seed": 10,
+        "average_seed_when_selected": 9.65,
+        "bowl_eligible": 0.995,
+        "conference_title": 0.0101,
+        "cfp_field": 0.0103,
+        "first_round_bye": 0.0,
+        "quarterfinal": 0.0037,
+        "semifinal": 0.0012,
         "final": 0.0007,
         "national_title": 0.0002
       },
       {
-        "team": "Houston",
+        "team": "Arizona",
         "conference": "Big 12",
-        "average_wins": 8.93,
+        "average_wins": 8.678,
         "wins_p10": 8,
         "wins_p90": 10,
         "most_likely_seed": 11,
-        "average_seed_when_selected": 9.98,
+        "average_seed_when_selected": 10.25,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0113,
-        "cfp_field": 0.0164,
+        "conference_title": 0.013,
+        "cfp_field": 0.0318,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0041,
+        "quarterfinal": 0.0088,
+        "semifinal": 0.0015,
+        "final": 0.0004,
+        "national_title": 0.0001
+      },
+      {
+        "team": "Baylor",
+        "conference": "Big 12",
+        "average_wins": 7.075,
+        "wins_p10": 6,
+        "wins_p90": 8,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 11.32,
+        "bowl_eligible": 0.9647,
+        "conference_title": 0.0075,
+        "cfp_field": 0.0074,
+        "first_round_bye": 0.0,
+        "quarterfinal": 0.0019,
+        "semifinal": 0.0005,
+        "final": 0.0001,
+        "national_title": 0.0001
+      },
+      {
+        "team": "Houston",
+        "conference": "Big 12",
+        "average_wins": 8.921,
+        "wins_p10": 8,
+        "wins_p90": 10,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 10.15,
+        "bowl_eligible": 1.0,
+        "conference_title": 0.0141,
+        "cfp_field": 0.0206,
+        "first_round_bye": 0.0,
+        "quarterfinal": 0.0054,
+        "semifinal": 0.0013,
+        "final": 0.0006,
+        "national_title": 0.0001
+      },
+      {
+        "team": "Iowa",
+        "conference": "Big Ten",
+        "average_wins": 8.636,
+        "wins_p10": 7,
+        "wins_p90": 10,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 10.59,
+        "bowl_eligible": 1.0,
+        "conference_title": 0.003,
+        "cfp_field": 0.0078,
+        "first_round_bye": 0.0,
+        "quarterfinal": 0.0021,
         "semifinal": 0.0008,
         "final": 0.0002,
         "national_title": 0.0001
       },
       {
-        "team": "Oregon",
-        "conference": "Big Ten",
-        "average_wins": 7.635,
-        "wins_p10": 7,
-        "wins_p90": 9,
-        "most_likely_seed": 9,
-        "average_seed_when_selected": 9.59,
-        "bowl_eligible": 0.9948,
-        "conference_title": 0.0117,
-        "cfp_field": 0.012,
-        "first_round_bye": 0.0,
-        "quarterfinal": 0.005,
-        "semifinal": 0.0018,
-        "final": 0.0004,
-        "national_title": 0.0001
-      },
-      {
-        "team": "USC",
-        "conference": "Big Ten",
-        "average_wins": 8.7,
-        "wins_p10": 8,
-        "wins_p90": 10,
-        "most_likely_seed": 11,
-        "average_seed_when_selected": 9.97,
-        "bowl_eligible": 1.0,
-        "conference_title": 0.0105,
-        "cfp_field": 0.0568,
-        "first_round_bye": 0.0,
-        "quarterfinal": 0.0176,
-        "semifinal": 0.0048,
-        "final": 0.0004,
-        "national_title": 0.0001
-      },
-      {
         "team": "Air Force",
         "conference": "Mountain West",
-        "average_wins": 7.942,
+        "average_wins": 7.935,
         "wins_p10": 7,
         "wins_p90": 9,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0013,
+        "conference_title": 0.0014,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2367,7 +2384,7 @@
       {
         "team": "Akron",
         "conference": "MAC",
-        "average_wins": 2.378,
+        "average_wins": 2.396,
         "wins_p10": 1,
         "wins_p90": 4,
         "most_likely_seed": null,
@@ -2384,13 +2401,13 @@
       {
         "team": "Appalachian State",
         "conference": "Sun Belt",
-        "average_wins": 7.464,
+        "average_wins": 7.471,
         "wins_p10": 6,
         "wins_p90": 9,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9893,
-        "conference_title": 0.006,
+        "bowl_eligible": 0.9887,
+        "conference_title": 0.0061,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2401,12 +2418,12 @@
       {
         "team": "Arizona State",
         "conference": "Big 12",
-        "average_wins": 5.878,
+        "average_wins": 5.873,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6587,
+        "bowl_eligible": 0.662,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2418,12 +2435,12 @@
       {
         "team": "Arkansas",
         "conference": "SEC",
-        "average_wins": 3.54,
+        "average_wins": 3.525,
         "wins_p10": 3,
         "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0068,
+        "bowl_eligible": 0.0051,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2435,13 +2452,13 @@
       {
         "team": "Arkansas State",
         "conference": "Sun Belt",
-        "average_wins": 6.279,
+        "average_wins": 6.283,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8175,
-        "conference_title": 0.0048,
+        "bowl_eligible": 0.8254,
+        "conference_title": 0.0034,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2452,14 +2469,14 @@
       {
         "team": "Army",
         "conference": "American",
-        "average_wins": 7.715,
+        "average_wins": 7.713,
         "wins_p10": 6,
         "wins_p90": 9,
-        "most_likely_seed": null,
-        "average_seed_when_selected": null,
-        "bowl_eligible": 0.9879,
-        "conference_title": 0.0467,
-        "cfp_field": 0.0,
+        "most_likely_seed": 12,
+        "average_seed_when_selected": 12.0,
+        "bowl_eligible": 0.9883,
+        "conference_title": 0.0442,
+        "cfp_field": 0.0001,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
         "semifinal": 0.0,
@@ -2469,12 +2486,12 @@
       {
         "team": "Auburn",
         "conference": "SEC",
-        "average_wins": 6.254,
+        "average_wins": 6.264,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8835,
+        "bowl_eligible": 0.886,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2486,12 +2503,12 @@
       {
         "team": "Ball State",
         "conference": "MAC",
-        "average_wins": 4.455,
+        "average_wins": 4.46,
         "wins_p10": 3,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1249,
+        "bowl_eligible": 0.1273,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2501,31 +2518,31 @@
         "national_title": 0.0
       },
       {
-        "team": "Baylor",
-        "conference": "Big 12",
-        "average_wins": 7.068,
-        "wins_p10": 6,
-        "wins_p90": 8,
-        "most_likely_seed": 11,
-        "average_seed_when_selected": 11.41,
-        "bowl_eligible": 0.9644,
-        "conference_title": 0.0068,
-        "cfp_field": 0.0061,
+        "team": "Boise State",
+        "conference": "Pac-12",
+        "average_wins": 10.121,
+        "wins_p10": 9,
+        "wins_p90": 11,
+        "most_likely_seed": 12,
+        "average_seed_when_selected": 11.97,
+        "bowl_eligible": 1.0,
+        "conference_title": 0.6445,
+        "cfp_field": 0.175,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0008,
-        "semifinal": 0.0001,
-        "final": 0.0,
+        "quarterfinal": 0.0248,
+        "semifinal": 0.0025,
+        "final": 0.0004,
         "national_title": 0.0
       },
       {
         "team": "Boston College",
         "conference": "ACC",
-        "average_wins": 4.697,
+        "average_wins": 4.696,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1185,
+        "bowl_eligible": 0.1177,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2537,7 +2554,7 @@
       {
         "team": "Bowling Green",
         "conference": "MAC",
-        "average_wins": 3.256,
+        "average_wins": 3.229,
         "wins_p10": 2,
         "wins_p90": 4,
         "most_likely_seed": null,
@@ -2554,13 +2571,13 @@
       {
         "team": "Buffalo",
         "conference": "MAC",
-        "average_wins": 6.721,
+        "average_wins": 6.72,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9043,
-        "conference_title": 0.0034,
+        "bowl_eligible": 0.9009,
+        "conference_title": 0.0045,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2576,7 +2593,7 @@
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0326,
+        "bowl_eligible": 0.0296,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2593,7 +2610,7 @@
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.4665,
+        "bowl_eligible": 0.4624,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2605,7 +2622,7 @@
       {
         "team": "Charlotte",
         "conference": "American",
-        "average_wins": 1.77,
+        "average_wins": 1.785,
         "wins_p10": 1,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -2622,12 +2639,12 @@
       {
         "team": "Cincinnati",
         "conference": "Big 12",
-        "average_wins": 6.527,
+        "average_wins": 6.537,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9061,
+        "bowl_eligible": 0.9086,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2639,12 +2656,12 @@
       {
         "team": "Clemson",
         "conference": "ACC",
-        "average_wins": 7.038,
+        "average_wins": 7.048,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9615,
+        "bowl_eligible": 0.9642,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2656,13 +2673,13 @@
       {
         "team": "Coastal Carolina",
         "conference": "Sun Belt",
-        "average_wins": 4.506,
+        "average_wins": 4.502,
         "wins_p10": 3,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1105,
-        "conference_title": 0.0011,
+        "bowl_eligible": 0.1115,
+        "conference_title": 0.001,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2673,12 +2690,12 @@
       {
         "team": "Colorado",
         "conference": "Big 12",
-        "average_wins": 4.132,
+        "average_wins": 4.12,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0659,
+        "bowl_eligible": 0.0664,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2690,12 +2707,12 @@
       {
         "team": "Colorado State",
         "conference": "Pac-12",
-        "average_wins": 3.512,
+        "average_wins": 3.509,
         "wins_p10": 3,
         "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0034,
+        "bowl_eligible": 0.0056,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2707,13 +2724,13 @@
       {
         "team": "Delaware",
         "conference": "Conference USA",
-        "average_wins": 6.179,
+        "average_wins": 6.167,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7536,
-        "conference_title": 0.0039,
+        "bowl_eligible": 0.75,
+        "conference_title": 0.0031,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2724,14 +2741,14 @@
       {
         "team": "Duke",
         "conference": "ACC",
-        "average_wins": 7.559,
+        "average_wins": 7.577,
         "wins_p10": 6,
         "wins_p90": 9,
-        "most_likely_seed": 12,
-        "average_seed_when_selected": 12.0,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 11.25,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0001,
-        "cfp_field": 0.0001,
+        "conference_title": 0.0004,
+        "cfp_field": 0.0004,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
         "semifinal": 0.0,
@@ -2741,13 +2758,13 @@
       {
         "team": "East Carolina",
         "conference": "American",
-        "average_wins": 6.305,
+        "average_wins": 6.312,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8087,
-        "conference_title": 0.0004,
+        "bowl_eligible": 0.8135,
+        "conference_title": 0.0006,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2758,12 +2775,12 @@
       {
         "team": "Eastern Michigan",
         "conference": "MAC",
-        "average_wins": 5.353,
+        "average_wins": 5.356,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.4227,
+        "bowl_eligible": 0.424,
         "conference_title": 0.0004,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2775,14 +2792,14 @@
       {
         "team": "Florida",
         "conference": "SEC",
-        "average_wins": 7.691,
+        "average_wins": 7.697,
         "wins_p10": 7,
         "wins_p90": 9,
-        "most_likely_seed": null,
-        "average_seed_when_selected": null,
-        "bowl_eligible": 0.9918,
+        "most_likely_seed": 12,
+        "average_seed_when_selected": 12.0,
+        "bowl_eligible": 0.993,
         "conference_title": 0.0,
-        "cfp_field": 0.0,
+        "cfp_field": 0.0001,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
         "semifinal": 0.0,
@@ -2792,12 +2809,12 @@
       {
         "team": "Florida Atlantic",
         "conference": "American",
-        "average_wins": 6.32,
+        "average_wins": 6.325,
         "wins_p10": 5,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7929,
+        "bowl_eligible": 0.7977,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2809,12 +2826,12 @@
       {
         "team": "Florida International",
         "conference": "Conference USA",
-        "average_wins": 5.177,
+        "average_wins": 5.167,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.3679,
+        "bowl_eligible": 0.362,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2826,12 +2843,12 @@
       {
         "team": "Florida State",
         "conference": "ACC",
-        "average_wins": 5.179,
+        "average_wins": 5.188,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.3672,
+        "bowl_eligible": 0.3706,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2843,13 +2860,13 @@
       {
         "team": "Fresno State",
         "conference": "Pac-12",
-        "average_wins": 6.902,
+        "average_wins": 6.908,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9701,
-        "conference_title": 0.0262,
+        "bowl_eligible": 0.9713,
+        "conference_title": 0.0285,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2860,13 +2877,13 @@
       {
         "team": "Georgia Southern",
         "conference": "Sun Belt",
-        "average_wins": 6.203,
+        "average_wins": 6.237,
         "wins_p10": 5,
-        "wins_p90": 7,
+        "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7512,
-        "conference_title": 0.0494,
+        "bowl_eligible": 0.7617,
+        "conference_title": 0.0516,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2877,13 +2894,13 @@
       {
         "team": "Georgia State",
         "conference": "Sun Belt",
-        "average_wins": 5.917,
+        "average_wins": 5.902,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6576,
-        "conference_title": 0.0,
+        "bowl_eligible": 0.6517,
+        "conference_title": 0.0001,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -2894,12 +2911,12 @@
       {
         "team": "Georgia Tech",
         "conference": "ACC",
-        "average_wins": 2.542,
+        "average_wins": 2.54,
         "wins_p10": 2,
         "wins_p90": 3,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0002,
+        "bowl_eligible": 0.0001,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2911,12 +2928,12 @@
       {
         "team": "Hawai'i",
         "conference": "Mountain West",
-        "average_wins": 4.447,
+        "average_wins": 4.458,
         "wins_p10": 3,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1074,
+        "bowl_eligible": 0.1127,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2928,12 +2945,12 @@
       {
         "team": "Illinois",
         "conference": "Big Ten",
-        "average_wins": 6.307,
+        "average_wins": 6.299,
         "wins_p10": 5,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7998,
+        "bowl_eligible": 0.7938,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2943,31 +2960,14 @@
         "national_title": 0.0
       },
       {
-        "team": "Iowa",
-        "conference": "Big Ten",
-        "average_wins": 8.634,
-        "wins_p10": 7,
-        "wins_p90": 10,
-        "most_likely_seed": 11,
-        "average_seed_when_selected": 10.22,
-        "bowl_eligible": 1.0,
-        "conference_title": 0.0029,
-        "cfp_field": 0.0068,
-        "first_round_bye": 0.0,
-        "quarterfinal": 0.0014,
-        "semifinal": 0.0,
-        "final": 0.0,
-        "national_title": 0.0
-      },
-      {
         "team": "Iowa State",
         "conference": "Big 12",
-        "average_wins": 5.631,
+        "average_wins": 5.629,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5513,
+        "bowl_eligible": 0.5462,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -2979,14 +2979,14 @@
       {
         "team": "Jacksonville State",
         "conference": "Conference USA",
-        "average_wins": 8.964,
+        "average_wins": 8.972,
         "wins_p10": 8,
         "wins_p90": 10,
-        "most_likely_seed": 12,
-        "average_seed_when_selected": 12.0,
+        "most_likely_seed": null,
+        "average_seed_when_selected": null,
         "bowl_eligible": 1.0,
-        "conference_title": 0.2617,
-        "cfp_field": 0.0001,
+        "conference_title": 0.2685,
+        "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
         "semifinal": 0.0,
@@ -2996,29 +2996,29 @@
       {
         "team": "James Madison",
         "conference": "Sun Belt",
-        "average_wins": 9.682,
+        "average_wins": 9.71,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 12,
         "average_seed_when_selected": 11.99,
         "bowl_eligible": 1.0,
-        "conference_title": 0.4572,
-        "cfp_field": 0.0341,
+        "conference_title": 0.4653,
+        "cfp_field": 0.0327,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0025,
-        "semifinal": 0.0002,
+        "quarterfinal": 0.0026,
+        "semifinal": 0.0005,
         "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Kansas",
         "conference": "Big 12",
-        "average_wins": 4.938,
+        "average_wins": 4.949,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.2816,
+        "bowl_eligible": 0.2904,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3030,12 +3030,12 @@
       {
         "team": "Kansas State",
         "conference": "Big 12",
-        "average_wins": 5.781,
+        "average_wins": 5.772,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6049,
+        "bowl_eligible": 0.6001,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3047,12 +3047,12 @@
       {
         "team": "Kennesaw State",
         "conference": "Conference USA",
-        "average_wins": 4.173,
+        "average_wins": 4.181,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0828,
+        "bowl_eligible": 0.0873,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3064,12 +3064,12 @@
       {
         "team": "Kent State",
         "conference": "MAC",
-        "average_wins": 3.986,
+        "average_wins": 3.994,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0385,
+        "bowl_eligible": 0.0357,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3079,50 +3079,33 @@
         "national_title": 0.0
       },
       {
-        "team": "Kentucky",
-        "conference": "SEC",
-        "average_wins": 8.502,
-        "wins_p10": 7,
-        "wins_p90": 10,
-        "most_likely_seed": 11,
-        "average_seed_when_selected": 10.38,
-        "bowl_eligible": 1.0,
-        "conference_title": 0.0139,
-        "cfp_field": 0.019,
-        "first_round_bye": 0.0,
-        "quarterfinal": 0.0039,
-        "semifinal": 0.0005,
-        "final": 0.0,
-        "national_title": 0.0
-      },
-      {
         "team": "Liberty",
         "conference": "Conference USA",
-        "average_wins": 11.201,
+        "average_wins": 11.178,
         "wins_p10": 10,
         "wins_p90": 12,
         "most_likely_seed": 12,
         "average_seed_when_selected": 11.96,
         "bowl_eligible": 1.0,
-        "conference_title": 0.7331,
-        "cfp_field": 0.288,
+        "conference_title": 0.7262,
+        "cfp_field": 0.2807,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0249,
-        "semifinal": 0.002,
-        "final": 0.0001,
+        "semifinal": 0.0018,
+        "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Louisiana",
         "conference": "Sun Belt",
-        "average_wins": 8.057,
+        "average_wins": 8.049,
         "wins_p10": 7,
         "wins_p90": 9,
-        "most_likely_seed": 12,
-        "average_seed_when_selected": 12.0,
-        "bowl_eligible": 0.997,
-        "conference_title": 0.0454,
-        "cfp_field": 0.0001,
+        "most_likely_seed": null,
+        "average_seed_when_selected": null,
+        "bowl_eligible": 0.9975,
+        "conference_title": 0.0464,
+        "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
         "semifinal": 0.0,
@@ -3132,47 +3115,47 @@
       {
         "team": "Louisiana Tech",
         "conference": "Sun Belt",
-        "average_wins": 9.281,
+        "average_wins": 9.265,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
         "bowl_eligible": 1.0,
-        "conference_title": 0.4308,
+        "conference_title": 0.4203,
         "cfp_field": 0.0025,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0001,
-        "semifinal": 0.0,
+        "quarterfinal": 0.0003,
+        "semifinal": 0.0001,
         "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Louisville",
         "conference": "ACC",
-        "average_wins": 7.576,
+        "average_wins": 7.578,
         "wins_p10": 6,
         "wins_p90": 9,
         "most_likely_seed": 12,
-        "average_seed_when_selected": 11.51,
-        "bowl_eligible": 0.9883,
-        "conference_title": 0.0134,
-        "cfp_field": 0.008,
+        "average_seed_when_selected": 11.54,
+        "bowl_eligible": 0.9889,
+        "conference_title": 0.0133,
+        "cfp_field": 0.0078,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0019,
-        "semifinal": 0.0003,
-        "final": 0.0002,
+        "quarterfinal": 0.0024,
+        "semifinal": 0.0007,
+        "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Marshall",
         "conference": "Sun Belt",
-        "average_wins": 6.892,
+        "average_wins": 6.879,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9385,
-        "conference_title": 0.0016,
+        "bowl_eligible": 0.9355,
+        "conference_title": 0.0013,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3183,12 +3166,12 @@
       {
         "team": "Maryland",
         "conference": "Big Ten",
-        "average_wins": 3.025,
+        "average_wins": 3.02,
         "wins_p10": 2,
         "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0032,
+        "bowl_eligible": 0.0017,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3200,12 +3183,12 @@
       {
         "team": "Massachusetts",
         "conference": "MAC",
-        "average_wins": 5.766,
+        "average_wins": 5.778,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6195,
+        "bowl_eligible": 0.6149,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3217,16 +3200,16 @@
       {
         "team": "Memphis",
         "conference": "American",
-        "average_wins": 9.112,
+        "average_wins": 9.142,
         "wins_p10": 8,
         "wins_p90": 10,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
         "bowl_eligible": 1.0,
-        "conference_title": 0.1029,
-        "cfp_field": 0.0035,
+        "conference_title": 0.1119,
+        "cfp_field": 0.0049,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0,
+        "quarterfinal": 0.0002,
         "semifinal": 0.0,
         "final": 0.0,
         "national_title": 0.0
@@ -3234,13 +3217,13 @@
       {
         "team": "Miami (OH)",
         "conference": "MAC",
-        "average_wins": 7.26,
+        "average_wins": 7.253,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9774,
-        "conference_title": 0.0301,
+        "bowl_eligible": 0.9727,
+        "conference_title": 0.0276,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3251,12 +3234,12 @@
       {
         "team": "Michigan",
         "conference": "Big Ten",
-        "average_wins": 6.695,
+        "average_wins": 6.693,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9494,
+        "bowl_eligible": 0.9495,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3268,12 +3251,12 @@
       {
         "team": "Michigan State",
         "conference": "Big Ten",
-        "average_wins": 3.056,
+        "average_wins": 3.058,
         "wins_p10": 2,
         "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0027,
+        "bowl_eligible": 0.003,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3285,13 +3268,13 @@
       {
         "team": "Middle Tennessee",
         "conference": "Conference USA",
-        "average_wins": 5.566,
+        "average_wins": 5.562,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5235,
-        "conference_title": 0.0002,
+        "bowl_eligible": 0.5219,
+        "conference_title": 0.0001,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3302,12 +3285,12 @@
       {
         "team": "Minnesota",
         "conference": "Big Ten",
-        "average_wins": 6.432,
+        "average_wins": 6.424,
         "wins_p10": 5,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8334,
+        "bowl_eligible": 0.8267,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3319,12 +3302,12 @@
       {
         "team": "Mississippi State",
         "conference": "SEC",
-        "average_wins": 6.576,
+        "average_wins": 6.561,
         "wins_p10": 6,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9315,
+        "bowl_eligible": 0.931,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3336,13 +3319,13 @@
       {
         "team": "Missouri State",
         "conference": "Conference USA",
-        "average_wins": 4.285,
+        "average_wins": 4.292,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0826,
-        "conference_title": 0.0,
+        "bowl_eligible": 0.0829,
+        "conference_title": 0.0006,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3353,12 +3336,12 @@
       {
         "team": "NC State",
         "conference": "ACC",
-        "average_wins": 5.692,
-        "wins_p10": 5,
+        "average_wins": 5.671,
+        "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5685,
+        "bowl_eligible": 0.5623,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3370,12 +3353,12 @@
       {
         "team": "Navy",
         "conference": "American",
-        "average_wins": 3.797,
+        "average_wins": 3.805,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0286,
+        "bowl_eligible": 0.0326,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3387,12 +3370,12 @@
       {
         "team": "Nebraska",
         "conference": "Big Ten",
-        "average_wins": 6.916,
+        "average_wins": 6.914,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9521,
+        "bowl_eligible": 0.9498,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3404,13 +3387,13 @@
       {
         "team": "Nevada",
         "conference": "Mountain West",
-        "average_wins": 4.718,
+        "average_wins": 4.707,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1758,
-        "conference_title": 0.0006,
+        "bowl_eligible": 0.1719,
+        "conference_title": 0.0008,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3421,13 +3404,13 @@
       {
         "team": "New Mexico State",
         "conference": "Conference USA",
-        "average_wins": 4.42,
+        "average_wins": 4.427,
         "wins_p10": 3,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1236,
-        "conference_title": 0.0,
+        "bowl_eligible": 0.1235,
+        "conference_title": 0.0004,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3438,12 +3421,12 @@
       {
         "team": "North Carolina",
         "conference": "ACC",
-        "average_wins": 6.194,
+        "average_wins": 6.214,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.762,
+        "bowl_eligible": 0.7723,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3455,16 +3438,16 @@
       {
         "team": "North Dakota State",
         "conference": "Mountain West",
-        "average_wins": 9.588,
+        "average_wins": 9.581,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 12,
-        "average_seed_when_selected": 12.0,
+        "average_seed_when_selected": 11.98,
         "bowl_eligible": 1.0,
-        "conference_title": 0.2826,
-        "cfp_field": 0.0047,
+        "conference_title": 0.2755,
+        "cfp_field": 0.0044,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0001,
+        "quarterfinal": 0.0002,
         "semifinal": 0.0,
         "final": 0.0,
         "national_title": 0.0
@@ -3472,24 +3455,24 @@
       {
         "team": "North Texas",
         "conference": "American",
-        "average_wins": 9.27,
+        "average_wins": 9.274,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
         "bowl_eligible": 1.0,
-        "conference_title": 0.4547,
-        "cfp_field": 0.0146,
+        "conference_title": 0.4552,
+        "cfp_field": 0.0166,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0007,
+        "quarterfinal": 0.0021,
         "semifinal": 0.0003,
-        "final": 0.0,
+        "final": 0.0001,
         "national_title": 0.0
       },
       {
         "team": "Northern Illinois",
         "conference": "Mountain West",
-        "average_wins": 0.995,
+        "average_wins": 1.003,
         "wins_p10": 0,
         "wins_p90": 2,
         "most_likely_seed": null,
@@ -3506,16 +3489,16 @@
       {
         "team": "Northwestern",
         "conference": "Big Ten",
-        "average_wins": 7.94,
+        "average_wins": 7.944,
         "wins_p10": 7,
         "wins_p90": 9,
-        "most_likely_seed": 10,
+        "most_likely_seed": 11,
         "average_seed_when_selected": 10.67,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0008,
-        "cfp_field": 0.0009,
+        "conference_title": 0.0003,
+        "cfp_field": 0.0003,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0004,
+        "quarterfinal": 0.0001,
         "semifinal": 0.0,
         "final": 0.0,
         "national_title": 0.0
@@ -3523,13 +3506,13 @@
       {
         "team": "Ohio",
         "conference": "MAC",
-        "average_wins": 8.702,
+        "average_wins": 8.691,
         "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
         "bowl_eligible": 1.0,
-        "conference_title": 0.1932,
+        "conference_title": 0.1896,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3540,12 +3523,12 @@
       {
         "team": "Oklahoma",
         "conference": "SEC",
-        "average_wins": 5.517,
+        "average_wins": 5.527,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.4906,
+        "bowl_eligible": 0.4937,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3557,13 +3540,13 @@
       {
         "team": "Oklahoma State",
         "conference": "Big 12",
-        "average_wins": 6.701,
+        "average_wins": 6.712,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
-        "bowl_eligible": 0.9026,
-        "conference_title": 0.0009,
+        "bowl_eligible": 0.9011,
+        "conference_title": 0.0013,
         "cfp_field": 0.0001,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3574,7 +3557,7 @@
       {
         "team": "Old Dominion",
         "conference": "Sun Belt",
-        "average_wins": 2.945,
+        "average_wins": 2.952,
         "wins_p10": 2,
         "wins_p90": 4,
         "most_likely_seed": null,
@@ -3591,13 +3574,13 @@
       {
         "team": "Oregon State",
         "conference": "Pac-12",
-        "average_wins": 6.958,
+        "average_wins": 6.968,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9461,
-        "conference_title": 0.2658,
+        "bowl_eligible": 0.9467,
+        "conference_title": 0.2708,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3608,12 +3591,12 @@
       {
         "team": "Penn State",
         "conference": "Big Ten",
-        "average_wins": 6.706,
+        "average_wins": 6.717,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9148,
+        "bowl_eligible": 0.9178,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3625,13 +3608,13 @@
       {
         "team": "Pittsburgh",
         "conference": "ACC",
-        "average_wins": 7.719,
+        "average_wins": 7.705,
         "wins_p10": 7,
         "wins_p90": 9,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0001,
+        "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3642,12 +3625,12 @@
       {
         "team": "Purdue",
         "conference": "Big Ten",
-        "average_wins": 4.296,
+        "average_wins": 4.301,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.061,
+        "bowl_eligible": 0.0607,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3659,7 +3642,7 @@
       {
         "team": "Rice",
         "conference": "American",
-        "average_wins": 2.117,
+        "average_wins": 2.108,
         "wins_p10": 1,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -3676,12 +3659,12 @@
       {
         "team": "Rutgers",
         "conference": "Big Ten",
-        "average_wins": 3.07,
+        "average_wins": 3.055,
         "wins_p10": 2,
         "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0026,
+        "bowl_eligible": 0.0023,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3697,20 +3680,20 @@
         "wins_p10": 7,
         "wins_p90": 9,
         "most_likely_seed": 12,
-        "average_seed_when_selected": 11.74,
+        "average_seed_when_selected": 11.65,
         "bowl_eligible": 1.0,
-        "conference_title": 0.0096,
-        "cfp_field": 0.0058,
+        "conference_title": 0.0105,
+        "cfp_field": 0.0049,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0015,
-        "semifinal": 0.0004,
-        "final": 0.0001,
+        "quarterfinal": 0.0007,
+        "semifinal": 0.0001,
+        "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Sacramento State",
         "conference": "MAC",
-        "average_wins": 2.371,
+        "average_wins": 2.378,
         "wins_p10": 2,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -3727,9 +3710,9 @@
       {
         "team": "Sam Houston State",
         "conference": "Conference USA",
-        "average_wins": 2.35,
+        "average_wins": 2.36,
         "wins_p10": 1,
-        "wins_p90": 3,
+        "wins_p90": 4,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
         "bowl_eligible": 0.0,
@@ -3744,13 +3727,13 @@
       {
         "team": "San Diego State",
         "conference": "Pac-12",
-        "average_wins": 4.699,
+        "average_wins": 4.696,
         "wins_p10": 4,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0659,
-        "conference_title": 0.0025,
+        "bowl_eligible": 0.0681,
+        "conference_title": 0.0022,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3761,13 +3744,13 @@
       {
         "team": "San Jos\u00e9 State",
         "conference": "Mountain West",
-        "average_wins": 5.844,
+        "average_wins": 5.82,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6343,
-        "conference_title": 0.0015,
+        "bowl_eligible": 0.6273,
+        "conference_title": 0.0013,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3778,13 +3761,13 @@
       {
         "team": "South Alabama",
         "conference": "Sun Belt",
-        "average_wins": 5.9,
+        "average_wins": 5.907,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6622,
-        "conference_title": 0.0011,
+        "bowl_eligible": 0.6666,
+        "conference_title": 0.0022,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3795,12 +3778,12 @@
       {
         "team": "South Carolina",
         "conference": "SEC",
-        "average_wins": 7.274,
+        "average_wins": 7.267,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9802,
+        "bowl_eligible": 0.9763,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3812,16 +3795,16 @@
       {
         "team": "South Florida",
         "conference": "American",
-        "average_wins": 8.551,
+        "average_wins": 8.523,
         "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
         "bowl_eligible": 1.0,
-        "conference_title": 0.004,
+        "conference_title": 0.0029,
         "cfp_field": 0.0002,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0,
+        "quarterfinal": 0.0001,
         "semifinal": 0.0,
         "final": 0.0,
         "national_title": 0.0
@@ -3829,13 +3812,13 @@
       {
         "team": "Southern Miss",
         "conference": "Sun Belt",
-        "average_wins": 4.392,
+        "average_wins": 4.378,
         "wins_p10": 3,
-        "wins_p90": 6,
+        "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1084,
-        "conference_title": 0.0009,
+        "bowl_eligible": 0.0984,
+        "conference_title": 0.0007,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3846,12 +3829,12 @@
       {
         "team": "Stanford",
         "conference": "ACC",
-        "average_wins": 4.551,
+        "average_wins": 4.565,
         "wins_p10": 4,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0827,
+        "bowl_eligible": 0.0842,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3863,12 +3846,12 @@
       {
         "team": "Syracuse",
         "conference": "ACC",
-        "average_wins": 5.49,
+        "average_wins": 5.479,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.4934,
+        "bowl_eligible": 0.4836,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3880,12 +3863,12 @@
       {
         "team": "TCU",
         "conference": "Big 12",
-        "average_wins": 5.387,
+        "average_wins": 5.41,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.4242,
+        "bowl_eligible": 0.4393,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3897,12 +3880,12 @@
       {
         "team": "Temple",
         "conference": "American",
-        "average_wins": 3.947,
+        "average_wins": 3.95,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0318,
+        "bowl_eligible": 0.0306,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3919,7 +3902,7 @@
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6584,
+        "bowl_eligible": 0.6574,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -3931,13 +3914,13 @@
       {
         "team": "Texas State",
         "conference": "Pac-12",
-        "average_wins": 5.844,
+        "average_wins": 5.827,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6539,
-        "conference_title": 0.0563,
+        "bowl_eligible": 0.6512,
+        "conference_title": 0.0498,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3948,16 +3931,16 @@
       {
         "team": "Toledo",
         "conference": "MAC",
-        "average_wins": 9.66,
+        "average_wins": 9.659,
         "wins_p10": 8,
         "wins_p90": 11,
         "most_likely_seed": 12,
         "average_seed_when_selected": 12.0,
         "bowl_eligible": 1.0,
-        "conference_title": 0.3975,
-        "cfp_field": 0.0003,
+        "conference_title": 0.3959,
+        "cfp_field": 0.0002,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.0,
+        "quarterfinal": 0.0001,
         "semifinal": 0.0,
         "final": 0.0,
         "national_title": 0.0
@@ -3965,13 +3948,13 @@
       {
         "team": "Troy",
         "conference": "Sun Belt",
-        "average_wins": 5.572,
+        "average_wins": 5.559,
         "wins_p10": 4,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5113,
-        "conference_title": 0.0017,
+        "bowl_eligible": 0.5038,
+        "conference_title": 0.0016,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3982,13 +3965,13 @@
       {
         "team": "Tulane",
         "conference": "American",
-        "average_wins": 5.843,
+        "average_wins": 5.842,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.6415,
-        "conference_title": 0.0,
+        "bowl_eligible": 0.6373,
+        "conference_title": 0.0001,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -3999,12 +3982,12 @@
       {
         "team": "Tulsa",
         "conference": "American",
-        "average_wins": 6.231,
+        "average_wins": 6.227,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8149,
+        "bowl_eligible": 0.8081,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4016,12 +3999,12 @@
       {
         "team": "UAB",
         "conference": "American",
-        "average_wins": 5.591,
+        "average_wins": 5.588,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5175,
+        "bowl_eligible": 0.5154,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4033,12 +4016,12 @@
       {
         "team": "UCF",
         "conference": "Big 12",
-        "average_wins": 6.129,
+        "average_wins": 6.146,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7451,
+        "bowl_eligible": 0.7495,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4050,12 +4033,12 @@
       {
         "team": "UConn",
         "conference": "Independent",
-        "average_wins": 6.412,
+        "average_wins": 6.384,
         "wins_p10": 5,
-        "wins_p90": 8,
+        "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8529,
+        "bowl_eligible": 0.8482,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4067,7 +4050,7 @@
       {
         "team": "ULM",
         "conference": "Sun Belt",
-        "average_wins": 1.603,
+        "average_wins": 1.609,
         "wins_p10": 1,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -4084,13 +4067,13 @@
       {
         "team": "UNLV",
         "conference": "Mountain West",
-        "average_wins": 7.371,
+        "average_wins": 7.383,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9868,
-        "conference_title": 0.0249,
+        "bowl_eligible": 0.9855,
+        "conference_title": 0.0258,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -4099,9 +4082,26 @@
         "national_title": 0.0
       },
       {
+        "team": "USC",
+        "conference": "Big Ten",
+        "average_wins": 8.689,
+        "wins_p10": 8,
+        "wins_p90": 10,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 10.03,
+        "bowl_eligible": 1.0,
+        "conference_title": 0.0104,
+        "cfp_field": 0.0576,
+        "first_round_bye": 0.0,
+        "quarterfinal": 0.0198,
+        "semifinal": 0.0038,
+        "final": 0.001,
+        "national_title": 0.0
+      },
+      {
         "team": "UTEP",
         "conference": "Mountain West",
-        "average_wins": 2.235,
+        "average_wins": 2.206,
         "wins_p10": 1,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -4118,30 +4118,30 @@
       {
         "team": "UTSA",
         "conference": "American",
-        "average_wins": 10.153,
+        "average_wins": 10.137,
         "wins_p10": 9,
         "wins_p90": 12,
         "most_likely_seed": 12,
         "average_seed_when_selected": 11.98,
         "bowl_eligible": 1.0,
-        "conference_title": 0.3913,
-        "cfp_field": 0.0369,
+        "conference_title": 0.3851,
+        "cfp_field": 0.0364,
         "first_round_bye": 0.0,
-        "quarterfinal": 0.003,
-        "semifinal": 0.0001,
+        "quarterfinal": 0.0029,
+        "semifinal": 0.0002,
         "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Utah State",
         "conference": "Pac-12",
-        "average_wins": 4.004,
+        "average_wins": 4.011,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0317,
-        "conference_title": 0.0048,
+        "bowl_eligible": 0.0322,
+        "conference_title": 0.0042,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -4152,12 +4152,12 @@
       {
         "team": "Vanderbilt",
         "conference": "SEC",
-        "average_wins": 3.597,
+        "average_wins": 3.588,
         "wins_p10": 3,
         "wins_p90": 5,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.0101,
+        "bowl_eligible": 0.0104,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4169,12 +4169,12 @@
       {
         "team": "Virginia",
         "conference": "ACC",
-        "average_wins": 5.686,
+        "average_wins": 5.681,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.5916,
+        "bowl_eligible": 0.5886,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4186,7 +4186,7 @@
       {
         "team": "Virginia Tech",
         "conference": "ACC",
-        "average_wins": 7.825,
+        "average_wins": 7.812,
         "wins_p10": 7,
         "wins_p90": 9,
         "most_likely_seed": null,
@@ -4203,12 +4203,12 @@
       {
         "team": "Washington",
         "conference": "Big Ten",
-        "average_wins": 6.704,
+        "average_wins": 6.721,
         "wins_p10": 6,
         "wins_p90": 8,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.9159,
+        "bowl_eligible": 0.9168,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4220,7 +4220,7 @@
       {
         "team": "Washington State",
         "conference": "Pac-12",
-        "average_wins": 1.952,
+        "average_wins": 1.96,
         "wins_p10": 1,
         "wins_p90": 3,
         "most_likely_seed": null,
@@ -4237,12 +4237,12 @@
       {
         "team": "West Virginia",
         "conference": "Big 12",
-        "average_wins": 5.98,
+        "average_wins": 5.971,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.7057,
+        "bowl_eligible": 0.7023,
         "conference_title": 0.0,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4254,12 +4254,12 @@
       {
         "team": "Western Kentucky",
         "conference": "Conference USA",
-        "average_wins": 4.684,
+        "average_wins": 4.694,
         "wins_p10": 4,
         "wins_p90": 6,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.1836,
+        "bowl_eligible": 0.189,
         "conference_title": 0.0011,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
@@ -4271,13 +4271,13 @@
       {
         "team": "Western Michigan",
         "conference": "MAC",
-        "average_wins": 8.791,
-        "wins_p10": 8,
+        "average_wins": 8.793,
+        "wins_p10": 7,
         "wins_p90": 10,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
         "bowl_eligible": 1.0,
-        "conference_title": 0.3754,
+        "conference_title": 0.382,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -4288,30 +4288,30 @@
       {
         "team": "Wisconsin",
         "conference": "Big Ten",
-        "average_wins": 7.801,
+        "average_wins": 7.784,
         "wins_p10": 7,
         "wins_p90": 9,
-        "most_likely_seed": 12,
-        "average_seed_when_selected": 11.75,
+        "most_likely_seed": 11,
+        "average_seed_when_selected": 11.5,
         "bowl_eligible": 0.9932,
-        "conference_title": 0.0011,
+        "conference_title": 0.0004,
         "cfp_field": 0.0004,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0001,
-        "semifinal": 0.0,
+        "semifinal": 0.0001,
         "final": 0.0,
         "national_title": 0.0
       },
       {
         "team": "Wyoming",
         "conference": "Mountain West",
-        "average_wins": 6.228,
+        "average_wins": 6.247,
         "wins_p10": 5,
         "wins_p90": 7,
         "most_likely_seed": null,
         "average_seed_when_selected": null,
-        "bowl_eligible": 0.8114,
-        "conference_title": 0.0036,
+        "bowl_eligible": 0.8181,
+        "conference_title": 0.0034,
         "cfp_field": 0.0,
         "first_round_bye": 0.0,
         "quarterfinal": 0.0,
@@ -4500,12 +4500,12 @@
   },
   "season": 2026,
   "source": "collegefootballdata.com/games",
-  "retrieved_at": "2026-11-01T14:03:06.678059+00:00",
-  "data_changed_at": "2026-11-01T13:17:00.617960+00:00",
+  "retrieved_at": "2026-11-01T17:10:33.043673+00:00",
+  "data_changed_at": "2026-11-01T17:10:33.043673+00:00",
   "summary": {
     "teams": 138,
-    "completed_games": 2816,
-    "upcoming_games": 862
+    "completed_games": 2836,
+    "upcoming_games": 842
   },
   "schedule": [
     {
@@ -14883,232 +14883,12 @@
       "confidence": "Lean"
     },
     {
-      "game_id": 401906638,
-      "week": 9,
-      "home": "Tiffin",
-      "away": "Lake Erie",
-      "neutral_site": false,
-      "predicted_winner": "Tiffin",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401906935,
-      "week": 9,
-      "home": "Roosevelt",
-      "away": "Grand Valley State",
-      "neutral_site": false,
-      "predicted_winner": "Roosevelt",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401906941,
-      "week": 9,
-      "home": "Benedict",
-      "away": "Savannah State",
-      "neutral_site": false,
-      "predicted_winner": "Benedict",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401907321,
-      "week": 9,
-      "home": "Sul Ross State",
-      "away": "West Texas",
-      "neutral_site": false,
-      "predicted_winner": "Sul Ross State",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401907662,
-      "week": 9,
-      "home": "Carnegie Mellon",
-      "away": "Dickinson",
-      "neutral_site": false,
-      "predicted_winner": "Carnegie Mellon",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401907869,
-      "week": 9,
-      "home": "Alfred",
-      "away": "Brockport",
-      "neutral_site": false,
-      "predicted_winner": "Alfred",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908090,
-      "week": 9,
-      "home": "St. John Fisher",
-      "away": "Utica",
-      "neutral_site": false,
-      "predicted_winner": "St. John Fisher",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908116,
-      "week": 9,
-      "home": "Huntingdon",
-      "away": "LaGrange",
-      "neutral_site": false,
-      "predicted_winner": "Huntingdon",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
       "game_id": 401908187,
       "week": 9,
       "home": "King's",
       "away": "Delaware Valley",
       "neutral_site": false,
       "predicted_winner": "King's",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908452,
-      "week": 9,
-      "home": "Redlands",
-      "away": "Claremont Mudd Scripps",
-      "neutral_site": false,
-      "predicted_winner": "Redlands",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908482,
-      "week": 9,
-      "home": "Curry",
-      "away": "Husson",
-      "neutral_site": false,
-      "predicted_winner": "Curry",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908547,
-      "week": 9,
-      "home": "Austin",
-      "away": "Texas Lutheran",
-      "neutral_site": false,
-      "predicted_winner": "Austin",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908573,
-      "week": 9,
-      "home": "Bridgewater State",
-      "away": "Fitchburg State",
-      "neutral_site": false,
-      "predicted_winner": "Bridgewater State",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908597,
-      "week": 9,
-      "home": "Framingham State",
-      "away": "Plymouth State",
-      "neutral_site": false,
-      "predicted_winner": "Framingham State",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908601,
-      "week": 9,
-      "home": "Mass Maritime",
-      "away": "Westfield State",
-      "neutral_site": false,
-      "predicted_winner": "Mass Maritime",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908629,
-      "week": 9,
-      "home": "WPI",
-      "away": "Merchant Marine",
-      "neutral_site": false,
-      "predicted_winner": "WPI",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908696,
-      "week": 9,
-      "home": "Olivet",
-      "away": "Adrian",
-      "neutral_site": false,
-      "predicted_winner": "Olivet",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908871,
-      "week": 9,
-      "home": "Bowdoin",
-      "away": "Wesleyan (CT)",
-      "neutral_site": false,
-      "predicted_winner": "Bowdoin",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908936,
-      "week": 9,
-      "home": "Christopher Newport",
-      "away": "Rowan",
-      "neutral_site": false,
-      "predicted_winner": "Christopher Newport",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401908964,
-      "week": 9,
-      "home": "Salve Regina",
-      "away": "Norwich",
-      "neutral_site": false,
-      "predicted_winner": "Salve Regina",
-      "home_margin": 3.0,
-      "home_win_probability": 0.5947806561416223,
-      "confidence": "Lean"
-    },
-    {
-      "game_id": 401909055,
-      "week": 9,
-      "home": "Saint Vincent",
-      "away": "Westminster (PA)",
-      "neutral_site": false,
-      "predicted_winner": "Saint Vincent",
       "home_margin": 3.0,
       "home_win_probability": 0.5947806561416223,
       "confidence": "Lean"
@@ -24256,229 +24036,19 @@
     }
   ],
   "performance": {
-    "Kansas": {
+    "Texas": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Clemson": {
+    "NC State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Houston": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Michigan": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Florida": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Washington State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "BYU": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Hawai'i": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Nevada": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Alabama": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Oregon State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Troy": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "California": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UConn": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Pittsburgh": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "West Virginia": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Mississippi State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Michigan State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Indiana": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Penn State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Cincinnati": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Wake Forest": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Utah": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Tulane": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Ball State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Illinois": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Miami (OH)": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Navy": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Iowa": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Arkansas State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Texas Tech": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "San Jos\u00e9 State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Boise State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "South Alabama": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Syracuse": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Virginia Tech": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "North Texas": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Wisconsin": {
+    "Northwestern": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24490,13 +24060,13 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Nebraska": {
+    "Washington": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Georgia": {
+    "Texas A&M": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24508,31 +24078,13 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Auburn": {
+    "New Mexico State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Air Force": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "New Mexico": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Middle Tennessee": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Baylor": {
+    "Missouri State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24544,19 +24096,253 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Louisville": {
+    "USC": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Kansas State": {
+    "Texas Tech": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Toledo": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Sacramento State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Syracuse": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
     "UTEP": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "California": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Baylor": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Boise State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Miami (FL)": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Rutgers": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Memphis": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Southern Miss": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Florida Atlantic": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Arizona": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Kent State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Oregon": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Alabama": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Tulsa": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Indiana": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Wisconsin": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UCLA": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Mississippi State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UCF": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Iowa": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Miami (OH)": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Purdue": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Louisiana Tech": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Colorado": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Wyoming": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "South Florida": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "West Virginia": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "New Mexico": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Texas State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Western Michigan": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Notre Dame": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Pittsburgh": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Washington State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Western Kentucky": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Rice": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Georgia Southern": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Utah": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24574,301 +24360,7 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Oklahoma State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Kennesaw State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Stanford": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Old Dominion": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Massachusetts": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Minnesota": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Florida State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Texas A&M": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UNLV": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Kentucky": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Florida Atlantic": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Eastern Michigan": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "San Diego State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Toledo": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Western Kentucky": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Charlotte": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Rice": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Texas State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Northern Illinois": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Missouri": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Colorado": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "TCU": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Sam Houston State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Western Michigan": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UAB": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "South Florida": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Arizona State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "James Madison": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Louisiana Tech": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Ohio": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Missouri State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "South Carolina": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Ohio State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Georgia Tech": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Miami (FL)": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Ole Miss": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Colorado State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "North Dakota State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "East Carolina": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Washington": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Southern Miss": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "SMU": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UCF": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Tulsa": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Kent State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
     "Coastal Carolina": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Sacramento State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Wyoming": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UTSA": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Georgia Southern": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24880,97 +24372,19 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Oregon": {
+    "North Dakota State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Tennessee": {
+    "Stanford": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Memphis": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Virginia": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Temple": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Utah State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Texas": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Akron": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Fresno State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Iowa State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "UCLA": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Oklahoma": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Notre Dame": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "NC State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Appalachian State": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Vanderbilt": {
+    "Michigan State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -24982,19 +24396,85 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Army": {
+    "Kansas": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Arkansas": {
+    "Houston": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "LSU": {
+    "Arkansas State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Cincinnati": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UNLV": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Florida State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Vanderbilt": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Clemson": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "North Texas": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Kansas State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Tennessee": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Georgia": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Temple": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "James Madison": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -25006,19 +24486,19 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Arizona": {
+    "Northern Illinois": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "USC": {
+    "Hawai'i": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Purdue": {
+    "SMU": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -25030,19 +24510,13 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Northwestern": {
+    "Iowa State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Florida International": {
-      "actual_wins": 0,
-      "expected_wins": 0.0,
-      "games_with_forecasts": 0,
-      "wins_above_expected": null
-    },
-    "Rutgers": {
+    "East Carolina": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -25054,19 +24528,163 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "North Carolina": {
+    "Akron": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Marshall": {
+    "Colorado State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "Maryland": {
+    "Oklahoma": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Old Dominion": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "TCU": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Virginia Tech": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Missouri": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Middle Tennessee": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "South Alabama": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Michigan": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UTSA": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Eastern Michigan": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Illinois": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UConn": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "LSU": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Tulane": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "South Carolina": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Florida International": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Florida": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Auburn": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Oregon State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Nebraska": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Ohio": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Virginia": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Charlotte": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "BYU": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Ball State": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
@@ -25078,11 +24696,179 @@
       "games_with_forecasts": 0,
       "wins_above_expected": null
     },
-    "New Mexico State": {
+    "Wake Forest": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "San Jos\u00e9 State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Massachusetts": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "UAB": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Arkansas": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Kennesaw State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Ole Miss": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Troy": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Penn State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Louisville": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Ohio State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Arizona State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Navy": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Nevada": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Army": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Maryland": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Oklahoma State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Fresno State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "North Carolina": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Air Force": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Kentucky": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Georgia Tech": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Sam Houston State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Utah State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Appalachian State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Minnesota": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "San Diego State": {
+      "actual_wins": 0,
+      "expected_wins": 0.0,
+      "games_with_forecasts": 0,
+      "wins_above_expected": null
+    },
+    "Marshall": {
       "actual_wins": 0,
       "expected_wins": 0.0,
       "games_with_forecasts": 0,
       "wins_above_expected": null
     }
+  },
+  "prediction_accuracy": {
+    "games_evaluated": 20,
+    "correct_winners": 7,
+    "winner_accuracy": 0.35,
+    "brier_score": 0.2874
   }
 }
