@@ -39,3 +39,13 @@ def test_weekly_backtest_does_not_leak_same_week_scores():
 def test_backtest_requires_dated_weeks():
     with pytest.raises(ValueError, match="positive week"):
         backtest_weeks(TEAMS, [Game("A", "B", 21, 7)])
+
+
+def test_fcs_baseline_uses_fixed_opponent_rating_when_priors_weighted():
+    from cfb_analytics.model import ModelSettings
+
+    settings = ModelSettings(prior_year_weight=0.5)
+    # In week one, both forecasts must match, even for an FCS opponent.
+    result = backtest_weeks(TEAMS, [Game("A", "FCS", 21, 7, 1)], settings)
+    assert result["games"] == 1
+    assert result["model"] == result["preseason_baseline"]
