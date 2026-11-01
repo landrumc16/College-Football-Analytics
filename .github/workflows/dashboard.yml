@@ -151,21 +151,19 @@ jobs:
           assert report["conference_strength"]
           assert all("most_likely_seed" in team for team in report["cfp"]["teams"])
           assert all("average_seed_when_selected" in team for team in report["cfp"]["teams"])
-          # Published accuracy must not count archived lower-division games as
-          # forecasts for the 138-team FBS model.
-          from pathlib import Path
+          # Verify published accuracy against completed games and the actual
+          # archived forecasts, rather than trusting a count upper bound.
+          snapshot_file = Path("data/cfbd-2026-games.json")
           history_file = Path("data/pregame-2026-history.json")
-          if history_file.exists():
+          if snapshot_file.exists() and history_file.exists():
+            from cfb_analytics.pipeline import build_prediction_accuracy
+            snapshot = json.loads(snapshot_file.read_text())
             history = json.loads(history_file.read_text())
             eligible = {row["team"] for row in report["rankings"]}
-            eligible_history = {
-              key: forecast for key, forecast in history.items()
-              if forecast.get("home") in eligible and forecast.get("away") in eligible
-            }
-            if "prediction_accuracy" in report:
-              assert report["prediction_accuracy"]["games_evaluated"] <= len(eligible_history), (
-                "Published accuracy includes games outside the FBS model universe"
-              )
+            expected_accuracy = build_prediction_accuracy(snapshot, history, eligible_teams=eligible)
+            assert report.get("prediction_accuracy") == expected_accuracy, (
+              "Published accuracy differs from eligible completed FBS forecasts"
+            )
           if "prediction_accuracy" in report:
             accuracy = report["prediction_accuracy"]
             assert isinstance(accuracy["games_evaluated"], int) and accuracy["games_evaluated"] >= 0
