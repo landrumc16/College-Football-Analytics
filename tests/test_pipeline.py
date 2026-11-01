@@ -141,7 +141,7 @@ def test_performance_uses_archived_forecasts_only():
     snapshot = {"games": [game(1, "Miami", "A", completed=True, hs=24, ass=14),
                           game(2, "A", "B", completed=True, hs=10, ass=17)]}
     roster = ROSTER + [{"name": "Miami (FL)", "conference": "ACC", "prior": 10}]
-    history = {"1": {"home_win_probability": 0.3}}
+    history = {"1": {"home": "Miami (FL)", "away": "A", "home_win_probability": 0.3}}
     rows = build_performance_against_expectations(snapshot, roster, history)
     assert rows["Miami (FL)"]["actual_wins"] == 1
     assert rows["Miami (FL)"]["expected_wins"] == 0.3
@@ -149,3 +149,13 @@ def test_performance_uses_archived_forecasts_only():
     assert rows["A"]["expected_wins"] == 0.7
     assert rows["B"]["games_with_forecasts"] == 0
     assert rows["B"]["wins_above_expected"] is None
+
+
+def test_performance_rejects_wrong_matchup_and_invalid_probability():
+    from cfb_analytics.pipeline import build_performance_against_expectations
+    snapshot = {"games": [game(1, "A", "B", completed=True, hs=21, ass=14)]}
+    for bad in ({"home": "B", "away": "A", "home_win_probability": 0.8},
+                {"home": "A", "away": "B", "home_win_probability": 1.2}):
+        rows = build_performance_against_expectations(snapshot, ROSTER, {"1": bad})
+        assert rows["A"]["games_with_forecasts"] == 0
+        assert rows["A"]["wins_above_expected"] is None
