@@ -26,6 +26,9 @@ def test_matched_benchmark_cli(tmp_path, capsys):
                  "--candidate", str(paths[2]), "--output", str(output)]) == 0
     result = json.loads(output.read_text())
     assert result["paired_games"] == 1
+    assert result["eligible_completed_games"] == 1
+    assert result["excluded"] == {"ineligible_game": 0, "missing_workbook": 0,
+                                  "missing_candidate": 0, "not_verified_pregame": 0}
     assert round(result["workbook"]["brier_score"], 8) == 0.16
     assert round(result["candidate"]["brier_score"], 8) == 0.04
     assert run(*paths) == result
