@@ -22,10 +22,10 @@ def fetch_cfbd_games(season: int, api_key: str):
 
 def refresh(season: int, output: Path, api_key: str):
     raw = fetch_cfbd_games(season, api_key)
-    games = normalize_cfbd_games(raw, season)
-    summary = snapshot_summary(games)
     if not isinstance(raw, list):
         raise RuntimeError("Unexpected CFBD response: expected a list of games")
+    games = normalize_cfbd_games(raw, season)
+    summary = snapshot_summary(games)
     if len(raw) != summary["scheduled"]:
         raise RuntimeError("Unexpected game records omitted during normalization")
     if summary["scheduled"] == 0:
