@@ -27,14 +27,16 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
         game_id = row.get("id")
         if game_id is None:
             raise ValueError("CFBD game missing id")
-        home, away = row.get("home_team"), row.get("away_team")
+        home = row.get("homeTeam", row.get("home_team"))
+        away = row.get("awayTeam", row.get("away_team"))
         if not home or not away:
             # CFBD includes future games with TBD participants. They cannot be
             # modeled until both opponents are known.
             continue
         if home == away:
             raise ValueError(f"Invalid participants for game {game_id}")
-        hs, ass = row.get("home_points"), row.get("away_points")
+        hs = row.get("homePoints", row.get("home_points"))
+        ass = row.get("awayPoints", row.get("away_points"))
         # CFBD /games generally exposes scores, not a completed flag.
         # A 0-0 placeholder is not evidence that a game has finished.
         state = row.get("status")
@@ -54,7 +56,7 @@ def normalize_cfbd_games(records: list[dict[str, Any]], season: int) -> list[Ing
             home=home, away=away, completed=completed,
             home_score=hs if completed else None,
             away_score=ass if completed else None,
-            neutral_site=bool(row.get("neutral_site")),
+            neutral_site=bool(row.get("neutralSite", row.get("neutral_site"))),
         )
         if game.game_id in games and games[game.game_id] != game:
             raise ValueError(f"Conflicting duplicate game id {game.game_id}")
