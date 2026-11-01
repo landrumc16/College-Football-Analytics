@@ -102,17 +102,29 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
             continue
         by_conference.setdefault(t.conference, []).append(t.name)
     ranking_index = {name: i for i, (name, _) in enumerate(order)}
-    projected_champions = [
-        min(members, key=lambda name: (-projections[name].projected_conference_wins,
-                                       ranking_index[name], name))
-        for members in by_conference.values()
-    ]
+    championship_matchups = []
+    projected_champions = []
+    for conference, members in sorted(by_conference.items()):
+        finalists = sorted(members, key=lambda name: (
+            -projections[name].projected_conference_wins, ranking_index[name], name))[:2]
+        if len(finalists) == 2:
+            first, second = finalists
+            # Most likely winner of the neutral-site title game.
+            champion = min(finalists, key=lambda name: (-ratings[name].adaptive_rating, name))
+            championship_matchups.append({
+                "conference": conference, "first": first, "second": second,
+                "projected_champion": champion,
+            })
+        else:
+            champion = finalists[0]
+        projected_champions.append(champion)
     projected_champions.sort(key=lambda name: ranking_index[name])
     auto_bids = projected_champions[:5]
     at_large = [name for name, _ in order if name not in auto_bids][:7]
     field = sorted(auto_bids + at_large, key=lambda name: ranking_index[name])
     projected_bracket = {
-        "methodology": "Projected conference-win leaders; five highest-ranked champions and seven at-large. Conference title games and committee selections not modeled.",
+        "methodology": "Projected top-two conference finishers play a neutral-site title game, with the higher-rated finalist favored. Five highest-ranked champions and seven at-large; conference-specific rules and committee selections not modeled.",
+        "conference_championships": championship_matchups,
         "seeds": [
             {"seed": i + 1, "team": name, "conference": conferences[name],
              "bid": "automatic" if name in auto_bids else "at_large",
