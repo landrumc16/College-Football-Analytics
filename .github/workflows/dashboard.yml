@@ -125,3 +125,28 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Smoke-test published dashboard
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          base="${PAGE_URL%/}/"
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --location --silent --show-error "$base" -o /tmp/cfb-index.html && \
+               curl --fail --location --silent --show-error "${base}season-report.json" -o /tmp/cfb-report.json; then
+              python - <<'PY'
+          import json
+          from pathlib import Path
+          html = Path("/tmp/cfb-index.html").read_text()
+          report = json.loads(Path("/tmp/cfb-report.json").read_text())
+          assert "<div id=\"root\"></div>" in html or 'id="root"' in html, "Missing React mount"
+          assert report["season"] == 2026 and report["rankings"] and report["predictions"]
+          print("Published dashboard and season report are reachable")
+          PY
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Published dashboard smoke test failed" >&2
+          exit 1
+
