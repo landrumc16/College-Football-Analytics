@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const server = spawn('npm', ['run', 'dev', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'pipe' });
+const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'pipe' });
 let browser;
 try {
   let ready = false;
@@ -22,6 +22,9 @@ try {
     await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
+    await page.getByText('Waiting for live data').count().then(count => { if (count) throw new Error('Dashboard failed to load season report'); });
+    const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok ? response.json() : null; });
+    if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (await page.getByLabel('Choose dashboard section').inputValue() !== section) {
