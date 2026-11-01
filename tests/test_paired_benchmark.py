@@ -22,6 +22,8 @@ def test_paired_comparison_excludes_unmatched_and_postgame():
     assert result["workbook"]["brier_score"] == 0.16
     assert round(result["candidate"]["brier_score"], 8) == 0.04
     assert result["by_season_counts"] == {"2025": 1}
+    assert result["by_season"]["2025"]["workbook"]["games"] == 1
+    assert result["by_season"]["2025"]["candidate"]["brier_score"] == result["candidate"]["brier_score"]
 
 
 def test_no_intersection_does_not_claim_accuracy():
