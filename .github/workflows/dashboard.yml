@@ -65,6 +65,8 @@ jobs:
           assert sum(seed["bye"] for seed in report["projected_bracket"]["seeds"]) == 4
           assert report["conference_standings"]
           assert report["conference_strength"]
+          assert all("most_likely_seed" in team for team in report["cfp"]["teams"])
+          assert all("average_seed_when_selected" in team for team in report["cfp"]["teams"])
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
