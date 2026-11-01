@@ -27,7 +27,8 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         raise ValueError("Completed game missing score")
     # CFBD uses "Miami" for Miami (FL), while the baseline roster uses
     # "Miami (FL)". Resolve this verified alias before model calculations.
-    aliases = {"Miami": "Miami (FL)"}
+    aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
+               "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     games = [IngestedGame(**{**g.__dict__,
                            "home": aliases.get(g.home, g.home),
                            "away": aliases.get(g.away, g.away)}) for g in games]
@@ -37,6 +38,11 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
     if any(g.home == g.away for g in games):
         raise ValueError("Snapshot contains a self-matchup")
     known = {t.name for t in teams}
+    if snapshot.get("source") == "collegefootballdata.com/games":
+        observed = {name for g in games for name in (g.home, g.away)}
+        missing = sorted(known - observed)
+        if missing:
+            raise ValueError(f"FBS roster schools absent from CFBD games: {missing}")
     conferences = {t.name: t.conference for t in teams}
     completed = [
         Game(g.home, g.away, g.home_score, g.away_score, g.week)
