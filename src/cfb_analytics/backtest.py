@@ -24,8 +24,10 @@ def backtest_weeks(teams: list[Team], games: list[Game],
     priors = {t.name: settings.prior_year_weight * t.prior for t in teams}
     history = []
     scored = []
+    weekly = []
     for week in sorted({game.week for game in games}):
         ratings = calculate_ratings(teams, history, settings)
+        week_start = len(scored)
         for game in (g for g in games if g.week == week):
             if game.home not in known and game.away not in known:
                 continue
@@ -47,6 +49,8 @@ def backtest_weeks(teams: list[Team], games: list[Game],
                 prior_home - prior_away + settings.home_field_advantage,
                 settings.win_probability_scale)
             scored.append((probability, baseline, actual))
+        if len(scored) > week_start:
+            weekly.append({"week": week, "games": len(scored) - week_start})
         history.extend(g for g in games if g.week == week)
     if not scored:
         return {"games": 0, "model": None, "preseason_baseline": None}
@@ -63,8 +67,21 @@ def backtest_weeks(teams: list[Team], games: list[Game],
                              (1-y) * log(max(1e-15, 1-p))
                              for p, (_, _, y) in zip(probabilities, scored)) / n,
         }
-    return {"games": len(scored), "model": metrics(0),
-            "preseason_baseline": metrics(1)}
+    model = metrics(0)
+    baseline = metrics(1)
+    return {
+        "games": len(scored),
+        "model": model,
+        "preseason_baseline": baseline,
+        "improvement_vs_preseason": {
+            "winner_accuracy_percentage_points":
+                100 * (model["winner_accuracy"] - baseline["winner_accuracy"]),
+            "brier_score_reduction": baseline["brier_score"] - model["brier_score"],
+            "log_loss_reduction": baseline["log_loss"] - model["log_loss"],
+        },
+        "weekly_coverage": weekly,
+        "evaluation_scope": "2026 frozen completed games; weekly pregame snapshots",
+    }
 
 
 def main(argv=None):
