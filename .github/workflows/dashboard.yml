@@ -107,6 +107,8 @@ jobs:
           from pathlib import Path
           report = json.loads(Path("web/dist/season-report.json").read_text())
           assert report["season"] == 2026, "Only the 2026 season is supported"
+          assert report["summary"]["completed_games"] >= 0
+          assert report["summary"]["upcoming_games"] >= 0
           assert report["summary"]["teams"] == len(report["rankings"])
           assert report["summary"]["upcoming_games"] == len(report["predictions"])
           assert report["rankings"] and report["predictions"]
@@ -206,7 +208,10 @@ jobs:
           assert assets.scripts, "Published dashboard has no JavaScript entrypoint"
           Path("/tmp/cfb-script-path.txt").write_text(assets.scripts[0])
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
-          if "DEMO" not in (report.get("source") or ""):
+          source = report.get("source") or ""
+          assert source, "Published report has no source"
+          if "DEMO" not in source:
+            assert "collegefootballdata.com" in source, "Unexpected published live source"
             assert report.get("retrieved_at"), "Published live report has no retrieval timestamp"
           backtest = json.loads(Path("/tmp/cfb-backtest.json").read_text())
           assert backtest["games"] > 0, "Published backtest has no evaluated games"
