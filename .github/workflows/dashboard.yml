@@ -208,6 +208,14 @@ jobs:
           npx playwright install chromium
           cd ..
           node web/tests/mobile-smoke.mjs
+      - name: Preserve mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-release-evidence
+          path: web/mobile-evidence/*.png
+          if-no-files-found: warn
+          retention-days: 14
       - uses: actions/configure-pages@v5
         with:
           enablement: true
