@@ -33,7 +33,15 @@ def refresh(season: int, output: Path, api_key: str):
     if len(eligible_ids) != summary["scheduled"]:
         raise RuntimeError("Unexpected games with known participants omitted during normalization")
     if summary["scheduled"] == 0:
-        raise RuntimeError("Refusing to publish an empty season snapshot")
+        from collections import Counter
+        keys = Counter(key for row in raw if isinstance(row, dict) for key in row)
+        missing_home = sum(not row.get("home_team") for row in raw if isinstance(row, dict))
+        missing_away = sum(not row.get("away_team") for row in raw if isinstance(row, dict))
+        raise RuntimeError(
+            f"Refusing to publish an empty season snapshot: records={len(raw)}, "
+            f"missing_home_team={missing_home}, missing_away_team={missing_away}, "
+            f"response_fields={sorted(keys)}"
+        )
     payload = {
         "season": season,
         "retrieved_at": datetime.now(timezone.utc).isoformat(),
