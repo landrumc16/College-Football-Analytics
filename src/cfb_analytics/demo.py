@@ -20,11 +20,11 @@ def main():
         raise RuntimeError("Incomplete frozen schedule")
     scored = {}
     for game in completed:
-        key = (game["home"], game["away"])
+        key = (game["week"], game["home"], game["away"])
         scored.setdefault(key, []).append(game)
     records = []
     for index, game in enumerate(schedule, 1):
-        key = (game["home"], game["away"])
+        key = (game["week"], game["home"], game["away"])
         matches = scored.get(key, [])
         match = matches.pop(0) if game["completed"] and matches else None
         if game["completed"] and match is None:
