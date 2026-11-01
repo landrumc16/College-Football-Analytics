@@ -11,6 +11,26 @@ from .parity import load_baseline
 from .pipeline import run_snapshot
 
 
+from datetime import datetime, timezone
+
+
+def parse_utc(value):
+    """Return an aware UTC timestamp or None; never guess a missing timezone."""
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parsed.astimezone(timezone.utc) if parsed.tzinfo else None
+    except ValueError:
+        return None
+
+
+def verified_pregame(publication_time, kickoff_time):
+    published = parse_utc(publication_time)
+    kickoff = parse_utc(kickoff_time)
+    return published is not None and kickoff is not None and published < kickoff
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--season", type=int, required=True)
@@ -36,26 +56,14 @@ def main():
     eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
-    from datetime import datetime, timezone
-    def parse_utc(value):
-        if not isinstance(value, str):
-            return None
-        try:
-            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-            return parsed.astimezone(timezone.utc) if parsed.tzinfo else None
-        except ValueError:
-            return None
-    previous_time = parse_utc(previous_retrieved)
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_games and key not in history
-                and previous_time is not None
                 and prediction["game_id"] in previous_pending
                 and prediction.get("home") in eligible_fbs
                 and prediction.get("away") in eligible_fbs):
             game = completed_games[prediction["game_id"]]
-            kickoff = parse_utc(game.get("start_date"))
-            if kickoff is None or previous_time >= kickoff:
+            if not verified_pregame(previous_retrieved, game.get("start_date")):
                 continue
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
