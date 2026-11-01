@@ -93,13 +93,6 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Browser smoke at mobile widths
-        run: |
-          cd web
-          npm install --no-save playwright
-          npx playwright install chromium
-          cd ..
-          node web/tests/mobile-smoke.mjs
       - name: Publish historical backtest evidence
         run: |
           test -s historical-backtest.json
@@ -208,6 +201,13 @@ jobs:
           name: validated-season-report
           path: web/dist/season-report.json
           if-no-files-found: error
+      - name: Browser smoke at mobile widths
+        run: |
+          cd web
+          npm install --no-save playwright
+          npx playwright install chromium
+          cd ..
+          node web/tests/mobile-smoke.mjs
       - uses: actions/configure-pages@v5
         with:
           enablement: true
