@@ -3,7 +3,7 @@
 Input values are pregame probabilities, never reconstructed from final scores.
 """
 from math import log
-from .historical import HistoricalGame
+from .historical import HistoricalGame, utc_instant
 from .historical_evaluation import ArchivedForecast
 
 
@@ -28,7 +28,10 @@ def paired_scorecard(games: list[HistoricalGame],
         if not game.eligible_fbs_accuracy or key not in left or key not in right:
             continue
         a, b = left[key], right[key]
-        if not game.verified_pregame(a.generated_at) or not game.verified_pregame(b.generated_at):
+        kickoff = utc_instant(game.kickoff)
+        if not all(f.input_retrieved_at is not None and
+                   utc_instant(f.input_retrieved_at) <= utc_instant(f.generated_at) < kickoff
+                   for f in (a, b)):
             continue
         scored.append((game.season, int(game.home_score > game.away_score),
                        a.home_win_probability, b.home_win_probability))
