@@ -95,6 +95,34 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         home_edge=settings.home_field_advantage,
         fcs_rating=settings.fcs_opponent_rating,
     )
+    # Deterministic projected field, distinct from Monte Carlo field odds.
+    by_conference = {}
+    for t in teams:
+        if t.conference == "Independent":
+            continue
+        by_conference.setdefault(t.conference, []).append(t.name)
+    ranking_index = {name: i for i, (name, _) in enumerate(order)}
+    projected_champions = [
+        min(members, key=lambda name: (-projections[name].projected_conference_wins,
+                                       ranking_index[name], name))
+        for members in by_conference.values()
+    ]
+    projected_champions.sort(key=lambda name: ranking_index[name])
+    auto_bids = projected_champions[:5]
+    at_large = [name for name, _ in order if name not in auto_bids][:7]
+    field = sorted(auto_bids + at_large, key=lambda name: ranking_index[name])
+    projected_bracket = {
+        "methodology": "Projected conference-win leaders; five highest-ranked champions and seven at-large. Conference title games and committee selections not modeled.",
+        "seeds": [
+            {"seed": i + 1, "team": name, "conference": conferences[name],
+             "bid": "automatic" if name in auto_bids else "at_large",
+             "bye": i < 4}
+            for i, name in enumerate(field)
+        ],
+        "first_round": [{"home_seed": a, "away_seed": b,
+                         "home": field[a-1], "away": field[b-1]}
+                        for a, b in ((5, 12), (6, 11), (7, 10), (8, 9))],
+    }
     conference_records = {t.name: {"wins": 0, "losses": 0} for t in teams}
     for g in games:
         if not g.completed or g.home not in known or g.away not in known:
@@ -131,6 +159,7 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         "conference_standings": conference_standings,
         "conference_strength": conference_strength,
         "cfp": cfp,
+        "projected_bracket": projected_bracket,
         "season": season, "source": snapshot.get("source"),
         "retrieved_at": snapshot.get("retrieved_at"),
         "summary": {"teams": len(teams), "completed_games": len(completed),
