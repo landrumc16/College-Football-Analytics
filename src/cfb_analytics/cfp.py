@@ -19,6 +19,10 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     """
     if simulations <= 0:
         raise ValueError("simulations must be positive")
+    if not teams:
+        raise ValueError("at least one team is required")
+    if scale <= 0:
+        raise ValueError("probability scale must be positive")
     rng = Random(seed)
     names = sorted(teams)
     conferences = defaultdict(list)
@@ -40,6 +44,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         prepared.append((home, away, win_probability_from_rating_gap(gap, scale), same_conf))
     totals = defaultdict(Counter)
     sum_wins = Counter()
+    win_histograms = defaultdict(Counter)
     title_counts = Counter()
     for _ in range(simulations):
         wins = {n: teams[n]["wins"] for n in names}
@@ -52,6 +57,7 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
                     conf_wins[winner] += 1
         for n in names:
             sum_wins[n] += wins[n]
+            win_histograms[n][wins[n]] += 1
         mean = sum(wins.values()) / len(names)
         std = sqrt(sum((wins[n]-mean)**2 for n in names)/len(names)) or 1
         scores = {n: 0.5*(wins[n]-mean)/std + 0.5*rating_z[n] for n in names}
@@ -85,6 +91,15 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         for n in semis:
             totals[n]["final"] += 1
         title_counts[game(*semis)] += 1
+    def percentile_win(histogram, percentile):
+        target = simulations * percentile
+        count = 0
+        for wins, occurrences in sorted(histogram.items()):
+            count += occurrences
+            if count >= target:
+                return wins
+        return max(histogram)
+
     return {
         "simulations": simulations, "seed": seed,
         "scenario": "current_model_probabilities",
@@ -92,6 +107,9 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         "teams": [
             {"team": n, "conference": teams[n]["conference"],
              "average_wins": round(sum_wins[n]/simulations, 3),
+             "wins_p10": percentile_win(win_histograms[n], 0.10),
+             "wins_p90": percentile_win(win_histograms[n], 0.90),
+             "bowl_eligible": round(sum(count for wins, count in win_histograms[n].items() if wins >= 6) / simulations, 4),
              **{k: round(totals[n][k]/simulations, 4) for k in ("conference_title","cfp_field","first_round_bye","quarterfinal","semifinal","final")},
              "national_title": round(title_counts[n]/simulations, 4)}
             for n in sorted(names, key=lambda n:(-title_counts[n],n))
