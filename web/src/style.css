@@ -22,3 +22,6 @@
 
 /* Mobile-first dashboard navigation: one clear section selector. */
 .section-navigation{display:flex;flex-direction:column;gap:8px;width:100%;min-width:0;color:#9baac0;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}.section-navigation select{width:100%;min-height:52px;padding:12px 42px 12px 16px;font-size:17px;font-weight:700;letter-spacing:0;text-transform:none;border-radius:10px;background-color:#1b2c42;color:#f0f5ff;border:1px solid #415875;cursor:pointer}.toolbar{display:flex;flex-direction:column;align-items:stretch;gap:12px}.toolbar>input,.toolbar>select{width:100%;min-height:48px;min-width:0}@media(min-width:900px){.toolbar{display:grid;grid-template-columns:minmax(240px,1fr) minmax(200px,1fr);align-items:end}.section-navigation{grid-column:1}.toolbar>input{grid-column:2}}
+
+/* Compact season overview on phones; keep the primary content visible. */
+@media(max-width:650px){.app{padding:24px 14px 48px}header h1{font-size:clamp(28px,7vw,38px);line-height:1.12;letter-spacing:-1.4px}header p{margin-bottom:24px}.stats{gap:8px;margin-bottom:20px}.stats article{padding:13px 12px;border-radius:10px}.stats small{font-size:10px;letter-spacing:.7px}.stats strong{font-size:clamp(23px,6vw,31px);margin-top:6px}.toolbar{margin-bottom:14px}}
