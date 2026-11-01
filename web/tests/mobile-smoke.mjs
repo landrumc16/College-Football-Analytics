@@ -29,6 +29,17 @@ try {
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
+      if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+      if (section === 'cfp') await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
+      if (section === 'schedule') {
+        await page.getByRole('heading', { name: 'School Season Schedule' }).waitFor();
+        await page.getByLabel('School Schedule').waitFor();
+      }
+      if (section === 'matchup') {
+        await page.getByRole('heading', { name: 'Hypothetical Matchup' }).waitFor();
+        await page.getByLabel('First school').waitFor();
+        await page.getByLabel('Second school').waitFor();
+      }
       if (await page.getByLabel('Choose dashboard section').inputValue() !== section) {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
