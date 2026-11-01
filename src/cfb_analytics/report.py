@@ -56,7 +56,11 @@ def main():
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
-        result["prediction_accuracy"] = build_prediction_accuracy(snapshot_data, history)
+        # Measure the FBS model only on games between schools in its rating universe.
+        # Preserve other archived forecasts, but never present their results as FBS accuracy.
+        fbs_teams = set(roster)
+        result["prediction_accuracy"] = build_prediction_accuracy(
+            snapshot_data, history, eligible_teams=fbs_teams)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         history_path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
     finally:
