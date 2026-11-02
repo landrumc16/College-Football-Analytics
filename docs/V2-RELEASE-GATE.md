@@ -1,16 +1,16 @@
 # V2 release gate — evidence, not estimates
 
-## Current decision: HOLD (2026-11-01)
+## Current decision: HOLD — historical baseline verified (2026-11-01)
 
 V2 lives on `v2-development` and draft PR #2. Do **not** merge until all gates below pass.
 
 | Gate | Current evidence | Release requirement |
 | --- | --- | --- |
-| Python regression | Workflow configured; no confirmed passing check observed | Successful full pytest run on current PR head |
+| Python regression | Passed: Python model tests run 41369068578 and historical evaluation run 41369068584; historical-data run 41369147125 | Successful full pytest run on current PR head |
 | Spreadsheet parity | Five observed prediction rows in `tests/test_workbook_live_parity.py` | Passing parity test in CI |
-| Historical coverage | Benchmark records eligible games, matched games, missing forecasts and unverified timestamps | Audited game-level pregame forecast snapshots; report coverage and exclusions |
-| Model comparison | `python -m cfb_analytics.paired_cli` implemented | Run on identical matched FBS games; publish accuracy, Brier and log loss by season |
-| Live V1 safety | Changes isolated to V2 branch | Confirm production dashboard still works after merge |
+| Historical coverage | Real 2022–2025 schedule audit passed: 3,174 completed FBS-FBS games; 485 FBS-other completed games; zero missing FBS kickoff; artifact 13108965581. No verified archived pregame model forecasts | Audited game-level pregame forecast snapshots; report coverage and exclusions |
+| Model comparison | Retrospective Elo walk-forward completed: 3,174 FBS games; accuracy 66.51%, Brier 0.21363, log loss 0.61582. This is NOT workbook-model parity or paired model comparison | Run on identical matched FBS games; publish accuracy, Brier and log loss by season |
+| Live V1 safety | Changes isolated to V2 branch; dashboard smoke verification still required | Confirm production dashboard still works after merge |
 
 ## Run the benchmark
 
@@ -30,3 +30,17 @@ Do not merge or claim improvement over betting lines unless the verified sample 
 ## Source audit
 
 The connected spreadsheet contains aggregate 2022-2025 backtest claims, but its live Games and RatingHistory tabs cover 2026. No separate game-level historical forecast archive was found in the connected Drive search. The claimed 2,998-game comparison therefore remains unverified. A chronological reconstruction using historical games and season-specific divisions is required. Reconstructed forecasts must be labeled retrospective, never archived pregame.
+
+## Verified historical baseline evidence (run 41369147125)
+
+Source: SportsDataverse season schedules, 2022–2025; GitHub Actions artifact `v2-historical-data-2022-2025` (ID 13108965581). The job completed successfully, including baseline regression tests and artifact upload. This is a **retrospective Elo baseline**, not the workbook model, and does not certify pregame archived predictions.
+
+| Season | FBS-FBS games | Accuracy | Brier | Log loss |
+| --- | ---: | ---: | ---: | ---: |
+| 2022 | 776 | 64.30% | 0.22900 | 0.65028 |
+| 2023 | 792 | 68.18% | 0.20748 | 0.60399 |
+| 2024 | 798 | 64.91% | 0.21566 | 0.61925 |
+| 2025 | 808 | 68.56% | 0.20288 | 0.59092 |
+| **Overall** | **3,174** | **66.51%** | **0.21363** | **0.61582** |
+
+**Outstanding release gates:** independently run the workbook-derived model over the same historical game population (or explicitly narrow release claims to a baseline research beta); verify dashboard smoke and full PR head CI; then approve PR #2. Do not use the unverified 2,998-game spreadsheet summary as a comparable scorecard. Do not merge the draft PR merely because the Elo baseline passes.
