@@ -2,7 +2,7 @@
 
 ## Current decision: V2 research beta CI verified; production release pending (2026-11-02)
 
-V2 lives on `v2-development` and draft PR #2. Do **not** merge until all gates below pass.
+PR #2 was merged into `main` as commit `2d6cf371d6f4f98352544d2a2eb5874da1644692` after passing the final Python and frontend preview CI. Production Pages deployment verification remains outstanding.
 
 | Gate | Current evidence | Release requirement |
 | --- | --- | --- |
@@ -65,3 +65,10 @@ PR #2 changes historical research tooling, tests, and documentation only (23 cha
 - [Python model workflow run 41371557433](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371557433): **PASS**.
 - Verified head: `5fa4e63174a6f01f3d45fa233dba9eba65e02a59`. PR #2 remains draft and mergeable at this checkpoint. The CI check is a **build/data smoke**, not an interactive browser playtest or deployed-site smoke.
 - The intended release scope is **V2 research beta**: existing dashboard plus clearly labeled 2022–2025 retrospective Elo scorecard, with no workbook-model or market-outperformance claim. Production Pages deployment has not been verified on this branch. Keep V1 live until explicit merge approval and post-merge Pages smoke.
+
+## Post-merge release record
+
+- PR #2 **merged** into main: [merge commit 2d6cf371](https://github.com/landrumc16/College-Football-Analytics/commit/2d6cf371d6f4f98352544d2a2eb5874da1644692).
+- Final pre-merge full Python + frontend build + V2 research payload smoke: [run 41371667402](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371667402) **PASS**; Python model [run 41371667376](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371667376) **PASS**.
+- The production dashboard workflow was updated on main at [a88eee7b](https://github.com/landrumc16/College-Football-Analytics/commit/a88eee7b0f18f72815d9d5517bfe2ffbc8bb2e64) to require V2 research data in the Pages artifact.
+- **Live Pages deployment and post-deployment smoke remain unverified.** Do not claim the site has updated until a successful deployment workflow and published research JSON are confirmed. Release label remains **V2 Research Beta**, not a verified workbook/market accuracy product.
