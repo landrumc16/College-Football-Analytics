@@ -17,32 +17,31 @@ def run(paths, output):
     games.sort(key=lambda g: (g["_time"], str(g["game_id"])))
     seen, ratings, predictions = set(), defaultdict(lambda: 1500.0), []
     for kickoff, batch_iter in groupby(games, key=lambda g: g["_time"]):
-      updates = []
-      for g in batch_iter:
-        key = (g["season"], str(g["game_id"]))
-          if key in seen:
-              raise ValueError(f"Duplicate game: {key}")
-          seen.add(key)
-          home, away = g["home"], g["away"]
-          hd, ad = g.get("home_division"), g.get("away_division")
-          if hd not in ("FBS", "FCS") or ad not in ("FBS", "FCS"):
-              continue
-          hs, ass = g.get("home_score"), g.get("away_score")
-          if hs is None or ass is None or hs == ass:
-              continue
-          advantage = 0 if g.get("neutral_site") else 55
-          p = 1 / (1 + 10 ** (-(ratings[home] + advantage - ratings[away]) / 400))
-          actual = int(hs > ass)
-          if hd == ad == "FBS":
-              predictions.append({"season": g["season"], "game_id": str(g["game_id"]),
-                                  "home": home, "away": away, "kickoff": g["kickoff"],
-                                  "home_probability": p, "home_won": actual})
-          delta = 24 * (actual - p)
-          updates.append((home, away, delta))
-  
-      for home, away, delta in updates:
-        ratings[home] += delta
-        ratings[away] -= delta
+        updates = []
+        for g in batch_iter:
+            key = (g["season"], str(g["game_id"]))
+            if key in seen:
+                raise ValueError(f"Duplicate game: {key}")
+            seen.add(key)
+            home, away = g["home"], g["away"]
+            hd, ad = g.get("home_division"), g.get("away_division")
+            if hd not in ("FBS", "FCS") or ad not in ("FBS", "FCS"):
+                continue
+            hs, ass = g.get("home_score"), g.get("away_score")
+            if hs is None or ass is None or hs == ass:
+                continue
+            advantage = 0 if g.get("neutral_site") else 55
+            p = 1 / (1 + 10 ** (-(ratings[home] + advantage - ratings[away]) / 400))
+            actual = int(hs > ass)
+            if hd == ad == "FBS":
+                predictions.append({"season": g["season"], "game_id": str(g["game_id"]),
+                                    "home": home, "away": away, "kickoff": g["kickoff"],
+                                    "home_probability": p, "home_won": actual})
+            delta = 24 * (actual - p)
+            updates.append((home, away, delta))
+        for home, away, delta in updates:
+            ratings[home] += delta
+            ratings[away] -= delta
 
     def score(rows):
         n = len(rows)
