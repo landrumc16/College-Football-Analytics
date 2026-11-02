@@ -141,6 +141,19 @@ jobs:
           Path("web/dist/v2-research-summary.json").write_text(json.dumps(data) + "\\n")
           PY
           fi
+      - name: Require V2 research summary in production build
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("web/dist/v2-research-summary.json")
+          assert p.is_file(), "V2 research scorecard missing from deployment"
+          data = json.loads(p.read_text())
+          assert data["type"] == "retrospective_walk_forward_baseline"
+          assert data["overall"]["games"] == 3174
+          assert sum(v["games"] for v in data["by_season"].values()) == 3174
+          print("V2 research summary included in production artifact")
+          PY
       - name: Rebuild report from the checked-in live snapshot
         run: |
           if [ -f data/cfbd-2026-games.json ]; then
