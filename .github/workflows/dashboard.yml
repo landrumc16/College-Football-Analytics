@@ -385,6 +385,12 @@ jobs:
           if accuracy is not None:
             assert isinstance(accuracy["games_evaluated"], int) and accuracy["games_evaluated"] >= 0
             assert 0 <= accuracy["correct_winners"] <= accuracy["games_evaluated"]
+            assert "log_loss" in accuracy and "calibration" in accuracy, "V3.1 accuracy missing"
+            assert "forecast_coverage" in accuracy, "V3.1 forecast coverage missing"
+            assert len(accuracy["calibration"]) == 5, "V3.1 calibration bins missing"
+          assert report.get("data_freshness", {}).get("retrieved_at") == report.get("retrieved_at"), (
+            "V3.1 freshness provenance missing from deployed report"
+          )
           print("Published dashboard and season report are reachable")
           PY
               script_url="$(python - <<'PY'
