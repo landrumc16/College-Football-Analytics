@@ -62,6 +62,13 @@ def run(output: Path, seasons=range(2022, 2026)):
                 row[f"{side}_division"] = (
                     raw_division if raw_division in ("FBS", "FCS", "OTHER") else "UNKNOWN"
                 )
+            # A source-certified FBS-vs-FBS flag identifies both divisions.
+            # It is not safe to infer the FBS side from fbs_participant alone.
+            if flags["fbs_game"] is True:
+                if any(row[f"{side}_division"] not in ("FBS", "UNKNOWN")
+                       for side in ("home", "away")):
+                    raise ValueError(f"{season}: contradictory FBS game classification")
+                row["home_division"] = row["away_division"] = "FBS"
             if row["completed"] is None:
                 row["completed"] = (row["home_points"] is not None
                                     and row["away_points"] is not None)
@@ -73,6 +80,12 @@ def run(output: Path, seasons=range(2022, 2026)):
                                       else "FBS" in (row["home_division"], row["away_division"]))
         if not any(row["fbs_participant"] for row in rows):
             raise ValueError(f"{season}: no FBS classifications; cannot infer from team names")
+        if any(r["fbs_participant"] is True and
+               "FBS" not in (r["home_division"], r["away_division"])
+               for r in rows):
+            raise ValueError(
+                f"{season}: FBS-participant games lack team-level classification; "
+                "cannot safely score FBS-FCS results without season-specific roster")
         report.setdefault("schema_columns", {})[str(season)] = sorted(available)
         ids = [str(r["game_id"]) for r in rows]
         if len(ids) != len(set(ids)):
