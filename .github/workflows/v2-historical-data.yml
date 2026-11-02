@@ -1,0 +1,30 @@
+name: V2 historical dataset audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [v2-development]
+    paths:
+      - 'scripts/fetch_historical_schedules.py'
+      - '.github/workflows/v2-historical-data.yml'
+permissions:
+  contents: read
+jobs:
+  dataset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Parquet reader
+        run: python -m pip install pyarrow
+      - name: Fetch and audit four historical seasons
+        run: python scripts/fetch_historical_schedules.py --output historical-data
+      - name: Upload audited game files and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-historical-data-2022-2025
+          path: historical-data/
+          if-no-files-found: warn
