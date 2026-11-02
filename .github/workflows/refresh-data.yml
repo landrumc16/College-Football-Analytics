@@ -82,12 +82,18 @@ jobs:
           assert report['season'] == snapshot['season'] == 2026
           assert report['retrieved_at'] == snapshot['retrieved_at']
           assert report['data_freshness']['retrieved_at'] == snapshot['retrieved_at']
+          verified = 0
           for game_id, forecast in history.items():
+              # Legacy entries lack source/kickoff provenance and are excluded
+              # from V3.1 accuracy, not silently promoted to verified forecasts.
+              if forecast.get('source') == 'previously_published_forecast' and not forecast.get('source_retrieved_at'):
+                  continue
               source_time = aware_utc(forecast.get('source_retrieved_at'))
               forecast_time = aware_utc(forecast.get('forecast_recorded_at'))
               kickoff_time = aware_utc(forecast.get('scheduled_kickoff_at'))
               assert all((source_time, forecast_time, kickoff_time)), game_id
               assert source_time <= forecast_time < kickoff_time, game_id
+              verified += 1
           accuracy = report['prediction_accuracy']
           assert accuracy['games_evaluated'] <= accuracy['eligible_completed_games']
           assert len(accuracy['calibration']) == 5
