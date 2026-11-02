@@ -51,7 +51,7 @@ def test_reject_completed_game_identity_change_and_bad_probability():
     report["predictions"][0]["away"] = "Florida"
     assert archive_pending({}, report, snapshot) == {}
     report["predictions"][0]["away"] = "Georgia"
-    for invalid in (True, -0.1, 1.1, None):
+    for invalid in (True, -0.1, 1.1, None, float("nan"), float("inf")):
         report["predictions"][0]["home_win_probability"] = invalid
         assert archive_pending({}, report, snapshot) == {}
 
@@ -61,3 +61,11 @@ def test_existing_ledger_preserved_when_source_unavailable():
     original = {"1": {"source": "previously_published_forecast"}}
     report["retrieved_at"] = None
     assert archive_pending(original, report, snapshot) == original
+
+
+def test_reject_future_generated_at():
+    report, snapshot = sample()
+    report["generated_at"] = "2099-11-02T12:00:00Z"
+    report["retrieved_at"] = "2099-11-02T11:00:00Z"
+    snapshot["games"][0]["start_date"] = "2099-11-03T12:00:00Z"
+    assert archive_pending({}, report, snapshot) == {}
