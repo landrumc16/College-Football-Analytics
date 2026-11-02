@@ -1,6 +1,6 @@
 # V2 release gate — evidence, not estimates
 
-## Current decision: HOLD — rerun required after leakage fix (2026-11-01)
+## Current decision: RESEARCH ENGINE VERIFIED; DASHBOARD RELEASE NOT YET VERIFIED (2026-11-02)
 
 V2 lives on `v2-development` and draft PR #2. Do **not** merge until all gates below pass.
 
@@ -47,10 +47,14 @@ Source: SportsDataverse season schedules, 2022–2025; GitHub Actions artifact `
 
 ## November 1 follow-up: chronology correction
 
-Commits `1e446d94` and `1e8f3b4b` delay outcome updates until four hours after kickoff and add a same-day leakage regression. Python model CI run `41369860070` and historical evaluation CI run `41369860111` both passed. **The previous 66.51% / 0.21363 / 0.61582 retrospective metrics are superseded** until the full `V2 historical dataset audit` workflow runs on the updated branch and publishes replacement results. No claim of original workbook historical performance is authorized by the baseline run.
+Commits `1e446d94` and `1e8f3b4b` delay outcome updates until four hours after kickoff and add a same-day leakage regression. Python model CI run `41369860070` and historical evaluation CI run `41369860111` both passed. The earlier metrics were temporarily superseded; the corrected full audit subsequently reproduced the same aggregate values (see verified run below). No claim of original workbook historical performance is authorized by the baseline run.
 
 ## Corrected historical workflow: verified (2026-11-02)
 
 [Run 41370501226](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41370501226) on `v2-development` commit `ff92bc41` completed successfully, including importer, regression tests, four-season baseline, and new integrity assertions. Artifact `v2-historical-data-2022-2025` ID `13108104121` uploaded successfully.
 
 **Corrected retrospective Elo baseline:** 3,174 completed FBS-FBS games, winner accuracy **66.5091%**, Brier **0.213628756**, log loss **0.615816389**. The corrected same-day outcome-availability guard did **not change the aggregate results** in this dataset. FBS-FCS games inform ratings but are excluded from accuracy. This is not a verified workbook-model backtest, archived pregame forecast, or market comparison. Historical data integrity gate is **PASS**; remaining release decision concerns scope and dashboard integration/smoke verification.
+
+## Final scope reconciliation
+
+PR #2 changes historical research tooling, tests, and documentation only (23 changed files); it does not implement or verify a distinct V2 frontend. The existing V1 React/Vite dashboard remains the production application. **Do not present a merge of PR #2 as completion of the full V2 dashboard.** A research-engine-only merge may be approved separately after current-head CI and compatibility review, with explicit release labeling. The spreadsheet's 71.7% and market 73.2% claims remain unverified and must not appear as reproduced accuracy. Full V2 UI release requires a demonstrable frontend feature boundary and smoke checks.
