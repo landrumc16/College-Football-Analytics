@@ -177,8 +177,11 @@ def test_prediction_accuracy_only_uses_archived_completed_forecasts():
         "4": {"home": "A", "away": "B", "home_win_probability": 0.9, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
     }
     result = build_prediction_accuracy(snapshot, history)
-    assert result == {"games_evaluated": 2, "correct_winners": 1,
+    assert {key: result[key] for key in ("games_evaluated", "correct_winners", "winner_accuracy", "brier_score")} == {"games_evaluated": 2, "correct_winners": 1,
                       "winner_accuracy": 0.5, "brier_score": 0.265}
+    assert result["log_loss"] is not None
+    assert result["margin_mae"] is None
+    assert sum(row["games"] for row in result["calibration"]) == 2
 
 
 def test_prediction_accuracy_empty_history_has_no_misleading_percentage():
@@ -221,8 +224,9 @@ def test_prediction_accuracy_fbs_only_excludes_unmodeled_matchups():
         "103": {"home": "Unmodeled College", "away": "B", "home_win_probability": 0.75, "forecast_recorded_at": "2026-11-01T17:00:00Z"},
     }
     result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
-    assert result == {"games_evaluated": 1, "correct_winners": 1,
+    assert {key: result[key] for key in ("games_evaluated", "correct_winners", "winner_accuracy", "brier_score")} == {"games_evaluated": 1, "correct_winners": 1,
                       "winner_accuracy": 1.0, "brier_score": 0.0625}
+    assert result["evaluation_scope"] == "archived_pregame_fbs_vs_fbs"
 
 
 def test_prediction_accuracy_fbs_only_empty_sample_is_not_zero_percent():
