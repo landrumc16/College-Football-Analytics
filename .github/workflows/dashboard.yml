@@ -157,10 +157,24 @@ jobs:
           assert sum(v["games"] for v in data["by_season"].values()) == 3174
           print("V2 research summary included in production artifact")
           PY
-      - name: Rebuild report from the checked-in live snapshot
+      - name: Rebuild and verify V3.1 report from the checked-in live snapshot
         run: |
           if [ -f data/cfbd-2026-games.json ]; then
             python -m cfb_analytics.report --season 2026
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          from cfb_analytics.pipeline import build_prediction_accuracy
+          report = json.loads(Path('data/season-2026-report.json').read_text())
+          snapshot = json.loads(Path('data/cfbd-2026-games.json').read_text())
+          history = json.loads(Path('data/pregame-2026-history.json').read_text())
+          eligible = {team['team'] for team in report['rankings']}
+          expected = build_prediction_accuracy(snapshot, history, eligible_teams=eligible)
+          assert report['prediction_accuracy'] == expected, 'Accuracy not computed from verified pregame history'
+          assert report['data_freshness']['retrieved_at'] == snapshot['retrieved_at']
+          assert len(expected['calibration']) == 5
+          print(f"V3.1 verified pregame evaluation: {expected['games_evaluated']} games")
+          PY
           fi
       - name: Include and validate published season report
         run: |
