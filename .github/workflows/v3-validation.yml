@@ -34,5 +34,5 @@ jobs:
       - name: Frontend build regression
         working-directory: web
         run: |
-          npm ci
+          npm install
           npm run build
