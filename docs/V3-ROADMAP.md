@@ -1,6 +1,6 @@
 # Version 3 — Maximum Practical Predictive Accuracy
 
-Status: Approved design standard; implementation not yet started.
+Status: In development on `v3-development`; draft PR #3. No V3 production release or model promotion yet.
 Predecessor: V2 Research Beta production deployment verified in Actions run 41372590890.
 
 ## Product objective
@@ -61,3 +61,15 @@ Work in substantial independently testable chunks, not micro-approvals. Keep a c
 - Forecasts and rankings are appropriately qualified; FCS and CFP caveats remain visible.
 - Full regression, frontend build, mobile browser smoke, deployment and published-data integrity checks pass.
 - No unverified accuracy or market-outperformance claims.
+
+## Implementation evidence — November 2, 2026
+
+- M1 first increment: `src/cfb_analytics/v3_evaluation.py`, `v3_cli.py`, and tests implement matched archived pregame comparison, calibration, chronological provenance checks, and FBS/FCS scope.
+- M2 bounded research increment: `scripts/v3_elo_study.py` compares a predeclared five-candidate Elo grid with a 2025 holdout. Candidate selection uses **development-season Brier only**; holdout is displayed once for audit, never used to select parameters. Existing 24 K / 55 home advantage remains the incumbent.
+- `tests/test_v3_elo_study.py` exercises chronology, FCS updates, duplicate rejection, and holdout separation.
+- `.github/workflows/v3-validation.yml` runs Python tests and frontend build on V3 branch/PR.
+- **Verification pending:** GitHub Actions results and full real historical study have not been confirmed. No candidate has been demonstrated to beat the incumbent. These are research-only reconstructions, not archived pregame forecasts.
+
+## Next execution boundary
+
+Run the historical study against verified 2022–2025 game inputs, review held-out scorecard and confidence/stability, and retain incumbent unless improvement is meaningful. Then integrate only the supported model improvements and complete M3–M6 without expanding the research grid indefinitely.
