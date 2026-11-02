@@ -32,6 +32,28 @@ jobs:
         run: python scripts/fetch_historical_schedules.py --output historical-data
       - name: Run chronological retrospective baseline
         run: python scripts/walkforward_baseline.py historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --output historical-data
+      - name: Assert historical coverage and scoring integrity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("historical-data")
+          coverage = json.loads((root / "coverage.json").read_text())
+          report = json.loads((root / "walkforward_report.json").read_text())
+          predictions = json.loads((root / "walkforward_predictions.json").read_text())
+          seasons = coverage["seasons"]
+          expected = sum(v["completed_fbs_vs_fbs"] for v in seasons.values())
+          assert set(seasons) == {"2022", "2023", "2024", "2025"}, seasons.keys()
+          assert all(v["completed_fbs_vs_fbs"] >= 700 for v in seasons.values())
+          assert all(v["missing_fbs_kickoff"] == 0 for v in seasons.values())
+          assert expected == report["overall"]["games"] == len(predictions)
+          assert len({(p["season"], p["game_id"]) for p in predictions}) == len(predictions)
+          assert all(0 < p["home_probability"] < 1 for p in predictions)
+          assert 0 <= report["overall"]["accuracy"] <= 1
+          assert 0 <= report["overall"]["brier"] <= 1
+          assert report["overall"]["logloss"] >= 0
+          print(f"Validated {expected} FBS-FBS predictions across four seasons")
+          PY
       - name: Show dataset audit outputs
         if: always()
         run: |
