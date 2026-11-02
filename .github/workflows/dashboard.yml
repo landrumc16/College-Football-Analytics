@@ -10,6 +10,7 @@ on:
     branches: [main, v2-development]
     paths:
       - 'data/v2-research-summary.json'
+      - 'docs/V2-RELEASE-GATE.md'
       - 'web/**'
       - 'src/**'
       - 'tests/**'
@@ -252,6 +253,12 @@ jobs:
           assert Path("web/dist/index.html").is_file()
           print("Validated published dashboard and report")
           PY
+      - name: Preserve V2 research summary for deployment verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-v2-research-summary
+          path: web/dist/v2-research-summary.json
+          if-no-files-found: error
       - name: Preserve validated report for deployment verification
         uses: actions/upload-artifact@v4
         with:
@@ -293,6 +300,11 @@ jobs:
         with:
           name: validated-season-report
           path: /tmp/cfb-validated
+      - name: Retrieve validated V2 research summary
+        uses: actions/download-artifact@v4
+        with:
+          name: validated-v2-research-summary
+          path: /tmp/cfb-v2-validated
       - id: deployment
         uses: actions/deploy-pages@v4
       - name: Smoke-test published dashboard
@@ -304,7 +316,8 @@ jobs:
           for attempt in 1 2 3 4 5; do
             if curl --fail --location --silent --show-error "$base" -o /tmp/cfb-index.html && \
                curl --fail --location --silent --show-error "${base}season-report.json" -o /tmp/cfb-report.json && \
-               curl --fail --location --silent --show-error "${base}historical-backtest.json" -o /tmp/cfb-backtest.json; then
+               curl --fail --location --silent --show-error "${base}historical-backtest.json" -o /tmp/cfb-backtest.json && \
+               curl --fail --location --silent --show-error "${base}v2-research-summary.json" -o /tmp/cfb-v2.json; then
               python - <<'PY'
           import json
           from pathlib import Path
@@ -346,6 +359,15 @@ jobs:
           if "DEMO" not in source:
             assert "collegefootballdata.com" in source, "Unexpected published live source"
             assert report.get("retrieved_at"), "Published live report has no retrieval timestamp"
+          v2 = json.loads(Path("/tmp/cfb-v2.json").read_text())
+          assert v2["type"] == "retrospective_walk_forward_baseline"
+          assert v2["overall"]["games"] == 3174
+          assert sum(x["games"] for x in v2["by_season"].values()) == 3174
+          v2_built = Path("/tmp/cfb-v2-validated/v2-research-summary.json").read_bytes()
+          v2_deployed = Path("/tmp/cfb-v2.json").read_bytes()
+          assert hashlib.sha256(v2_built).digest() == hashlib.sha256(v2_deployed).digest(), (
+            "Published V2 research differs from validated artifact"
+          )
           backtest = json.loads(Path("/tmp/cfb-backtest.json").read_text())
           assert backtest["games"] > 0, "Published backtest has no evaluated games"
           assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
