@@ -9,7 +9,6 @@ from math import log
 from statistics import mean
 
 from .historical import HistoricalGame, validate_unique_games, utc_instant
-from .historical_evaluation import ArchivedForecast
 
 _EPS = 1e-12
 
