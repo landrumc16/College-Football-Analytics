@@ -8,6 +8,8 @@ on:
       - 'scripts/fetch_historical_schedules.py'
       - 'scripts/walkforward_baseline.py'
       - 'tests/test_v3_elo_study.py'
+      - 'tests/test_v3_model_metadata.py'
+      - 'src/cfb_analytics/pipeline.py'
       - '.github/workflows/v3-historical-research.yml'
 permissions:
   contents: read
