@@ -139,7 +139,7 @@ jobs:
           assert data["disclaimer"] and data["fcs_policy"]
           assert data["overall"]["games"] == sum(v["games"] for v in data["by_season"].values())
           assert all(0 <= v["accuracy"] <= 1 and 0 <= v["brier"] <= 1 for v in data["by_season"].values())
-          Path("web/dist/v2-research-summary.json").write_text(json.dumps(data) + "\\n")
+          Path("web/dist/v2-research-summary.json").write_text(json.dumps(data) + "\n")
           PY
           fi
       - name: Require V2 research summary in production build
