@@ -32,6 +32,7 @@ def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
     ratings = defaultdict(lambda: 1500.0)
     pending = []
     predictions = []
+    fcs_scored = []
     for kickoff, batch in groupby(records, lambda g: g["_kickoff"]):
         ready = [u for u in pending if u[0] <= kickoff]
         pending = [u for u in pending if u[0] > kickoff]
@@ -49,9 +50,12 @@ def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
             advantage = 0 if g.get("neutral_site") else home_advantage
             p = 1 / (1 + 10 ** (-(ratings[home] + advantage - ratings[away]) / 400))
             y = int(hs > away_score)
+            row = {"season": g["season"], "game_id": str(g["game_id"]),
+                   "home_probability": p, "home_won": y}
             if hd == ad == "FBS":
-                predictions.append({"season": g["season"], "game_id": str(g["game_id"]),
-                                    "home_probability": p, "home_won": y})
+                predictions.append(row)
+            elif "FBS" in (hd, ad) and "FCS" in (hd, ad):
+                fcs_scored.append(row)
             pending.append((kickoff + timedelta(hours=4), home, away, k * (y - p)))
     def score(rows):
         if not rows:
@@ -69,6 +73,10 @@ def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
         "development": score([r for r in predictions if r["season"] < holdout]),
         "holdout": score([r for r in predictions if r["season"] == holdout]),
         "excluded_future_games": sum(r["season"] > holdout for r in predictions),
+        "fbs_fcs": {
+            "development": score([r for r in fcs_scored if r["season"] < holdout]),
+            "holdout": score([r for r in fcs_scored if r["season"] == holdout]),
+        },
     }
 
 
