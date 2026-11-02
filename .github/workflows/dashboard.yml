@@ -7,8 +7,9 @@ on:
     types: [completed]
     branches: [main]
   push:
-    branches: [main]
+    branches: [main, v2-development]
     paths:
+      - 'data/v2-research-summary.json'
       - 'web/**'
       - 'src/**'
       - 'tests/**'
@@ -26,8 +27,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  v2-preview:
+    if: github.ref == 'refs/heads/v2-development'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build V2 dashboard
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+      - name: Verify optional V2 research data and compiled dashboard
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('data/v2-research-summary.json').read_text())
+          assert data['type'] == 'retrospective_walk_forward_baseline'
+          assert data['overall']['games'] == 3174
+          assert sum(x['games'] for x in data['by_season'].values()) == 3174
+          assert all(0 <= x['accuracy'] <= 1 for x in data['by_season'].values())
+          assert Path('web/dist/index.html').is_file()
+          Path('web/dist/v2-research-summary.json').write_text(json.dumps(data))
+          assert json.loads(Path('web/dist/v2-research-summary.json').read_text()) == data
+          print('V2 research dashboard build and summary smoke verified')
+          PY
   build:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
