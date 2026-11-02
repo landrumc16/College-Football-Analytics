@@ -66,6 +66,7 @@ jobs:
           assert decision['recommendation'] in ('retain_incumbent', 'candidate_warrants_further_validation')
           assert v3['promotion_authorized'] is False
           print('V3 historical study and incumbent parity verified:', expected_dev, expected_holdout)
+          print('V3 research decision:', json.dumps(decision, sort_keys=True))
           PY
       - name: Upload V3 historical study evidence
         if: always()
