@@ -131,6 +131,10 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
             champion = finalists[0]
         projected_champions.append(champion)
     projected_champions.sort(key=lambda name: ranking_index[name])
+    if len(projected_champions) < 5:
+        raise ValueError("Projected CFP field requires at least five eligible conference champions")
+    if len(known) < 12:
+        raise ValueError("Projected CFP field requires at least twelve eligible teams")
     auto_bids = projected_champions[:5]
     at_large = [name for name, _ in order if name not in auto_bids][:7]
     field = sorted(auto_bids + at_large, key=lambda name: ranking_index[name])
