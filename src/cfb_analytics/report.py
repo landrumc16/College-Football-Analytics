@@ -9,7 +9,9 @@ import json
 from pathlib import Path
 from .parity import load_baseline
 from .pipeline import run_snapshot
-from .forecast_ledger import archive_pending
+from .forecast_ledger import archive_pending, aware_utc
+import os
+import tempfile
 
 
 from datetime import datetime, timezone
@@ -55,6 +57,9 @@ def main():
     # Published predictions are the authoritative set of games forecast while pending.
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
     previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
+    # Never promote a report with missing or future-dated source provenance.
+    if aware_utc(snapshot_data.get("retrieved_at")) is None:
+        raise RuntimeError("Snapshot has no verified retrieval timestamp")
     eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
@@ -85,7 +90,8 @@ def main():
     try:
         roster_path.parent.mkdir(parents=True, exist_ok=True)
         roster_path.write_text(json.dumps(roster), encoding="utf-8")
-        result = run_snapshot(snapshot, roster_path, output)
+        staging_path = output.with_suffix(".staging.json")
+        result = run_snapshot(snapshot, roster_path, staging_path)
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
         from datetime import datetime, timezone
         result["generated_at"] = datetime.now(timezone.utc).isoformat()
@@ -97,10 +103,24 @@ def main():
         fbs_teams = {team['name'] for team in roster}
         result["prediction_accuracy"] = build_prediction_accuracy(
             snapshot_data, history, eligible_teams=fbs_teams)
-        output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-        history_path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
+        # Persist the ledger first: a crash must not lose the first pregame forecast.
+        def atomic_json(path, value):
+            fd, name = tempfile.mkstemp(prefix=".v31-", suffix=".json", dir=path.parent)
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as stream:
+                    json.dump(value, stream, indent=2, allow_nan=False)
+                    stream.write("\\n")
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                os.replace(name, path)
+            finally:
+                if os.path.exists(name):
+                    os.unlink(name)
+        atomic_json(history_path, history)
+        atomic_json(output, result)
     finally:
         roster_path.unlink(missing_ok=True)
+        output.with_suffix(".staging.json").unlink(missing_ok=True)
     print(json.dumps({"output": str(output), "summary": result["summary"]}))
 
 
