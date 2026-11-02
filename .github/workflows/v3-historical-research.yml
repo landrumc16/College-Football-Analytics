@@ -1,0 +1,67 @@
+name: V3 historical model research
+on:
+  workflow_dispatch:
+  push:
+    branches: [v3-development]
+    paths:
+      - 'scripts/v3_elo_study.py'
+      - 'scripts/fetch_historical_schedules.py'
+      - 'scripts/walkforward_baseline.py'
+      - 'tests/test_v3_elo_study.py'
+      - '.github/workflows/v3-historical-research.yml'
+permissions:
+  contents: read
+jobs:
+  historical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pyarrow pytest
+      - name: Run research regression tests
+        run: python -m pytest -q tests/test_v3_elo_study.py tests/test_walkforward_baseline.py
+      - name: Retrieve audited historical schedule sources
+        run: python scripts/fetch_historical_schedules.py --output historical-data
+      - name: Reproduce V2 baseline
+        run: python scripts/walkforward_baseline.py historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --output historical-data
+      - name: Run bounded V3 candidates
+        run: python -m scripts.v3_elo_study historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --holdout 2025 --output historical-data/v3-elo-study.json
+      - name: Verify baseline parity and candidate counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('historical-data')
+          v2 = json.loads((root / 'walkforward_report.json').read_text())
+          v3 = json.loads((root / 'v3-elo-study.json').read_text())
+          coverage = json.loads((root / 'coverage.json').read_text())['seasons']
+          assert v2['overall']['games'] == 3174, 'Historical population changed; audit before model comparison'
+          assert abs(v2['overall']['brier'] - 0.2136287560405848) < 1e-7
+          expected_dev = sum(coverage[str(year)]['completed_fbs_vs_fbs'] for year in (2022, 2023, 2024))
+          expected_holdout = coverage['2025']['completed_fbs_vs_fbs']
+          assert expected_dev + expected_holdout == 3174
+          assert len(v3['candidates']) == 5
+          for c in v3['candidates']:
+              assert c['development']['games'] == expected_dev
+              assert c['holdout']['games'] == expected_holdout
+          incumbent = v3['incumbent']
+          weighted_brier = (incumbent['development']['brier'] * expected_dev +
+                            incumbent['holdout']['brier'] * expected_holdout) / 3174
+          assert abs(weighted_brier - v2['overall']['brier']) < 1e-10, 'V3 incumbent differs from V2 baseline'
+          assert v3['promotion_authorized'] is False
+          print('V3 historical study and incumbent parity verified:', expected_dev, expected_holdout)
+          PY
+      - name: Upload V3 historical study evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-historical-research
+          path: |
+            historical-data/coverage.json
+            historical-data/walkforward_report.json
+            historical-data/v3-elo-study.json
+          if-no-files-found: warn
+          retention-days: 30
