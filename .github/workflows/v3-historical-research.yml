@@ -51,6 +51,8 @@ jobs:
           weighted_brier = (incumbent['development']['brier'] * expected_dev +
                             incumbent['holdout']['brier'] * expected_holdout) / 3174
           assert abs(weighted_brier - v2['overall']['brier']) < 1e-10, 'V3 incumbent differs from V2 baseline'
+          assert v3['incumbent']['fbs_fcs']['development']['games'] >= 0
+          assert v3['incumbent']['fbs_fcs']['holdout']['games'] >= 0
           assert v3['promotion_authorized'] is False
           print('V3 historical study and incumbent parity verified:', expected_dev, expected_holdout)
           PY
