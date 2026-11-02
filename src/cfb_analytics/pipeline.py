@@ -281,34 +281,64 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
 
 
 def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set[str] | None = None) -> dict:
-    """Score only completed games with genuine archived pregame probabilities."""
-    games = 0
-    correct = 0
-    brier_total = 0.0
-    aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
-               "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
+    """Evaluate verified archived pregame forecasts, never retrospective estimates."""
+    import math
+    from .forecast_ledger import aware_utc, ALIASES
+    games = correct = eligible_completed = 0
+    brier_total = log_total = margin_abs_total = 0.0
+    margin_games = 0
+    bins = [{"count": 0, "predicted_total": 0.0, "actual_total": 0.0}
+            for _ in range(5)]
     for game in snapshot["games"]:
         if not game["completed"] or game["home_score"] is None or game["away_score"] is None:
             continue
         if game["home_score"] == game["away_score"]:
             continue
+        home = ALIASES.get(game["home"], game["home"])
+        away = ALIASES.get(game["away"], game["away"])
+        if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
+            continue
+        eligible_completed += 1
         forecast = history.get(str(game["game_id"]))
         if not forecast or not _has_verified_pregame_provenance(game, forecast):
             continue
-        home = aliases.get(game["home"], game["home"])
-        away = aliases.get(game["away"], game["away"])
+        home = ALIASES.get(game["home"], game["home"])
+        away = ALIASES.get(game["away"], game["away"])
         if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
             continue
         probability = forecast.get("home_win_probability")
         if (forecast.get("home") != home or forecast.get("away") != away
                 or isinstance(probability, bool)
                 or not isinstance(probability, (float, int))
-                or not 0 <= probability <= 1):
+                or not math.isfinite(probability) or not 0 <= probability <= 1):
             continue
         outcome = int(game["home_score"] > game["away_score"])
         games += 1
         correct += int((probability >= 0.5) == bool(outcome))
         brier_total += (probability - outcome) ** 2
-    return {"games_evaluated": games, "correct_winners": correct,
+        clipped = min(max(probability, 1e-15), 1 - 1e-15)
+        log_total -= outcome * math.log(clipped) + (1 - outcome) * math.log(1 - clipped)
+        bucket = bins[min(int(probability * 5), 4)]
+        bucket["count"] += 1
+        bucket["predicted_total"] += probability
+        bucket["actual_total"] += outcome
+        margin = forecast.get("home_margin")
+        if isinstance(margin, (int, float)) and not isinstance(margin, bool) and math.isfinite(margin):
+            margin_abs_total += abs(margin - (game["home_score"] - game["away_score"]))
+            margin_games += 1
+    calibration = [
+        {"range": f"{i * 20}-{(i + 1) * 20}%", "games": b["count"],
+         "mean_predicted": round(b["predicted_total"] / b["count"], 4) if b["count"] else None,
+         "actual_home_win_rate": round(b["actual_total"] / b["count"], 4) if b["count"] else None}
+        for i, b in enumerate(bins)
+    ]
+    return {"games_evaluated": games, "eligible_completed_games": eligible_completed,
+            "forecast_coverage": round(games / eligible_completed, 4) if eligible_completed else None,
+            "correct_winners": correct,
             "winner_accuracy": round(correct / games, 4) if games else None,
-            "brier_score": round(brier_total / games, 4) if games else None}
+            "brier_score": round(brier_total / games, 4) if games else None,
+            "log_loss": round(log_total / games, 4) if games else None,
+            "margin_mae": round(margin_abs_total / margin_games, 3) if margin_games else None,
+            "margin_games": margin_games, "calibration": calibration,
+            "evaluation_scope": "archived_pregame_fbs_vs_fbs" if eligible_teams is not None
+                                else "archived_pregame_all_eligible"}

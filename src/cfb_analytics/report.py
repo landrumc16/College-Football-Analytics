@@ -9,6 +9,9 @@ import json
 from pathlib import Path
 from .parity import load_baseline
 from .pipeline import run_snapshot
+from .forecast_ledger import archive_pending, aware_utc
+import os
+import tempfile
 
 
 from datetime import datetime, timezone
@@ -53,14 +56,17 @@ def main():
     previous_generated = previous.get("generated_at")
     # Published predictions are the authoritative set of games forecast while pending.
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
-    previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
+    # Never promote a report with missing or future-dated source provenance.
+    retrieved = aware_utc(snapshot_data.get("retrieved_at"))
+    now = datetime.now(timezone.utc)
+    if retrieved is None or retrieved > now or (now - retrieved).total_seconds() > 72 * 3600:
+        raise RuntimeError("Snapshot retrieval timestamp missing, future-dated, or older than 72 hours")
     eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_games and key not in history
-                and prediction["game_id"] in previous_pending
                 and prediction.get("home") in eligible_fbs
                 and prediction.get("away") in eligible_fbs):
             game = completed_games[prediction["game_id"]]
@@ -70,6 +76,8 @@ def main():
             # was computed. Only archive reports with an explicit generation
             # timestamp strictly preceding kickoff.
             if not verified_pregame(previous_generated, game.get("start_date")):
+                continue
+            if not verified_pregame(previous_retrieved, previous_generated):
                 continue
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
@@ -84,10 +92,13 @@ def main():
     try:
         roster_path.parent.mkdir(parents=True, exist_ok=True)
         roster_path.write_text(json.dumps(roster), encoding="utf-8")
-        result = run_snapshot(snapshot, roster_path, output)
+        staging_path = output.with_suffix(".staging.json")
+        result = run_snapshot(snapshot, roster_path, staging_path)
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
-        from datetime import datetime, timezone
         result["generated_at"] = datetime.now(timezone.utc).isoformat()
+        result["data_freshness"] = {"status": "current", "retrieved_at": snapshot_data["retrieved_at"],
+                                    "data_changed_at": snapshot_data.get("data_changed_at")}
+        history = archive_pending(history, result, snapshot_data)
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
         # Measure the FBS model only on games between schools in its rating universe.
@@ -95,10 +106,24 @@ def main():
         fbs_teams = {team['name'] for team in roster}
         result["prediction_accuracy"] = build_prediction_accuracy(
             snapshot_data, history, eligible_teams=fbs_teams)
-        output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-        history_path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
+        # Persist the ledger first: a crash must not lose the first pregame forecast.
+        def atomic_json(path, value):
+            fd, name = tempfile.mkstemp(prefix=".v31-", suffix=".json", dir=path.parent)
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as stream:
+                    json.dump(value, stream, indent=2, allow_nan=False)
+                    stream.write("\n")
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                os.replace(name, path)
+            finally:
+                if os.path.exists(name):
+                    os.unlink(name)
+        atomic_json(history_path, history)
+        atomic_json(output, result)
     finally:
         roster_path.unlink(missing_ok=True)
+        output.with_suffix(".staging.json").unlink(missing_ok=True)
     print(json.dumps({"output": str(output), "summary": result["summary"]}))
 
 
