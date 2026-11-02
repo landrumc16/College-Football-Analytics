@@ -1,6 +1,6 @@
 # V2 release gate — evidence, not estimates
 
-## Current decision: RESEARCH ENGINE VERIFIED; DASHBOARD RELEASE NOT YET VERIFIED (2026-11-02)
+## Current decision: V2 research beta CI verified; production release pending (2026-11-02)
 
 V2 lives on `v2-development` and draft PR #2. Do **not** merge until all gates below pass.
 
@@ -58,3 +58,10 @@ Commits `1e446d94` and `1e8f3b4b` delay outcome updates until four hours after k
 ## Final scope reconciliation
 
 PR #2 changes historical research tooling, tests, and documentation only (23 changed files); it does not implement or verify a distinct V2 frontend. The existing V1 React/Vite dashboard remains the production application. **Do not present a merge of PR #2 as completion of the full V2 dashboard.** A research-engine-only merge may be approved separately after current-head CI and compatibility review, with explicit release labeling. The spreadsheet's 71.7% and market 73.2% claims remain unverified and must not appear as reproduced accuracy. Full V2 UI release requires a demonstrable frontend feature boundary and smoke checks.
+
+## Final preview CI evidence (2026-11-02)
+
+- [V2 historical evaluation workflow run 41371557374](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371557374): **PASS**, including full Python suite, frontend TypeScript/Vite production build, and published research-summary payload smoke assertions.
+- [Python model workflow run 41371557433](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371557433): **PASS**.
+- Verified head: `5fa4e63174a6f01f3d45fa233dba9eba65e02a59`. PR #2 remains draft and mergeable at this checkpoint. The CI check is a **build/data smoke**, not an interactive browser playtest or deployed-site smoke.
+- The intended release scope is **V2 research beta**: existing dashboard plus clearly labeled 2022–2025 retrospective Elo scorecard, with no workbook-model or market-outperformance claim. Production Pages deployment has not been verified on this branch. Keep V1 live until explicit merge approval and post-merge Pages smoke.
