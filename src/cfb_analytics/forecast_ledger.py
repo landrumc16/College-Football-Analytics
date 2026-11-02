@@ -4,6 +4,7 @@ The source retrieval and report generation times must both precede kickoff.
 This ledger does not backfill historical predictions.
 """
 from datetime import datetime, timezone
+import math
 
 
 ALIASES = {"Miami": "Miami (FL)", "App State": "Appalachian State",
@@ -24,7 +25,7 @@ def archive_pending(history, report, snapshot):
     """Return an updated ledger without mutating existing first observations."""
     generated = aware_utc(report.get("generated_at"))
     retrieved = aware_utc(report.get("retrieved_at"))
-    if generated is None or retrieved is None or retrieved > generated:
+    if generated is None or retrieved is None or retrieved > generated or generated > datetime.now(timezone.utc):
         return dict(history)
     games = {str(g["game_id"]): g for g in snapshot.get("games", [])}
     result = dict(history)
@@ -47,7 +48,7 @@ def archive_pending(history, report, snapshot):
             continue
         probability = prediction.get("home_win_probability")
         if (isinstance(probability, bool) or not isinstance(probability, (int, float))
-                or not 0 <= probability <= 1):
+                or not math.isfinite(probability) or not 0 <= probability <= 1):
             continue
         result[key] = {
             **prediction,
