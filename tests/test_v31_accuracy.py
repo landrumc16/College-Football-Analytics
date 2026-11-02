@@ -18,6 +18,8 @@ def test_margin_logloss_and_calibration_are_archived_only():
     history = {"1": forecast("A", "B", .8, 7), "2": forecast("B", "A", .2, -6)}
     result = build_prediction_accuracy(snapshot, history, eligible_teams={"A", "B"})
     assert result["games_evaluated"] == 2
+    assert result["eligible_completed_games"] == 2
+    assert result["forecast_coverage"] == 1.0
     assert result["winner_accuracy"] == 1.0
     assert result["brier_score"] == .04
     assert result["log_loss"] == round(-math.log(.8), 4)
@@ -29,6 +31,8 @@ def test_margin_logloss_and_calibration_are_archived_only():
 def test_empty_forecasts_do_not_invent_calibration_or_errors():
     result = build_prediction_accuracy({"games": [game(1, "A", "B", 24, 14)]}, {})
     assert result["games_evaluated"] == 0
+    assert result["eligible_completed_games"] == 1
+    assert result["forecast_coverage"] == 0.0
     assert result["log_loss"] is None
     assert result["margin_mae"] is None
     assert all(bucket["games"] == 0 and bucket["mean_predicted"] is None
