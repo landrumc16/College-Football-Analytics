@@ -54,8 +54,7 @@ def run(output: Path, seasons=range(2022, 2026)):
         # Keep the source's authoritative FBS flags where supplied.
         source_flags = [{"fbs_game": raw.get("fbs_game"),
                          "fbs_participant": raw.get("fbs_participant")}
-                        for raw in table.select([c for c in ("fbs_game", "fbs_participant")
-                                                 if c in available]).to_pylist()]
+                        for raw in table.to_pylist()]
         for row, flags in zip(rows, source_flags):
             row["home_division"] = str(row["home_division"] or "UNKNOWN").upper()
             row["away_division"] = str(row["away_division"] or "UNKNOWN").upper()
@@ -68,6 +67,8 @@ def run(output: Path, seasons=range(2022, 2026)):
             row["fbs_participant"] = (flags["fbs_participant"]
                                       if flags["fbs_participant"] is not None
                                       else "FBS" in (row["home_division"], row["away_division"]))
+        if len(rows) != len(source_flags):
+            raise ValueError(f"{season}: source rows and classification flags differ")
         if not any(row["fbs_participant"] for row in rows):
             raise ValueError(f"{season}: no FBS classifications; cannot infer from team names")
         report.setdefault("schema_columns", {})[str(season)] = sorted(available)
