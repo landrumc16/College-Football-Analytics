@@ -39,3 +39,15 @@ def test_duplicate_game_rejected(tmp_path):
     source.write_text(json.dumps([g, g]))
     with pytest.raises(ValueError, match="Duplicate game"):
         run([source], tmp_path / "out")
+
+
+def test_later_same_day_kickoff_cannot_see_unfinished_result(tmp_path):
+    games = [game(1, "2025-09-01T12:00:00Z", "A", "FCS1", ad="FCS"),
+             game(2, "2025-09-01T14:00:00Z", "A", "B"),
+             game(3, "2025-09-02T12:00:00Z", "A", "C")]
+    source = tmp_path / "games.json"
+    source.write_text(json.dumps(games))
+    run([source], tmp_path / "out")
+    preds = json.loads((tmp_path / "out" / "walkforward_predictions.json").read_text())
+    assert preds[0]["home_probability"] == 0.5
+    assert preds[1]["home_probability"] > 0.5
