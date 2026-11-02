@@ -2,7 +2,7 @@
 import argparse
 import json
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import groupby
 from math import log
 from pathlib import Path
@@ -16,7 +16,13 @@ def run(paths, output):
             raise ValueError("Timezone-aware kickoff required")
     games.sort(key=lambda g: (g["_time"], str(g["game_id"])))
     seen, ratings, predictions = set(), defaultdict(lambda: 1500.0), []
+    pending = []  # Outcomes become usable only after a conservative four-hour game window.
     for kickoff, batch_iter in groupby(games, key=lambda g: g["_time"]):
+        ready = [u for u in pending if u[0] <= kickoff]
+        pending = [u for u in pending if u[0] > kickoff]
+        for _, home, away, delta in ready:
+            ratings[home] += delta
+            ratings[away] -= delta
         updates = []
         for g in batch_iter:
             key = (g["season"], str(g["game_id"]))
@@ -38,10 +44,8 @@ def run(paths, output):
                                     "home": home, "away": away, "kickoff": g["kickoff"],
                                     "home_probability": p, "home_won": actual})
             delta = 24 * (actual - p)
-            updates.append((home, away, delta))
-        for home, away, delta in updates:
-            ratings[home] += delta
-            ratings[away] -= delta
+            updates.append((kickoff + timedelta(hours=4), home, away, delta))
+        pending.extend(updates)
 
     def score(rows):
         n = len(rows)
@@ -57,6 +61,7 @@ def run(paths, output):
     seasons = sorted({g["season"] for g in games})
     report = {"type": "retrospective_walk_forward_baseline",
               "disclaimer": "Not an archived pregame forecast or the original workbook model.",
+              "outcome_availability": "Conservative kickoff plus four hours; later same-day kickoffs cannot use unfinished earlier games",
               "fcs_policy": "FBS-FCS games update ratings but are excluded from accuracy",
               "overall": score(predictions),
               "by_season": {str(y): score([x for x in predictions if x["season"] == y])
