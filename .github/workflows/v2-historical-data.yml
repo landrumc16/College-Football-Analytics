@@ -21,6 +21,11 @@ jobs:
         run: python -m pip install pyarrow
       - name: Fetch and audit four historical seasons
         run: python scripts/fetch_historical_schedules.py --output historical-data
+      - name: Show dataset audit outputs
+        if: always()
+        run: |
+          find historical-data -maxdepth 1 -type f -printf '%f %s bytes\\n' 2>/dev/null || true
+          if [ -f historical-data/coverage.json ]; then cat historical-data/coverage.json; fi
       - name: Upload audited game files and coverage
         if: always()
         uses: actions/upload-artifact@v4
