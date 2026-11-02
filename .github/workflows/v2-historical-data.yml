@@ -7,6 +7,7 @@ on:
       - 'scripts/fetch_historical_schedules.py'
       - 'scripts/walkforward_baseline.py'
       - 'tests/test_historical_data_import.py'
+      - 'tests/test_walkforward_baseline.py'
       - '.github/workflows/v2-historical-data.yml'
 permissions:
   contents: read
@@ -22,7 +23,11 @@ jobs:
       - name: Install Parquet reader
         run: python -m pip install pyarrow
       - name: Validate importer syntax
-        run: python -m py_compile scripts/fetch_historical_schedules.py
+        run: python -m py_compile scripts/fetch_historical_schedules.py scripts/walkforward_baseline.py
+      - name: Run baseline regression tests
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_walkforward_baseline.py
       - name: Fetch and audit four historical seasons
         run: python scripts/fetch_historical_schedules.py --output historical-data
       - name: Run chronological retrospective baseline
