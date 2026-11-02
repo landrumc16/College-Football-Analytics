@@ -48,16 +48,20 @@ def run(output: Path, seasons=range(2022, 2026)):
         missing = [name for name in required if selected[name] is None]
         if missing:
             raise ValueError(f"{season}: missing {missing}; actual columns: {sorted(available)}")
+        raw_rows = table.to_pylist()
         rows = [{name: raw.get(column) if column else None
                  for name, column in selected.items()}
-                for raw in table.to_pylist()]
+                for raw in raw_rows]
         # Keep the source's authoritative FBS flags where supplied.
         source_flags = [{"fbs_game": raw.get("fbs_game"),
                          "fbs_participant": raw.get("fbs_participant")}
-                        for raw in table.to_pylist()]
+                        for raw in raw_rows]
         for row, flags in zip(rows, source_flags):
-            row["home_division"] = str(row["home_division"] or "UNKNOWN").upper()
-            row["away_division"] = str(row["away_division"] or "UNKNOWN").upper()
+            for side in ("home", "away"):
+                raw_division = str(row[f"{side}_division"] or "UNKNOWN").upper()
+                row[f"{side}_division"] = (
+                    raw_division if raw_division in ("FBS", "FCS", "OTHER") else "UNKNOWN"
+                )
             if row["completed"] is None:
                 row["completed"] = (row["home_points"] is not None
                                     and row["away_points"] is not None)
@@ -67,8 +71,6 @@ def run(output: Path, seasons=range(2022, 2026)):
             row["fbs_participant"] = (flags["fbs_participant"]
                                       if flags["fbs_participant"] is not None
                                       else "FBS" in (row["home_division"], row["away_division"]))
-        if len(rows) != len(source_flags):
-            raise ValueError(f"{season}: source rows and classification flags differ")
         if not any(row["fbs_participant"] for row in rows):
             raise ValueError(f"{season}: no FBS classifications; cannot infer from team names")
         report.setdefault("schema_columns", {})[str(season)] = sorted(available)
@@ -89,6 +91,10 @@ def run(output: Path, seasons=range(2022, 2026)):
             "completed_fbs_vs_fbs": len(fbs),
             "completed_fbs_vs_other": len(fcs),
             "missing_fbs_kickoff": sum(not r["start_date"] for r in fbs),
+            "unclassified_fbs_participants": sum(
+                r["fbs_participant"] is True and "FBS" not in
+                (r["home_division"], r["away_division"]) for r in completed
+            ),
         }
         (output / f"games_{season}.json").write_text(
             json.dumps([{
@@ -100,6 +106,8 @@ def run(output: Path, seasons=range(2022, 2026)):
                 "source": URL.format(season=season),
                 "home_score": int(r["home_points"]), "away_score": int(r["away_points"]),
                 "neutral_site": r["neutral_site"],
+                "fbs_game": r["fbs_game"],
+                "fbs_participant": r["fbs_participant"],
                 "week": r["week"], "season_type": r["season_type"]
             } for r in completed if r["fbs_participant"] is True and r["start_date"]],
                        indent=2) + "\n", encoding="utf-8")
