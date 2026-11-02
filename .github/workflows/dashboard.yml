@@ -10,8 +10,10 @@ on:
     branches: [main, v2-development]
     paths:
       - 'data/v2-research-summary.json'
+      - 'docs/V3-EXECUTION-CHECKLIST.md'
       - 'docs/V2-RELEASE-GATE.md'
       - 'web/**'
+      - '.github/workflows/v3-historical-research.yml'
       - 'src/**'
       - 'tests/**'
       - 'pyproject.toml'
@@ -255,6 +257,8 @@ jobs:
           assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
           assert backtest["evaluation_scope"].startswith("2026 frozen")
           assert Path("web/dist/index.html").is_file()
+          bundles = list(Path("web/dist/assets").glob("*.js"))
+          assert bundles and any(b"VERSION 3" in p.read_bytes() for p in bundles), "Version 3 dashboard bundle missing"
           print("Validated published dashboard and report")
           PY
       - name: Preserve V2 research summary for deployment verification
@@ -343,6 +347,7 @@ jobs:
           Path("/tmp/cfb-script-path.txt").write_text(assets.scripts[0])
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
           assert report["model_metadata"]["model_id"] == "workbook_2026_baseline", "V3 provenance absent from live dashboard"
+          assert report["model_metadata"]["model_status"] == "incumbent_not_v3_promoted"
           # The deployed JSON must match the artifact built from the checked-in
           # snapshot; a successful HTTP 200 is not sufficient.
           import hashlib
