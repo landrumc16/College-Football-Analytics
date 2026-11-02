@@ -180,6 +180,13 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
         key=lambda r: -r["average_rating"],
     )
     return {
+        "model_metadata": {
+            "model_id": "workbook_2026_baseline",
+            "model_status": "incumbent_not_v3_promoted",
+            "prediction_scale": settings.win_probability_scale,
+            "home_field_advantage": settings.home_field_advantage,
+            "historical_study": "retrospective_research_only",
+        },
         "conference_standings": conference_standings,
         "conference_strength": conference_strength,
         "cfp": cfp,
