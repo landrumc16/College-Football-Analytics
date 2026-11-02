@@ -4,6 +4,8 @@ on:
   push:
     branches: [v2-development]
     paths:
+      - 'web/**'
+      - 'data/v2-research-summary.json'
       - 'src/**'
       - 'tests/**'
       - 'pyproject.toml'
@@ -33,6 +35,27 @@ jobs:
         run: python -m pytest -q tests/test_historical_schema.py tests/test_historical_adapter.py tests/test_historical_evaluation.py tests/test_historical_cli.py
       - name: Full Python regression suite
         run: python -m pytest -q --junitxml=v2-pytest-results.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build V2 dashboard and validate research payload
+        run: |
+          cd web
+          npm ci
+          npm run build
+          cd ..
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("data/v2-research-summary.json").read_text())
+          assert d["type"] == "retrospective_walk_forward_baseline"
+          assert d["overall"]["games"] == 3174
+          assert sum(x["games"] for x in d["by_season"].values()) == 3174
+          assert Path("web/dist/index.html").exists()
+          Path("web/dist/v2-research-summary.json").write_text(json.dumps(d))
+          assert json.loads(Path("web/dist/v2-research-summary.json").read_text()) == d
+          print("V2 dashboard preview and research data verified")
+          PY
       - name: Preserve V2 test results
         if: always()
         uses: actions/upload-artifact@v4
