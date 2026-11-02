@@ -5,6 +5,8 @@ on:
     branches: [v3-development]
     paths:
       - 'scripts/v3_elo_study.py'
+      - 'scripts/v3_research_decision.py'
+      - 'tests/test_v3_research_decision.py'
       - 'scripts/fetch_historical_schedules.py'
       - 'scripts/walkforward_baseline.py'
       - 'tests/test_v3_elo_study.py'
@@ -24,13 +26,15 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install pyarrow pytest
       - name: Run research regression tests
-        run: python -m pytest -q tests/test_v3_elo_study.py tests/test_walkforward_baseline.py
+        run: python -m pytest -q tests/test_v3_elo_study.py tests/test_v3_research_decision.py tests/test_walkforward_baseline.py
       - name: Retrieve audited historical schedule sources
         run: python scripts/fetch_historical_schedules.py --output historical-data
       - name: Reproduce V2 baseline
         run: python scripts/walkforward_baseline.py historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --output historical-data
       - name: Run bounded V3 candidates
         run: python -m scripts.v3_elo_study historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --holdout 2025 --output historical-data/v3-elo-study.json
+      - name: Produce bounded research recommendation
+        run: python -m scripts.v3_research_decision --study historical-data/v3-elo-study.json --output historical-data/v3-research-decision.json
       - name: Verify baseline parity and candidate counts
         run: |
           python - <<'PY'
@@ -55,6 +59,9 @@ jobs:
           assert abs(weighted_brier - v2['overall']['brier']) < 1e-10, 'V3 incumbent differs from V2 baseline'
           assert v3['incumbent']['fbs_fcs']['development']['games'] >= 0
           assert v3['incumbent']['fbs_fcs']['holdout']['games'] >= 0
+          decision = json.loads((root / 'v3-research-decision.json').read_text())
+          assert decision['promotion_authorized'] is False
+          assert decision['recommendation'] in ('retain_incumbent', 'candidate_warrants_further_validation')
           assert v3['promotion_authorized'] is False
           print('V3 historical study and incumbent parity verified:', expected_dev, expected_holdout)
           PY
@@ -67,5 +74,6 @@ jobs:
             historical-data/coverage.json
             historical-data/walkforward_report.json
             historical-data/v3-elo-study.json
+            historical-data/v3-research-decision.json
           if-no-files-found: warn
           retention-days: 30
