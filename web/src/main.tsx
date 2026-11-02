@@ -12,14 +12,14 @@ type Performance = { actual_wins: number; expected_wins: number; games_with_fore
 type HistoricalBacktest = { games: number; evaluation_scope: string; model: { winner_accuracy: number; brier_score: number; log_loss: number }; preseason_baseline: { winner_accuracy: number; brier_score: number; log_loss: number }; improvement_vs_preseason: { winner_accuracy_percentage_points: number; brier_score_reduction: number; log_loss_reduction: number }; weekly_coverage: { week: number; games: number }[] }
 type MultiSeasonResearch = { type: string; disclaimer: string; fcs_policy: string; overall: { games: number; accuracy: number; brier: number; logloss: number }; by_season: Record<string, { games: number; accuracy: number; brier: number; logloss: number }> }
 type PollSnapshot = { season: number; week: number; source: string; ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
-type Report = { prediction_accuracy?: { games_evaluated: number; correct_winners: number; winner_accuracy: number | null; brier_score: number | null }; performance?: Record<string, Performance>; schedule?: ScheduleGame[]; projected_bracket?: Bracket; cfp?: { simulations: number; methodology: string; teams: CfpTeam[] }; conference_standings?: Record<string, ConferenceTeam[]>; conference_strength?: { conference: string; teams: number; average_rating: number; best_team: string }[]; season: number; source?: string; retrieved_at?: string | null; data_changed_at?: string | null; summary: { teams: number; completed_games: number; upcoming_games: number }; rankings: Team[]; predictions: Prediction[] }
+type Report = { model_metadata?: { model_id: string; model_status: string; prediction_scale: number; home_field_advantage: number; historical_study: string }; prediction_accuracy?: { games_evaluated: number; correct_winners: number; winner_accuracy: number | null; brier_score: number | null }; performance?: Record<string, Performance>; schedule?: ScheduleGame[]; projected_bracket?: Bracket; cfp?: { simulations: number; methodology: string; teams: CfpTeam[] }; conference_standings?: Record<string, ConferenceTeam[]>; conference_strength?: { conference: string; teams: number; average_rating: number; best_team: string }[]; season: number; source?: string; retrieved_at?: string | null; data_changed_at?: string | null; summary: { teams: number; completed_games: number; upcoming_games: number }; rankings: Team[]; predictions: Prediction[] }
 
 const pct = (p: number) => (p * 100).toFixed(1) + '%'
 const num = (n: number) => n.toFixed(2)
 // Same rating-gap logistic function and home advantage as the Python prediction model.
-const hypothetical = (home: Team, away: Team, neutral: boolean) => {
-  const margin = home.rating - away.rating + (neutral ? 0 : 3)
-  const homeProbability = 1 / (1 + Math.pow(10, -margin / 18))
+const hypothetical = (home: Team, away: Team, neutral: boolean, scale = 18, homeEdge = 3) => {
+  const margin = home.rating - away.rating + (neutral ? 0 : homeEdge)
+  const homeProbability = 1 / (1 + Math.pow(10, -margin / scale))
   const certainty = Math.max(homeProbability, 1 - homeProbability)
   const confidence = certainty > .8 ? 'Strong' : certainty > .65 ? 'Likely' : certainty > .55 ? 'Lean' : 'Toss-up'
   return { margin, homeProbability, winner: homeProbability >= .5 ? home.team : away.team, confidence }
@@ -120,11 +120,12 @@ function App() {
     .sort((a, b) => (b[1].wins_above_expected ?? 0) - (a[1].wins_above_expected ?? 0))
   const teamSchedule = (report?.schedule || []).filter(g => g.home === selectedScheduleTeam || g.away === selectedScheduleTeam).sort((a,b) => a.week - b.week || a.game_id - b.game_id)
   const predictionByGame = new Map((report?.predictions || []).map(p => [p.game_id, p]))
-  const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral') : null
+  const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral', report?.model_metadata?.prediction_scale, report?.model_metadata?.home_field_advantage) : null
   return <main className="app">
     <header><div className="eyebrow">SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
+      <section className="notice"><strong>Prediction model: {report.model_metadata?.model_id === "workbook_2026_baseline" ? "2026 workbook baseline" : (report.model_metadata?.model_id || "Legacy model — provenance unavailable")}</strong><p>{report.model_metadata?.model_status === "incumbent_not_v3_promoted" ? "V3 research candidates are under evaluation and are not yet powering these forecasts." : "Forecasts use the model identified in this published report."} CFP selection remains a model approximation, not an official committee forecast.</p></section>
       {report.source?.includes("DEMO") && <section className="notice"><strong>Historical demonstration — not live rankings</strong><p>This view uses the frozen 2026 Week 7 workbook baseline. Live rankings will replace it after the CFBD refresh is verified.</p></section>}
       {(freshnessUnknown || staleData) && <section className="notice"><strong>Data freshness warning</strong><p>{freshnessUnknown ? 'This report has no valid retrieval timestamp; live-data freshness cannot be verified.' : 'This report was retrieved more than 72 hours ago (or has a future timestamp). Rankings and forecasts may be outdated.'}</p></section>}
       <p className="data-timestamp" role="status">{isDemo ? 'Historical Demo Data' : report.retrieved_at && Number.isFinite(retrievedTime) ? `Data Updated: ${new Date(retrievedTime).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}` : 'Data Update Time Unavailable'} · Source: {isDemo ? 'Frozen Historical Fixture' : 'CollegeFootballData'}</p>
