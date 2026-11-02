@@ -25,6 +25,7 @@ def backtest_weeks(teams: list[Team], games: list[Game],
     history = []
     scored = []
     weekly = []
+    weekly_diagnostics = []
     for week in sorted({game.week for game in games}):
         ratings = calculate_ratings(teams, history, settings)
         week_start = len(scored)
@@ -50,7 +51,16 @@ def backtest_weeks(teams: list[Team], games: list[Game],
                 settings.win_probability_scale)
             scored.append((probability, baseline, actual))
         if len(scored) > week_start:
-            weekly.append({"week": week, "games": len(scored) - week_start})
+            batch = scored[week_start:]
+            weekly.append({"week": week, "games": len(batch)})
+            weekly_diagnostics.append({
+                "week": week,
+                "games": len(batch),
+                "model_brier": sum((p - y) ** 2 for p, _, y in batch) / len(batch),
+                "baseline_brier": sum((b - y) ** 2 for _, b, y in batch) / len(batch),
+                "model_winner_accuracy": sum((p >= 0.5) == bool(y) for p, _, y in batch) / len(batch),
+                "baseline_winner_accuracy": sum((b >= 0.5) == bool(y) for _, b, y in batch) / len(batch),
+            })
         history.extend(g for g in games if g.week == week)
     if not scored:
         return {"games": 0, "model": None, "preseason_baseline": None}
@@ -80,6 +90,7 @@ def backtest_weeks(teams: list[Team], games: list[Game],
             "log_loss_reduction": baseline["log_loss"] - model["log_loss"],
         },
         "weekly_coverage": weekly,
+        "weekly_diagnostics": weekly_diagnostics,
         "evaluation_scope": "2026 frozen completed games; weekly pregame snapshots",
     }
 
