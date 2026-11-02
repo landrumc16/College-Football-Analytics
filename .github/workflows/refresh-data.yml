@@ -13,6 +13,11 @@ on:
 permissions:
   contents: write
 
+# A second refresh must not overwrite a newer immutable forecast ledger.
+concurrency:
+  group: cfb-2026-refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -55,8 +60,8 @@ jobs:
               except ValueError:
                   continue
               valid += parsed.tzinfo is not None
-          assert valid > 0, (
-              "No upcoming games have timezone-aware kickoff timestamps; "
+          assert not pending or valid > 0, (
+              "Upcoming games lack timezone-aware kickoff timestamps; "
               "refusing to publish forecasts without pregame provenance"
           )
           print(f"Upcoming games with verifiable kickoff: {valid}/{len(pending)}")
@@ -65,6 +70,29 @@ jobs:
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.report --season "$SEASON"
+      - name: Verify archived forecast provenance and accuracy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from cfb_analytics.forecast_ledger import aware_utc
+          snapshot = json.loads(Path('data/cfbd-2026-games.json').read_text())
+          report = json.loads(Path('data/season-2026-report.json').read_text())
+          history = json.loads(Path('data/pregame-2026-history.json').read_text())
+          assert report['season'] == snapshot['season'] == 2026
+          assert report['retrieved_at'] == snapshot['retrieved_at']
+          assert report['data_freshness']['retrieved_at'] == snapshot['retrieved_at']
+          for game_id, forecast in history.items():
+              source_time = aware_utc(forecast.get('source_retrieved_at'))
+              forecast_time = aware_utc(forecast.get('forecast_recorded_at'))
+              kickoff_time = aware_utc(forecast.get('scheduled_kickoff_at'))
+              assert all((source_time, forecast_time, kickoff_time)), game_id
+              assert source_time <= forecast_time < kickoff_time, game_id
+          accuracy = report['prediction_accuracy']
+          assert accuracy['games_evaluated'] <= accuracy['eligible_completed_games']
+          assert len(accuracy['calibration']) == 5
+          print(f\"Verified {len(history)} immutable pregame forecasts\")
+          PY
       - name: Commit changed snapshot
         run: |
           git config user.name 'github-actions[bot]'
