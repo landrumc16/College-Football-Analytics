@@ -5,6 +5,7 @@ on:
     branches: [v2-development]
     paths:
       - 'scripts/fetch_historical_schedules.py'
+      - 'tests/test_historical_data_import.py'
       - '.github/workflows/v2-historical-data.yml'
 permissions:
   contents: read
@@ -19,6 +20,8 @@ jobs:
           python-version: '3.11'
       - name: Install Parquet reader
         run: python -m pip install pyarrow
+      - name: Validate importer syntax
+        run: python -m py_compile scripts/fetch_historical_schedules.py
       - name: Fetch and audit four historical seasons
         run: python scripts/fetch_historical_schedules.py --output historical-data
       - name: Show dataset audit outputs
