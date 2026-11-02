@@ -4,9 +4,9 @@ from cfb_analytics.pipeline import build_season_report
 
 def test_model_metadata_is_explicit_and_incumbent():
     # Exercise metadata on a small complete roster with no completed games.
-    # Existing pipeline needs 12+ teams for CFP simulation.
+    # Use enough teams for the five-champion/seven-at-large bracket.
     roster = [{"name": f"School {i}", "conference": "League", "prior": float(i)}
-              for i in range(12)]
+              for i in range(14)]
     snapshot = {"season": 2026, "source": "test-fixture",
                 "retrieved_at": "2026-09-01T00:00:00Z", "games": []}
     report = build_season_report(snapshot, roster)
