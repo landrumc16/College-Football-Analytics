@@ -1,0 +1,38 @@
+{
+  "type": "retrospective_walk_forward_baseline",
+  "disclaimer": "Retrospective Elo walk-forward baseline; not archived pregame forecasts or the original workbook model.",
+  "fcs_policy": "FBS-FCS games update ratings but are excluded from scored accuracy",
+  "source_run": "https://github.com/landrumc16/College-Football-Analytics/actions/runs/41370501226",
+  "overall": {
+    "games": 3174,
+    "accuracy": 0.6650913673597983,
+    "brier": 0.2136287560405848,
+    "logloss": 0.6158163890780549
+  },
+  "by_season": {
+    "2022": {
+      "games": 776,
+      "accuracy": 0.6430412371134021,
+      "brier": 0.22900235790431886,
+      "logloss": 0.6502798254030087
+    },
+    "2023": {
+      "games": 792,
+      "accuracy": 0.6818181818181818,
+      "brier": 0.20748277332043202,
+      "logloss": 0.603994085354978
+    },
+    "2024": {
+      "games": 798,
+      "accuracy": 0.6491228070175439,
+      "brier": 0.2156595224414342,
+      "logloss": 0.61925
+    },
+    "2025": {
+      "games": 808,
+      "accuracy": 0.6856435643564357,
+      "brier": 0.20288,
+      "logloss": 0.59092
+    }
+  }
+}

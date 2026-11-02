@@ -14,12 +14,15 @@ class ArchivedForecast:
     game_id: int
     home_win_probability: float
     generated_at: str
+    input_retrieved_at: str | None = None
 
     def __post_init__(self):
         if not isfinite(self.home_win_probability) or not 0 <= self.home_win_probability <= 1:
             raise ValueError("Probability must be between zero and one")
         if utc_instant(self.generated_at) is None:
             raise ValueError("Forecast timestamp must include timezone")
+        if self.input_retrieved_at is not None and utc_instant(self.input_retrieved_at) is None:
+            raise ValueError("Forecast input timestamp must include timezone")
 
 
 def evaluate_forecasts(games: list[HistoricalGame],
@@ -39,13 +42,13 @@ def evaluate_forecasts(games: list[HistoricalGame],
         if not game.eligible_fbs_accuracy:
             exclusions["ineligible_game"] += 1
             continue
-        if not game.verified_pregame(forecast.generated_at):
+        if not game.verified_pregame(forecast.generated_at, forecast.input_retrieved_at):
             exclusions["not_pregame"] += 1
             continue
         actual = int(game.home_score > game.away_score)
         scored.append((forecast.home_win_probability, actual, forecast.season))
     result = {"games": len(scored), "excluded": exclusions,
-              "evaluation_scope": "verified archived pregame FBS-vs-FBS forecasts"}
+              "evaluation_scope": "verified pregame forecasts with input-snapshot provenance; FBS-vs-FBS"}
     if not scored:
         return {**result, "metrics": None, "by_season": {}}
 
