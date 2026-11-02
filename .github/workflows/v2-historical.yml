@@ -41,7 +41,7 @@ jobs:
       - name: Build V2 dashboard and validate research payload
         run: |
           cd web
-          npm ci
+          npm install
           npm run build
           cd ..
           python - <<'PY'
