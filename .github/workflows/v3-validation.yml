@@ -2,7 +2,7 @@ name: V3 research validation
 
 on:
   push:
-    branches: [v3-development, v3.1-development]
+    branches: [v3-development, v3.1-development, v3.2-development]
     paths:
       - 'src/**'
       - 'scripts/**'
@@ -10,6 +10,7 @@ on:
       - 'pyproject.toml'
       - 'docs/V3-ROADMAP.md'
       - 'docs/V3.1-ROADMAP.md'
+      - 'docs/V3.2-ROADMAP.md'
       - '.github/workflows/v3-validation.yml'
   pull_request:
     branches: [main]
@@ -27,6 +28,28 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Full Python regression suite
         run: PYTHONPATH=. python -m pytest -q
+      - name: Run V3.2 bounded model experiments
+        run: |
+          python -m cfb_analytics.v32_experiments --output v32-experiments.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("v32-experiments.json").read_text())
+          assert report["evaluation_type"] == "retrospective_preweek_replay"
+          assert report["promotion_authorized"] is False
+          assert report["holdout_validated"] is False
+          assert report["games"] > 0
+          assert len(report["candidates"]) >= 5
+          assert all(row["games"] == report["games"] for row in report["candidates"].values())
+          print("Exploratory candidates evaluated:", len(report["candidates"]))
+          PY
+      - name: Upload V3.2 exploratory experiment evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: v32-exploratory-experiments
+          path: v32-experiments.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Verify V3 CLI interface
         run: python -m cfb_analytics.v3_cli --help
       - uses: actions/setup-node@v4

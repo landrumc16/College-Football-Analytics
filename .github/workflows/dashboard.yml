@@ -87,6 +87,14 @@ jobs:
               assert 0 <= scores["winner_accuracy"] <= 1, label
               assert 0 <= scores["brier_score"] <= 1, label
               assert scores["log_loss"] >= 0, label
+          assert sum(row["games"] for row in result["weekly_diagnostics"]) == result["games"]
+          groups = result["matchup_diagnostics"]
+          assert set(groups) == {"fbs_fbs", "fbs_fcs"}
+          assert sum(group["games"] for group in groups.values()) == result["games"]
+          for label in ("model", "preseason_baseline"):
+              weighted = sum(group["games"] * group[label]["brier_score"]
+                             for group in groups.values() if group["games"])
+              assert abs(weighted / result["games"] - result[label]["brier_score"]) < 1e-10
           print("Historical games evaluated:", result["games"])
           print("Model:", result["model"])
           print("Preseason baseline:", result["preseason_baseline"])

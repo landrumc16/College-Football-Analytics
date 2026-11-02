@@ -70,3 +70,65 @@ def test_improvement_metrics_and_weekly_coverage_are_consistent():
         report["preseason_baseline"]["brier_score"] - report["model"]["brier_score"])
     assert delta["log_loss_reduction"] == pytest.approx(
         report["preseason_baseline"]["log_loss"] - report["model"]["log_loss"])
+
+
+
+def test_v32_weekly_diagnostics_match_aggregate_brier_and_coverage():
+    games = [Game("A", "B", 28, 14, 1),
+             Game("A", "FCS", 35, 7, 2),
+             Game("B", "A", 7, 21, 3)]
+    report = backtest_weeks(TEAMS, games)
+    weeks = report["weekly_diagnostics"]
+    assert [w["week"] for w in weeks] == [1, 2, 3]
+    assert sum(w["games"] for w in weeks) == report["games"]
+    for key, aggregate in (("model_brier", "model"), ("baseline_brier", "preseason_baseline")):
+        weighted = sum(w[key] * w["games"] for w in weeks) / report["games"]
+        assert weighted == pytest.approx(report[aggregate]["brier_score"])
+    assert weeks[0]["model_brier"] == pytest.approx(weeks[0]["baseline_brier"])
+
+
+def test_v32_weekly_diagnostics_skip_unranked_fcs_only_games():
+    report = backtest_weeks(TEAMS, [
+        Game("FCS-1", "FCS-2", 21, 14, 1),
+        Game("A", "FCS-1", 35, 7, 2),
+    ])
+    assert report["games"] == 1
+    assert report["weekly_diagnostics"][0]["week"] == 2
+
+
+def test_v32_weekly_diagnostics_empty_and_invalid_inputs():
+    empty = backtest_weeks(TEAMS, [])
+    assert empty["games"] == 0
+    assert empty["model"] is None
+    with pytest.raises(ValueError, match="cannot be tied"):
+        backtest_weeks(TEAMS, [Game("A", "B", 7, 7, 1)])
+    with pytest.raises(ValueError, match="positive week"):
+        backtest_weeks(TEAMS, [Game("A", "B", 7, 3, 0)])
+
+
+
+def test_v32_matchup_diagnostics_partition_all_evaluated_games():
+    report = backtest_weeks(TEAMS, [
+        Game("A", "B", 28, 14, 1),
+        Game("A", "FCS", 35, 7, 2),
+        Game("FCS", "B", 7, 21, 3),
+    ])
+    groups = report["matchup_diagnostics"]
+    assert groups["fbs_fbs"]["games"] == 1
+    assert groups["fbs_fcs"]["games"] == 2
+    assert sum(group["games"] for group in groups.values()) == report["games"]
+    for group in groups.values():
+        for name in ("model", "preseason_baseline"):
+            assert 0 <= group[name]["brier_score"] <= 1
+            assert group[name]["log_loss"] >= 0
+    combined = sum(group["model"]["brier_score"] * group["games"]
+                   for group in groups.values()) / report["games"]
+    assert combined == pytest.approx(report["model"]["brier_score"])
+
+
+def test_v32_matchup_diagnostics_handle_absent_fcs_games():
+    report = backtest_weeks(TEAMS, [Game("A", "B", 28, 14, 1)])
+    assert report["matchup_diagnostics"]["fbs_fbs"]["games"] == 1
+    assert report["matchup_diagnostics"]["fbs_fcs"] == {
+        "games": 0, "model": None, "preseason_baseline": None
+    }
