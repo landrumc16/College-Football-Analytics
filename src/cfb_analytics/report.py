@@ -58,8 +58,10 @@ def main():
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
     previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
     # Never promote a report with missing or future-dated source provenance.
-    if aware_utc(snapshot_data.get("retrieved_at")) is None:
-        raise RuntimeError("Snapshot has no verified retrieval timestamp")
+    retrieved = aware_utc(snapshot_data.get("retrieved_at"))
+    now = datetime.now(timezone.utc)
+    if retrieved is None or retrieved > now or (now - retrieved).total_seconds() > 72 * 3600:
+        raise RuntimeError("Snapshot retrieval timestamp missing, future-dated, or older than 72 hours")
     eligible_fbs = {team["name"] for team in roster}
     aliases = {"Miami": "Miami (FL)", "App State": "Appalachian State",
                "Sam Houston": "Sam Houston State", "UL Monroe": "ULM"}
@@ -95,6 +97,8 @@ def main():
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
         from datetime import datetime, timezone
         result["generated_at"] = datetime.now(timezone.utc).isoformat()
+        result["data_freshness"] = {"status": "current", "retrieved_at": snapshot_data["retrieved_at"],
+                                    "data_changed_at": snapshot_data.get("data_changed_at")}
         history = archive_pending(history, result, snapshot_data)
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
