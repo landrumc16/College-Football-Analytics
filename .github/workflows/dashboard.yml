@@ -97,6 +97,21 @@ jobs:
         run: |
           test -s historical-backtest.json
           cp historical-backtest.json web/dist/historical-backtest.json
+      - name: Include optional V2 multi-season research evidence
+        run: |
+          if [ -f data/v2-research-summary.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          source = Path("data/v2-research-summary.json")
+          data = json.loads(source.read_text())
+          assert data["type"] == "retrospective_walk_forward_baseline"
+          assert data["disclaimer"] and data["fcs_policy"]
+          assert data["overall"]["games"] == sum(v["games"] for v in data["by_season"].values())
+          assert all(0 <= v["accuracy"] <= 1 and 0 <= v["brier"] <= 1 for v in data["by_season"].values())
+          Path("web/dist/v2-research-summary.json").write_text(json.dumps(data) + "\\n")
+          PY
+          fi
       - name: Rebuild report from the checked-in live snapshot
         run: |
           if [ -f data/cfbd-2026-games.json ]; then
