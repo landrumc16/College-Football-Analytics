@@ -29,6 +29,7 @@ def test_fcs_changes_later_rating():
              game(2024, 2, 2, away="B")]
     r = evaluate(games, holdout=2025)
     assert r["development"]["games"] == 1
+    assert r["fbs_fcs"]["development"]["games"] == 1
     assert r["development"]["brier"] < .25
 
 
