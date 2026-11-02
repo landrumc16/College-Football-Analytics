@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from .parity import load_baseline
 from .pipeline import run_snapshot
+from .forecast_ledger import archive_pending
 
 
 from datetime import datetime, timezone
@@ -88,6 +89,7 @@ def main():
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
         from datetime import datetime, timezone
         result["generated_at"] = datetime.now(timezone.utc).isoformat()
+        history = archive_pending(history, result, snapshot_data)
         result["performance"] = build_performance_against_expectations(
             snapshot_data, roster, history)
         # Measure the FBS model only on games between schools in its rating universe.
