@@ -122,7 +122,7 @@ function App() {
   const predictionByGame = new Map((report?.predictions || []).map(p => [p.game_id, p]))
   const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral', report?.model_metadata?.prediction_scale, report?.model_metadata?.home_field_advantage) : null
   return <main className="app">
-    <header><div className="eyebrow">SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
+    <header><div className="eyebrow">VERSION 3 · SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
       <section className="notice"><strong>Prediction model: {report.model_metadata?.model_id === "workbook_2026_baseline" ? "2026 workbook baseline" : (report.model_metadata?.model_id || "Legacy model — provenance unavailable")}</strong><p>{report.model_metadata?.model_status === "incumbent_not_v3_promoted" ? "V3 research candidates are under evaluation and are not yet powering these forecasts." : "Forecasts use the model identified in this published report."} CFP selection remains a model approximation, not an official committee forecast.</p></section>
