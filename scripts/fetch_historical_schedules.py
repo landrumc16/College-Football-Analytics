@@ -51,15 +51,23 @@ def run(output: Path, seasons=range(2022, 2026)):
         rows = [{name: raw.get(column) if column else None
                  for name, column in selected.items()}
                 for raw in table.to_pylist()]
-        for row in rows:
+        # Keep the source's authoritative FBS flags where supplied.
+        source_flags = [{"fbs_game": raw.get("fbs_game"),
+                         "fbs_participant": raw.get("fbs_participant")}
+                        for raw in table.select([c for c in ("fbs_game", "fbs_participant")
+                                                 if c in available]).to_pylist()]
+        for row, flags in zip(rows, source_flags):
             row["home_division"] = str(row["home_division"] or "UNKNOWN").upper()
             row["away_division"] = str(row["away_division"] or "UNKNOWN").upper()
             if row["completed"] is None:
                 row["completed"] = (row["home_points"] is not None
                                     and row["away_points"] is not None)
-            row["fbs_game"] = (row["home_division"] == "FBS"
+            row["fbs_game"] = (flags["fbs_game"] if flags["fbs_game"] is not None
+                               else row["home_division"] == "FBS"
                                and row["away_division"] == "FBS")
-            row["fbs_participant"] = ("FBS" in (row["home_division"], row["away_division"]))
+            row["fbs_participant"] = (flags["fbs_participant"]
+                                      if flags["fbs_participant"] is not None
+                                      else "FBS" in (row["home_division"], row["away_division"]))
         if not any(row["fbs_participant"] for row in rows):
             raise ValueError(f"{season}: no FBS classifications; cannot infer from team names")
         report.setdefault("schema_columns", {})[str(season)] = sorted(available)
@@ -68,7 +76,7 @@ def run(output: Path, seasons=range(2022, 2026)):
             raise ValueError(f"Duplicate game IDs in {season}")
         if any(int(r["season"]) != season for r in rows):
             raise ValueError(f"Wrong season in {season} archive")
-        completed = [r for r in rows if r["completed"] is True]
+        completed = [r for r in rows if r["completed"] is True and r["home_points"] is not None and r["away_points"] is not None]
         fbs = [r for r in completed if r["fbs_game"] is True]
         fcs = [r for r in completed if r["fbs_participant"] is True
                and r["fbs_game"] is not True]
@@ -92,7 +100,7 @@ def run(output: Path, seasons=range(2022, 2026)):
                 "home_score": int(r["home_points"]), "away_score": int(r["away_points"]),
                 "neutral_site": r["neutral_site"],
                 "week": r["week"], "season_type": r["season_type"]
-            } for r in completed if r["fbs_participant"] is True],
+            } for r in completed if r["fbs_participant"] is True and r["start_date"]],
                        indent=2) + "\n", encoding="utf-8")
     (output / "coverage.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
