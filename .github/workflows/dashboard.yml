@@ -170,6 +170,10 @@ jobs:
           from pathlib import Path
           report = json.loads(Path("web/dist/season-report.json").read_text())
           assert report["season"] == 2026, "Only the 2026 season is supported"
+          metadata = report.get("model_metadata")
+          assert metadata and metadata["model_id"] == "workbook_2026_baseline", "V3 model provenance missing"
+          assert metadata["model_status"] == "incumbent_not_v3_promoted"
+          assert metadata["prediction_scale"] > 0 and metadata["home_field_advantage"] >= 0
           assert report["summary"]["completed_games"] >= 0
           assert report["summary"]["upcoming_games"] >= 0
           assert report["summary"]["teams"] == len(report["rankings"])
@@ -338,6 +342,7 @@ jobs:
           assert assets.scripts, "Published dashboard has no JavaScript entrypoint"
           Path("/tmp/cfb-script-path.txt").write_text(assets.scripts[0])
           assert report["season"] == 2026 and report["rankings"] and report["predictions"]
+          assert report["model_metadata"]["model_id"] == "workbook_2026_baseline", "V3 provenance absent from live dashboard"
           # The deployed JSON must match the artifact built from the checked-in
           # snapshot; a successful HTTP 200 is not sufficient.
           import hashlib
