@@ -2,7 +2,7 @@ name: V3 historical model research
 on:
   workflow_dispatch:
   push:
-    branches: [v3-development]
+    branches: [v3-development, main]
     paths:
       - 'scripts/v3_elo_study.py'
       - 'scripts/v3_research_decision.py'
@@ -13,6 +13,8 @@ on:
       - 'tests/test_v3_model_metadata.py'
       - 'src/cfb_analytics/pipeline.py'
       - '.github/workflows/v3-historical-research.yml'
+  pull_request:
+    branches: [main]
 permissions:
   contents: read
 jobs:
