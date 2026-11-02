@@ -1,6 +1,6 @@
 # V2 release gate — evidence, not estimates
 
-## Current decision: HOLD — historical baseline verified (2026-11-01)
+## Current decision: HOLD — rerun required after leakage fix (2026-11-01)
 
 V2 lives on `v2-development` and draft PR #2. Do **not** merge until all gates below pass.
 
@@ -44,3 +44,7 @@ Source: SportsDataverse season schedules, 2022–2025; GitHub Actions artifact `
 | **Overall** | **3,174** | **66.51%** | **0.21363** | **0.61582** |
 
 **Outstanding release gates:** independently run the workbook-derived model over the same historical game population (or explicitly narrow release claims to a baseline research beta); verify dashboard smoke and full PR head CI; then approve PR #2. Do not use the unverified 2,998-game spreadsheet summary as a comparable scorecard. Do not merge the draft PR merely because the Elo baseline passes.
+
+## November 1 follow-up: chronology correction
+
+Commits `1e446d94` and `1e8f3b4b` delay outcome updates until four hours after kickoff and add a same-day leakage regression. Python model CI run `41369860070` and historical evaluation CI run `41369860111` both passed. **The previous 66.51% / 0.21363 / 0.61582 retrospective metrics are superseded** until the full `V2 historical dataset audit` workflow runs on the updated branch and publishes replacement results. No claim of original workbook historical performance is authorized by the baseline run.
