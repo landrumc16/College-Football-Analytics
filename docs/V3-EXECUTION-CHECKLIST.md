@@ -1,6 +1,6 @@
 # V3 implementation and release checklist
 
-**Branch:** `v3-development` · **PR:** #3 (draft) · **Production:** V2 unchanged
+**Version 3 release:** merged PR #3 and deployed successfully via GitHub Actions run [41516928308](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41516928308). **Production model:** `workbook_2026_baseline`; retrospective Elo candidate remains research-only.
 
 ## Immediate execution: historical data benchmark
 
