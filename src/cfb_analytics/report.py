@@ -95,7 +95,6 @@ def main():
         staging_path = output.with_suffix(".staging.json")
         result = run_snapshot(snapshot, roster_path, staging_path)
         from .pipeline import build_performance_against_expectations, build_prediction_accuracy
-        from datetime import datetime, timezone
         result["generated_at"] = datetime.now(timezone.utc).isoformat()
         result["data_freshness"] = {"status": "current", "retrieved_at": snapshot_data["retrieved_at"],
                                     "data_changed_at": snapshot_data.get("data_changed_at")}
