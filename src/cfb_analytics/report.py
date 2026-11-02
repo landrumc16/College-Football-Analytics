@@ -56,7 +56,6 @@ def main():
     previous_generated = previous.get("generated_at")
     # Published predictions are the authoritative set of games forecast while pending.
     # The school schedule is FBS-filtered and can omit otherwise valid forecasts.
-    previous_pending = {p["game_id"] for p in previous.get("predictions", [])}
     # Never promote a report with missing or future-dated source provenance.
     retrieved = aware_utc(snapshot_data.get("retrieved_at"))
     now = datetime.now(timezone.utc)
@@ -68,7 +67,6 @@ def main():
     for prediction in previous.get("predictions", []):
         key = str(prediction["game_id"])
         if (prediction["game_id"] in completed_games and key not in history
-                and prediction["game_id"] in previous_pending
                 and prediction.get("home") in eligible_fbs
                 and prediction.get("away") in eligible_fbs):
             game = completed_games[prediction["game_id"]]
@@ -78,6 +76,8 @@ def main():
             # was computed. Only archive reports with an explicit generation
             # timestamp strictly preceding kickoff.
             if not verified_pregame(previous_generated, game.get("start_date")):
+                continue
+            if not verified_pregame(previous_retrieved, previous_generated):
                 continue
             if (prediction["home"] != aliases.get(game["home"], game["home"]) or
                     prediction["away"] != aliases.get(game["away"], game["away"])):
