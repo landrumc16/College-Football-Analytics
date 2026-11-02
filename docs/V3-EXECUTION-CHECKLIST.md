@@ -23,6 +23,6 @@
 
 No speculative model expansion; keep the original workbook reference, FCS rating influence, and strict separation of reconstructed historical backtests from archived pregame predictions. A passing unit test does not establish real-data accuracy or release readiness.
 
-## Known verification gap
+## Verified historical study — 2026-11-02
 
-This document does not assert historical runs or GitHub Actions passed. The current V3 research scripts and CLI are committed, but full historical-data execution, candidate evaluation and production validation remain outstanding.
+GitHub Actions run `41509570039` completed the four-season 2022–2025 study successfully: 2,366 FBS–FBS development games and 808 FBS–FBS 2025 holdout games (3,174 total). The incumbent Elo configuration was K=24, home advantage=55; development-selected K=32, home advantage=55 improved Brier by 0.00323278 on development and 0.00362631 on holdout. Decision: `candidate_warrants_further_validation`, not authorized for production promotion. This is retrospective Elo research and is **not** a matched archived pregame evaluation of the workbook-based production model. The V3 dashboard retains that production baseline, with explicit provenance. See the workflow artifact `v3-historical-research` for full candidate metrics.
