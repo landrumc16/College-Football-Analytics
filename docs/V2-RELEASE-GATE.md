@@ -1,8 +1,8 @@
 # V2 release gate — evidence, not estimates
 
-## Current decision: V2 research beta CI verified; production release pending (2026-11-02)
+## Current decision: V2 Research Beta production release verified (2026-11-02)
 
-PR #2 was merged into `main` as commit `2d6cf371d6f4f98352544d2a2eb5874da1644692` after passing the final Python and frontend preview CI. Production Pages deployment verification remains outstanding.
+PR #2 was merged into `main` as commit `2d6cf371d6f4f98352544d2a2eb5874da1644692` after passing the final Python and frontend preview CI. Production Pages deployment and deployed research payload verification passed in run 41372590890.
 
 | Gate | Current evidence | Release requirement |
 | --- | --- | --- |
@@ -72,3 +72,10 @@ PR #2 changes historical research tooling, tests, and documentation only (23 cha
 - Final pre-merge full Python + frontend build + V2 research payload smoke: [run 41371667402](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371667402) **PASS**; Python model [run 41371667376](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41371667376) **PASS**.
 - The production dashboard workflow was updated on main at [a88eee7b](https://github.com/landrumc16/College-Football-Analytics/commit/a88eee7b0f18f72815d9d5517bfe2ffbc8bb2e64) to require V2 research data in the Pages artifact.
 - **Live Pages deployment and post-deployment smoke remain unverified.** Do not claim the site has updated until a successful deployment workflow and published research JSON are confirmed. Release label remains **V2 Research Beta**, not a verified workbook/market accuracy product.
+
+## Production release closure (2026-11-02)
+
+- [Dashboard run 41372590890](https://github.com/landrumc16/College-Football-Analytics/actions/runs/41372590890): **PASS** — full Python regression, historical backtest, frontend production build, mobile browser smoke, Pages artifact upload, and deploy.
+- Deployment smoke: **PASS** — live index, season report, historical backtest, and V2 research summary retrieved; published season report and V2 research JSON hashes matched validated build artifacts.
+- Release status: **V2 Research Beta deployed and technically closed**. This does not establish independent workbook-model historical accuracy, market outperformance, or official CFP committee fidelity. Historical Elo research remains explicitly retrospective.
+- Next release: Version 3 prioritizes objectively validated out-of-sample prediction quality and calibration, without reopening V2 scope.
