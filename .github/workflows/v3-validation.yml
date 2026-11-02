@@ -2,7 +2,7 @@ name: V3 research validation
 
 on:
   push:
-    branches: [v3-development, v3.1-development]
+    branches: [v3-development, v3.1-development, v3.2-development]
     paths:
       - 'src/**'
       - 'scripts/**'
@@ -10,6 +10,7 @@ on:
       - 'pyproject.toml'
       - 'docs/V3-ROADMAP.md'
       - 'docs/V3.1-ROADMAP.md'
+      - 'docs/V3.2-ROADMAP.md'
       - '.github/workflows/v3-validation.yml'
   pull_request:
     branches: [main]
