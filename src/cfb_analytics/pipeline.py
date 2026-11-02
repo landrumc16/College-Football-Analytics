@@ -284,7 +284,7 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
     """Evaluate verified archived pregame forecasts, never retrospective estimates."""
     import math
     from .forecast_ledger import aware_utc, ALIASES
-    games = correct = 0
+    games = correct = eligible_completed = 0
     brier_total = log_total = margin_abs_total = 0.0
     margin_games = 0
     bins = [{"count": 0, "predicted_total": 0.0, "actual_total": 0.0}
@@ -294,6 +294,11 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
             continue
         if game["home_score"] == game["away_score"]:
             continue
+        home = ALIASES.get(game["home"], game["home"])
+        away = ALIASES.get(game["away"], game["away"])
+        if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
+            continue
+        eligible_completed += 1
         forecast = history.get(str(game["game_id"]))
         if not forecast or not _has_verified_pregame_provenance(game, forecast):
             continue
@@ -327,7 +332,9 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
          "actual_home_win_rate": round(b["actual_total"] / b["count"], 4) if b["count"] else None}
         for i, b in enumerate(bins)
     ]
-    return {"games_evaluated": games, "correct_winners": correct,
+    return {"games_evaluated": games, "eligible_completed_games": eligible_completed,
+            "forecast_coverage": round(games / eligible_completed, 4) if eligible_completed else None,
+            "correct_winners": correct,
             "winner_accuracy": round(correct / games, 4) if games else None,
             "brier_score": round(brier_total / games, 4) if games else None,
             "log_loss": round(log_total / games, 4) if games else None,
