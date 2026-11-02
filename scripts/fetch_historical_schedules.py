@@ -23,8 +23,46 @@ def run(output: Path, seasons=range(2022, 2026)):
         path = output / f"cfb_schedules_{season}.parquet"
         if not path.exists():
             urlretrieve(URL.format(season=season), path)
-        table = pq.read_table(path, columns=COLUMNS)
-        rows = table.to_pylist()
+        # Read the actual release schema rather than assuming CFBD field names.
+        table = pq.read_table(path)
+        available = set(table.column_names)
+        aliases = {
+            "game_id": ("game_id", "id"),
+            "season": ("season",),
+            "week": ("week",),
+            "season_type": ("season_type",),
+            "start_date": ("start_date", "startDate"),
+            "completed": ("completed",),
+            "home_team": ("home_team", "homeTeam"),
+            "away_team": ("away_team", "awayTeam"),
+            "home_division": ("home_division", "home_classification"),
+            "away_division": ("away_division", "away_classification"),
+            "home_points": ("home_points", "homePoints"),
+            "away_points": ("away_points", "awayPoints"),
+            "neutral_site": ("neutral_site", "neutralSite"),
+        }
+        selected = {name: next((a for a in names if a in available), None)
+                    for name, names in aliases.items()}
+        required = ("game_id", "season", "week", "start_date", "home_team",
+                    "away_team", "home_points", "away_points")
+        missing = [name for name in required if selected[name] is None]
+        if missing:
+            raise ValueError(f"{season}: missing {missing}; actual columns: {sorted(available)}")
+        rows = [{name: raw.get(column) if column else None
+                 for name, column in selected.items()}
+                for raw in table.to_pylist()]
+        for row in rows:
+            row["home_division"] = str(row["home_division"] or "UNKNOWN").upper()
+            row["away_division"] = str(row["away_division"] or "UNKNOWN").upper()
+            if row["completed"] is None:
+                row["completed"] = (row["home_points"] is not None
+                                    and row["away_points"] is not None)
+            row["fbs_game"] = (row["home_division"] == "FBS"
+                               and row["away_division"] == "FBS")
+            row["fbs_participant"] = ("FBS" in (row["home_division"], row["away_division"]))
+        if not any(row["fbs_participant"] for row in rows):
+            raise ValueError(f"{season}: no FBS classifications; cannot infer from team names")
+        report.setdefault("schema_columns", {})[str(season)] = sorted(available)
         ids = [str(r["game_id"]) for r in rows]
         if len(ids) != len(set(ids)):
             raise ValueError(f"Duplicate game IDs in {season}")
@@ -49,9 +87,9 @@ def run(output: Path, seasons=range(2022, 2026)):
                 "home": r["home_team"], "away": r["away_team"],
                 "home_division": (r["home_division"] or "UNKNOWN").upper(),
                 "away_division": (r["away_division"] or "UNKNOWN").upper(),
-                "kickoff": r["start_date"],
+                "kickoff": str(r["start_date"]),
                 "source": URL.format(season=season),
-                "home_score": r["home_points"], "away_score": r["away_points"],
+                "home_score": int(r["home_points"]), "away_score": int(r["away_points"]),
                 "neutral_site": r["neutral_site"],
                 "week": r["week"], "season_type": r["season_type"]
             } for r in completed if r["fbs_participant"] is True],
