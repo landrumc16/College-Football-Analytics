@@ -26,6 +26,7 @@ def backtest_weeks(teams: list[Team], games: list[Game],
     scored = []
     weekly = []
     weekly_diagnostics = []
+    matchup_scored = {"fbs_fbs": [], "fbs_fcs": []}
     for week in sorted({game.week for game in games}):
         ratings = calculate_ratings(teams, history, settings)
         week_start = len(scored)
@@ -49,7 +50,9 @@ def backtest_weeks(teams: list[Team], games: list[Game],
             baseline = win_probability_from_rating_gap(
                 prior_home - prior_away + settings.home_field_advantage,
                 settings.win_probability_scale)
-            scored.append((probability, baseline, actual))
+            observation = (probability, baseline, actual)
+            scored.append(observation)
+            matchup_scored["fbs_fbs" if game.home in known and game.away in known else "fbs_fcs"].append(observation)
         if len(scored) > week_start:
             batch = scored[week_start:]
             weekly.append({"week": week, "games": len(batch)})
@@ -77,6 +80,22 @@ def backtest_weeks(teams: list[Team], games: list[Game],
                              (1-y) * log(max(1e-15, 1-p))
                              for p, (_, _, y) in zip(probabilities, scored)) / n,
         }
+    def subset_metrics(rows, index):
+        if not rows:
+            return None
+        n = len(rows)
+        return {
+            "games": n,
+            "winner_accuracy": sum((row[index] >= 0.5) == bool(row[2]) for row in rows) / n,
+            "brier_score": sum((row[index] - row[2]) ** 2 for row in rows) / n,
+            "log_loss": -sum(row[2] * log(max(1e-15, row[index])) +
+                             (1-row[2]) * log(max(1e-15, 1-row[index])) for row in rows) / n,
+        }
+    matchup_diagnostics = {
+        name: {"games": len(rows), "model": subset_metrics(rows, 0),
+               "preseason_baseline": subset_metrics(rows, 1)}
+        for name, rows in matchup_scored.items()
+    }
     model = metrics(0)
     baseline = metrics(1)
     return {
@@ -91,6 +110,7 @@ def backtest_weeks(teams: list[Team], games: list[Game],
         },
         "weekly_coverage": weekly,
         "weekly_diagnostics": weekly_diagnostics,
+        "matchup_diagnostics": matchup_diagnostics,
         "evaluation_scope": "2026 frozen completed games; weekly pregame snapshots",
     }
 
