@@ -3,7 +3,7 @@
 Research-only: the observations must come from predictions reconstructed before
 each game's result; these utilities do not create prospective forecast evidence.
 """
-from math import log, sqrt
+from math import isfinite, log, sqrt
 
 
 def _index(rows):
@@ -14,7 +14,7 @@ def _index(rows):
             raise ValueError(f"Duplicate prediction game: {key}")
         p = row["home_probability"]
         y = row["home_won"]
-        if not isinstance(p, (int, float)) or not 0 <= p <= 1:
+        if isinstance(p, bool) or not isinstance(p, (int, float)) or not isfinite(p) or not 0 <= p <= 1:
             raise ValueError(f"Invalid home probability: {key}")
         if y not in (0, 1):
             raise ValueError(f"Invalid outcome: {key}")
