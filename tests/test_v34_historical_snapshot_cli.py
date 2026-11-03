@@ -44,3 +44,24 @@ def test_collector_skips_unscored_classes_without_zero_imputation():
     report = collect_snapshot([2023], api_key="fixture", fetch=fetch)
     assert len(report["classes"]) == 1
     assert report["classes"][0]["team"] == "Georgia"
+
+
+def test_transient_gateway_failure_retries(monkeypatch):
+    import io
+    from urllib.error import HTTPError
+    from cfb_analytics import v34_historical_snapshot_cli as module
+    calls = []
+    class Response:
+        def __enter__(self):
+            return io.BytesIO(b'[]')
+        def __exit__(self, *args):
+            return False
+    def flaky(request, timeout):
+        calls.append(1)
+        if len(calls) == 1:
+            raise HTTPError(request.full_url, 502, "Bad Gateway", {}, None)
+        return Response()
+    monkeypatch.setattr(module, "urlopen", flaky)
+    monkeypatch.setattr(module.time, "sleep", lambda _: None)
+    assert module.fetch_json("/games?year=2023", api_key="fixture") == []
+    assert len(calls) == 2
