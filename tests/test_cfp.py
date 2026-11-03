@@ -69,3 +69,13 @@ def test_cfp_seed_distribution_and_input_validation():
         simulate_cfp({}, [], simulations=10)
     with pytest.raises(ValueError):
         simulate_cfp(teams, [], simulations=0)
+
+
+def test_non_fbs_only_games_do_not_change_fbs_cfp_outcomes():
+    teams = {f"T{i}": {"conference": f"C{i // 3}", "rating": 30-i,
+                        "wins": 8, "conference_wins": 4} for i in range(15)}
+    fbs_game = {"home": "T0", "away": "FCS Opponent", "neutral_site": False}
+    non_fbs_game = {"home": "FCS A", "away": "FCS B", "neutral_site": False}
+    baseline = simulate_cfp(teams, [fbs_game], simulations=100, seed=31)
+    with_non_fbs = simulate_cfp(teams, [fbs_game, non_fbs_game], simulations=100, seed=31)
+    assert with_non_fbs == baseline
