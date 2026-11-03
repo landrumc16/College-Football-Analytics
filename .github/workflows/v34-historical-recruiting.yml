@@ -70,6 +70,8 @@ jobs:
           git add web/public/v34-recruiting-research.json
           if ! git diff --cached --quiet; then
             git commit -m 'data: publish historical recruiting research leaderboard'
+            git fetch origin v3.4-development
+            git rebase origin/v3.4-development
             git push origin HEAD:v3.4-development
           fi
       - uses: actions/upload-artifact@v4
