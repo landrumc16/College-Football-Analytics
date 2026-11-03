@@ -31,7 +31,7 @@ def main(argv=None):
     payload = json.loads(args.input.read_text(encoding="utf-8"))
     report = evaluate_snapshot(payload)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report
 
 
