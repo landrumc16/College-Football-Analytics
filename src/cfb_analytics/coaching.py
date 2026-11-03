@@ -37,17 +37,26 @@ def coaching_as_of(records, cutoff):
 
 
 def scheme_as_of(records, cutoff):
-    """Select observed, dated team tendencies; no invented scheme labels."""
-    from .talent import features_as_of
-    translated = []
+    """Select latest dated, source-backed tendencies by team and metric."""
+    from .talent import validate_talent_observation
+    limit = _timestamp(cutoff)
+    if limit is None:
+        raise ValueError("Cutoff must include timezone")
+    selected = {}
     for row in records:
-        if row.get("feature") not in TENDENCIES:
+        if not isinstance(row, dict) or row.get("feature") not in TENDENCIES:
             raise ValueError("Unknown measurable scheme feature")
-        translated.append({**row, "feature": "on_field_contribution"})
-    # Validate provenance and numeric value using shared cutoff rules, while
-    # retaining the original feature name for matchup research.
-    checked = features_as_of(translated, cutoff)
-    return {(team, records_feature): {**value, "feature": records_feature}
-            for (team, _), value in checked.items()
-            for records_feature in [next(r["feature"] for r in records
-                                    if r["team"] == team and r["published_at"] == value["published_at"])]}
+        published = _timestamp(row.get("published_at"))
+        if published is None:
+            raise ValueError("Missing scheme publication timestamp")
+        if published >= limit:
+            continue
+        # Reuse the shared source, timestamp and numeric validation.
+        validate_talent_observation({**row, "feature": "on_field_contribution"}, cutoff)
+        key = (row["team"], row["feature"])
+        previous = selected.get(key)
+        if previous is None or published > _timestamp(previous["published_at"]):
+            selected[key] = dict(row)
+        elif published == _timestamp(previous["published_at"]) and row != previous:
+            raise ValueError("Conflicting scheme observations at same timestamp")
+    return selected
