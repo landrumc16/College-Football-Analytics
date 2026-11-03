@@ -6,7 +6,7 @@ then seven at-large teams. All twelve seeds follow simulated projected-win/ratin
 scores. Four highest seeds receive byes. Playoff games use neutral-site ratings.
 """
 from collections import Counter, defaultdict
-from math import sqrt
+from math import isfinite, sqrt
 from random import Random
 from .model import win_probability_from_rating_gap
 
@@ -24,6 +24,15 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         raise ValueError("probability scale must be positive")
     if len(teams) < 12:
         raise ValueError("CFP simulation requires at least 12 eligible teams")
+    for name, team in teams.items():
+        if not isinstance(team["rating"], (int, float)) or not isfinite(team["rating"]):
+            raise ValueError(f"Invalid rating for {name}")
+        for key in ("wins", "conference_wins"):
+            value = team[key]
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"Invalid {key} for {name}")
+        if team["conference"] != "Independent" and not team["conference"]:
+            raise ValueError(f"Missing conference for {name}")
     rng = Random(seed)
     names = sorted(teams)
     if len(names) != len(set(names)):
@@ -38,8 +47,15 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     rating_std = sqrt(sum((teams[n]["rating"] - rating_mean)**2 for n in names) / len(names)) or 1
     rating_z = {n:(teams[n]["rating"]-rating_mean)/rating_std for n in names}
     prepared = []
+    seen_games = set()
     for game in games:
         home, away = game["home"], game["away"]
+        matchup = tuple(sorted((home, away)))
+        if matchup in seen_games:
+            raise ValueError(f"Duplicate remaining matchup: {matchup}")
+        seen_games.add(matchup)
+        if home not in teams and away not in teams:
+            raise ValueError("Remaining game has no modeled FBS team")
         if home == away:
             raise ValueError("self-matchup in remaining schedule")
         gap = (teams[home]["rating"] if home in teams else fcs_rating) - (teams[away]["rating"] if away in teams else fcs_rating)
