@@ -256,7 +256,22 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
     performance = {name: {"actual_wins": 0, "expected_wins": 0.0,
                           "games_with_forecasts": 0, "wins_above_expected": None}
                    for name in known}
+    # Only unique completed fixtures contribute to program performance.
+    # A duplicate or conflicting final result must not inflate wins.
+    unique_games = {}
+    conflicting = set()
     for g in snapshot["games"]:
+        key = str(g["game_id"])
+        previous = unique_games.get(key)
+        if previous is None or (g.get("completed") and not previous.get("completed")):
+            unique_games[key] = g
+        elif g.get("completed") and previous.get("completed"):
+            if any(g.get(field) != previous.get(field)
+                   for field in ("home", "away", "home_score", "away_score")):
+                conflicting.add(key)
+    for key, g in unique_games.items():
+        if key in conflicting:
+            continue
         if not g["completed"] or g["home_score"] is None or g["away_score"] is None:
             continue
         forecast = history.get(str(g["game_id"]))
