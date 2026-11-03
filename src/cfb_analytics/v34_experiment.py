@@ -6,6 +6,7 @@ final scores. Feature coverage is reported rather than silently imputed.
 from .talent import features_as_of
 from .coaching import coaching_as_of, scheme_as_of
 from .paired_benchmark import paired_scorecard
+from .historical import utc_instant, validate_unique_games
 
 
 def evaluate_feature_challenger(games, champion, challenger, observations,
@@ -15,6 +16,7 @@ def evaluate_feature_challenger(games, champion, challenger, observations,
     cutoff_by_game maps (season, game_id) to the prediction-time cutoff.
     Missing cutoffs fail closed; no postgame feature can be used for evaluation.
     """
+    validate_unique_games(games)
     keys = {(g.season, g.game_id) for g in games}
     if keys != set(cutoff_by_game):
         raise ValueError("Every game needs exactly one explicit prediction cutoff")
@@ -24,12 +26,15 @@ def evaluate_feature_challenger(games, champion, challenger, observations,
     # The challenger probabilities must have been archived before kickoff.
     for game in games:
         cutoff = cutoff_by_game[(game.season, game.game_id)]
+        if utc_instant(cutoff) is None or utc_instant(cutoff) >= utc_instant(game.kickoff):
+            raise ValueError("Feature cutoff must precede kickoff")
+        participants = {game.home, game.away}
         talent = features_as_of(observations, cutoff)
         staff = coaching_as_of(coaching, cutoff)
         tendencies = scheme_as_of(schemes, cutoff)
-        coverage["talent_team_features"] += len(talent)
-        coverage["coaching_assignments"] += len(staff)
-        coverage["scheme_team_features"] += len(tendencies)
+        coverage["talent_team_features"] += sum(team in participants for team, _ in talent)
+        coverage["coaching_assignments"] += sum(team in participants for team, _ in staff)
+        coverage["scheme_team_features"] += sum(team in participants for team, _ in tendencies)
     return {"paired": paired_scorecard(games, champion, challenger),
             "feature_coverage": coverage,
             "promotion_status": "research_only_manual_validation_required"}
