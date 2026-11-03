@@ -57,6 +57,14 @@ jobs:
           test -s web/dist/index.html
           if [ -f data/season-2026-report.json ]; then cp data/season-2026-report.json web/dist/season-report.json; fi
           test -s web/dist/season-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('web/dist/season-report.json').read_text())
+          assert isinstance(report.get('rankings'), list) and report['rankings'], 'Missing rankings'
+          assert isinstance(report.get('predictions'), list) and report['predictions'], 'Missing predictions'
+          print('V3.3 season report includes rankings and predictions')
+          PY
           echo 'V3.3 frontend and baseline report compiled successfully'
   v2-preview:
     if: github.ref == 'refs/heads/v2-development'
