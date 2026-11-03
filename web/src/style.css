@@ -49,3 +49,6 @@
 .team-suggestions button{display:block;width:100%;text-align:left;padding:12px 14px;color:#e8edf7;font-weight:600;border-radius:6px}
 .team-suggestions button:hover,.team-suggestions button:focus-visible{background:#2c425a;color:#fff;outline:2px solid #70d7b8;outline-offset:-2px}
 @media(max-width:700px){.team-search{flex-basis:100%;max-width:none}.team-suggestions button{min-height:44px}}
+
+/* Dedicated research library: detailed evidence stays out of the primary football views. */
+.research-page{margin:18px 0 28px}.research-page>p{color:#afc1d6;line-height:1.55}.research-group{background:#142338;border:1px solid #354c67;border-radius:12px;padding:14px 18px}.research-group>summary{cursor:pointer;font-weight:750;padding:8px 0;min-height:44px}.research-group[open]>summary{margin-bottom:14px;border-bottom:1px solid #354c67}.research-group .accuracy-summary,.research-group .notice{margin:14px 0}.compact-model-note{padding:10px 14px}
