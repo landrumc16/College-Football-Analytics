@@ -30,7 +30,7 @@ def refresh_history(years, output: Path, api_key: str):
     output.parent.mkdir(parents=True, exist_ok=True)
     temp = output.with_suffix(output.suffix + ".tmp")
     try:
-        temp.write_text(json.dumps(payload, indent=2) + "\\n", encoding="utf-8")
+        temp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         temp.replace(output)
     finally:
         temp.unlink(missing_ok=True)
