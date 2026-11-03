@@ -36,6 +36,7 @@ def test_collector_skips_unscored_classes_without_zero_imputation():
     def fetch(path, *, api_key):
         if path.startswith("/recruiting/"):
             return [{"year": 2023, "team": "Unranked", "points": None, "rank": None},
+                    {"year": 2023, "team": "Unscored", "points": -1, "rank": None},
                     {"year": 2023, "team": "Georgia", "points": 300.0, "rank": 1}]
         if path.startswith("/games?"):
             return [{"id": 1, "home_team": "Georgia", "away_team": "FCS Team"}]
