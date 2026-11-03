@@ -52,6 +52,19 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Mobile and browser regression smoke
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+          node web/tests/mobile-smoke.mjs
+      - name: Upload browser smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v33-mobile-browser-evidence
+          path: web/mobile-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Verify preview artifact
         run: |
           test -s web/dist/index.html
