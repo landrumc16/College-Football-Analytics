@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/v34-historical-recruiting.yml'
       - 'src/cfb_analytics/v34_historical_snapshot_cli.py'
+      - 'src/cfb_analytics/v34_historical_records.py'
   workflow_dispatch:
     inputs:
       start:
