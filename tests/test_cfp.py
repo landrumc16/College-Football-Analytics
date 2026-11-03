@@ -79,3 +79,12 @@ def test_non_fbs_only_games_do_not_change_fbs_cfp_outcomes():
     baseline = simulate_cfp(teams, [fbs_game], simulations=100, seed=31)
     with_non_fbs = simulate_cfp(teams, [fbs_game, non_fbs_game], simulations=100, seed=31)
     assert with_non_fbs == baseline
+
+
+def test_duplicate_fcs_only_fixtures_do_not_block_live_report():
+    teams = {f"T{i}": {"conference": f"C{i // 3}", "rating": 30-i,
+                        "wins": 8, "conference_wins": 4} for i in range(15)}
+    fcs_only = {"home": "Kean", "away": "The College of New Jersey"}
+    expected = simulate_cfp(teams, [], simulations=10, seed=19)
+    actual = simulate_cfp(teams, [fcs_only, fcs_only], simulations=10, seed=19)
+    assert actual == expected
