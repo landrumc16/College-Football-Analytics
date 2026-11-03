@@ -35,3 +35,13 @@ def test_cancelled_game_excluded_but_fcs_result_retained():
         completed_seasons={2024})
     assert rows == [{"season": 2024, "team": "Georgia", "actual_wins": 1,
                      "games_played": 1, "fcs_or_other_opponent_games": 1}]
+
+
+def test_historical_tied_score_placeholder_not_counted():
+    rows = historical_season_records(
+        {2024: [raw_game(1, 2024, "Georgia", "FCS", 40, 7),
+                raw_game(2, 2024, "Georgia", "Alabama", 0, 0)]},
+        fbs_teams_by_season={2024: {"Georgia", "Alabama"}},
+        completed_seasons={2024})
+    assert len(rows) == 1
+    assert rows[0]["actual_wins"] == rows[0]["games_played"] == 1
