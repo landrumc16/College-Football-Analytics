@@ -55,7 +55,9 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
             raise ValueError(f"Duplicate remaining matchup: {matchup}")
         seen_games.add(matchup)
         if home not in teams and away not in teams:
-            raise ValueError("Remaining game has no modeled FBS team")
+            # FCS-vs-FCS games cannot change any modeled FBS win total.
+            # Retain FBS-vs-FCS games below using the FCS rating assumption.
+            continue
         if home == away:
             raise ValueError("self-matchup in remaining schedule")
         gap = (teams[home]["rating"] if home in teams else fcs_rating) - (teams[away]["rating"] if away in teams else fcs_rating)
