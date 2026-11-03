@@ -19,7 +19,7 @@ def historical_season_records(raw_by_season, *, fbs_teams_by_season, completed_s
         games = normalize_cfbd_games(raw, season)
         # A completed historical season may retain cancelled fixtures.
         # Never count unplayed games as wins or losses.
-        games = [game for game in games if game.completed]
+        games = [game for game in games if game.completed and game.home_score != game.away_score]
         if not games:
             raise ValueError(f"No completed games for {season}")
         records = season_records(games, eligible_teams=fbs_teams_by_season[season])
