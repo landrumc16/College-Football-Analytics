@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './style.css'
 
+type RecruitingResearch = { historical_asof_verified: false; joined_team_seasons: number; scorecard: { evaluated_team_seasons: number; heldout_seasons: number; win_mae: number }; program_recruiting_residuals: { programs: { team: string; heldout_seasons: number; average_wins_above_recruiting_baseline: number }[] } }
 type Team = { ranking_explanation?: { wins_contribution: number; rating_contribution: number; tie_break_contribution: number; score: number; scope: string }; rank: number; team: string; rating: number; wins: number; losses: number; projected_wins: number; projected_conference_wins: number; rank_score: number }
 type Prediction = { game_id: number; week: number; home: string; away: string; predicted_winner: string; home_margin: number; home_win_probability: number; confidence: string }
 type CfpTeam = { team: string; conference: string; most_likely_seed: number | null; average_seed_when_selected: number | null; average_wins: number; wins_p10: number; wins_p90: number; bowl_eligible: number; cfp_field: number; first_round_bye: number; quarterfinal: number; semifinal: number; final: number; national_title: number }
@@ -27,6 +28,7 @@ const hypothetical = (home: Team, away: Team, neutral: boolean, scale = 18, home
 
 function App() {
   const [report, setReport] = useState<Report | null>(null)
+  const [recruitingResearch, setRecruitingResearch] = useState<RecruitingResearch | null>(null)
   const [historicalBacktest, setHistoricalBacktest] = useState<HistoricalBacktest | null>(null)
   const [multiSeasonResearch, setMultiSeasonResearch] = useState<MultiSeasonResearch | null>(null)
   const [pollSnapshot, setPollSnapshot] = useState<PollSnapshot | null>(null)
@@ -50,6 +52,15 @@ function App() {
         setReport(data)
       })
       .catch(e => setError(String(e.message || e)))
+  }, [])
+
+  useEffect(() => {
+    fetch(import.meta.env.BASE_URL + 'v34-recruiting-research.json', { cache: 'no-store' })
+      .then(r => { if (!r.ok) throw new Error('Research unavailable'); return r.json() })
+      .then((data: RecruitingResearch) => {
+        if (data.historical_asof_verified === false && Array.isArray(data.program_recruiting_residuals?.programs) && data.scorecard?.evaluated_team_seasons > 0) setRecruitingResearch(data)
+      })
+      .catch(() => { /* Optional research, never block live rankings. */ })
   }, [])
 
   useEffect(() => {
@@ -133,6 +144,7 @@ function App() {
     <header><div className="eyebrow">VERSION 3.2 · SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
+      {recruitingResearch && <section className="notice"><h2>Recruiting vs. Results · Historical Research</h2><p>Retrospective recruiting-only baseline, not verified pregame forecasts or causal coaching/development rankings. {recruitingResearch.scorecard.evaluated_team_seasons} held-out team-seasons across {recruitingResearch.scorecard.heldout_seasons} seasons; average wins error {recruitingResearch.scorecard.win_mae.toFixed(2)}.</p><div className="table-wrap"><table><thead><tr><th>Program</th><th>Held-out seasons</th><th>Avg. wins above recruiting baseline</th></tr></thead><tbody>{recruitingResearch.program_recruiting_residuals.programs.slice(0,15).map(p => <tr key={p.team}><td className="team">{p.team}</td><td>{p.heldout_seasons}</td><td>{p.average_wins_above_recruiting_baseline > 0 ? '+' : ''}{p.average_wins_above_recruiting_baseline.toFixed(2)}</td></tr>)}</tbody></table></div></section>}
       <section className="notice"><strong>Prediction model: {report.model_metadata?.model_id === "workbook_2026_baseline" ? "2026 workbook baseline" : (report.model_metadata?.model_id || "Legacy model — provenance unavailable")}</strong><p>{report.model_metadata?.model_status === "incumbent_not_v3_promoted" ? "V3 research candidates are under evaluation and are not yet powering these forecasts." : "Forecasts use the model identified in this published report."} CFP selection remains a model approximation, not an official committee forecast.</p></section>
       {report.source?.includes("DEMO") && <section className="notice"><strong>Historical demonstration — not live rankings</strong><p>This view uses the frozen 2026 Week 7 workbook baseline. Live rankings will replace it after the CFBD refresh is verified.</p></section>}
       {(freshnessUnknown || staleData) && <section className="notice"><strong>Data freshness warning</strong><p>{freshnessUnknown ? 'This report has no valid retrieval timestamp; live-data freshness cannot be verified.' : 'This report was retrieved more than 72 hours ago (or has a future timestamp). Rankings and forecasts may be outdated.'}</p></section>}
