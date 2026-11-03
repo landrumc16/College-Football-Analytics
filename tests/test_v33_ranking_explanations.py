@@ -7,7 +7,7 @@ def test_explanations_reconcile_with_incumbent_scores():
     for weight in (0, 0.3, 0.5, 1):
         explanations = explain_rank_scores(rows, weight)
         scores = rank_scores(rows, weight)
-        assert [(item["team"], item["score"]) for item in explanations] == pytest.approx(scores) if False else [item["team"] for item in explanations] == [team for team, _ in scores]
+        assert [item["team"] for item in explanations] == [team for team, _ in scores]
         for item, (_, score) in zip(explanations, scores):
             assert item["score"] == pytest.approx(score)
             assert item["score"] == pytest.approx(item["wins_contribution"] + item["rating_contribution"] + item["tie_break_contribution"])
