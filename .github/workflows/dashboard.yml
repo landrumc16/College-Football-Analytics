@@ -54,8 +54,10 @@ jobs:
           npm run build
       - name: Mobile and browser regression smoke
         run: |
+          cd web
           npm install --no-save playwright
           npx playwright install --with-deps chromium
+          cd ..
           node web/tests/mobile-smoke.mjs
       - name: Upload browser smoke screenshots
         if: always()
