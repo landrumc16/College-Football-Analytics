@@ -5,6 +5,7 @@ Only completed seasons explicitly supplied by the operator are included.
 """
 import argparse
 import json
+from math import isfinite
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,8 +40,8 @@ def collect_snapshot(seasons, *, api_key, fetch=fetch_json):
             raise ValueError(f"Invalid FBS membership for {year}")
         # CFBD can return unranked classes with null points. Preserve
         # missingness rather than fabricating a zero score.
-        usable = [row for row in recruiting if isinstance(row.get("points"), (int, float))
-                  and not isinstance(row.get("points"), bool)]
+        usable = [row for row in recruiting if type(row.get("points")) in (int, float)
+                  and isfinite(row["points"]) and row["points"] >= 0]
         if not usable:
             raise ValueError(f"No scored recruiting classes for {year}")
         classes.extend(normalize_recruiting_classes(usable, retrieved_at=retrieved))
