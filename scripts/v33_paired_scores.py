@@ -47,3 +47,21 @@ def paired_score(incumbent_rows, candidate_rows):
     return {"games": n, "brier_delta": mean,
             "logloss_delta": sum(log_deltas) / n,
             "brier_delta_standard_error": se}
+
+
+def calibration_bins(rows, *, bins=10):
+    """Equal-width reliability bins; observed rates are descriptive, not calibrated forecasts."""
+    if not isinstance(bins, int) or not 2 <= bins <= 100:
+        raise ValueError("bins must be an integer from 2 to 100")
+    observations = _index(rows)
+    groups = [[] for _ in range(bins)]
+    for probability, outcome in observations.values():
+        index = min(bins - 1, int(probability * bins))
+        groups[index].append((probability, outcome))
+    return [
+        {"lower": i / bins, "upper": (i + 1) / bins,
+         "games": len(group),
+         "mean_probability": sum(p for p, _ in group) / len(group) if group else None,
+         "observed_rate": sum(y for _, y in group) / len(group) if group else None}
+        for i, group in enumerate(groups)
+    ]
