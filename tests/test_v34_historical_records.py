@@ -23,3 +23,15 @@ def test_missing_fbs_classification_fails_closed():
     with pytest.raises(ValueError, match="classification"):
         historical_season_records({2024: [raw_game(1, 2024, "Georgia", "FCS", 40, 7)]},
                                   fbs_teams_by_season={}, completed_seasons={2024})
+
+
+def test_cancelled_game_excluded_but_fcs_result_retained():
+    cancelled = {"id": 2, "season": 2024, "week": 2,
+                 "home_team": "Georgia", "away_team": "Alabama",
+                 "home_points": None, "away_points": None, "completed": False}
+    rows = historical_season_records(
+        {2024: [raw_game(1, 2024, "Georgia", "FCS", 40, 7), cancelled]},
+        fbs_teams_by_season={2024: {"Georgia", "Alabama"}},
+        completed_seasons={2024})
+    assert rows == [{"season": 2024, "team": "Georgia", "actual_wins": 1,
+                     "games_played": 1, "fcs_or_other_opponent_games": 1}]
