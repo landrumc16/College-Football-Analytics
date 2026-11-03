@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.v33_paired_scores import paired_score
+from scripts.v33_paired_scores import paired_score, calibration_bins
 
 
 def row(game, probability, won=1, season=2025):
@@ -44,3 +44,17 @@ def test_rejects_duplicate_and_invalid_probabilities():
         paired_score([row(1, .5), row(1, .5)], [])
     with pytest.raises(ValueError, match="Invalid"):
         paired_score([row(1, 1.1)], [row(1, .5)])
+
+
+def test_calibration_bins_partition_and_edge_probabilities():
+    bins = calibration_bins([row(1, 0, 0), row(2, 1, 1), row(3, .55, 1)], bins=2)
+    assert [b["games"] for b in bins] == [1, 2]
+    assert bins[0]["observed_rate"] == 0
+    assert bins[1]["observed_rate"] == 1
+    assert bins[1]["mean_probability"] == pytest.approx(.775)
+
+
+def test_calibration_empty_bins_and_validation():
+    assert all(b["observed_rate"] is None for b in calibration_bins([], bins=3))
+    with pytest.raises(ValueError):
+        calibration_bins([], bins=1)
