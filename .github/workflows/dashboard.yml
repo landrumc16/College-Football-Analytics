@@ -7,7 +7,7 @@ on:
     types: [completed]
     branches: [main]
   push:
-    branches: [main, v2-development, v3.3-development]
+    branches: [main, v2-development, v3.3-development, v3.4-development]
     paths:
       - 'data/v2-research-summary.json'
       - 'docs/V3-EXECUTION-CHECKLIST.md'
