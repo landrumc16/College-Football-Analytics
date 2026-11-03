@@ -50,7 +50,7 @@ jobs:
       - name: Compile V3.3 dashboard preview
         working-directory: web
         run: |
-          npm ci
+          npm install
           npm run build
       - name: Verify preview artifact
         run: |
