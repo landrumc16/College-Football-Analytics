@@ -67,7 +67,14 @@ function App() {
       .then((data: PollSnapshot) => {
         if (data.season === 2026 && Number.isInteger(data.week) &&
             Array.isArray(data.ap_top25) && Array.isArray(data.coaches_top25) &&
-            data.ap_top25.length > 0 && data.coaches_top25.length > 0 && data.source) setPollSnapshot(data)
+            data.ap_top25.length > 0 && data.coaches_top25.length > 0 && data.source &&
+            [data.ap_top25, data.coaches_top25, ...(data.cfp_top25 ? [data.cfp_top25] : [])].every(poll =>
+              Array.isArray(poll) && poll.length <= 25 &&
+              poll.every(row => typeof row.team === 'string' && row.team.trim().length > 0 &&
+                Number.isInteger(row.rank) && row.rank >= 1 && row.rank <= 25) &&
+              new Set(poll.map(row => row.team)).size === poll.length &&
+              new Set(poll.map(row => row.rank)).size === poll.length)) setPollSnapshot(data)
+        else setPollUnavailable(true)
       })
       .catch(() => setPollUnavailable(true))
   }, [])
