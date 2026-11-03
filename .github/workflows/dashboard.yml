@@ -55,6 +55,7 @@ jobs:
       - name: Verify preview artifact
         run: |
           test -s web/dist/index.html
+          if [ -f data/season-2026-report.json ]; then cp data/season-2026-report.json web/dist/season-report.json; fi
           test -s web/dist/season-report.json
           echo 'V3.3 frontend and baseline report compiled successfully'
   v2-preview:
