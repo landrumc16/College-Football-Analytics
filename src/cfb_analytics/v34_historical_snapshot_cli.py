@@ -37,7 +37,13 @@ def collect_snapshot(seasons, *, api_key, fetch=fetch_json):
         team_names = [team.get("school") for team in fbs]
         if any(not isinstance(name, str) or not name.strip() for name in team_names) or len(set(team_names)) != len(team_names):
             raise ValueError(f"Invalid FBS membership for {year}")
-        classes.extend(normalize_recruiting_classes(recruiting, retrieved_at=retrieved))
+        # CFBD can return unranked classes with null points. Preserve
+        # missingness rather than fabricating a zero score.
+        usable = [row for row in recruiting if isinstance(row.get("points"), (int, float))
+                  and not isinstance(row.get("points"), bool)]
+        if not usable:
+            raise ValueError(f"No scored recruiting classes for {year}")
+        classes.extend(normalize_recruiting_classes(usable, retrieved_at=retrieved))
         games[str(year)] = season_games
         members[str(year)] = sorted(team_names)
     return {"classes": classes, "games_by_season": games,
