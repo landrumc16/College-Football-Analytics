@@ -1,0 +1,988 @@
+{
+  "historical_asof_verified": false,
+  "joined_team_seasons": 1309,
+  "program_recruiting_residuals": {
+    "eligible_programs": 133,
+    "programs": [
+      {
+        "average_wins_above_recruiting_baseline": 4.903106227161302,
+        "first_heldout_season": 2022,
+        "heldout_seasons": 4,
+        "last_heldout_season": 2025,
+        "team": "James Madison"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 3.4252669338664092,
+        "first_heldout_season": 2023,
+        "heldout_seasons": 3,
+        "last_heldout_season": 2025,
+        "team": "Jacksonville State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.5990733488819027,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Liberty"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.5074454684919436,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Army"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.4377427024735367,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Louisiana"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.427136433633575,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "SMU"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.373187165442629,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Air Force"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.362383859124346,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "BYU"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.2809138579484345,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Ohio State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.259186381584915,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Georgia"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.2524449577064556,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Boise State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.229904257951469,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Western Kentucky"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.152735189771126,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Ohio"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.0884520545404213,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Memphis"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.0454431369772705,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Notre Dame"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 2.0395804911214612,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Navy"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.8650908614655388,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "App State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.8615450368807178,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Coastal Carolina"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.8162245502215542,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Oregon"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.7721728861451413,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UTSA"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.640892603160738,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Marshall"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.496847020348984,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Toledo"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.4939208067420096,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Iowa"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.489369540502416,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Tulane"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.4577815692363585,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Michigan"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.4082169431095404,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Alabama"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.3617661069448161,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Cincinnati"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.3477412140200111,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Utah"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.323045756553223,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Fresno State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.1714345913117126,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Miami (OH)"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.1666170873719939,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Clemson"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.1255684778619994,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Troy"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 1.0120202274359247,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Washington"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.9879904657141737,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Ole Miss"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.9071448828168792,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Minnesota"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.8670771966055648,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Kansas State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.8272915168540562,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "San Diego State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.6987751359596349,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Hawai'i"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.6858131162938578,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Penn State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.6656456235664063,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Louisville"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.6181931992327054,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Oklahoma"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.6039305482388633,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Western Michigan"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.5456918271989079,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Iowa State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.4525341011747038,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Pittsburgh"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.4343348597372427,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "San Jos\u00e9 State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.38572087734051397,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Buffalo"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.38235954695327784,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Indiana"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.35969664086599223,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Utah State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.3261336061984448,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Georgia Southern"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.31197921177307375,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Wake Forest"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.30416213151631116,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UCF"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.2989129371915608,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "NC State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.2854275014657986,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "TCU"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.2502717733824516,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UAB"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.23284063461089197,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UNLV"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.22854541683849622,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "North Texas"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.1841331883927467,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Wyoming"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.14172748913964522,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Eastern Michigan"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.12704488420170051,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Central Michigan"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.12678690208152776,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Texas Tech"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.11373958910312,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Texas"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.11051792808554417,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Missouri"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.09432482645630166,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Houston"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.0351042338479241,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "LSU"
+      },
+      {
+        "average_wins_above_recruiting_baseline": 0.002935863234169389,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "USC"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.07322619424396112,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Illinois"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.1217198239264248,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Oklahoma State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.13392187858073637,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "South Alabama"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.156190132826086,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Tennessee"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.17643556322995582,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Texas State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.20213040358167816,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "East Carolina"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.2052278955644001,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Arizona State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.22909672160368963,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Baylor"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.2710487193318651,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Washington State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.2981618046764787,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Miami"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.3954006461769247,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Texas A&M"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.4360375302553834,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Duke"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.4697153934158586,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Ball State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.4891651794338845,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 6,
+        "last_heldout_season": 2025,
+        "team": "Old Dominion"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.49070448481644113,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Wisconsin"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.5071279568191324,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Virginia"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.5304077157585316,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Louisiana Tech"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.5433873801826768,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Oregon State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.5563114393270859,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 6,
+        "last_heldout_season": 2025,
+        "team": "UConn"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.566129395464751,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Georgia State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.5979510088031798,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Florida Atlantic"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.6345403535222242,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Northern Illinois"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.6410785676778342,
+        "first_heldout_season": 2023,
+        "heldout_seasons": 3,
+        "last_heldout_season": 2025,
+        "team": "Sam Houston"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.6682599014744585,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UCLA"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.6746093010172419,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "New Mexico State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.6969883123353343,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Tulsa"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.7293129608903114,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "New Mexico"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.7783078477532304,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Arkansas State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.7911092204631497,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Kentucky"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.8368726024406754,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Bowling Green"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.8379266895703223,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Middle Tennessee"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.91411043816626,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "California"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -0.9660535736050658,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "West Virginia"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.0103246550142035,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "North Carolina"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.0120786428060078,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Nevada"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.1908379278435461,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Michigan State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.1909975458952842,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Charlotte"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.2033226117833675,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Rice"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.2110496421627712,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Kent State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.2268152922234918,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Florida State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.2874654594708292,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Syracuse"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.3247904874264502,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Boston College"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.4213756767259473,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Arizona"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.4237217896122307,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Florida"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.4816909269912075,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Virginia Tech"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.4914272741277068,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Maryland"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.4933490572750776,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Southern Miss"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.5796388984991734,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Georgia Tech"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.6288965041804617,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Temple"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.6692482798027324,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UTEP"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.7208881587695026,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "South Florida"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.7254750484348516,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Northwestern"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.7522704217937497,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "South Carolina"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.7583183833906675,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "UL Monroe"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.7690904476584641,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Colorado State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.8235567583484875,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Kansas"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.8314787279253346,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 6,
+        "last_heldout_season": 2025,
+        "team": "Florida International"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.86135954115445,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Auburn"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.917010851695144,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Colorado"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.9473976349833688,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Rutgers"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -1.959423511938938,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Mississippi State"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -2.066634858066095,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Purdue"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -2.219866897360825,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Nebraska"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -2.327821278078866,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Arkansas"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -2.368701804779742,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Vanderbilt"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -2.606463356497105,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Akron"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -3.059419067462039,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Stanford"
+      },
+      {
+        "average_wins_above_recruiting_baseline": -3.4269449666846157,
+        "first_heldout_season": 2019,
+        "heldout_seasons": 7,
+        "last_heldout_season": 2025,
+        "team": "Massachusetts"
+      }
+    ],
+    "scope": "research-only recruiting residuals, not causal coaching/development rankings"
+  },
+  "scope": "descriptive historical season-win benchmark; not verified pregame forecasts",
+  "scorecard": {
+    "by_season": [
+      {
+        "season": 2019,
+        "team_seasons": 130,
+        "win_mae": 2.1029424729384805
+      },
+      {
+        "season": 2020,
+        "team_seasons": 128,
+        "win_mae": 1.717397816679724
+      },
+      {
+        "season": 2021,
+        "team_seasons": 130,
+        "win_mae": 2.2509108919998813
+      },
+      {
+        "season": 2022,
+        "team_seasons": 130,
+        "win_mae": 1.9687680935971525
+      },
+      {
+        "season": 2023,
+        "team_seasons": 133,
+        "win_mae": 2.0766558859900273
+      },
+      {
+        "season": 2024,
+        "team_seasons": 134,
+        "win_mae": 2.093993804820447
+      },
+      {
+        "season": 2025,
+        "team_seasons": 136,
+        "win_mae": 2.206434364323086
+      }
+    ],
+    "evaluated_team_seasons": 921,
+    "heldout_seasons": 7,
+    "mean_error": 0.01595837439819367,
+    "promotion_status": "research_only_not_pregame_verified",
+    "sufficient_seasons": true,
+    "win_mae": 2.06149097326295,
+    "win_rmse": 2.50791634797408
+  }
+}
