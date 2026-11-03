@@ -13,9 +13,10 @@ def test_duplicate_reverse_matchup_rejected():
                                {"home": "T1", "away": "T0"}], simulations=1)
 
 
-def test_unmodeled_game_rejected():
-    with pytest.raises(ValueError, match="no modeled FBS"):
-        simulate_cfp(teams(), [{"home": "FCS1", "away": "FCS2"}], simulations=1)
+def test_unmodeled_game_ignored_without_changing_fbs_outcomes():
+    baseline = simulate_cfp(teams(), [], simulations=10, seed=17)
+    with_fcs_only = simulate_cfp(teams(), [{"home": "FCS1", "away": "FCS2"}], simulations=10, seed=17)
+    assert with_fcs_only == baseline
 
 
 @pytest.mark.parametrize("field,value", [("rating", float("nan")),
