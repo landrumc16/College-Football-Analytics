@@ -41,6 +41,11 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.refresh --season "$SEASON"
+      - name: Refresh 2026 recruiting research snapshot (development branch only)
+        if: github.ref == 'refs/heads/v3.4-development'
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python -m cfb_analytics.v34_recruiting_refresh --year 2026
       - name: Verify live kickoff timestamps are available
         run: |
           python - <<'PY'
@@ -103,7 +108,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
+          git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json\n          if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then\n            git add data/cfbd-recruiting-*.json\n          fi
           if ! git diff --cached --quiet; then
             git commit -m "Refresh CFBD season snapshot"
             git push
