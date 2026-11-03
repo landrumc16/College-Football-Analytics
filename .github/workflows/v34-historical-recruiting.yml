@@ -19,7 +19,7 @@ on:
         default: '2025'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   historical-recruiting:
@@ -52,6 +52,26 @@ jobs:
                             'historical_asof_verified': report['historical_asof_verified']}, indent=2))
           assert report['historical_asof_verified'] is False
           PY
+      - name: Publish research-only dashboard data
+        if: github.ref == 'refs/heads/v3.4-development'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/v34-recruiting-report.json').read_text())
+          assert report['historical_asof_verified'] is False
+          summary = {key: report[key] for key in ('historical_asof_verified', 'joined_team_seasons', 'scorecard', 'program_recruiting_residuals', 'scope')}
+          target = Path('web/public/v34-recruiting-research.json')
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/public/v34-recruiting-research.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: publish historical recruiting research leaderboard'
+            git push origin HEAD:v3.4-development
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: v34-historical-recruiting-research
