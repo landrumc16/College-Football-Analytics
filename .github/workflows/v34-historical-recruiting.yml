@@ -63,7 +63,7 @@ jobs:
           summary = {key: report[key] for key in ('historical_asof_verified', 'joined_team_seasons', 'scorecard', 'program_recruiting_residuals', 'scope')}
           target = Path('web/public/v34-recruiting-research.json')
           target.parent.mkdir(parents=True, exist_ok=True)
-          target.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          target.write_text(json.dumps(summary, indent=2, sort_keys=True) + chr(10))
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
