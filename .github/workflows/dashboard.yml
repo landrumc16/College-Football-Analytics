@@ -381,7 +381,7 @@ jobs:
           assert backtest["evaluation_scope"].startswith("2026 frozen")
           assert Path("web/dist/index.html").is_file()
           bundles = list(Path("web/dist/assets").glob("*.js"))
-          assert bundles and any(b"VERSION 3.2" in p.read_bytes() for p in bundles), "Version 3.2 dashboard bundle missing"
+          assert bundles and any(b"SEASON INTELLIGENCE" in p.read_bytes() for p in bundles), "Dashboard bundle identity missing"
           print("Validated published dashboard and report")
           PY
       - name: Preserve V2 research summary for deployment verification
