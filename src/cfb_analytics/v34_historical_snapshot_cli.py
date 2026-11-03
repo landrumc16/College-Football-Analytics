@@ -10,6 +10,8 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+import time
 from .v34_recruiting_ingestion import normalize_recruiting_classes
 
 BASE = "https://api.collegefootballdata.com"
@@ -18,8 +20,17 @@ BASE = "https://api.collegefootballdata.com"
 def fetch_json(path, *, api_key):
     request = Request(BASE + path, headers={"Authorization": "Bearer " + api_key,
                                             "Accept": "application/json"})
-    with urlopen(request, timeout=60) as response:
-        return json.load(response)
+    for attempt in range(4):
+        try:
+            with urlopen(request, timeout=60) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            if exc.code not in (429, 500, 502, 503, 504) or attempt == 3:
+                raise
+        except (URLError, TimeoutError):
+            if attempt == 3:
+                raise
+        time.sleep(2 ** attempt)
 
 
 def collect_snapshot(seasons, *, api_key, fetch=fetch_json):
