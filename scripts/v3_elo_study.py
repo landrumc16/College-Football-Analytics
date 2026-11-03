@@ -11,7 +11,10 @@ from itertools import groupby
 from math import log
 from pathlib import Path
 
-from scripts.v33_paired_scores import paired_score
+try:
+    from scripts.v33_paired_scores import paired_score
+except ModuleNotFoundError:
+    from v33_paired_scores import paired_score  # direct script execution
 
 
 def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
