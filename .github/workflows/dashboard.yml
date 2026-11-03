@@ -104,7 +104,7 @@ jobs:
       - name: Build V3.4 dashboard
         working-directory: web
         run: |
-          npm ci
+          npm install
           npm run build
       - name: Mobile and browser smoke
         run: |
