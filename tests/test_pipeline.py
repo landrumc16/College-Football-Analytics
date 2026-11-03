@@ -260,3 +260,20 @@ def test_fcs_results_and_future_games_flow_through_full_report():
     assert all(row["team"] not in {"FCS Visitor", "FCS Host", "FCS Future"}
                for row in report["rankings"])
     assert ranked["C"]["projected_wins"] > ranked["C"]["wins"]
+
+
+def test_report_ranking_explanations_reconcile_to_published_scores():
+    report = build_season_report({"season": 2026, "source": "test", "games": [
+        game(1, "A", "B", completed=True, hs=28, ass=14),
+        game(2, "B", "C"),
+    ]}, ROSTER)
+    for row in report["rankings"]:
+        explanation = row["ranking_explanation"]
+        assert explanation["team"] == row["team"]
+        assert explanation["projected_wins"] == row["projected_wins"]
+        assert explanation["rating"] == row["rating"]
+        assert abs(explanation["score"] - row["rank_score"]) < 1e-12
+        assert abs(sum(explanation[key] for key in (
+            "wins_contribution", "rating_contribution", "tie_break_contribution"
+        )) - row["rank_score"]) < 1e-12
+        assert "no separate SOS attribution" in explanation["scope"]
