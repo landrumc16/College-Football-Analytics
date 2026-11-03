@@ -11,6 +11,8 @@ from itertools import groupby
 from math import log
 from pathlib import Path
 
+from scripts.v33_paired_scores import paired_score
+
 
 def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
     if not 0 < k <= 100 or not 0 <= home_advantage <= 200:
@@ -70,6 +72,7 @@ def evaluate(games, *, k=24, home_advantage=55, holdout=2025):
                             for r in rows) / n,
         }
     return {
+        "predictions": {"fbs_fbs": predictions, "fbs_fcs": fcs_scored},
         "development": score([r for r in predictions if r["season"] < holdout]),
         "holdout": score([r for r in predictions if r["season"] == holdout]),
         "excluded_future_games": sum(r["season"] > holdout for r in predictions),
@@ -98,7 +101,16 @@ def study(paths, *, holdout=2025):
         (r["k"], r["home_advantage"]) != (24, 55)))
     selected = ranked[0]
     incumbent = candidates[0]
+    paired_holdout = {}
+    for label in ("fbs_fbs", "fbs_fcs"):
+        incumbent_rows = [r for r in incumbent["predictions"][label] if r["season"] == holdout]
+        candidate_rows = [r for r in selected["predictions"][label] if r["season"] == holdout]
+        paired_holdout[label] = paired_score(incumbent_rows, candidate_rows)
+    # Keep existing report schema compact: per-game records are research-only intermediates.
+    for candidate in candidates:
+        candidate.pop("predictions")
     return {
+        "paired_holdout": paired_holdout,
         "type": "v3_retrospective_elo_sensitivity",
         "disclaimer": "Chronologically reconstructed predictions, NOT archived pregame forecasts.",
         "holdout_season": holdout,
