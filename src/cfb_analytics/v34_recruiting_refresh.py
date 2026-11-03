@@ -37,7 +37,7 @@ def refresh(year, output, api_key):
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(output.suffix + ".tmp")
     try:
-        temporary.write_text(json.dumps(payload, indent=2) + "\\n", encoding="utf-8")
+        temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         temporary.replace(output)
     finally:
         temporary.unlink(missing_ok=True)
