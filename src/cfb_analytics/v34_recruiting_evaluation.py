@@ -4,6 +4,7 @@ This pipeline intentionally does not claim historical pregame provenance.
 """
 from .v34_recruiting_baseline import walkforward_recruiting_baseline
 from .v34_recruiting_scorecard import recruiting_baseline_scorecard
+from .v34_recruiting_leaderboard import recruiting_residual_leaderboard
 from .v34_historical_records import historical_season_records
 
 
@@ -42,6 +43,7 @@ def evaluate_historical_recruiting(classes, raw_games_by_season, *, fbs_teams_by
     predictions = walkforward_recruiting_baseline(joined,
                                                    min_train_seasons=min_train_seasons)
     return {"scorecard": recruiting_baseline_scorecard(predictions),
+            "program_recruiting_residuals": recruiting_residual_leaderboard(predictions),
             "holdout_predictions": predictions,
             "joined_team_seasons": len(joined), "excluded": skipped,
             "historical_asof_verified": False,
