@@ -1,6 +1,10 @@
 name: V3.4 historical recruiting research
 
 on:
+  push:
+    branches: [v3.4-development]
+    paths:
+      - '.github/workflows/v34-historical-recruiting.yml'
   workflow_dispatch:
     inputs:
       start:
@@ -30,8 +34,8 @@ jobs:
       - name: Collect completed-season historical inputs
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-          START: ${{ inputs.start }}
-          END: ${{ inputs.end }}
+          START: ${{ inputs.start || '2016' }}
+          END: ${{ inputs.end || '2025' }}
         run: python -m cfb_analytics.v34_historical_snapshot_cli --start "$START" --end "$END" --output /tmp/v34-historical-input.json
       - name: Evaluate historical recruiting baseline
         run: python -m cfb_analytics.v34_recruiting_evaluation_cli --input /tmp/v34-historical-input.json --output /tmp/v34-recruiting-report.json
