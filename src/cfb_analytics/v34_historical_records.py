@@ -17,8 +17,11 @@ def historical_season_records(raw_by_season, *, fbs_teams_by_season, completed_s
         if not isinstance(raw, list) or not raw:
             raise ValueError(f"Missing games for {season}")
         games = normalize_cfbd_games(raw, season)
-        if any(not game.completed for game in games):
-            raise ValueError(f"Incomplete game in declared completed season {season}")
+        # A completed historical season may retain cancelled fixtures.
+        # Never count unplayed games as wins or losses.
+        games = [game for game in games if game.completed]
+        if not games:
+            raise ValueError(f"No completed games for {season}")
         records = season_records(games, eligible_teams=fbs_teams_by_season[season])
         output.extend(records)
     return output
