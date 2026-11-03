@@ -12,7 +12,7 @@ from .ingestion import IngestedGame
 from .model import ModelSettings
 from .predictions import predict
 from .projections import ScheduledGame, project_season
-from .rankings import rank_scores
+from .rankings import rank_scores, explain_rank_scores
 from .ratings import Game, Team, calculate_ratings
 
 
@@ -70,8 +70,14 @@ def build_season_report(snapshot: dict, roster: list[dict], settings=ModelSettin
          ratings[t.name].adaptive_rating, index + 4)
         for index, t in enumerate(teams)
     ])
+    ranking_drivers = {item['team']: item for item in explain_rank_scores([
+        (t.name, projections[t.name].projected_wins,
+         ratings[t.name].adaptive_rating, index + 4)
+        for index, t in enumerate(teams)
+    ])}
     ranking = [
         {"rank": index + 1, "team": name, "rank_score": score,
+         "ranking_explanation": ranking_drivers[name],
          "rating": ratings[name].adaptive_rating,
          "wins": ratings[name].wins,
          "losses": ratings[name].losses,
