@@ -356,7 +356,45 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
          "actual_home_win_rate": round(b["actual_total"] / b["count"], 4) if b["count"] else None}
         for i, b in enumerate(bins)
     ]
-    return {"games_evaluated": games, "eligible_completed_games": eligible_completed,
+    # Keep a compact weekly scorecard from the same verified, deduplicated
+    # game population; never treat a retrospective prediction as pregame.
+    weekly = {}
+    for game_id, game in unique_games.items():
+        if game_id in conflicting_ids or not game.get("completed"):
+            continue
+        hs, aw = game.get("home_score"), game.get("away_score")
+        if hs is None or aw is None or hs == aw:
+            continue
+        home = ALIASES.get(game["home"], game["home"])
+        away = ALIASES.get(game["away"], game["away"])
+        if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
+            continue
+        forecast = history.get(game_id)
+        if not forecast or not _has_verified_pregame_provenance(game, forecast):
+            continue
+        probability = forecast.get("home_win_probability")
+        if (forecast.get("home") != home or forecast.get("away") != away
+                or isinstance(probability, bool) or not isinstance(probability, (int, float))
+                or not math.isfinite(probability) or not 0 <= probability <= 1):
+            continue
+        week = game.get("week")
+        if isinstance(week, bool) or not isinstance(week, int):
+            continue
+        bucket = weekly.setdefault(week, {"week": week, "games_evaluated": 0,
+                                          "correct_winners": 0, "brier_sum": 0.0})
+        outcome = int(hs > aw)
+        bucket["games_evaluated"] += 1
+        bucket["correct_winners"] += int((probability >= 0.5) == bool(outcome))
+        bucket["brier_sum"] += (probability - outcome) ** 2
+    weekly_scorecard = [
+        {"week": row["week"], "games_evaluated": row["games_evaluated"],
+         "correct_winners": row["correct_winners"],
+         "winner_accuracy": round(row["correct_winners"] / row["games_evaluated"], 4),
+         "brier_score": round(row["brier_sum"] / row["games_evaluated"], 4)}
+        for _, row in sorted(weekly.items())
+    ]
+    return {"weekly_scorecard": weekly_scorecard,
+            "games_evaluated": games, "eligible_completed_games": eligible_completed,
             "forecast_coverage": round(games / eligible_completed, 4) if eligible_completed else None,
             "correct_winners": correct,
             "winner_accuracy": round(correct / games, 4) if games else None,
