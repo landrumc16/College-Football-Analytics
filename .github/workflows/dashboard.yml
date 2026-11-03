@@ -7,7 +7,7 @@ on:
     types: [completed]
     branches: [main]
   push:
-    branches: [main, v2-development, v3.3-development]
+    branches: [main, v2-development, v3.3-development, v3.4-development]
     paths:
       - 'data/v2-research-summary.json'
       - 'docs/V3-EXECUTION-CHECKLIST.md'
@@ -85,6 +85,52 @@ jobs:
           print('V3.3 season report includes rankings and predictions')
           PY
           echo 'V3.3 frontend and baseline report compiled successfully'
+  v34-preview:
+    if: github.ref == 'refs/heads/v3.4-development'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate model and generate preview report
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pytest -q
+          python -m cfb_analytics.demo
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build V3.4 dashboard
+        working-directory: web
+        run: |
+          npm install
+          npm run build
+      - name: Mobile and browser smoke
+        run: |
+          cd web
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+          cd ..
+          node web/tests/mobile-smoke.mjs
+      - name: Verify recruiting research asset
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('web/dist/v34-recruiting-research.json')
+          assert p.is_file() and p.stat().st_size > 0
+          data = json.loads(p.read_text())
+          assert isinstance(data, dict)
+          print('Recruiting research asset valid')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v34-release-browser-evidence
+          path: web/mobile-evidence/
+          if-no-files-found: ignore
+
   v2-preview:
     if: github.ref == 'refs/heads/v2-development'
     runs-on: ubuntu-latest

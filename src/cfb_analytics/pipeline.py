@@ -256,7 +256,22 @@ def build_performance_against_expectations(snapshot: dict, roster: list[dict],
     performance = {name: {"actual_wins": 0, "expected_wins": 0.0,
                           "games_with_forecasts": 0, "wins_above_expected": None}
                    for name in known}
+    # Only unique completed fixtures contribute to program performance.
+    # A duplicate or conflicting final result must not inflate wins.
+    unique_games = {}
+    conflicting = set()
     for g in snapshot["games"]:
+        key = str(g["game_id"])
+        previous = unique_games.get(key)
+        if previous is None or (g.get("completed") and not previous.get("completed")):
+            unique_games[key] = g
+        elif g.get("completed") and previous.get("completed"):
+            if any(g.get(field) != previous.get(field)
+                   for field in ("home", "away", "home_score", "away_score")):
+                conflicting.add(key)
+    for key, g in unique_games.items():
+        if key in conflicting:
+            continue
         if not g["completed"] or g["home_score"] is None or g["away_score"] is None:
             continue
         forecast = history.get(str(g["game_id"]))
@@ -295,7 +310,25 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
     margin_games = 0
     bins = [{"count": 0, "predicted_total": 0.0, "actual_total": 0.0}
             for _ in range(5)]
+    # A provider may repeat a fixture. Prefer a completed row over an earlier
+    # pending row, and reject conflicting completed results rather than choosing
+    # whichever happens to appear first.
+    unique_games = {}
+    conflicting_ids = set()
     for game in snapshot["games"]:
+        key = str(game["game_id"])
+        previous = unique_games.get(key)
+        if previous is None:
+            unique_games[key] = game
+        elif game.get("completed") and previous.get("completed"):
+            fields = ("home", "away", "home_score", "away_score")
+            if any(previous.get(field) != game.get(field) for field in fields):
+                conflicting_ids.add(key)
+        elif game.get("completed"):
+            unique_games[key] = game
+    for game_id, game in unique_games.items():
+        if game_id in conflicting_ids:
+            continue
         if not game["completed"] or game["home_score"] is None or game["away_score"] is None:
             continue
         if game["home_score"] == game["away_score"]:
@@ -338,7 +371,45 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
          "actual_home_win_rate": round(b["actual_total"] / b["count"], 4) if b["count"] else None}
         for i, b in enumerate(bins)
     ]
-    return {"games_evaluated": games, "eligible_completed_games": eligible_completed,
+    # Keep a compact weekly scorecard from the same verified, deduplicated
+    # game population; never treat a retrospective prediction as pregame.
+    weekly = {}
+    for game_id, game in unique_games.items():
+        if game_id in conflicting_ids or not game.get("completed"):
+            continue
+        hs, aw = game.get("home_score"), game.get("away_score")
+        if hs is None or aw is None or hs == aw:
+            continue
+        home = ALIASES.get(game["home"], game["home"])
+        away = ALIASES.get(game["away"], game["away"])
+        if eligible_teams is not None and (home not in eligible_teams or away not in eligible_teams):
+            continue
+        forecast = history.get(game_id)
+        if not forecast or not _has_verified_pregame_provenance(game, forecast):
+            continue
+        probability = forecast.get("home_win_probability")
+        if (forecast.get("home") != home or forecast.get("away") != away
+                or isinstance(probability, bool) or not isinstance(probability, (int, float))
+                or not math.isfinite(probability) or not 0 <= probability <= 1):
+            continue
+        week = game.get("week")
+        if isinstance(week, bool) or not isinstance(week, int):
+            continue
+        bucket = weekly.setdefault(week, {"week": week, "games_evaluated": 0,
+                                          "correct_winners": 0, "brier_sum": 0.0})
+        outcome = int(hs > aw)
+        bucket["games_evaluated"] += 1
+        bucket["correct_winners"] += int((probability >= 0.5) == bool(outcome))
+        bucket["brier_sum"] += (probability - outcome) ** 2
+    weekly_scorecard = [
+        {"week": row["week"], "games_evaluated": row["games_evaluated"],
+         "correct_winners": row["correct_winners"],
+         "winner_accuracy": round(row["correct_winners"] / row["games_evaluated"], 4),
+         "brier_score": round(row["brier_sum"] / row["games_evaluated"], 4)}
+        for _, row in sorted(weekly.items())
+    ]
+    return {"weekly_scorecard": weekly_scorecard,
+            "games_evaluated": games, "eligible_completed_games": eligible_completed,
             "forecast_coverage": round(games / eligible_completed, 4) if eligible_completed else None,
             "correct_winners": correct,
             "winner_accuracy": round(correct / games, 4) if games else None,
