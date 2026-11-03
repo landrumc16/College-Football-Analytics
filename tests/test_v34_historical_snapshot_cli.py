@@ -30,3 +30,16 @@ def test_collector_requires_unique_seasons_and_credentials():
         collect_snapshot([2023, 2023], api_key="fixture")
     with pytest.raises(ValueError):
         collect_snapshot([2023], api_key="")
+
+
+def test_collector_skips_unscored_classes_without_zero_imputation():
+    def fetch(path, *, api_key):
+        if path.startswith("/recruiting/"):
+            return [{"year": 2023, "team": "Unranked", "points": None, "rank": None},
+                    {"year": 2023, "team": "Georgia", "points": 300.0, "rank": 1}]
+        if path.startswith("/games?"):
+            return [{"id": 1, "home_team": "Georgia", "away_team": "FCS Team"}]
+        return [{"school": "Georgia"}]
+    report = collect_snapshot([2023], api_key="fixture", fetch=fetch)
+    assert len(report["classes"]) == 1
+    assert report["classes"][0]["team"] == "Georgia"
