@@ -295,13 +295,25 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
     margin_games = 0
     bins = [{"count": 0, "predicted_total": 0.0, "actual_total": 0.0}
             for _ in range(5)]
-    # Duplicate provider rows must not count a game twice or inflate model accuracy.
-    seen_game_ids = set()
+    # A provider may repeat a fixture. Prefer a completed row over an earlier
+    # pending row, and reject conflicting completed results rather than choosing
+    # whichever happens to appear first.
+    unique_games = {}
+    conflicting_ids = set()
     for game in snapshot["games"]:
-        game_id = str(game["game_id"])
-        if game_id in seen_game_ids:
+        key = str(game["game_id"])
+        previous = unique_games.get(key)
+        if previous is None:
+            unique_games[key] = game
+        elif game.get("completed") and previous.get("completed"):
+            fields = ("home", "away", "home_score", "away_score")
+            if any(previous.get(field) != game.get(field) for field in fields):
+                conflicting_ids.add(key)
+        elif game.get("completed"):
+            unique_games[key] = game
+    for game_id, game in unique_games.items():
+        if game_id in conflicting_ids:
             continue
-        seen_game_ids.add(game_id)
         if not game["completed"] or game["home_score"] is None or game["away_score"] is None:
             continue
         if game["home_score"] == game["away_score"]:
