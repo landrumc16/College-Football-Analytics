@@ -81,6 +81,7 @@ jobs:
           from pathlib import Path
           report = json.loads(Path('web/dist/season-report.json').read_text())
           assert isinstance(report.get('rankings'), list) and report['rankings'], 'Missing rankings'
+          assert all(isinstance(row.get('ranking_explanation'), dict) and abs(row['ranking_explanation']['score'] - row['rank_score']) < 1e-10 for row in report['rankings']), 'Ranking explanations missing or inconsistent'
           assert isinstance(report.get('predictions'), list) and report['predictions'], 'Missing predictions'
           print('V3.3 season report includes rankings and predictions')
           PY
