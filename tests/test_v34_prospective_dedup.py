@@ -61,3 +61,23 @@ def test_weekly_scorecard_uses_only_verified_unique_games():
         {"week": 9, "games_evaluated": 1, "correct_winners": 1,
          "winner_accuracy": 1.0, "brier_score": 0.04}]
     assert build_prediction_accuracy({"games": [game]}, {}, {"Georgia", "Alabama"})["weekly_scorecard"] == []
+
+
+def test_team_performance_deduplicates_and_rejects_conflicts():
+    from cfb_analytics.pipeline import build_performance_against_expectations
+    game = {"game_id": 901, "completed": True, "home": "Georgia",
+            "away": "Alabama", "home_score": 31, "away_score": 21,
+            "start_date": "2026-10-31T18:00:00Z"}
+    forecast = {"home": "Georgia", "away": "Alabama",
+                "home_win_probability": 0.8,
+                "source_retrieved_at": "2026-10-30T12:00:00Z",
+                "forecast_recorded_at": "2026-10-30T13:00:00Z",
+                "scheduled_kickoff_at": "2026-10-31T18:00:00Z"}
+    roster = [{"name": "Georgia"}, {"name": "Alabama"}]
+    once = build_performance_against_expectations({"games": [game]}, roster, {"901": forecast})
+    twice = build_performance_against_expectations({"games": [game, dict(game)]}, roster, {"901": forecast})
+    assert once == twice
+    assert twice["Georgia"]["games_with_forecasts"] == 1
+    conflict = {**game, "away_score": 35}
+    rejected = build_performance_against_expectations({"games": [game, conflict]}, roster, {"901": forecast})
+    assert rejected["Georgia"]["games_with_forecasts"] == 0
