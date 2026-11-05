@@ -59,3 +59,25 @@
 @supports (padding: max(0px)) { .app { padding-left:max(12px,env(safe-area-inset-left)); padding-right:max(12px,env(safe-area-inset-right)); padding-bottom:max(16px,env(safe-area-inset-bottom)); } }
 .offline-warning{position:sticky;top:0;z-index:20;background:#5c3616;color:#fff3d5;border:1px solid #c88b45;border-radius:10px;padding:12px 14px;margin:0 0 12px;font-weight:650;line-height:1.4}
 @media(display-mode:standalone){.section-navigation select,.toolbar input,.toolbar button{min-height:44px}}
+
+
+/* V3.4.1 collegiate brand: restrained navy, cream and deep red. */
+:root{color:#f5f0e6;background:#0b1626}
+body{background:#0b1626;color:#f5f0e6}
+.eyebrow,.rank,.team-number,.bracket-seed{color:#e2b6a8}
+header h1{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.035em}
+header h1 span{color:#f2e7d5}
+header p,.muted,footer{color:#b9c4d3}
+.stats article,.matchup-panel,.performance-panel,.expectation-leaders,.research-group,.research-topic,.prediction-card,.bracket-team{background:#142238;border-color:#34445a}
+.stats strong,.matchup-result h3{color:#f5f0e6}
+button.active{background:#792d36;color:#fff8ee}
+button:hover{color:#fff8ee}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #d9a3a4;outline-offset:2px}
+.section-navigation select{background-color:#192b42;border-color:#526079;color:#fff8ee}
+.table-wrap{background:#101e31}
+.table-wrap th:first-child,.table-wrap td:first-child{background:#101e31}
+.table-wrap thead th:first-child,th{background:#1b2b40}
+.table-wrap tbody tr:hover td:first-child{background:#26374e}
+.emphasis,.prediction-pick strong,.matchup-result>strong{color:#f1d5c8}
+.auto-bid{background:#33443e;color:#e3f1e8}
+@media(max-width:650px){header h1{letter-spacing:-.025em}}

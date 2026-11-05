@@ -149,7 +149,7 @@ function App() {
   const predictionByGame = new Map((report?.predictions || []).map(p => [p.game_id, p]))
   const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral', report?.model_metadata?.prediction_scale, report?.model_metadata?.home_field_advantage) : null
   return <main className="app">{offline && <div role="status" className="offline-warning">You are offline. Current scores, rankings, and predictions cannot be refreshed. Any displayed report may be outdated.</div>}
-    <header><div className="eyebrow">SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
+    <header className="brand-header"><div className="brand-mark" aria-hidden="true"><span className="brand-ball">⌁</span><span className="brand-chart"><i/><i/><i/><i/></span></div><div className="brand-copy"><div className="eyebrow">COLLEGE FOOTBALL · SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Rankings, predictions and playoff outlooks—backed by data.</p></div></header>
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
       {report.source?.includes("DEMO") && <section className="notice"><strong>Historical demonstration — not live rankings</strong><p>This view uses the frozen 2026 Week 7 workbook baseline. Live rankings will replace it after the CFBD refresh is verified.</p></section>}
