@@ -141,3 +141,6 @@ a:hover{color:#fff1dd}
 .prediction-actions button { cursor: pointer; padding: .5rem .7rem; border: 1px solid #751d32; border-radius: 7px; background: #751d32; color: #fff; }
 .prediction-actions button:focus-visible, .favorite-panel button:focus-visible { outline: 3px solid #b78325; outline-offset: 2px; }
 .share-notice { padding: .6rem 1rem; border-radius: 8px; background: #f2eee8; color: #17263a; }
+
+.playoff-shortlist { padding-left: 1.4rem; margin: .5rem 0 1rem; }
+.playoff-shortlist li { padding: .3rem 0; line-height: 1.4; }
