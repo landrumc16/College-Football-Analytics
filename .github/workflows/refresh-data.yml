@@ -105,7 +105,7 @@ jobs:
           accuracy = report['prediction_accuracy']
           assert accuracy['games_evaluated'] <= accuracy['eligible_completed_games']
           assert len(accuracy['calibration']) == 5
-          print(f\"Verified {len(history)} immutable pregame forecasts\")
+          print(f"Verified {len(history)} immutable pregame forecasts")
           PY
       - name: Commit changed snapshot
         run: |
