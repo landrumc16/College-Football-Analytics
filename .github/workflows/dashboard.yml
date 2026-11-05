@@ -282,7 +282,7 @@ jobs:
               path = dist / entry["src"]
               assert path.is_file(), path
               raw = path.read_bytes()
-              assert raw.startswith(b"\\x89PNG\\r\\n\\x1a\\n")
+              assert raw[:8] == bytes((137,80,78,71,13,10,26,10))
               assert struct.unpack(">II", raw[16:24]) == tuple(map(int, entry["sizes"].split("x")))
           sw = (dist / "sw.js").read_text()
           assert "navigate" in sw and "assets/" in sw
