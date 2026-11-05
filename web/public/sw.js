@@ -1,6 +1,6 @@
 /* Minimal shell worker. Live JSON is always network-only, never cached. */
 const SHELL_CACHE = 'cfb-shell-v341';
-self.addEventListener('install', event => { self.skipWaiting(); });
+self.addEventListener('install', event => { event.waitUntil(caches.open(SHELL_CACHE).then(cache => cache.add(new URL('offline.html', self.registration.scope).href))); self.skipWaiting(); });
 self.addEventListener('activate', event => { event.waitUntil((async () => { const keys = await caches.keys(); await Promise.all(keys.filter(k => k.startsWith('cfb-shell-') && k !== SHELL_CACHE).map(k => caches.delete(k))); await self.clients.claim(); })()); });
 self.addEventListener('fetch', event => {
   const req = event.request;
