@@ -81,3 +81,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .emphasis,.prediction-pick strong,.matchup-result>strong{color:#f1d5c8}
 .auto-bid{background:#33443e;color:#e3f1e8}
 @media(max-width:650px){header h1{letter-spacing:-.025em}}
+
+/* V3.4.1 unified collegiate identity: typography and surfaces follow the approved crest. */
+:root{font-family:"Trebuchet MS",Arial,sans-serif;--brand-navy:#0b1626;--brand-panel:#142238;--brand-cream:#f5f0e6;--brand-burgundy:#792d36;--brand-border:#34445a}
+.brand-header{display:flex;align-items:center;gap:24px;padding:22px 26px;margin-bottom:26px;background:linear-gradient(115deg,#142238 0%,#0d1b2d 75%);border:1px solid var(--brand-border);border-left:4px solid var(--brand-burgundy);border-radius:12px}
+.brand-logo{width:clamp(80px,11vw,120px);height:auto;aspect-ratio:1;object-fit:contain;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.28))}
+.brand-copy{min-width:0}
+.brand-copy .eyebrow{color:#d7ac9f;font-size:11px;letter-spacing:.16em}
+.brand-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(27px,4vw,46px);font-weight:700;line-height:1.07;letter-spacing:-.025em;margin:8px 0}
+.brand-copy h1 span{color:var(--brand-cream)}
+.brand-copy p{margin:8px 0 0;line-height:1.5}
+h2,h3,.stats strong,.matchup-result h3{font-family:Georgia,"Times New Roman",serif}
+.stats article,.table-wrap,.notice,.research-group,.research-topic,.matchup-panel{border-color:var(--brand-border)}
+.tabs{background:#142238;border:1px solid var(--brand-border)}
+button.active,.tabs button.active{background:var(--brand-burgundy);color:#fff8ee}
+button:hover{background-color:#26374e}
+.table-wrap tbody tr:hover{background:#24354a}
+a{color:#e5c1b2}
+a:hover{color:#fff1dd}
+@media(max-width:700px){.brand-header{gap:14px;padding:16px;margin-bottom:20px}.brand-logo{width:76px}.brand-copy .eyebrow{font-size:9px;letter-spacing:.09em}.brand-copy h1{font-size:clamp(23px,5vw,32px)}.brand-copy p{font-size:12px}}
+@media(max-width:390px){.brand-header{gap:10px;padding:12px}.brand-logo{width:64px}.brand-copy h1{font-size:22px}}
