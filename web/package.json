@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prebuild": "python ../scripts/generate_pwa_icons.py"
   },
   "dependencies": {
     "react": "^18.3.1",
