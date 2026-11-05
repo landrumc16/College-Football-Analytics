@@ -54,3 +54,8 @@
 .research-page{margin:18px 0 28px}.research-page>p{color:#afc1d6;line-height:1.55}.research-group{background:#142338;border:1px solid #354c67;border-radius:12px;padding:14px 18px}.research-group>summary{cursor:pointer;font-weight:750;padding:8px 0;min-height:44px}.research-group[open]>summary{margin-bottom:14px;border-bottom:1px solid #354c67}.research-group .accuracy-summary,.research-group .notice{margin:14px 0}.compact-model-note{padding:10px 14px}
 
 .research-topic{background:#142338;border:1px solid #354c67;border-radius:12px;margin:12px 0;padding:12px 16px}.research-topic>summary{cursor:pointer;font-weight:750;min-height:44px;padding:10px 2px}.research-topic[open]>summary{border-bottom:1px solid #354c67;margin-bottom:14px}.research-topic .notice,.research-topic .accuracy-summary{margin:12px 0}.research-page .table-wrap{max-width:100%}
+
+/* Installed mobile app: respect safe areas and keep offline status visible. */
+@supports (padding: max(0px)) { .app { padding-left:max(12px,env(safe-area-inset-left)); padding-right:max(12px,env(safe-area-inset-right)); padding-bottom:max(16px,env(safe-area-inset-bottom)); } }
+.offline-warning{position:sticky;top:0;z-index:20;background:#5c3616;color:#fff3d5;border:1px solid #c88b45;border-radius:10px;padding:12px 14px;margin:0 0 12px;font-weight:650;line-height:1.4}
+@media(display-mode:standalone){.section-navigation select,.toolbar input,.toolbar button{min-height:44px}}
