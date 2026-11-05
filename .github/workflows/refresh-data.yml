@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -e '.[dev]'
-      - run: pytest -q
+      - run: python -m pytest -q
       - name: Reject unsupported season before refresh
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
