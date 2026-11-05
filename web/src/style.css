@@ -101,3 +101,11 @@ a{color:#e5c1b2}
 a:hover{color:#fff1dd}
 @media(max-width:700px){.brand-header{gap:14px;padding:16px;margin-bottom:20px}.brand-logo{width:76px}.brand-copy .eyebrow{font-size:9px;letter-spacing:.09em}.brand-copy h1{font-size:clamp(23px,5vw,32px)}.brand-copy p{font-size:12px}}
 @media(max-width:390px){.brand-header{gap:10px;padding:12px}.brand-logo{width:64px}.brand-copy h1{font-size:22px}}
+
+/* Compact, accessible home-screen installation help. */
+.install-guide { margin: 0 0 1rem; border: 1px solid rgba(133, 150, 175, .35); border-radius: 12px; background: #fff; color: #17263a; overflow: hidden; }
+.install-guide summary { cursor: pointer; padding: .8rem 1rem; font-weight: 700; }
+.install-guide summary:focus-visible, .install-guide button:focus-visible { outline: 3px solid #9d2940; outline-offset: 2px; }
+.install-guide-content { padding: 0 1rem 1rem; }
+.install-guide-content p { margin: .55rem 0; line-height: 1.5; }
+.install-guide-content button { background: #751d32; color: #fff; border: 0; border-radius: 8px; padding: .65rem 1rem; font-weight: 700; cursor: pointer; }
