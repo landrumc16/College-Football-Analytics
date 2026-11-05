@@ -27,6 +27,22 @@ const hypothetical = (home: Team, away: Team, neutral: boolean, scale = 18, home
 }
 
 function App() {
+  const [installPrompt, setInstallPrompt] = useState<{ prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> } | null>(null)
+  const [installed, setInstalled] = useState(false)
+  useEffect(() => {
+    const onPrompt = (event: Event) => {
+      event.preventDefault()
+      setInstallPrompt(event as Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> })
+    }
+    const onInstalled = () => { setInstalled(true); setInstallPrompt(null) }
+    window.addEventListener('beforeinstallprompt', onPrompt)
+    window.addEventListener('appinstalled', onInstalled)
+    setInstalled(window.matchMedia('(display-mode: standalone)').matches || ('standalone' in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone)))
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
+  }, [])
   const [report, setReport] = useState<Report | null>(null)
   const [recruitingResearch, setRecruitingResearch] = useState<RecruitingResearch | null>(null)
   const [historicalBacktest, setHistoricalBacktest] = useState<HistoricalBacktest | null>(null)
@@ -150,6 +166,7 @@ function App() {
   const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral', report?.model_metadata?.prediction_scale, report?.model_metadata?.home_field_advantage) : null
   return <main className="app">{offline && <div role="status" className="offline-warning">You are offline. Current scores, rankings, and predictions cannot be refreshed. Any displayed report may be outdated.</div>}
     <header className="brand-header"><img className="brand-logo" src={`${import.meta.env.BASE_URL}icons/icon-512.png`} alt="College Football Analytics collegiate logo" width="112" height="112" /><div className="brand-copy"><div className="eyebrow">COLLEGE FOOTBALL · SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Rankings, predictions and playoff outlooks—backed by data.</p></div></header>
+    {!installed && <details className="install-guide"><summary>Add College Football Analytics to your phone</summary><div className="install-guide-content"><p>Get one-tap access from your home screen—no app store needed.</p>{installPrompt && <button type="button" onClick={async () => { const prompt = installPrompt; setInstallPrompt(null); await prompt.prompt(); await prompt.userChoice }}>Install App</button>}<p><strong>iPhone:</strong> Open this page in Safari, tap Share, then choose <strong>Add to Home Screen</strong> and tap Add.</p><p><strong>Android:</strong> Open this page in Chrome, tap the three-dot menu, then choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p></div></details>}
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
       {report.source?.includes("DEMO") && <section className="notice"><strong>Historical demonstration — not live rankings</strong><p>This view uses the frozen 2026 Week 7 workbook baseline. Live rankings will replace it after the CFBD refresh is verified.</p></section>}
