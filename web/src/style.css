@@ -132,3 +132,12 @@ a:hover{color:#fff1dd}
 .favorite-picker { display: block; margin: .7rem 0; }
 .favorite-picker input { display: block; max-width: 360px; width: 100%; margin-top: .3rem; }
 @media(max-width: 650px) { .favorite-grid { grid-template-columns: minmax(0,1fr); } }
+
+/* V3.4.2 prediction details and sharing */
+.pick-explanation { margin-top: .75rem; font-size: .9rem; }
+.pick-explanation summary { cursor: pointer; font-weight: 700; }
+.pick-explanation p { line-height: 1.5; }
+.prediction-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+.prediction-actions button { cursor: pointer; padding: .5rem .7rem; border: 1px solid #751d32; border-radius: 7px; background: #751d32; color: #fff; }
+.prediction-actions button:focus-visible, .favorite-panel button:focus-visible { outline: 3px solid #b78325; outline-offset: 2px; }
+.share-notice { padding: .6rem 1rem; border-radius: 8px; background: #f2eee8; color: #17263a; }
