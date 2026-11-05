@@ -8,7 +8,12 @@ APPROVED_SHA256 = {
     512: '55e67ccf6f63fd1c64ca2fa4172fb6213ff3e8e7ae5f7044067c98fddcb66ab9',
 }
 
-MASKABLE_SHA256 = {\n    192: '25c1c24303f3a06d03b33a9bfb27cac70180d601770105d109ec63165acd33ea',\n    512: '5f9cf598629df065cd2cb47bad7472ab6c15d561ebdd54d65bb11d5adb166133',\n}\n\nICONS = Path(__file__).resolve().parents[1] / "web" / "public" / "icons"
+MASKABLE_SHA256 = {
+    192: '25c1c24303f3a06d03b33a9bfb27cac70180d601770105d109ec63165acd33ea',
+    512: '5f9cf598629df065cd2cb47bad7472ab6c15d561ebdd54d65bb11d5adb166133',
+}
+
+ICONS = Path(__file__).resolve().parents[1] / "web" / "public" / "icons"
 
 
 def validate_png(path: Path, expected: int, checksum: str) -> None:
@@ -27,5 +32,6 @@ def validate_png(path: Path, expected: int, checksum: str) -> None:
 
 if __name__ == "__main__":
     for size in (192, 512):
-        validate_png(ICONS / f"icon-{size}.png", size, APPROVED_SHA256[size])\n        validate_png(ICONS / f"icon-maskable-{size}.png", size, MASKABLE_SHA256[size])
+        validate_png(ICONS / f"icon-{size}.png", size, APPROVED_SHA256[size])
+        validate_png(ICONS / f"icon-maskable-{size}.png", size, MASKABLE_SHA256[size])
     print("Approved PWA icons present and dimensions validated; no icons regenerated.")
