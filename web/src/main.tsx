@@ -53,7 +53,7 @@ function App() {
   const [offline, setOffline] = useState(!navigator.onLine)
   const [tab, setTab] = useState<'home' | 'rankings' | 'predictions' | 'conferences' | 'cfp' | 'matchup' | 'schedule' | 'research'>('home')
   const [favorites, setFavorites] = useState<(string | null)[]>(() => {
-    try { const saved = JSON.parse(localStorage.getItem('cfba-favorites-v1') || '[]'); return Array.isArray(saved) ? Array.from({length: 3}, (_, i) => typeof saved[i] === 'string' ? saved[i] as string : null) : [null, null, null] } catch { return [] }
+    try { const saved = JSON.parse(localStorage.getItem('cfba-favorites-v1') || '[]'); return Array.isArray(saved) ? Array.from({length: 3}, (_, i) => typeof saved[i] === 'string' ? saved[i] as string : null) : [null, null, null] } catch { return [null, null, null] }
   })
   const [favoritePicker, setFavoritePicker] = useState('')
   const [shareNotice, setShareNotice] = useState('')
