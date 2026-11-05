@@ -34,6 +34,7 @@ function App() {
   const [pollSnapshot, setPollSnapshot] = useState<PollSnapshot | null>(null)
   const [pollUnavailable, setPollUnavailable] = useState(false)
   const [error, setError] = useState('')
+  const [offline, setOffline] = useState(!navigator.onLine)
   const [tab, setTab] = useState<'rankings' | 'predictions' | 'conferences' | 'cfp' | 'matchup' | 'schedule' | 'research'>('rankings')
   const [search, setSearch] = useState('')
   const [showTeamSuggestions, setShowTeamSuggestions] = useState(false)
@@ -43,6 +44,13 @@ function App() {
   const [awayTeam, setAwayTeam] = useState('')
   const [scheduleTeam, setScheduleTeam] = useState('')
   const [venue, setVenue] = useState<'home' | 'away' | 'neutral'>('home')
+
+  useEffect(() => {
+    const sync = () => setOffline(!navigator.onLine)
+    window.addEventListener('online', sync)
+    window.addEventListener('offline', sync)
+    return () => { window.removeEventListener('online', sync); window.removeEventListener('offline', sync) }
+  }, [])
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store' })
@@ -140,7 +148,7 @@ function App() {
   const teamSchedule = (report?.schedule || []).filter(g => g.home === selectedScheduleTeam || g.away === selectedScheduleTeam).sort((a,b) => a.week - b.week || a.game_id - b.game_id)
   const predictionByGame = new Map((report?.predictions || []).map(p => [p.game_id, p]))
   const matchup = actualHome && actualAway && homeTeam !== awayTeam ? hypothetical(actualHome, actualAway, venue === 'neutral', report?.model_metadata?.prediction_scale, report?.model_metadata?.home_field_advantage) : null
-  return <main className="app">
+  return <main className="app">{offline && <div role="status" className="offline-warning">You are offline. Current scores, rankings, and predictions cannot be refreshed. Any displayed report may be outdated.</div>}
     <header><div className="eyebrow">SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Model-driven rankings, season outlooks and upcoming game forecasts.</p></header>
     {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
     {report && <>
@@ -171,6 +179,10 @@ function App() {
       <footer>Model estimates are probabilistic, not guarantees. Data source: {report.source || 'CFBD'}. {report.retrieved_at ? `Last successful data check: ${new Date(report.retrieved_at).toLocaleString()}.` : 'Historical fixture or retrieval date unavailable.'} {report.data_changed_at ? `Game data last changed: ${new Date(report.data_changed_at).toLocaleString()}.` : ''}</footer>
     </>}
   </main>
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register(import.meta.env.BASE_URL + 'sw.js', { scope: import.meta.env.BASE_URL }).catch(() => { /* App remains usable in browser without service worker. */ }) })
 }
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>)

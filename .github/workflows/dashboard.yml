@@ -7,7 +7,7 @@ on:
     types: [completed]
     branches: [main]
   push:
-    branches: [main, v2-development, v3.3-development, v3.4-development]
+    branches: [main, v2-development, v3.3-development, v3.4-development, v3.4.1-development]
     paths:
       - 'data/v2-research-summary.json'
       - 'docs/V3-EXECUTION-CHECKLIST.md'
@@ -31,6 +31,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pwa-preview:
+    if: github.ref == 'refs/heads/v3.4.1-development'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build installable app
+        working-directory: web
+        run: |
+          npm install
+          npm run build
+      - name: Verify PWA output
+        run: |
+          python - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+          dist = Path("web/dist")
+          manifest = json.loads((dist / "manifest.webmanifest").read_text())
+          assert manifest["display"] == "standalone"
+          assert manifest["start_url"] == manifest["scope"] == "./"
+          for entry in manifest["icons"]:
+              data = (dist / entry["src"]).read_bytes()
+              assert data[:8] == bytes((137,80,78,71,13,10,26,10))
+              assert struct.unpack(">II", data[16:24]) == tuple(map(int, entry["sizes"].split("x")))
+          assert (dist / "sw.js").exists()
+          assert "manifest.webmanifest" in (dist / "index.html").read_text()
+          print("Installable app assets verified")
+          PY
   v33-preview:
     if: github.ref == 'refs/heads/v3.3-development'
     runs-on: ubuntu-latest
@@ -234,6 +268,28 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Validate installable app resources
+        run: |
+          python - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+          dist = Path("web/dist")
+          manifest = json.loads((dist / "manifest.webmanifest").read_text())
+          assert manifest["display"] == "standalone"
+          assert manifest["start_url"] == manifest["scope"] == "./"
+          for entry in manifest["icons"]:
+              path = dist / entry["src"]
+              assert path.is_file(), path
+              raw = path.read_bytes()
+              assert raw.startswith(b"\\x89PNG\\r\\n\\x1a\\n")
+              assert struct.unpack(">II", raw[16:24]) == tuple(map(int, entry["sizes"].split("x")))
+          sw = (dist / "sw.js").read_text()
+          assert "navigate" in sw and "assets/" in sw
+          html = (dist / "index.html").read_text()
+          assert "manifest.webmanifest" in html
+          print("PWA manifest, icons, worker and HTML validated")
+          PY
       - name: Publish historical backtest evidence
         run: |
           test -s historical-backtest.json
