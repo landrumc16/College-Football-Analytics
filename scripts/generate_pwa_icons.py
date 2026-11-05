@@ -16,7 +16,7 @@ def validate_png(path: Path, expected: int) -> None:
         raise SystemExit(f"Missing approved collegiate icon: {path}. Publish approved assets before building.")
     with path.open("rb") as handle:
         header = handle.read(24)
-    if len(header) != 24 or header[:8] != b"\\x89PNG\\r\\n\\x1a\\n" or header[12:16] != b"IHDR":
+    if len(header) != 24 or header[:8] != bytes.fromhex("89504e470d0a1a0a") or header[12:16] != b"IHDR":
         raise SystemExit(f"Invalid PNG icon: {path}")
     if hashlib.sha256(path.read_bytes()).hexdigest() != APPROVED_SHA256[expected]:
         raise SystemExit(f'Icon does not match approved collegiate artwork: {path}')
