@@ -29,7 +29,7 @@ def test_ranked_dropouts_and_unranked_entries_are_distinct():
 def test_three_ranked_comparisons_classify_historical_tendency():
     result = historical_hype([row(2023, 5, 15), row(2024, 6, 16),
                               row(2025, 7, 17)], 2025)
-    assert result["program_polls"][0]["historical_tendency"] == "historically_overhyped"
+    assert result["program_polls"][0]["historical_tendency"] == "insufficient_data"\n    assert result["program_polls"][0]["full_window_coverage"] is False\n\n\ndef test_complete_window_classifies_historical_tendency():\n    result = historical_hype([row(year, 5, 15) for year in range(2016, 2026)], 2025)\n    record = result["program_polls"][0]\n    assert record["full_window_coverage"] is True\n    assert record["seasons_required"] == 10\n    assert record["historical_tendency"] == "historically_overhyped"
 
 
 def test_missing_and_invalid_rank_rejected_without_inventing_26():
