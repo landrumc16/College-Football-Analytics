@@ -58,3 +58,29 @@ def test_clustered_interval_rejects_insufficient_and_prospective_cohorts():
             row(game_id="a", prediction_kind="prospective"),
             row(game_id="b", week=2),
         ], draws=100)
+
+
+def test_release_gate_rejects_incomplete_season_coverage():
+    from cfb_analytics.v4_evaluation import assess_release_gates
+    with pytest.raises(ValueError, match="Exactly four"):
+        assess_release_gates([row()], held_out_seasons=[2024])
+    with pytest.raises(ValueError, match="All and only"):
+        assess_release_gates([row()], held_out_seasons=[2022, 2023, 2024, 2025])
+
+
+def test_release_gate_requires_all_numerical_conditions_and_never_promotes():
+    from cfb_analytics.v4_evaluation import assess_release_gates
+    rows = [row(game_id=f"{season}-{week}", season=season, week=week,
+                incumbent_probability=.55, challenger_probability=.85, outcome=1)
+            for season in range(2022, 2026) for week in range(1, 5)]
+    result = assess_release_gates(rows, held_out_seasons=[2022, 2023, 2024, 2025],
+                                  draws=200, seed=7)
+    assert result["numerical_gates_pass"]
+    assert result["folds_improved"] == 4
+    assert result["promotion_eligible"] is False
+    assert all(result["criteria"].values())
+    weaker = [dict(x, challenger_probability=.2) for x in rows]
+    failed = assess_release_gates(weaker, held_out_seasons=[2022, 2023, 2024, 2025],
+                                  draws=200, seed=7)
+    assert not failed["numerical_gates_pass"]
+    assert not failed["criteria"]["brier_reduction_at_least_5_percent"]
