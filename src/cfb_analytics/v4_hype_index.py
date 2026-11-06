@@ -59,7 +59,7 @@ def historical_hype(rows: list[dict], latest_season: int, window: int = 10,
                     for r, change in drift]
         mean_drift = (sum(w * d for w, d in weighted) / sum(w for w, _ in weighted)) if weighted else None
         classification = "insufficient_data"
-        if len(drift) >= 3:
+        # Never label a ten-season tendency from a partial set of seasons.\n        if len(records) == window and len(drift) >= 3:
             if mean_drift > 2:
                 classification = "historically_overhyped"
             elif mean_drift < -2:
@@ -68,6 +68,7 @@ def historical_hype(rows: list[dict], latest_season: int, window: int = 10,
                 classification = "broadly_justified"
         results.append({
             "team": team, "poll": poll, "seasons_observed": len(records),
+            "seasons_required": window, "full_window_coverage": len(records) == window,
             "preseason_top25": len(preseason), "retained_top25": len(retained),
             "dropped_out": len(preseason) - len(retained),
             "unranked_preseason": len(eligible_entries), "entered_top25": len(entered),
