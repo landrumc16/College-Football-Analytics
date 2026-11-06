@@ -1,0 +1,51 @@
+name: V4 development validation
+
+on:
+  push:
+    branches: [v4-development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python package and tests
+        run: python -m pip install -e '.[dev]'
+      - name: Run Python regression suite
+        run: python -m pytest -q
+      - name: Verify frozen workbook parity
+        run: python -m cfb_analytics.parity --strict
+      - name: Generate reproducible 2026 baseline
+        run: python -m cfb_analytics.backtest --output v4-baseline-2026.json
+      - name: Verify baseline provenance and coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("v4-baseline-2026.json").read_text())
+          assert report["games"] > 0
+          assert report["model"]["brier_score"] >= 0
+          assert sum(x["games"] for x in report["weekly_coverage"]) == report["games"]
+          assert sum(x["games"] for x in report["matchup_diagnostics"].values()) == report["games"]
+          print("2026 retrospective baseline verified; NOT multi-season V4 evidence")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v4-frozen-2026-retrospective-baseline
+          path: v4-baseline-2026.json
+          retention-days: 30
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build existing dashboard without deploying
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
