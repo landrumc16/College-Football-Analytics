@@ -68,3 +68,27 @@ def validate_historical_rows(rows: list[dict]) -> dict:
     return {"games": len(rows), "seasons": sorted(seasons), "prediction_kinds": kinds,
             "eligible_for_release": False,
             "reason": "Validation alone does not establish complete held-out cohorts or frozen model parity"}
+
+
+def validate_held_out_cohorts(rows: list[dict], seasons: list[int]) -> dict:
+    """Require four distinct, nonempty historical seasons with pregame provenance.
+
+    This is a dataset contract, not proof of independent training or release readiness.
+    Missing seasons are never filled with synthetic observations.
+    """
+    if len(seasons) != 4 or len(set(seasons)) != 4 or any(not isinstance(s, int) for s in seasons):
+        raise ValueError("Exactly four distinct historical seasons required")
+    validated = validate_historical_rows(rows)
+    if set(validated["seasons"]) != set(seasons):
+        raise ValueError("Historical rows must cover all and only held-out seasons")
+    counts = {str(s): sum(r["season"] == s for r in rows) for s in sorted(seasons)}
+    if any(n == 0 for n in counts.values()):
+        raise ValueError("Empty historical fold")
+    return {
+        "status": "cohort_contract_only",
+        "seasons": sorted(seasons),
+        "games_by_season": counts,
+        "games": validated["games"],
+        "promotion_eligible": False,
+        "reason": "External source authenticity, training independence, and complete pregame feature provenance require separate verification",
+    }
