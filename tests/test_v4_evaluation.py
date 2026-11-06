@@ -84,3 +84,9 @@ def test_release_gate_requires_all_numerical_conditions_and_never_promotes():
                                   draws=200, seed=7)
     assert not failed["numerical_gates_pass"]
     assert not failed["criteria"]["brier_reduction_at_least_5_percent"]
+
+
+def test_clustered_interval_rejects_duplicate_games():
+    from cfb_analytics.v4_evaluation import clustered_brier_interval
+    with pytest.raises(ValueError, match="Duplicate"):
+        clustered_brier_interval([row(), row()], draws=100)
