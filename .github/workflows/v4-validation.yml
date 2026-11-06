@@ -55,5 +55,7 @@ jobs:
       - name: Build existing dashboard without deploying
         working-directory: web
         run: |
-          npm ci
+          # The dashboard currently has no committed npm lockfile.
+          # Use npm install until a reviewed lockfile is introduced.
+          npm install --no-audit --no-fund
           npm run build
