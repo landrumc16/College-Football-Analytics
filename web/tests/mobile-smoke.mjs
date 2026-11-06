@@ -38,7 +38,11 @@ try {
     await page.evaluate(() => localStorage.removeItem('cfba-favorites-v1'));
     await page.reload({ waitUntil: 'networkidle' });
     await page.getByText('+ Add Team', { exact: true }).first().click();
-    const firstTeam = (await page.evaluate(async () => (await (await fetch('./season-report.json')).json()).rankings[0].team));
+    const firstTeam = await page.evaluate(async () => {
+      const response = await fetch('./season-report.json');
+      if (!response.ok || !response.headers.get('content-type')?.includes('json')) throw new Error('Season report JSON not served at ' + response.url);
+      return (await response.json()).rankings[0].team;
+    });
     await page.getByLabel('Add favorite team').fill(firstTeam);
     await page.getByRole('button', { name: 'Save Team' }).click();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
@@ -48,7 +52,7 @@ try {
     await page.reload({ waitUntil: 'networkidle' });
     if (await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).count()) throw new Error('Favorite removal did not persist');
 
-    const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok ? response.json() : null; });
+    const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
