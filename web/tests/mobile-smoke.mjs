@@ -26,6 +26,14 @@ try {
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
     if (await page.getByText('Waiting for live data').count()) throw new Error('Dashboard failed to load season report');
+    // Guard the approved four-section mobile homepage against regressions.
+    for (const title of ['My Teams', 'Featured Games', 'Upset Watch', 'Games That Matter']) {
+      await page.getByRole('heading', { name: title, exact: true }).waitFor();
+    }
+    if (await page.getByRole('heading', { name: 'Competitive Games', exact: true }).count()) throw new Error('Redundant Competitive Games section returned');
+    if (await page.getByText('Prediction model:', { exact: false }).count()) throw new Error('Redundant model notice returned');
+    await page.getByText('Our Model Rankings', { exact: false }).first().waitFor();
+    await page.screenshot({ path: `web/mobile-evidence/home-${width}.png`, fullPage: true });
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
