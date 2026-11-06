@@ -34,6 +34,20 @@ try {
     if (await page.getByText('Prediction model:', { exact: false }).count()) throw new Error('Redundant model notice returned');
     await page.getByText('Our Model Rankings', { exact: false }).first().waitFor();
     await page.screenshot({ path: `web/mobile-evidence/home-${width}.png`, fullPage: true });
+    // Exercise favorites persistence without changing the user's actual browser storage.
+    await page.evaluate(() => localStorage.removeItem('cfba-favorites-v1'));
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('+ Add Team', { exact: true }).first().click();
+    const firstTeam = (await page.evaluate(async () => (await (await fetch('./season-report.json')).json()).rankings[0].team));
+    await page.getByLabel('Add favorite team').fill(firstTeam);
+    await page.getByRole('button', { name: 'Save Team' }).click();
+    await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
+    await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).click();
+    await page.reload({ waitUntil: 'networkidle' });
+    if (await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).count()) throw new Error('Favorite removal did not persist');
+
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
