@@ -83,6 +83,9 @@ def clustered_brier_interval(rows: list[dict], *, draws: int = 2000,
         raise ValueError("At least one paired game is required")
     if draws < 100:
         raise ValueError("At least 100 bootstrap draws required")
+    # Enforce the same unique-game cohort contract as the paired summary.
+    # Duplicate games would otherwise inflate both significance and sample size.
+    evaluate_pairs(rows)
     clusters = defaultdict(list)
     for row in rows:
         if row["prediction_kind"] != "retrospective":
