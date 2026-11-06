@@ -167,3 +167,12 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 **M1 provenance implementation (2026-11-06):** Added deterministic `v4_baseline_manifest.py` to hash frozen 2026 fixture files and incumbent source modules, record baseline settings, counts, and explicit single-season/retrospective limitations. V4 CI now generates and uploads this manifest alongside baseline metrics; regression test checks stable hashes and no false multi-season eligibility. CI success and genuine multi-season historical evaluation remain unverified. No change to `main`.
 
 **M2 foundation started (2026-11-06):** Added `v4_historical.py` strict source/fixture as-of contract and `test_v4_historical.py` to reject post-kickoff inputs, missing timezone, duplicate games and missing/late prospective archive provenance. This enables trustworthy multi-season ingestion without inventing datasets. M1 remains open pending CI verification and real frozen four-season paired historical cohorts; M2 ingestion and historical source acquisition remain incomplete. Tests committed, not yet confirmed passing in CI.
+
+
+## Verified execution evidence — 2026-11-06
+
+- Development HEAD before this documentation update: `1b9ab72349b431f56fefe1bc6985abf944f55cbb`.
+- Four-season historical source acquisition succeeded in [GitHub Actions run 42298095721](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095721). Extracted completed FBS-participant games: **2022: 896; 2023: 910; 2024: 919; 2025: 934; total: 3,659**. The workflow verified source/extraction SHA-256 checksums, season labels, unique IDs, and source FBS-FBS coverage thresholds. Source artifacts are retained for 30 days.
+- [V4 validation 42298095549](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095549) and [Python tests 42298095596](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095596) both passed.
+- **Milestone 2 remains incomplete:** historical outcomes are not archived pregame model inputs. Need dated feature snapshots, time-safe training/holdout boundaries, and season-specific team identities before valid challenger comparisons. No numerical release gate is proven by the 3,659 outcomes alone.
+- **Release decision: NO-GO pending independent pregame provenance and four-season paired model results.** V3.4.2 on `main` remains protected. Do not interpret successful CI or historical outcomes acquisition as a validated V4 model.
