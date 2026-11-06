@@ -120,3 +120,50 @@ def clustered_brier_interval(rows: list[dict], *, draws: int = 2000,
         "ci_method": "paired game-week cluster bootstrap percentile",
         "supports_improvement": sampled[min(draws - 1, int(draws * .975))] < 0,
     }
+
+
+def assess_release_gates(rows: list[dict], *, held_out_seasons: list[int],
+                         draws: int = 2000, seed: int = 2026) -> dict:
+    """Apply the predeclared numerical V4 gates to genuine held-out pairs.
+
+    A numerical pass is NOT authorization to deploy: external provenance,
+    feature ablations, pipeline, and owner acceptance remain separate gates.
+    """
+    if len(held_out_seasons) != 4 or len(set(held_out_seasons)) != 4:
+        raise ValueError("Exactly four distinct held-out seasons are required")
+    if not rows or any(r["prediction_kind"] != "retrospective" for r in rows):
+        raise ValueError("Only retrospective held-out paired games are eligible")
+    if {r["season"] for r in rows} != set(held_out_seasons):
+        raise ValueError("All and only declared held-out seasons must be present")
+    comparison = evaluate_pairs(rows)
+    pooled = comparison["retrospective"]
+    per_season = comparison["retrospective_by_season"]
+    ci = clustered_brier_interval(rows, draws=draws, seed=seed)
+    fold_wins = sum(per_season[str(season)]["relative_brier_reduction"] is not None
+                    and per_season[str(season)]["relative_brier_reduction"] > 0
+                    for season in held_out_seasons)
+    incumbent_log = pooled["incumbent"]["log_loss"]
+    challenger_log = pooled["challenger"]["log_loss"]
+    relative_log_change = ((challenger_log - incumbent_log) / incumbent_log
+                           if incumbent_log > 0 else None)
+    criteria = {
+        "brier_reduction_at_least_5_percent":
+            pooled["relative_brier_reduction"] is not None
+            and pooled["relative_brier_reduction"] >= .05,
+        "improved_in_at_least_three_folds": fold_wins >= 3,
+        "log_loss_regression_at_most_2_percent":
+            relative_log_change is not None and relative_log_change <= .02,
+        "clustered_ci_excludes_zero": ci["ci95_upper"] < 0,
+    }
+    return {
+        "status": "numerical_gates_only",
+        "numerical_gates_pass": all(criteria.values()),
+        "promotion_eligible": False,
+        "held_out_seasons": sorted(held_out_seasons),
+        "folds_improved": fold_wins,
+        "criteria": criteria,
+        "relative_log_loss_change": relative_log_change,
+        "comparison": comparison,
+        "clustered_interval": ci,
+        "warning": "No deployment or superiority claim without independent data provenance, leakage audit and remaining roadmap gates",
+    }
