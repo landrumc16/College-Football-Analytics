@@ -61,7 +61,7 @@ try {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
         await page.getByRole('heading', { name: 'Our Top 25 vs. Official CFP Top 25' }).waitFor();
         await page.getByRole('heading', { name: 'Playoff Bubble' }).waitFor();
-        const poll = await page.evaluate(async () => { try { const response = await fetch('./poll-snapshot.json'); return response.ok ? response.json() : null; } catch { return null; } });
+        const poll = await page.evaluate(async () => { try { const response = await fetch('./poll-snapshot.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; } catch { return null; } });
         if (!poll?.cfp_published_at || !poll?.cfp_top25?.length) {
           await page.getByText('A verified, publication-dated official CFP Top 25 is not available', { exact: false }).waitFor();
         }
