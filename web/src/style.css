@@ -109,3 +109,38 @@ a:hover{color:#fff1dd}
 .install-guide-content { padding: 0 1rem 1rem; }
 .install-guide-content p { margin: .55rem 0; line-height: 1.5; }
 .install-guide-content button { background: #751d32; color: #fff; border: 0; border-radius: 8px; padding: .65rem 1rem; font-weight: 700; cursor: pointer; }
+
+/* V3.4.2: short, readable weekly landing page */
+.weekly-home { margin: 1rem 0; }
+.weekly-home h2 { margin-bottom: .3rem; }
+.weekly-home-grid { display: grid; grid-template-columns: minmax(0,2fr) minmax(220px,1fr); gap: 1rem; margin-top: 1rem; }
+.weekly-home-grid > section { background: #fff; color: #17263a; border: 1px solid #d6dbe1; border-radius: 12px; padding: 1rem; }
+.weekly-game { display: flex; flex-direction: column; gap: .3rem; width: 100%; text-align: left; padding: .75rem; margin: .4rem 0; background: #f5f6f8; color: #17263a; border: 1px solid #d6dbe1; border-radius: 8px; cursor: pointer; }
+.weekly-game span { font-size: .85rem; }
+.weekly-game:focus-visible { outline: 3px solid #751d32; outline-offset: 2px; }
+@media(max-width: 700px) { .weekly-home-grid { grid-template-columns: minmax(0,1fr); } }
+
+.favorite-panel { margin: 1rem 0; padding: 1rem; border: 1px solid #d6dbe1; border-radius: 12px; background: #fff; color: #17263a; }
+.weekly-section-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.weekly-section-heading h3 { margin: 0; }
+.weekly-section-heading button { border: 0; background: transparent; color: #751d32; font-size: 1.4rem; cursor: pointer; }
+.favorite-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .75rem; margin: .8rem 0; }
+.favorite-card { display: flex; flex-direction: column; align-items: flex-start; gap: .45rem; padding: .85rem; border-radius: 9px; background: #f5f6f8; min-width: 0; }
+.favorite-card p { margin: 0; }
+.favorite-card button:not(.weekly-section-heading button), .favorite-panel > button { padding: .5rem .75rem; border-radius: 7px; border: 1px solid #751d32; background: #751d32; color: #fff; cursor: pointer; }
+.favorite-panel button:disabled { opacity: .5; cursor: not-allowed; }
+.favorite-picker { display: block; margin: .7rem 0; }
+.favorite-picker input { display: block; max-width: 360px; width: 100%; margin-top: .3rem; }
+@media(max-width: 650px) { .favorite-grid { grid-template-columns: minmax(0,1fr); } }
+
+/* V3.4.2 prediction details and sharing */
+.pick-explanation { margin-top: .75rem; font-size: .9rem; }
+.pick-explanation summary { cursor: pointer; font-weight: 700; }
+.pick-explanation p { line-height: 1.5; }
+.prediction-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+.prediction-actions button { cursor: pointer; padding: .5rem .7rem; border: 1px solid #751d32; border-radius: 7px; background: #751d32; color: #fff; }
+.prediction-actions button:focus-visible, .favorite-panel button:focus-visible { outline: 3px solid #b78325; outline-offset: 2px; }
+.share-notice { padding: .6rem 1rem; border-radius: 8px; background: #f2eee8; color: #17263a; }
+
+.playoff-shortlist { padding-left: 1.4rem; margin: .5rem 0 1rem; }
+.playoff-shortlist li { padding: .3rem 0; line-height: 1.4; }
