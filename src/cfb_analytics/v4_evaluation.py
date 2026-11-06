@@ -50,8 +50,24 @@ def evaluate_pairs(rows: list[dict]) -> dict:
         incumbent = metrics("incumbent_probability")
         challenger = metrics("challenger_probability")
         before = incumbent["brier_score"]
+        # Fixed-width calibration bins are descriptive, not a tuning objective.
+        # Use identical cohorts for both models and include bin coverage.
+        def calibration(field):
+            bins = []
+            for index in range(10):
+                selected = [r for r in items if min(9, int(r[field] * 10)) == index]
+                bins.append({
+                    "lower": index / 10,
+                    "upper": (index + 1) / 10,
+                    "games": len(selected),
+                    "mean_probability": mean(r[field] for r in selected) if selected else None,
+                    "observed_win_rate": mean(r["outcome"] for r in selected) if selected else None,
+                })
+            return bins
         return {
             "games": len(items),
+            "calibration": {"incumbent": calibration("incumbent_probability"),
+                            "challenger": calibration("challenger_probability")},
             "incumbent": incumbent,
             "challenger": challenger,
             "relative_brier_reduction": (before-challenger["brier_score"])/before if before > 0 else None,
