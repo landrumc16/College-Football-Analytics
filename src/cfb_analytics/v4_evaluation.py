@@ -67,3 +67,56 @@ def evaluate_pairs(rows: list[dict]) -> dict:
         "retrospective_by_season": {str(season): summarize([r for r in buckets["retrospective"] if r["season"] == season])
                                    for season in sorted({r["season"] for r in buckets["retrospective"]})},
     }
+
+
+def clustered_brier_interval(rows: list[dict], *, draws: int = 2000,
+                             seed: int = 2026) -> dict:
+    """Paired game-week cluster bootstrap of challenger-minus-incumbent Brier.
+
+    Use only held-out retrospective rows from a single predeclared evaluation
+    cohort. Resample entire (season, week) clusters, not individual games.
+    The returned interval is descriptive until fold independence and cutoff
+    provenance are established elsewhere.
+    """
+    import random
+    if not rows:
+        raise ValueError("At least one paired game is required")
+    if draws < 100:
+        raise ValueError("At least 100 bootstrap draws required")
+    clusters = defaultdict(list)
+    for row in rows:
+        if row["prediction_kind"] != "retrospective":
+            raise ValueError("Bootstrap requires retrospective rows only")
+        if not isinstance(row["week"], int) or row["week"] < 1:
+            raise ValueError("Invalid week")
+        for key in ("incumbent_probability", "challenger_probability"):
+            p = row[key]
+            if not isinstance(p, (int, float)) or not isfinite(p) or not 0 <= p <= 1:
+                raise ValueError("Invalid probability")
+        if row["outcome"] not in (0, 1):
+            raise ValueError("Invalid outcome")
+        y = row["outcome"]
+        clusters[(row["season"], row["week"])].append(
+            (row["challenger_probability"] - y) ** 2
+            - (row["incumbent_probability"] - y) ** 2)
+    if len(clusters) < 2:
+        raise ValueError("At least two independent game-week clusters required")
+    blocks = list(clusters.values())
+    point = mean(d for block in blocks for d in block)
+    rng = random.Random(seed)
+    sampled = []
+    for _ in range(draws):
+        selected = [blocks[rng.randrange(len(blocks))] for _ in blocks]
+        sampled.append(mean(d for block in selected for d in block))
+    sampled.sort()
+    return {
+        "paired_brier_difference": point,
+        "ci95_lower": sampled[int(draws * .025)],
+        "ci95_upper": sampled[min(draws - 1, int(draws * .975))],
+        "clusters": len(blocks),
+        "games": len(rows),
+        "draws": draws,
+        "seed": seed,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "supports_improvement": sampled[min(draws - 1, int(draws * .975))] < 0,
+    }
