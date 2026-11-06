@@ -24,7 +24,9 @@ jobs:
         run: python -m cfb_analytics.parity --strict
       - name: Generate reproducible 2026 baseline
         run: python -m cfb_analytics.backtest --output v4-baseline-2026.json
-      - name: Freeze source and fixture provenance\n        run: python -m cfb_analytics.v4_baseline_manifest --output v4-baseline-manifest.json\n      - name: Verify baseline provenance and coverage
+      - name: Freeze source and fixture provenance
+        run: python -m cfb_analytics.v4_baseline_manifest --output v4-baseline-manifest.json
+      - name: Verify baseline provenance and coverage
         run: |
           python - <<'PY'
           import json
@@ -34,12 +36,18 @@ jobs:
           assert report["model"]["brier_score"] >= 0
           assert sum(x["games"] for x in report["weekly_coverage"]) == report["games"]
           assert sum(x["games"] for x in report["matchup_diagnostics"].values()) == report["games"]
-          manifest = json.loads(Path('v4-baseline-manifest.json').read_text())\n          assert manifest['historical_seasons'] == [2026]\n          assert manifest['eligible_for_v4_multiseason_release_gate'] is False\n          assert len(manifest['fixture_hashes']) > 0\n          print("2026 retrospective baseline verified; NOT multi-season V4 evidence")
+          manifest = json.loads(Path('v4-baseline-manifest.json').read_text())
+          assert manifest['historical_seasons'] == [2026]
+          assert manifest['eligible_for_v4_multiseason_release_gate'] is False
+          assert len(manifest['fixture_hashes']) > 0
+          print("2026 retrospective baseline verified; NOT multi-season V4 evidence")
           PY
       - uses: actions/upload-artifact@v4
         with:
           name: v4-frozen-2026-retrospective-baseline
-          path: |\n            v4-baseline-2026.json\n            v4-baseline-manifest.json
+          path: |
+            v4-baseline-2026.json
+            v4-baseline-manifest.json
           retention-days: 30
       - uses: actions/setup-node@v4
         with:
