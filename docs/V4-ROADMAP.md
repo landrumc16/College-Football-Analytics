@@ -229,3 +229,19 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 **Implementation contract:** derive overview tiles and cross-school comparisons from shared, provenance-aware metric outputs; no parallel scoring engine. Implement lightweight reusable cards and responsive layouts in the current frontend. Provide accessible labels, clear sample sizes and real-data-only values.
 
 **Acceptance tests:** team search-to-profile navigation, tile-to-detail consistency, comparison-to-team deep links, mobile layout, missing-data states, historical date labeling, existing schedule/favorites/autocomplete regression, and browser/PWA smoke verification. This refines the approved M6 UX scope without changing quantitative predictive release gates.
+
+
+### M. Ten-Year Program Rankings — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Rank all eligible FBS programs by sustained **on-field program strength over the ten most recently completed seasons**, separately from single-season power rankings, historical hype tendency, and trajectory direction.
+
+- Compute a reproducible, opponent-adjusted season-level strength measure using verified game outcomes, schedule strength, quality of wins/losses, margins with sensible safeguards, and sustained performance. Conference championships and postseason outcomes may inform a transparent secondary achievement view, without double-counting opponent-adjusted results.
+- Publish **10-year overall ranking**, plus comparable **5-year and 3-year windows** to reveal recent movement. Clearly label window years, season coverage, and the difference between absolute strength and trend/momentum. Use a declared weighting policy, with transparent sensitivity checks; never silently reward brand reputation or preseason polls.
+- **Financial resources, NIL spending, facilities and recruiting investment are contextual indicators only** where reliable comparable historical data exists; they do not automatically improve a performance-based rank. Avoid unsupported estimates or treating budgets as wins.
+- Address conference realignment, season-specific FBS status, schedule differences, 2020 disruptions, sparse histories, and school identity changes. Show insufficient history/coverage when appropriate rather than inventing a full ten-season score.
+- Share the verified historical season-strength foundation with Program Trajectory and Hype Index where applicable, without conflating poll expectation with performance. Maintain one computation path for both team tiles and comparison rankings.
+- **Team Page:** display 10-year national program rank and strength score as prominent overview tiles, with 5-/3-year comparison, rank movement and historical explanation in the detailed section.
+- **Program Rankings page:** sortable/searchable all-FBS list with rank, school, 10-/5-/3-year strength, trajectory, schedule-adjusted context, sample coverage and direct deep links to the consolidated Team Page. Clearly distinguish from current-season model rankings.
+- **Acceptance:** deterministic historical calculations with dated data lineage; ranking stability and opponent-strength tests; no double-counted games; explicit FBS eligibility and missing-data behavior; mobile-friendly comparison and team tile consistency; browser/PWA regression coverage. No claims of predictive lift without independent walk-forward ablation.
+
+**Roadmap integration:** M2 collects ten-season schedules/outcomes and season identities; M3–M5 builds/tests reusable program-strength and trajectory calculations, preserving predictive gates; M6 adds Program Rankings comparison view and Team Page tiles; M7 verifies and releases only with all mandatory gates satisfied. This is an approved V4 scope addition, not a new version or separate prediction engine.
