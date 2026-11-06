@@ -41,3 +41,19 @@ def test_reject_duplicate_games_and_accept_genuine_archive_metadata():
     report = validate_historical_rows([game(prediction_kind="prospective", archive_id="a1",
                                             predicted_at="2023-09-09T12:00:00Z")])
     assert report["prediction_kinds"]["prospective"] == 1
+
+
+def test_four_season_contract_requires_real_rows_for_every_fold():
+    from cfb_analytics.v4_historical import validate_held_out_cohorts
+    seasons = [2021, 2022, 2023, 2024]
+    with pytest.raises(ValueError, match="all and only"):
+        validate_held_out_cohorts([game()], seasons)
+    rows = [game(season=s, game_id=f"{s}-a-b",
+                 kickoff_at=f"{s}-09-09T18:00:00Z",
+                 source_as_of=f"{s}-09-08T16:00:00Z") for s in seasons]
+    report = validate_held_out_cohorts(rows, seasons)
+    assert report["games"] == 4
+    assert all(n == 1 for n in report["games_by_season"].values())
+    assert not report["promotion_eligible"]
+    with pytest.raises(ValueError, match="Exactly four"):
+        validate_held_out_cohorts(rows, [2021, 2022, 2023, 2023])
