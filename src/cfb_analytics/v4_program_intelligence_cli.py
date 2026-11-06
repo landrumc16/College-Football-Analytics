@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 
 from .v4_program_intelligence import build_program_intelligence
+from .v4_program_provenance import validate_program_sources
 
 
 def main() -> None:
@@ -25,12 +26,22 @@ def main() -> None:
     parser.add_argument("--poll-input", type=Path, required=True)
     parser.add_argument("--latest-completed-season", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--reviewed-sources", action="store_true", help="Explicit acknowledgement that source authenticity and comparable opponent-adjusted strength were independently reviewed")
     args = parser.parse_args()
     strength = json.loads(args.strength_input.read_text(encoding="utf-8"))
     polls = json.loads(args.poll_input.read_text(encoding="utf-8"))
     if not isinstance(strength, list) or not isinstance(polls, list):
         parser.error("Input files must each contain a JSON array")
+    coverage = validate_program_sources(strength, polls, args.latest_completed_season)
+    if not strength or not polls:
+        parser.error("Both verified strength and poll history are required for publication")
+    if coverage["strength_programs_full_window"] == 0 or coverage["poll_programs_full_window"] == 0:
+        parser.error("No ten-season historical coverage for strength or polls; refusing publication")
+    if not args.reviewed_sources:
+        parser.error("Source authenticity and comparable opponent-adjusted strength require independent review; use --reviewed-sources only after verification")
     report = build_program_intelligence(strength, polls, args.latest_completed_season)
+    report["source_review_attested"] = True
+    report["provenance_diagnostics"] = coverage
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
