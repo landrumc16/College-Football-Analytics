@@ -176,3 +176,35 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 - [V4 validation 42298095549](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095549) and [Python tests 42298095596](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095596) both passed.
 - **Milestone 2 remains incomplete:** historical outcomes are not archived pregame model inputs. Need dated feature snapshots, time-safe training/holdout boundaries, and season-specific team identities before valid challenger comparisons. No numerical release gate is proven by the 3,659 outcomes alone.
 - **Release decision: NO-GO pending independent pregame provenance and four-season paired model results.** V3.4.2 on `main` remains protected. Do not interpret successful CI or historical outcomes acquisition as a validated V4 model.
+
+
+### K. Hype Index — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Identify programs whose preseason AP and Coaches Poll expectations have historically been too high or too low. Integrate with existing Rankings and Team pages; do not create a parallel prediction engine.
+
+- Use the **10 most recently completed seasons**, weighting the latest five more heavily; display sample size, seasons covered, and missing poll history. Never treat the current unfinished season as a completed observation.
+- Preserve **AP and Coaches Poll separately**: preseason rank, final rank, preseason Top 25 exits, and unranked-to-final-Top-25 entries. Track missing/unranked as a distinct state rather than inventing a numerical rank of 26; where useful, report Top 25 retention/entry rates separately from within-poll rank movement.
+- Compare historical preseason expectations with actual end-of-season outcomes, using program-level baselines and uncertainty/coverage. Adjust comparisons for preseason ranking tier to avoid penalizing a perennial No. 2 team for not finishing No. 1.
+- Publish a clearly labeled **historical hype tendency** (overhyped / broadly justified / underhyped) with transparent supporting counts and confidence; avoid misleading precision from small samples. A **current preseason hype assessment** may additionally use independent, time-safe current roster/coaching/model information only after its predictive value has been tested.
+- Display a compact Hype Index indicator in Rankings and detailed AP/Coaches historical breakdown on Team pages, with explanations and links to Research & Data. Include preseason sleepers and Top 25 drop-out history without asserting that historical frequency guarantees future outcomes.
+- Validate team aliases and season-specific identities, especially renamed teams, conference moves and FBS transitions. Explicitly handle 2020 disruption in historical comparisons.
+- **Acceptance:** deterministic calculations on known poll-history fixtures; missing data and preseason-unranked cases covered; 10-year and five-year weighting verified; historical results traceable to dated poll sources; mobile UI tested. No model promotion based on hype features without independent walk-forward evidence.
+
+### L. Program Trajectory — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Show whether each football program has strengthened, weakened, or remained stable across the **10 most recently completed seasons**, distinct from its current absolute strength or poll ranking.
+
+- Plot an understandable, normalized **10-season program-strength trend** based first on verified schedule-adjusted on-field performance and season outcomes. Add recruiting, transfers, coaching continuity and development only when historical provenance and independent incremental value support them; do not silently blend incomparable metrics.
+- Report a **three-season recent momentum** indicator alongside the 10-season trend, with sample sizes, uncertainty, and contextual notes on coaching changes, conference realignment, FBS transitions and unusual 2020 conditions.
+- Classify as **rapidly rising, steadily improving, stable, steadily declining, or rapidly declining** using predeclared, testable thresholds and minimum coverage. Show **insufficient data** rather than force a classification where evidence is weak.
+- Keep **program strength** and **direction of travel** separate: a powerful program can be declining, and a weaker program can be rising. Compare seasons on a consistent opponent-adjusted scale to avoid mistaking schedule difficulty for genuine improvement.
+- Place a compact trajectory indicator beside Hype Index on Rankings and Team pages, with an interactive 10-year chart and methodology in Research & Data. Make the combination useful for spotting rising underrated teams and declining overranked teams, without presenting it as a proven forecast.
+- **Acceptance:** verified ten-season historical data and provenance; time-consistent normalized scoring; unit tests for rising, declining, flat, sparse and discontinuous histories; mobile accessibility; no future-data leakage; prospective predictive use only after independent ablation and release-gate evaluation.
+
+### Integration and sequencing for K–L
+
+- **M2:** Extend the existing historical foundation with 10 completed seasons of AP/Coaches preseason and final polls, team identity mapping, and comparable season-level results; record sources and missing coverage.
+- **M3–M5:** Implement shared, simple historical computations and test each factor independently against the frozen baseline; preserve the mandatory V4 prediction gates. These are descriptive features unless predictive utility is established.
+- **M6:** Add Hype Index and Program Trajectory to existing Rankings, Team and Research & Data surfaces; keep the primary dashboard uncluttered and mobile-first. Reuse existing data refresh and UI patterns.
+- **M7:** Verify data lineage, regression tests, browser/mobile/PWA presentation, and no regression of existing V3 functionality.
+- **Scope rule:** These are approved V4 features, not a new version or a justification to bypass the current historical pregame provenance blocker. Build them alongside the existing roadmap; do not delay core predictive integrity for cosmetic scoring.
