@@ -53,7 +53,15 @@ try {
     for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-      if (section === 'cfp') await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
+      if (section === 'cfp') {
+        await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
+        await page.getByRole('heading', { name: 'Our Top 25 vs. Official CFP Top 25' }).waitFor();
+        await page.getByRole('heading', { name: 'Playoff Bubble' }).waitFor();
+        const poll = await page.evaluate(async () => { try { const response = await fetch('./poll-snapshot.json'); return response.ok ? response.json() : null; } catch { return null; } });
+        if (!poll?.cfp_published_at || !poll?.cfp_top25?.length) {
+          await page.getByText('A verified, publication-dated official CFP Top 25 is not available', { exact: false }).waitFor();
+        }
+      }
       if (section === 'schedule') {
         await page.getByRole('heading', { name: 'School Season Schedule' }).waitFor();
         await page.getByLabel('School Schedule').waitFor();
