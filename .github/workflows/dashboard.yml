@@ -11,6 +11,7 @@ on:
     paths:
       - 'data/v2-research-summary.json'
       - 'docs/V3-EXECUTION-CHECKLIST.md'
+      - 'docs/V3.4.2-RELEASE.md'
       - 'docs/V3.2-MODEL-DECISION.md'
       - 'docs/V2-RELEASE-GATE.md'
       - 'web/**'
