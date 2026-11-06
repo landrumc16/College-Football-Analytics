@@ -90,3 +90,17 @@ def test_clustered_interval_rejects_duplicate_games():
     from cfb_analytics.v4_evaluation import clustered_brier_interval
     with pytest.raises(ValueError, match="Duplicate"):
         clustered_brier_interval([row(), row()], draws=100)
+
+
+def test_calibration_bins_preserve_coverage_and_probability_endpoints():
+    report = evaluate_pairs([
+        row(game_id="zero", outcome=0, incumbent_probability=0, challenger_probability=0),
+        row(game_id="one", outcome=1, incumbent_probability=1, challenger_probability=1),
+    ])["retrospective"]
+    for model in ("incumbent", "challenger"):
+        bins = report["calibration"][model]
+        assert len(bins) == 10
+        assert sum(b["games"] for b in bins) == 2
+        assert bins[0]["observed_win_rate"] == 0
+        assert bins[9]["observed_win_rate"] == 1
+        assert bins[1]["mean_probability"] is None
