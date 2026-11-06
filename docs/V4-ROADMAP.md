@@ -208,3 +208,24 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 - **M6:** Add Hype Index and Program Trajectory to existing Rankings, Team and Research & Data surfaces; keep the primary dashboard uncluttered and mobile-first. Reuse existing data refresh and UI patterns.
 - **M7:** Verify data lineage, regression tests, browser/mobile/PWA presentation, and no regression of existing V3 functionality.
 - **Scope rule:** These are approved V4 features, not a new version or a justification to bypass the current historical pregame provenance blocker. Build them alongside the existing roadmap; do not delay core predictive integrity for cosmetic scoring.
+
+
+### M6 team-first information architecture — APPROVED
+
+**Primary rule:** Each school's existing Team Page is the single consolidated destination for its metrics. Cross-school pages (Hype Index, Rankings, Team Stock Watch, Contenders & Pretenders) are comparison/discovery views that deep-link to the same Team Page; never create duplicate team profiles or independent metric definitions.
+
+**Team Page compact overview tiles (mobile-first):**
+- Model rank and strength; AP and Coaches Poll positions/movement, clearly labeled by poll and date.
+- Hype Index with historical overhyped/underhyped classification and sample coverage.
+- Program Trajectory (10-year direction) and recent three-season momentum, with confidence/insufficient-data treatment.
+- CFP/conference outlook and forecast confidence/upset exposure where available.
+- Team Stock Watch and Contenders/Pretenders signals, only where supported by existing validated calculations.
+- Tiles must disclose missing/unavailable values, timestamps, and retrospective-vs-forecast distinctions; never fabricate numbers to fill the UI.
+
+**Detailed sections below overview:** existing full schedule and game predictions; ten-season program strength chart; AP/Coaches preseason-to-final history; recruiting/transfers/roster and coaching; matchup advantages; methodology/source links. Keep sections collapsible or progressively disclosed on narrow screens; preserve existing school autocomplete, favorites, team navigation and PWA behavior.
+
+**Hype Index comparison page:** searchable/sortable all-school table/list with school, AP/Coaches historical tendency, preseason Top 25 retention/entry rates, program trajectory and data coverage; click a school to open its Team Page. Filtering and sorting must not treat unranked or missing poll data as a fictitious rank.
+
+**Implementation contract:** derive overview tiles and cross-school comparisons from shared, provenance-aware metric outputs; no parallel scoring engine. Implement lightweight reusable cards and responsive layouts in the current frontend. Provide accessible labels, clear sample sizes and real-data-only values.
+
+**Acceptance tests:** team search-to-profile navigation, tile-to-detail consistency, comparison-to-team deep links, mobile layout, missing-data states, historical date labeling, existing schedule/favorites/autocomplete regression, and browser/PWA smoke verification. This refines the approved M6 UX scope without changing quantitative predictive release gates.
