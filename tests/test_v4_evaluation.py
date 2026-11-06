@@ -36,3 +36,25 @@ def test_reject_duplicate_and_invalid_inputs():
         evaluate_pairs([row(challenger_probability=float("nan"))])
     with pytest.raises(ValueError, match="Week"):
         evaluate_pairs([row(week=0)])
+
+
+def test_clustered_interval_is_reproducible_and_paired():
+    from cfb_analytics.v4_evaluation import clustered_brier_interval
+    rows = [row(game_id=f"g{i}", week=i, incumbent_probability=.55,
+                challenger_probability=.85, outcome=1) for i in range(1, 9)]
+    first = clustered_brier_interval(rows, draws=200, seed=7)
+    assert first == clustered_brier_interval(rows, draws=200, seed=7)
+    assert first["supports_improvement"]
+    assert first["ci95_upper"] < 0
+    assert first["clusters"] == 8
+
+
+def test_clustered_interval_rejects_insufficient_and_prospective_cohorts():
+    from cfb_analytics.v4_evaluation import clustered_brier_interval
+    with pytest.raises(ValueError, match="two independent"):
+        clustered_brier_interval([row()], draws=100)
+    with pytest.raises(ValueError, match="retrospective"):
+        clustered_brier_interval([
+            row(game_id="a", prediction_kind="prospective"),
+            row(game_id="b", week=2),
+        ], draws=100)
