@@ -62,6 +62,11 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
+      - name: Stage validated incumbent season report for browser smoke
+        run: |
+          test -s data/season-2026-report.json
+          cp data/season-2026-report.json web/dist/season-report.json
+          python scripts/verify_v4_product_release.py --report web/dist/season-report.json
       - name: Verify mobile, PWA, and historical comparison journeys in Chromium
         run: |
           cd web
