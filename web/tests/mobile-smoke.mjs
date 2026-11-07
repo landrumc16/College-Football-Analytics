@@ -66,12 +66,19 @@ try {
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
       }
       if (['programs', 'hype', 'trajectory'].includes(section)) {
-        // The asset is optional until its historical sources are independently verified.
-        // A missing asset must show an honest unavailable state, not crash the page.
-        const published = page.getByText('Descriptive research only', { exact: false });
-        const unavailable = page.getByRole('status').filter({ hasText: /historical|research|published|format/i });
-        await published.or(unavailable).first().waitFor();
-        if (await published.count()) {
+        // The optional historical asset is deliberately not published without
+        // verified source coverage. Check its absence is explicit and safe.
+        const historicalResponse = await page.evaluate(async () => {
+          const response = await fetch('./v4-program-intelligence.json', { cache: 'no-store' });
+          const contentType = response.headers.get('content-type') || '';
+          if (!response.ok || !contentType.includes('json')) return 'unavailable';
+          const payload = await response.json();
+          return payload.schema_version === 1 && payload.status === 'descriptive_only'
+            && Array.isArray(payload.programs) ? 'published' : 'invalid';
+        });
+        if (historicalResponse === 'invalid') throw new Error('Historical research asset failed provenance schema gate');
+        if (historicalResponse === 'published') {
+          await page.getByText('Descriptive research only', { exact: false }).first().waitFor();
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
           if (await link.count()) {
             await link.click();
@@ -79,6 +86,7 @@ try {
             await page.getByLabel('Choose dashboard section').selectOption(section);
           }
         }
+
       }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
