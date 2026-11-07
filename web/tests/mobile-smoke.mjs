@@ -54,9 +54,30 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
+    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', profile: 'Team Profile' };
+      if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
+      if (section === 'profile') {
+        await page.getByLabel('Choose school').selectOption(firstTeam);
+        await page.getByText('Contenders & Pretenders', { exact: true }).waitFor();
+        await page.getByText('Team Stock Watch', { exact: true }).waitFor();
+        await page.getByText('Full Season Schedule and Model Outlook').waitFor();
+      }
+      if (['programs', 'hype', 'trajectory'].includes(section)) {
+        const unavailable = page.getByText('Verified historical program data has not been published yet.', { exact: false });
+        const published = page.getByText('Descriptive research only', { exact: false });
+        await Promise.race([unavailable.waitFor(), published.waitFor()]);
+        if (await published.count()) {
+          const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
+          if (await link.count()) {
+            await link.click();
+            await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+            await page.getByLabel('Choose dashboard section').selectOption(section);
+          }
+        }
+      }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
         await page.getByRole('heading', { name: 'Our Top 25 vs. Official CFP Top 25' }).waitFor();
