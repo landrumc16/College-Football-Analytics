@@ -1,0 +1,257 @@
+# College Football Analytics — Version 4.0 Roadmap
+## Theme: Proven Predictive Intelligence, Not Feature Volume
+**Status:** APPROVED FOR DEVELOPMENT — NOT RELEASED
+**Branch:** `v4-development`
+**Production baseline:** V3.4.2 on `main`; validated dashboard deployment [42169215432](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42169215432), application SHA `e76ea2ef35ad6d03171476efc95caf780642b9f9`.
+**Primary objective:** deliver a materially better, independently validated prediction and college football intelligence system. No promotion on cosmetic improvement alone.
+
+## Approved release-scope amendment — November 6, 2026 (supersedes conflicting gates below)
+
+**Owner decision:** Ship the verified V4 fan-facing and descriptive research product independently of promoting the experimental V4 prediction model. The existing validated V3.4.2 prediction engine remains the sole production forecasting engine until the challenger independently satisfies the original quantitative promotion criteria. This is a change in product release scope, **not** a claim that V4 prediction accuracy has improved.
+
+**Product V4.0 GO criteria:** (1) Complete and verify approved fan-facing features with honest missing-data states; (2) validate source provenance for each *published* historical metric, excluding unverified rankings or hype claims from publication; (3) keep the incumbent model, model version, and all downstream predictions/CFP outputs consistent; (4) pass Python, frontend, browser/mobile, PWA, regression and deployment checks; (5) publish an evidence ledger identifying implemented, omitted and research-only capabilities; (6) verify GitHub Pages and obtain owner acceptance. No speculative coaching/roster factors or unverified historical outputs may be presented as fact.
+
+**Separate challenger model-promotion criteria (unchanged):** At least 5% pooled held-out relative Brier improvement, improvements in 3/4 independent seasons, no more than 2% relative log-loss regression, favorable 95% clustered interval, calibration/coverage/upset reporting, valid historical pregame provenance and no leakage. These gates govern *replacement of the production prediction engine*, **not** shipment of independently validated descriptive product features. Do not activate the challenger or claim predictive superiority if any gate is unproven.
+
+**Implementation rule:** V4 UI must consume only incumbent production predictions unless challenger promotion is separately approved and evidenced. Model-research modules and release-evidence checks remain available but cannot trigger model promotion. Features requiring unavailable historical data may be explicitly marked unavailable; do not invent coverage. This amendment overrides earlier statements that a research-only challenger blocks every V4 product release, and preserves the seven milestone structure.
+
+## 1. Product definition — what a finished V4 looks like
+A fan opens the familiar, fast, mobile-first This Week dashboard, sees meaningful win probabilities, rankings, CFP outlooks and games that matter, and can open any prediction to understand the **evidence-backed reasons**: demonstrated team performance, talent and roster continuity, coaching context and opponent-specific strengths, with missing data explicitly disclosed. The model is demonstrably better calibrated and more useful than the incumbent across held-out historical seasons and prospective archived games. A separate Research & Data view explains the datasets, tests, limitations, and comparisons. V3 functionality remains intact.
+
+The upgrade is not a complete UI rebuild, a replacement for the existing Google Sheet, or a promise to predict winners perfectly. New features and model inputs are admitted only when they add validated value.
+
+## 2. Non-negotiable quantitative release gates
+1. **Predeclared primary metric:** mean out-of-sample Brier score for pregame winner probabilities; lower is better. Use identical eligible FBS-game cohorts and prediction cutoffs for incumbent and challenger, and compare to a simple preseason/reference baseline. Log loss is a mandatory corroborating metric; winner accuracy, calibration by probability bin, coverage, and upset performance are reported, not optimized in isolation.
+2. **Material gain:** target at least **5% relative Brier-score reduction** against the frozen incumbent on a pooled, strictly held-out multi-season evaluation. Also require positive Brier improvement in **at least 3 of 4** distinct held-out season folds, with no material log-loss regression (greater than 2% relative). These are explicit product release targets, not a forecast of achievable improvement.
+3. **Uncertainty and sample integrity:** report per-season sample counts, 95% confidence interval for the paired Brier difference using game-week or team-season clustered resampling, and a transparent sensitivity analysis. Require the interval to favor V4 (upper bound of V4-minus-incumbent Brier < 0) before claiming statistically supported superiority. If data volume or leakage prevents a credible test, do not claim the target was met.
+4. **Prospective reality check:** preserve immutable pre-kickoff prediction snapshots with timestamps, model/version/data-as-of IDs and final results; report 2026 prospective performance separately from retrospective backtests. Do not invent prospective records or retroactively reconstruct them as if archived.
+5. **No cherry-picking:** report all eligible FBS games, including FBS–FCS matchups under a consistent documented policy; segment by FBS-only vs FBS–FCS, favorites/upsets, conference, season and probability band. Handle missing/forfeited/canceled games transparently. No selective removal of difficult games.
+6. **No future leakage:** each historical example must use only roster, transfer, coaching, recruiting, ratings and results known by its pregame cutoff; document publication and availability dates. Use rolling-origin / walk-forward validation and keep test folds untouched during feature selection.
+7. **Integrity and reliability:** existing tests and new leakage/identity/calibration/CFP regression tests pass; Python tests, frontend typecheck/build, mobile browser smoke, and published-site smoke pass on the actual release commit. CI cannot promote a challenger without explicit evaluation evidence and approval.
+8. **Production acceptance:** `main` release deployed to GitHub Pages, actual commit and published data verified, desktop/mobile user journeys checked, release notes and final evidence ledger committed, owner acceptance recorded. No automatic model promotion.
+
+**Decision rule:** If the material gain cannot be proven, keep V3.4.2's model in production. A research-only V4 candidate is not a completed V4.0 product; document the negative result and stop or revise the scope rather than weakening the gates.
+
+## 3. Work packages — execute in large, testable chunks
+
+### M1 — Frozen baseline and evaluation contract
+- Inventory actual incumbent model, historical backtest, archived pregame forecasts, spreadsheet parity checks, source schemas, and scheduled refresh pipeline.
+- Freeze baseline model code/version, evaluation datasets, eligibility and cutoff rules; save reproducible baseline Brier/log loss/accuracy/coverage per season.
+- Establish challenger-vs-incumbent paired comparison runner, provenance and evaluation report schema; make historical versus genuinely prospective records unmistakable.
+- **Exit:** reproducible baseline and deterministic evaluation tests; gaps documented, no fabricated archive.
+
+### M2 — Time-aware historical data foundation
+- Assemble versioned season/week/team records for historical scores, team stats, recruiting classes, coaching staffs and coordinators, transfers, returning production and roster experience when available.
+- Normalize school identities and conference membership by season; preserve FBS/FCS policy, game venue, dates, data source and as-of availability.
+- Audit coverage and licensing/API constraints; prioritize reliable datasets over speculative proxies. Fall back gracefully where history is incomplete.
+- **Exit:** reproducible dataset manifests, completeness tables, no-leakage checks and stable data contracts across held-out years.
+
+### M3 — Coaching, roster and talent intelligence
+- Evaluate head-coach track record, coordinator history, staff continuity and scheme tendencies using only pregame evidence.
+- Test recruiting quality, talent development versus recruiting expectation, transfer inflow/outflow, returning production and experience as separate ablations.
+- Exclude or label weakly sourced factors; keep explainability tied to measured model inputs.
+- **Exit:** per-factor ablation report including gain, coverage, uncertainty and maintenance cost; retain only useful factors.
+
+### M4 — Opponent-specific matchup model
+- Develop parsimonious offense/defense matchup features, tempo and efficiency interactions, home/away/neutral venue, and opponent-adjusted strengths where supported.
+- Use one prediction pipeline with explicit baseline/challenger selection; no competing production models, no hidden manual overrides.
+- Calibrate probabilities on training/validation data only; prevent CFP/rankings/head-to-head from using incompatible assumptions.
+- **Exit:** deterministic end-to-end challenger predictions and grounded 'Why this pick?' explanations.
+
+### M5 — Independent historical and prospective validation
+- Perform walk-forward multi-season holdouts; paired Brier/log-loss comparison, calibration and coverage; inspect error concentrations and negative cases.
+- Compare against baseline, incumbent, and simple ablations; produce 95% clustered uncertainty and sensitivity results.
+- Continue recording real pregame 2026 snapshots and evaluating only after final scores. Do not wait for the entire season to begin research, but do not treat retrospective predictions as prospective.
+- **Exit:** signed-off promotion decision against Section 2; stop if gains are not material and robust.
+
+### M6 — Meaningful fan-facing V4 experience
+- Keep the proven four-section This Week layout and favorite teams; add concise evidence-backed prediction drivers and matchup advantages only when supported.
+- Surface model confidence, freshness, verified coaching/talent/roster context and meaningful uncertainty without overwhelming the main page.
+- Improve CFP and rankings only insofar as the validated challenger changes their inputs; official CFP poll data remains separately sourced, dated, and honestly unavailable when missing.
+- Put deeper methodology, per-factor evidence and backtests on Research & Data; preserve search autocomplete, poll comparisons, FBS/FCS, PWA and sharing.
+- **Exit:** user can identify what is new, why a prediction changed and what evidence supports it; mobile smoke and accessibility checks pass.
+
+### M7 — Production verification and release
+- Freeze scope; run full Python, TypeScript/build, UI/browser, dataset provenance, historical model, CFP simulation and deployment checks.
+- Merge only the validated candidate and approved UI changes; verify `main` deployment and published artifact hashes/commit.
+- Commit V4 release notes, evidence ledger, actual gains and limitations; obtain owner acceptance; mark roadmap COMPLETE only afterward.
+- **Exit:** all Section 2 gates passed and V4.0 is deployed, independently checked and formally closed.
+
+## 4. Explicit exclusions and engineering rules
+- No wholesale rewrite, new dashboard framework, unnecessary microservices, parallel data pipelines, or speculative player-level scouting scores.
+- No paid data dependency without a documented affordable alternative and explicit approval; no API secrets in source control.
+- No invented coaching/transfer/roster history, unsupported predictive claims, or future information in backtests.
+- No AP/Coaches poll substitutions for official CFP committee rankings; preserve verified date/source safeguards.
+- Use Karpathy principles: understand before coding; reuse existing modules; smallest coherent changes; clean, readable and maintainable code; verify behavior before expanding.
+- Work in substantial milestones, not repeated tiny tweak cycles. Don't reopen settled V3.4.2 work or change `main` before a verified release decision.
+- Preserve the original Google Sheet as numerical reference, without editing it.
+
+## 5. Release decision and contingency
+**GO** only if the 5% relative Brier improvement, cross-season robustness, non-regressing log loss, uncertainty test, provenance safeguards, user-facing value, and deployment gates are all satisfied.
+**NO-GO** if any mandatory gate fails. Preserve V3.4.2 in production and publish a research outcome; do not rename an incremental or unproven model V4.0.
+**Review checkpoint:** After M2, confirm historical data coverage is sufficient for four honest held-out season folds. If not, revise the evaluation design openly before looking at test outcomes, rather than inventing data or relaxing thresholds afterward.
+
+## 6. Approved additional V4 capabilities — integrated scope (November 2026)
+These additions strengthen the existing M1–M7 plan, not a new development cycle or excuse for indefinite scope growth. Prioritize measurable accuracy gain and genuinely useful fan-facing explanations. Do not delay release for unavailable or unproven data.
+
+### A. Opponent-adjusted schedule strength and quality of wins — ESSENTIAL
+- Distinguish raw offensive/defensive production from opponent-adjusted performance, including strength of schedule, quality of wins/losses, and opponent-adjusted efficiency.
+- Avoid circular rankings, double-counting opponent strength, and future results in historical pregame estimates. Evaluate separately from existing strength-of-schedule inputs to avoid redundant features.
+- **Milestones:** M2 source/availability schema; M4 model ablation; M5 holdout test; M6 concise strength-of-opposition explanation.
+
+### B. Recent form, improvement and decline — ESSENTIAL
+- Test rolling, time-decayed pregame trends for team efficiency, offense/defense performance and consistency, with preseason shrinkage to avoid overreacting to small samples.
+- Model season-to-season and within-season changes without treating postgame or end-of-season data as pregame knowledge. Distinguish genuine improvement from weak recent opponents.
+- **Milestones:** M2 dated game features; M4 candidate model; M5 ablations and calibration; M6 evidence-backed trend indicator.
+
+### C. Availability and injuries — HIGH, SOURCE-CONDITIONAL
+- Assess the feasibility of trustworthy timestamped injury/availability and quarterback-status data. If coverage is sparse or inconsistent, omit from production rather than fabricate player-level ratings or backfill postgame injury reports.
+- Require explicit missing-data behavior, publication cutoff checks, and tests for whether availability materially improves forecasts. Never make private health inferences.
+- **Milestones:** M2 feasibility/coverage decision; M3 isolated ablation if supported; M6 explanation only for verified source-backed signals.
+
+### D. Uncertainty, upset risk and calibration — ESSENTIAL
+- Show calibrated win probability and explain uncertainty using evidence-backed data coverage, model disagreement or empirically validated uncertainty measures; do not equate a 55% win probability with a guarantee or invent precise confidence intervals.
+- Evaluate underdog calibration, high-confidence errors, uncertainty buckets, and late-season drift; flag when missing roster or source data limits the estimate.
+- **Milestones:** M1 evaluation definitions; M4 calibration; M5 reliability/coverage analysis; M6 readable confidence and upset explanations.
+
+### E. Explainable forecast movement — HIGH
+- Archive versioned, timestamped weekly model outputs; compare rankings, game probabilities and CFP odds to prior *genuinely archived* snapshots and explain changes with supported inputs (results, opponent-adjusted form, schedule, roster updates).
+- Keep model-version changes separate from football changes; if the prior snapshot is missing, show 'movement unavailable' rather than synthetic historical deltas.
+- **Milestones:** M1 snapshot contract; M2 storage and provenance; M5 replay tests; M6 'What changed?' research/detail views.
+
+### F. Scenario-based season and CFP forecasting — HIGH
+- Reuse the existing 10,000-season Monte Carlo and venue-aware matchup machinery to evaluate clearly labeled, conditional what-if outcomes (e.g. if a team wins a selected upcoming game), without building a second simulation engine.
+- Maintain correct season-specific CFP qualification/seeding constraints, conference scenarios and reproducible simulation seeds. Distinguish hypothetical results from real forecasts; avoid claims of exact committee decisions.
+- **Milestones:** M4 shared model interfaces; M5 consistency/regression checks; M6 lightweight scenario exploration on a detail page, not an overloaded homepage.
+
+### G. Optional independent market benchmark — RESEARCH ONLY
+- If legally usable, properly timestamped historical pregame odds are available at reasonable cost, derive no-vig market probabilities as an external comparison benchmark. Report cohort alignment and source limitations. Do not use future closing lines for earlier forecast cutoffs or silently train on market odds.
+- This is not a betting feature, pick service, gambling recommendation, or mandatory release dependency. No-go on unsupported or expensive sources.
+- **Milestones:** M1 benchmark contract; M2 feasibility; M5 separate comparison if available.
+
+### H. Data-quality and model-drift monitoring — ESSENTIAL OPERATIONAL SAFEGUARD
+- Add checks for stale/missing inputs, abrupt distribution shifts, team-ID mismatches, incomplete schedules and prediction coverage. Preserve last validated production data on refresh failure.
+- Report model performance drift by week/season with minimum-sample thresholds; alerts must not claim degradation without enough data. Keep scheduled automation simple and reuse existing GitHub workflows.
+- **Milestones:** M2 quality contract; M5 monitoring checks; M7 deployment/refresh-failure regression.
+
+### Additional V4 user-value acceptance criteria
+- A typical fan can distinguish a strong opponent-adjusted performance from inflated raw statistics and see a sourced, comprehensible reason behind a matchup prediction.
+- A fan can see whether a team is trending upward or downward, with sample-size and opponent-quality context.
+- A fan can see meaningful probability uncertainty and verified week-to-week movement without invented numbers.
+- A fan can explore at least one upcoming-game conditional playoff/conference scenario using the existing simulation engine, with reproducible outputs and clearly hypothetical labels.
+- Injury/availability signals and independent market benchmarking are included only if provenance and out-of-sample value justify them; their absence does not block the release.
+- No new factor or feature may degrade the mandatory Section 2 model promotion criteria. V4 must remain understandable, mobile-first and maintainable.
+
+### Scope discipline and sequencing
+Implement A, B, D and H as core model/operations improvements; E and F as the major new fan-facing differentiators. Treat C and G as feasibility-gated optional work. Fold all into M1–M7, in large verified chunks, without introducing an M8, parallel pipelines or a new release number. The Section 2 quantitative gates and V3.4.2 production protection remain unchanged.
+
+### I. Team Stock Watch — APPROVED FAN-FACING V4 FEATURE
+- Introduce a transparent **Team Stock Index (0–100)** and **four-week stock change** that captures whether a team's trajectory is rising, falling or steady. This is a *trend indicator*, not a stock-market asset, power ranking, or standalone predicted win probability.
+- Use strictly as-of-week information: results versus pregame expectation, opponent strength, opponent-adjusted performance change, and sustained improvement/decline. Normalize by season and shrink early-week estimates toward a preseason prior; explicitly mark insufficient history. Do not double-count results and strength-of-schedule inputs. Weight choices must be fixed on training/validation data, not tuned on held-out test seasons.
+- Show **Stock Rising**, **Stock Falling**, or **Steady** with a weekly sparkline, four-week delta, and brief evidence-backed explanation. Team pages include the historical trend and reasons for movement. Add mobile-friendly **Top 10 Rising Teams** and **Top 10 Falling Teams** discovery lists on an appropriate secondary view, not another bulky homepage section. Display only genuinely archived or reproducibly as-of reconstructed retrospective trends, clearly labeled as such.
+- A highly ranked team may be falling and a lower-ranked team rising; keep absolute team quality and trajectory distinct. Make movement comparable across weeks and avoid noisy single-game swings. Include a regression test that a team cannot gain 'stock' merely because future games are known.
+- Treat the stock indicator as a separate descriptive experience initially; admit it as a predictive feature only if the M5 out-of-sample ablation demonstrates added value and preserves Section 2 gates. Do not imply that a rising stock index guarantees future wins.
+- **Milestones:** M1 define versioned stock formula, normalization, data contract and test cases; M2 as-of weekly history; M4 compute trend with no-leakage and stability tests; M5 test whether it adds independent predictive signal; M6 build team-page chart, movement explanations and rising/falling discovery; M7 mobile/production checks.
+- **Acceptance:** representative teams with different records can have opposite stock trajectories; early-season and missing-data states are honest; historical week snapshots never change because of later outcomes; team trends, leaderboards and explanations agree with the same underlying dataset.
+
+### J. Contenders & Pretenders — APPROVED FAN-FACING V4 FEATURE
+- Build a **record-versus-performance diagnostic** to reveal teams whose win-loss record is unusually strong or weak relative to opponent-adjusted underlying quality. Present four understandable states: **True Contender**, **Hidden Contender**, **Possible Pretender**, and **Performing as Expected**. A team must meet minimum sample and model-confidence requirements before receiving a categorical label; otherwise show **Too Early to Tell**.
+- Derive an expected record for each team's *actual schedule to date* from a separate, as-of-date, historically validated game-strength model or cross-fitted opponent-adjusted estimate. Compare actual wins against expected wins, adjusted for schedule difficulty, game location, and performance quality. Avoid using the same game outcome twice to manufacture an apparent surprise; evaluate against pregame expectations or appropriately out-of-fold strength estimates.
+- Include quality-of-wins/losses, opponent-adjusted efficiency, close-game variability, and record over/underperformance only when separately validated. Do not equate lucky close wins with proof of future regression; label the finding as model interpretation with uncertainty.
+- Clearly distinguish **absolute team strength** (contender quality), **record-vs-expectation gap** (hollow or unlucky record), and **trajectory** (Team Stock Watch). An 8–1 team can be a possible pretender while a 5–4 team can be a hidden contender; a team may also have no reliable label. Set category thresholds using training/validation data, not held-out evaluation seasons.
+- Add mobile-friendly **Contenders & Pretenders** discovery lists and a team-page card showing actual record, model-expected record, schedule strength, underlying strength, supporting evidence and uncertainty. Reuse existing team data, charts and components; avoid crowding the This Week homepage.
+- Cross-link with Team Stock Watch: e.g., hidden contender + rising stock, possible pretender + falling stock. Do not conflate stock movement with expected-record gap or use one score as the other.
+- Evaluate historical label stability and usefulness: whether teams classified as hidden contenders or pretenders subsequently outperform/underperform *reasonable pregame expectations*, with cohort counts, calibration and held-out results. No postgame information leakage. Only feed the diagnostic back into the main win-probability model if it adds independent predictive signal and passes Section 2 gates.
+- **Milestones:** M1 formal expected-record formula and labeling contract; M2 season/week opponent-quality and result history; M4 expected-record and category computation; M5 walk-forward diagnostic evaluation and ablations; M6 team cards and discovery views; M7 mobile, consistency and production checks.
+- **Acceptance:** illustrative 8–1 weak-schedule and 5–4 strong-schedule cases classify correctly under documented criteria; a strong team with a tough record can be identified without automatically treating every close loss as impressive; every displayed label has source-backed explanation, reproducible inputs and honest early-season uncertainty; team-page and discovery calculations match.
+
+## Execution ledger — 2026-11-06
+**M1 IN PROGRESS, not complete.** Added `src/cfb_analytics/v4_evaluation.py` and `tests/test_v4_evaluation.py` on `v4-development`. The paired evaluator checks unique season/game IDs, probability ranges, explicit retrospective/prospective labels and prospective provenance; reports Brier, log loss, winner accuracy, and per-season retrospective comparisons. It deliberately sets `promotion_eligible=false` until the full V4 gates can be tested. **Tests are committed but have not yet been executed by CI in this session.** Remaining M1: freeze actual incumbent artifacts and cohorts, assemble real paired historical rows, add clustered uncertainty, and run tests. Do not interpret the evaluator's test fixtures as model improvement evidence.
+
+**M1 continuation (2026-11-06):** Added isolated `.github/workflows/v4-validation.yml` for every push to `v4-development`. It runs Python regression tests, strict frozen spreadsheet parity, a reproducible **2026-only retrospective** baseline with coverage checks and uploaded evidence, plus the existing frontend production build, **without deploying or writing to `main`**. The 2026 fixture does not satisfy the four-season release gate. GitHub Actions execution status still needs confirmation; do not count the workflow definition as a passing run. Next: inspect CI, fix failures, freeze baseline provenance and establish genuine multi-season held-out cohorts.
+
+**M1 further implementation (2026-11-06):** Added deterministic paired game-week clustered bootstrap confidence interval (`clustered_brier_interval`) with seed, 95% percentile bounds, cluster/game counts, and explicit retrospective-only input checks; added reproducibility, positive-signal and invalid-cohort tests. This is a statistical component, **not** an empirical claim of V4 model superiority. Pending: actual GitHub Actions pass evidence, frozen multi-season paired cohort and independent fold evaluation. Do not mark M1 complete until verified.
+
+**M1 release-decision implementation (2026-11-06):** Added `assess_release_gates` to enforce exactly four declared held-out seasons, >=5% pooled relative Brier reduction, >=3/4 positive season folds, <=2% relative log-loss regression and upper clustered 95% CI < 0. Added synthetic-unit-test coverage for pass, fail and missing-season conditions. Synthetic test data is **not** historical accuracy evidence. Numerical gate pass never authorizes deployment (`promotion_eligible=false`). Pending verification of CI and genuine dated multi-season cohorts. M1 remains IN PROGRESS.
+
+**M1 provenance implementation (2026-11-06):** Added deterministic `v4_baseline_manifest.py` to hash frozen 2026 fixture files and incumbent source modules, record baseline settings, counts, and explicit single-season/retrospective limitations. V4 CI now generates and uploads this manifest alongside baseline metrics; regression test checks stable hashes and no false multi-season eligibility. CI success and genuine multi-season historical evaluation remain unverified. No change to `main`.
+
+**M2 foundation started (2026-11-06):** Added `v4_historical.py` strict source/fixture as-of contract and `test_v4_historical.py` to reject post-kickoff inputs, missing timezone, duplicate games and missing/late prospective archive provenance. This enables trustworthy multi-season ingestion without inventing datasets. M1 remains open pending CI verification and real frozen four-season paired historical cohorts; M2 ingestion and historical source acquisition remain incomplete. Tests committed, not yet confirmed passing in CI.
+
+
+## Verified execution evidence — 2026-11-06
+
+- Development HEAD before this documentation update: `1b9ab72349b431f56fefe1bc6985abf944f55cbb`.
+- Four-season historical source acquisition succeeded in [GitHub Actions run 42298095721](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095721). Extracted completed FBS-participant games: **2022: 896; 2023: 910; 2024: 919; 2025: 934; total: 3,659**. The workflow verified source/extraction SHA-256 checksums, season labels, unique IDs, and source FBS-FBS coverage thresholds. Source artifacts are retained for 30 days.
+- [V4 validation 42298095549](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095549) and [Python tests 42298095596](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42298095596) both passed.
+- **Milestone 2 remains incomplete:** historical outcomes are not archived pregame model inputs. Need dated feature snapshots, time-safe training/holdout boundaries, and season-specific team identities before valid challenger comparisons. No numerical release gate is proven by the 3,659 outcomes alone.
+- **Release decision: NO-GO pending independent pregame provenance and four-season paired model results.** V3.4.2 on `main` remains protected. Do not interpret successful CI or historical outcomes acquisition as a validated V4 model.
+
+
+### K. Hype Index — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Identify programs whose preseason AP and Coaches Poll expectations have historically been too high or too low. Integrate with existing Rankings and Team pages; do not create a parallel prediction engine.
+
+- Use the **10 most recently completed seasons**, weighting the latest five more heavily; display sample size, seasons covered, and missing poll history. Never treat the current unfinished season as a completed observation.
+- Preserve **AP and Coaches Poll separately**: preseason rank, final rank, preseason Top 25 exits, and unranked-to-final-Top-25 entries. Track missing/unranked as a distinct state rather than inventing a numerical rank of 26; where useful, report Top 25 retention/entry rates separately from within-poll rank movement.
+- Compare historical preseason expectations with actual end-of-season outcomes, using program-level baselines and uncertainty/coverage. Adjust comparisons for preseason ranking tier to avoid penalizing a perennial No. 2 team for not finishing No. 1.
+- Publish a clearly labeled **historical hype tendency** (overhyped / broadly justified / underhyped) with transparent supporting counts and confidence; avoid misleading precision from small samples. A **current preseason hype assessment** may additionally use independent, time-safe current roster/coaching/model information only after its predictive value has been tested.
+- Display a compact Hype Index indicator in Rankings and detailed AP/Coaches historical breakdown on Team pages, with explanations and links to Research & Data. Include preseason sleepers and Top 25 drop-out history without asserting that historical frequency guarantees future outcomes.
+- Validate team aliases and season-specific identities, especially renamed teams, conference moves and FBS transitions. Explicitly handle 2020 disruption in historical comparisons.
+- **Acceptance:** deterministic calculations on known poll-history fixtures; missing data and preseason-unranked cases covered; 10-year and five-year weighting verified; historical results traceable to dated poll sources; mobile UI tested. No model promotion based on hype features without independent walk-forward evidence.
+
+### L. Program Trajectory — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Show whether each football program has strengthened, weakened, or remained stable across the **10 most recently completed seasons**, distinct from its current absolute strength or poll ranking.
+
+- Plot an understandable, normalized **10-season program-strength trend** based first on verified schedule-adjusted on-field performance and season outcomes. Add recruiting, transfers, coaching continuity and development only when historical provenance and independent incremental value support them; do not silently blend incomparable metrics.
+- Report a **three-season recent momentum** indicator alongside the 10-season trend, with sample sizes, uncertainty, and contextual notes on coaching changes, conference realignment, FBS transitions and unusual 2020 conditions.
+- Classify as **rapidly rising, steadily improving, stable, steadily declining, or rapidly declining** using predeclared, testable thresholds and minimum coverage. Show **insufficient data** rather than force a classification where evidence is weak.
+- Keep **program strength** and **direction of travel** separate: a powerful program can be declining, and a weaker program can be rising. Compare seasons on a consistent opponent-adjusted scale to avoid mistaking schedule difficulty for genuine improvement.
+- Place a compact trajectory indicator beside Hype Index on Rankings and Team pages, with an interactive 10-year chart and methodology in Research & Data. Make the combination useful for spotting rising underrated teams and declining overranked teams, without presenting it as a proven forecast.
+- **Acceptance:** verified ten-season historical data and provenance; time-consistent normalized scoring; unit tests for rising, declining, flat, sparse and discontinuous histories; mobile accessibility; no future-data leakage; prospective predictive use only after independent ablation and release-gate evaluation.
+
+### Integration and sequencing for K–L
+
+- **M2:** Extend the existing historical foundation with 10 completed seasons of AP/Coaches preseason and final polls, team identity mapping, and comparable season-level results; record sources and missing coverage.
+- **M3–M5:** Implement shared, simple historical computations and test each factor independently against the frozen baseline; preserve the mandatory V4 prediction gates. These are descriptive features unless predictive utility is established.
+- **M6:** Add Hype Index and Program Trajectory to existing Rankings, Team and Research & Data surfaces; keep the primary dashboard uncluttered and mobile-first. Reuse existing data refresh and UI patterns.
+- **M7:** Verify data lineage, regression tests, browser/mobile/PWA presentation, and no regression of existing V3 functionality.
+- **Scope rule:** These are approved V4 features, not a new version or a justification to bypass the current historical pregame provenance blocker. Build them alongside the existing roadmap; do not delay core predictive integrity for cosmetic scoring.
+
+
+### M6 team-first information architecture — APPROVED
+
+**Primary rule:** Each school's existing Team Page is the single consolidated destination for its metrics. Cross-school pages (Hype Index, Rankings, Team Stock Watch, Contenders & Pretenders) are comparison/discovery views that deep-link to the same Team Page; never create duplicate team profiles or independent metric definitions.
+
+**Team Page compact overview tiles (mobile-first):**
+- Model rank and strength; AP and Coaches Poll positions/movement, clearly labeled by poll and date.
+- Hype Index with historical overhyped/underhyped classification and sample coverage.
+- Program Trajectory (10-year direction) and recent three-season momentum, with confidence/insufficient-data treatment.
+- CFP/conference outlook and forecast confidence/upset exposure where available.
+- Team Stock Watch and Contenders/Pretenders signals, only where supported by existing validated calculations.
+- Tiles must disclose missing/unavailable values, timestamps, and retrospective-vs-forecast distinctions; never fabricate numbers to fill the UI.
+
+**Detailed sections below overview:** existing full schedule and game predictions; ten-season program strength chart; AP/Coaches preseason-to-final history; recruiting/transfers/roster and coaching; matchup advantages; methodology/source links. Keep sections collapsible or progressively disclosed on narrow screens; preserve existing school autocomplete, favorites, team navigation and PWA behavior.
+
+**Hype Index comparison page:** searchable/sortable all-school table/list with school, AP/Coaches historical tendency, preseason Top 25 retention/entry rates, program trajectory and data coverage; click a school to open its Team Page. Filtering and sorting must not treat unranked or missing poll data as a fictitious rank.
+
+**Implementation contract:** derive overview tiles and cross-school comparisons from shared, provenance-aware metric outputs; no parallel scoring engine. Implement lightweight reusable cards and responsive layouts in the current frontend. Provide accessible labels, clear sample sizes and real-data-only values.
+
+**Acceptance tests:** team search-to-profile navigation, tile-to-detail consistency, comparison-to-team deep links, mobile layout, missing-data states, historical date labeling, existing schedule/favorites/autocomplete regression, and browser/PWA smoke verification. This refines the approved M6 UX scope without changing quantitative predictive release gates.
+
+
+### M. Ten-Year Program Rankings — APPROVED FAN-FACING V4 FEATURE
+
+**Purpose:** Rank all eligible FBS programs by sustained **on-field program strength over the ten most recently completed seasons**, separately from single-season power rankings, historical hype tendency, and trajectory direction.
+
+- Compute a reproducible, opponent-adjusted season-level strength measure using verified game outcomes, schedule strength, quality of wins/losses, margins with sensible safeguards, and sustained performance. Conference championships and postseason outcomes may inform a transparent secondary achievement view, without double-counting opponent-adjusted results.
+- Publish **10-year overall ranking**, plus comparable **5-year and 3-year windows** to reveal recent movement. Clearly label window years, season coverage, and the difference between absolute strength and trend/momentum. Use a declared weighting policy, with transparent sensitivity checks; never silently reward brand reputation or preseason polls.
+- **Financial resources, NIL spending, facilities and recruiting investment are contextual indicators only** where reliable comparable historical data exists; they do not automatically improve a performance-based rank. Avoid unsupported estimates or treating budgets as wins.
+- Address conference realignment, season-specific FBS status, schedule differences, 2020 disruptions, sparse histories, and school identity changes. Show insufficient history/coverage when appropriate rather than inventing a full ten-season score.
+- Share the verified historical season-strength foundation with Program Trajectory and Hype Index where applicable, without conflating poll expectation with performance. Maintain one computation path for both team tiles and comparison rankings.
+- **Team Page:** display 10-year national program rank and strength score as prominent overview tiles, with 5-/3-year comparison, rank movement and historical explanation in the detailed section.
+- **Program Rankings page:** sortable/searchable all-FBS list with rank, school, 10-/5-/3-year strength, trajectory, schedule-adjusted context, sample coverage and direct deep links to the consolidated Team Page. Clearly distinguish from current-season model rankings.
+- **Acceptance:** deterministic historical calculations with dated data lineage; ranking stability and opponent-strength tests; no double-counted games; explicit FBS eligibility and missing-data behavior; mobile-friendly comparison and team tile consistency; browser/PWA regression coverage. No claims of predictive lift without independent walk-forward ablation.
+
+**Roadmap integration:** M2 collects ten-season schedules/outcomes and season identities; M3–M5 builds/tests reusable program-strength and trajectory calculations, preserving predictive gates; M6 adds Program Rankings comparison view and Team Page tiles; M7 verifies and releases only with all mandatory gates satisfied. This is an approved V4 scope addition, not a new version or separate prediction engine.

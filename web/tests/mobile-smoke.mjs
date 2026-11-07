@@ -54,9 +54,43 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup']) {
+    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', profile: 'Team Profile' };
+      if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
+      if (section === 'profile') {
+        await page.getByLabel('Choose school').selectOption(firstTeam);
+        await page.getByText('Contenders & Pretenders', { exact: true }).waitFor();
+        await page.getByText('Team Stock Watch', { exact: true }).waitFor();
+        for (const heading of ['Head Coach & Coordinators', 'Roster Continuity & Transfers', 'Opponent-Specific Matchup Factors']) {
+          await page.getByText(heading, { exact: true }).waitFor();
+        }
+        await page.getByText('Full Season Schedule and Model Outlook').waitFor();
+      }
+      if (['programs', 'hype', 'trajectory'].includes(section)) {
+        // The optional historical asset is deliberately not published without
+        // verified source coverage. Check its absence is explicit and safe.
+        const historicalResponse = await page.evaluate(async () => {
+          const response = await fetch('./v4-program-intelligence.json', { cache: 'no-store' });
+          const contentType = response.headers.get('content-type') || '';
+          if (!response.ok || !contentType.includes('json')) return 'unavailable';
+          const payload = await response.json();
+          return payload.schema_version === 1 && payload.status === 'descriptive_only'
+            && Array.isArray(payload.programs) ? 'published' : 'invalid';
+        });
+        if (historicalResponse === 'invalid') throw new Error('Historical research asset failed provenance schema gate');
+        if (historicalResponse === 'published') {
+          await page.getByText('Descriptive research only', { exact: false }).first().waitFor();
+          const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
+          if (await link.count()) {
+            await link.click();
+            await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+            await page.getByLabel('Choose dashboard section').selectOption(section);
+          }
+        }
+
+      }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
         await page.getByRole('heading', { name: 'Our Top 25 vs. Official CFP Top 25' }).waitFor();

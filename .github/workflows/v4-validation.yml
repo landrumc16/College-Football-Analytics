@@ -1,0 +1,102 @@
+name: V4 development validation
+
+on:
+  push:
+    branches: [v4-development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python package and tests
+        run: python -m pip install -e '.[dev]'
+      - name: Run Python regression suite
+        run: python -m pytest -q
+      - name: Guard V4 product release against unvalidated challenger promotion
+        run: python scripts/verify_v4_product_release.py --report data/season-2026-report.json
+      - name: Verify frozen workbook parity
+        run: python -m cfb_analytics.parity --strict
+      - name: Generate reproducible 2026 baseline
+        run: python -m cfb_analytics.backtest --output v4-baseline-2026.json
+      - name: Freeze source and fixture provenance
+        run: python -m cfb_analytics.v4_baseline_manifest --output v4-baseline-manifest.json
+      - name: Verify baseline provenance and coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("v4-baseline-2026.json").read_text())
+          assert report["games"] > 0
+          assert report["model"]["brier_score"] >= 0
+          assert sum(x["games"] for x in report["weekly_coverage"]) == report["games"]
+          assert sum(x["games"] for x in report["matchup_diagnostics"].values()) == report["games"]
+          manifest = json.loads(Path('v4-baseline-manifest.json').read_text())
+          assert manifest['historical_seasons'] == [2026]
+          assert manifest['eligible_for_v4_multiseason_release_gate'] is False
+          assert len(manifest['fixture_hashes']) > 0
+          print("2026 retrospective baseline verified; NOT multi-season V4 evidence")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v4-frozen-2026-retrospective-baseline
+          path: |
+            v4-baseline-2026.json
+            v4-baseline-manifest.json
+          retention-days: 30
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build existing dashboard without deploying
+        working-directory: web
+        run: |
+          # The dashboard currently has no committed npm lockfile.
+          # Use npm install until a reviewed lockfile is introduced.
+          npm install --no-audit --no-fund
+          npm run build
+
+      - name: Stage validated incumbent season report for browser smoke
+        run: |
+          test -s data/season-2026-report.json
+          cp data/season-2026-report.json web/dist/season-report.json
+          python scripts/verify_v4_product_release.py --report web/dist/season-report.json
+      - name: Verify mobile, PWA, and historical comparison journeys in Chromium
+        run: |
+          cd web
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          cd ..
+          node web/tests/mobile-smoke.mjs
+      - name: Verify production PWA artifacts
+        run: |
+          python - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+          dist = Path("web/dist")
+          manifest = json.loads((dist / "manifest.webmanifest").read_text())
+          assert manifest["display"] == "standalone"
+          assert manifest["start_url"] == manifest["scope"] == "./"
+          for icon in manifest["icons"]:
+              raw = (dist / icon["src"]).read_bytes()
+              assert raw[:8] == bytes((137,80,78,71,13,10,26,10))
+              assert struct.unpack(">II", raw[16:24]) == tuple(map(int, icon["sizes"].split("x")))
+          assert (dist / "sw.js").is_file()
+          assert "manifest.webmanifest" in (dist / "index.html").read_text()
+          print("V4 PWA assets verified")
+          PY
+      - name: Upload V4 mobile browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v4-mobile-browser-evidence
+          path: web/mobile-evidence/
+          if-no-files-found: ignore
+          retention-days: 14

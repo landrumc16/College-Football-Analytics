@@ -3,6 +3,7 @@
 Requires: pip install pyarrow. Never treats retrospective data as archived forecasts.
 """
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from urllib.request import urlretrieve
@@ -23,6 +24,8 @@ def run(output: Path, seasons=range(2022, 2026)):
         path = output / f"cfb_schedules_{season}.parquet"
         if not path.exists():
             urlretrieve(URL.format(season=season), path)
+        # Preserve the exact source bytes used in this historical extraction.
+        source_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
         # Read the actual release schema rather than assuming CFBD field names.
         table = pq.read_table(path)
         available = set(table.column_names)
@@ -93,6 +96,9 @@ def run(output: Path, seasons=range(2022, 2026)):
         if any(r["home_points"] is None or r["away_points"] is None for r in fbs):
             raise ValueError(f"Missing completed FBS score in {season}")
         report["seasons"][str(season)] = {
+            "source_url": URL.format(season=season),
+            "source_sha256": source_sha256,
+            "source_bytes": path.stat().st_size,
             "all_games": len(rows),
             "completed": len(completed),
             "completed_fbs_vs_fbs": len(fbs),
@@ -103,7 +109,8 @@ def run(output: Path, seasons=range(2022, 2026)):
                 (r["home_division"], r["away_division"]) for r in completed
             ),
         }
-        (output / f"games_{season}.json").write_text(
+        extracted_path = output / f"games_{season}.json"
+        extracted_path.write_text(
             json.dumps([{
                 "season": season, "game_id": str(r["game_id"]),
                 "home": r["home_team"], "away": r["away_team"],
@@ -118,6 +125,8 @@ def run(output: Path, seasons=range(2022, 2026)):
                 "week": r["week"], "season_type": r["season_type"]
             } for r in completed if r["fbs_participant"] is True and r["start_date"]],
                        indent=2) + "\n", encoding="utf-8")
+        report["seasons"][str(season)]["extracted_sha256"] = hashlib.sha256(extracted_path.read_bytes()).hexdigest()
+        report["seasons"][str(season)]["extracted_games"] = len(json.loads(extracted_path.read_text(encoding="utf-8")))
     (output / "coverage.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
     return report
