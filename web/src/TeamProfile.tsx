@@ -7,7 +7,8 @@ type Team = { team: string; rank: number; rating: number; wins: number; losses: 
 type Poll = { ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
 type Cfp = { team: string; cfp_field: number; national_title: number }
 type ScheduleGame = { game_id: number; week: number; home: string; away: string; completed: boolean; home_score: number | null; away_score: number | null }
-type Prediction = { game_id: number; home: string; away: string; predicted_winner: string; home_win_probability: number; confidence: string }
+type Prediction = { game_id: number; home: string; away: string; predicted_winner: string; home_win_probability: number; confidence: string; home_margin?: number }
+type ModelMetadata = { prediction_scale: number; home_field_advantage: number; model_status: string }
 type Recruiting = { team: string; heldout_seasons: number; average_wins_above_recruiting_baseline: number }
 type Performance = { actual_wins: number; expected_wins: number; games_with_forecasts: number; wins_above_expected: number | null }
 type ConferenceTeam = { team: string; conference_title_odds: number; conference_wins: number; conference_losses: number }
@@ -19,10 +20,10 @@ const predictedForecast = (predictions: Prediction[], gameId: number, team: stri
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, onChoose }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, onChoose }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
-  performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>;
+  performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
   onChoose: (team: string) => void;
 }) {
   const [history, setHistory] = useState<HistoryPayload | null>(null)
@@ -86,6 +87,20 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Contender and confidence methodology</summary><p>Contender labels reflect published CFP simulation probabilities, not a separate validated model. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch methodology</summary><p>Stock Watch compares actual wins with the published model’s expected wins for games with forecasts. At least three forecasted games are required. This is a descriptive performance signal, not a prediction of future improvement.</p></details>
+    <details><summary>Upcoming prediction explanations</summary>
+      <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching, roster, and matchup-specific contributions remain unavailable until validated.</p>
+      <div className="table-wrap"><table><thead><tr><th>Week</th><th>Matchup</th><th>Team win probability</th><th>Current rating gap</th><th>Forecast</th></tr></thead><tbody>{upcoming.map(g => {
+        const opponent = g.home === team ? g.away : g.home
+        const forecast = predicted.get(g.game_id)
+        const ourRating = rankings.find(r => r.team === team)?.rating
+        const theirRating = rankings.find(r => r.team === opponent)?.rating
+        const gap = ourRating == null || theirRating == null ? null : ourRating - theirRating
+        const probability = predictedForecast(predictions, g.game_id, team)
+        return <tr key={g.game_id}><td>{g.week}</td><td>{g.away} at {g.home}</td><td>{probability == null ? "Unavailable" : (probability * 100).toFixed(1) + "%"}</td><td>{gap == null ? "Unavailable" : (gap > 0 ? "+" : "") + gap.toFixed(1)}</td><td>{forecast?.confidence || "Unavailable"}</td></tr>
+      })}</tbody></table></div>
+      {!upcoming.length && <p>No remaining scheduled games.</p>}
+      <p>Model status: {modelMetadata?.model_status || 'Not published'}. Home-field setting: {modelMetadata?.home_field_advantage ?? 'Unavailable'} rating points. Rating scale: {modelMetadata?.prediction_scale ?? 'Unavailable'}.</p>
+    </details>
     <details><summary>Full Season Schedule and Model Outlook</summary>
       <p>Completed games show actual scores; future games show the existing published model forecast only when one is available.</p>
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Opponent</th><th>Result / forecast</th></tr></thead><tbody>{games.map(g => {
