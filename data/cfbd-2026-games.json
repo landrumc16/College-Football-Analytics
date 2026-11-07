@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-06T18:04:32.429374+00:00",
+  "retrieved_at": "2026-11-07T16:53:50.598774+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3678,
-    "completed": 2845,
-    "pending": 833
+    "completed": 2850,
+    "pending": 828
   },
   "games": [
     {
@@ -34358,9 +34358,9 @@
       "week": 10,
       "home": "Arizona",
       "away": "TCU",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 29,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-07T03:15:00.000Z"
     },
@@ -34418,9 +34418,9 @@
       "week": 10,
       "home": "SMU",
       "away": "Virginia Tech",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 51,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-07T00:00:00.000Z"
     },
@@ -34478,9 +34478,9 @@
       "week": 10,
       "home": "Illinois",
       "away": "Nebraska",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 24,
+      "away_score": 13,
       "neutral_site": false,
       "start_date": "2026-11-07T01:00:00.000Z"
     },
@@ -34622,9 +34622,9 @@
       "week": 10,
       "home": "East Carolina",
       "away": "South Florida",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 20,
+      "away_score": 17,
       "neutral_site": false,
       "start_date": "2026-11-07T00:30:00.000Z"
     },
@@ -34706,9 +34706,9 @@
       "week": 10,
       "home": "Nevada",
       "away": "New Mexico",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 3,
+      "away_score": 31,
       "neutral_site": false,
       "start_date": "2026-11-07T02:00:00.000Z"
     },
@@ -35118,7 +35118,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-07T22:00:00.000Z"
+      "start_date": "2026-11-07T21:00:00.000Z"
     },
     {
       "game_id": 401868082,
@@ -36330,7 +36330,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-07T21:00:00.000Z"
+      "start_date": "2026-11-07T20:00:00.000Z"
     },
     {
       "game_id": 401907401,
@@ -36882,7 +36882,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-07T18:00:00.000Z"
+      "start_date": "2026-11-07T17:00:00.000Z"
     },
     {
       "game_id": 401908075,
@@ -37482,7 +37482,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-07T18:30:00.000Z"
+      "start_date": "2026-11-07T21:00:00.000Z"
     },
     {
       "game_id": 401908668,
@@ -44145,5 +44145,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-06T18:04:32.429374+00:00"
+  "data_changed_at": "2026-11-07T16:53:50.598774+00:00"
 }
