@@ -70,10 +70,7 @@ try {
         // A missing asset must show an honest unavailable state, not crash the page.
         const published = page.getByText('Descriptive research only', { exact: false });
         const unavailable = page.getByRole('status').filter({ hasText: /historical|research|published|format/i });
-        await page.waitForFunction(() => {
-          const body = document.body.textContent || '';
-          return /historical program data|historical research format|descriptive research only|unexpected token/i.test(body);
-        }, { timeout: 10000 });
+        await published.or(unavailable).first().waitFor();
         if (await published.count()) {
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
           if (await link.count()) {
