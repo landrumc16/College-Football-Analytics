@@ -80,10 +80,14 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Strongest Remaining Opponent', rankedOpponents.length ? '#' + rankedOpponents[0].rank + ' ' + rankedOpponents[0].opponent : 'Unavailable')}
       {tile('Wins vs Model Expectation', performanceRecord?.wins_above_expected == null ? 'Insufficient forecasts' : (performanceRecord.wins_above_expected > 0 ? '+' : '') + performanceRecord.wins_above_expected.toFixed(2))}
       {tile('Conference Title Odds', conferenceTeam ? (100 * conferenceTeam.conference_title_odds).toFixed(1) + '%' : 'Unavailable')}
+      {tile('Head Coach & Coordinators', 'Verified staff data unavailable')}
+      {tile('Roster Continuity & Transfers', 'Verified roster data unavailable')}
+      {tile('Opponent-Specific Matchup Factors', 'Verified matchup factors unavailable')}
       {tile('Recruiting Development', recruitingRecord ? recruitingRecord.average_wins_above_recruiting_baseline.toFixed(2) + ' wins vs talent baseline' : 'Insufficient research')}
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div>
+    <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Contender and confidence methodology</summary><p>Contender labels reflect published CFP simulation probabilities, not a separate validated model. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch methodology</summary><p>Stock Watch compares actual wins with the published model’s expected wins for games with forecasts. At least three forecasted games are required. This is a descriptive performance signal, not a prediction of future improvement.</p></details>
