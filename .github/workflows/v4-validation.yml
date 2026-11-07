@@ -61,3 +61,37 @@ jobs:
           # Use npm install until a reviewed lockfile is introduced.
           npm install --no-audit --no-fund
           npm run build
+
+      - name: Verify mobile, PWA, and historical comparison journeys in Chromium
+        run: |
+          cd web
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          cd ..
+          node web/tests/mobile-smoke.mjs
+      - name: Verify production PWA artifacts
+        run: |
+          python - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+          dist = Path("web/dist")
+          manifest = json.loads((dist / "manifest.webmanifest").read_text())
+          assert manifest["display"] == "standalone"
+          assert manifest["start_url"] == manifest["scope"] == "./"
+          for icon in manifest["icons"]:
+              raw = (dist / icon["src"]).read_bytes()
+              assert raw[:8] == bytes((137,80,78,71,13,10,26,10))
+              assert struct.unpack(">II", raw[16:24]) == tuple(map(int, icon["sizes"].split("x")))
+          assert (dist / "sw.js").is_file()
+          assert "manifest.webmanifest" in (dist / "index.html").read_text()
+          print("V4 PWA assets verified")
+          PY
+      - name: Upload V4 mobile browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v4-mobile-browser-evidence
+          path: web/mobile-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
