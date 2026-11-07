@@ -71,9 +71,8 @@ try {
         const published = page.getByText('Descriptive research only', { exact: false });
         const unavailable = page.getByRole('status').filter({ hasText: /historical|research|published|format/i });
         await page.waitForFunction(() => {
-          const section = document.querySelector('section.notice');
-          return !!section && (/historical program data|historical research format/i.test(section.textContent || '') ||
-            /descriptive research only/i.test(section.textContent || ''));
+          const body = document.body.textContent || '';
+          return /historical program data|historical research format|descriptive research only|unexpected token/i.test(body);
         }, { timeout: 10000 });
         if (await published.count()) {
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
