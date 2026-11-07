@@ -66,9 +66,15 @@ try {
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
       }
       if (['programs', 'hype', 'trajectory'].includes(section)) {
-        const unavailable = page.getByText('Verified historical program data has not been published yet.', { exact: false });
+        // The asset is optional until its historical sources are independently verified.
+        // A missing asset must show an honest unavailable state, not crash the page.
         const published = page.getByText('Descriptive research only', { exact: false });
-        await Promise.race([unavailable.waitFor(), published.waitFor()]);
+        const unavailable = page.getByRole('status').filter({ hasText: /historical|research|published|format/i });
+        await page.waitForFunction(() => {
+          const section = document.querySelector('section.notice');
+          return !!section && (/historical program data|historical research format/i.test(section.textContent || '') ||
+            /descriptive research only/i.test(section.textContent || ''));
+        }, { timeout: 10000 });
         if (await published.count()) {
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
           if (await link.count()) {
