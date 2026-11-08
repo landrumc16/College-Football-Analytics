@@ -11,7 +11,9 @@ on:
         required: true
         default: '2026'
   schedule:
-    - cron: '23 11 * * *'
+    - cron: '23 11 * * *' # Daily baseline (UTC)
+    - cron: '23 19 * * *' # Game-day midday (UTC)
+    - cron: '23 3 * * *'  # Game-day late evening in US Central (UTC next day)
 
 permissions:
   contents: write
@@ -22,7 +24,45 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  game_day_gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run_refresh: ${{ steps.decide.outputs.run_refresh }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: decide
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+          # Manual runs, workflow changes, and the baseline daily run always proceed.
+          run = os.environ['EVENT_NAME'] != 'schedule' or os.environ['SCHEDULE'] == '23 11 * * *'
+          if not run:
+              today = datetime.now(ZoneInfo('America/Chicago')).date()
+              games = json.loads(Path('data/cfbd-2026-games.json').read_text())['games']
+              for game in games:
+                  kickoff = game.get('start_date')
+                  if not kickoff:
+                      continue
+                  try:
+                      local_date = datetime.fromisoformat(kickoff.replace('Z', '+00:00')).astimezone(ZoneInfo('America/Chicago')).date()
+                  except ValueError:
+                      continue
+                  if local_date == today:
+                      run = True
+                      break
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              print(f'run_refresh={str(run).lower()}', file=out)
+          print(f'Additional game-day refresh eligible: {run}')
+          PY
   refresh:
+    needs: game_day_gate
+    if: needs.game_day_gate.outputs.run_refresh == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
