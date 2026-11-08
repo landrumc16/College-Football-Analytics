@@ -40,3 +40,32 @@ def team_season_records(games: list[dict], season: int) -> dict:
         "pregame_available": False,
         "teams": [{"team": team, **teams[team]} for team in sorted(teams)],
     }
+
+
+def main() -> None:
+    import argparse
+    import json
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(description="Build descriptive team-season records from audited historical games")
+    parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    files = sorted(args.input.glob("games_20*.json"))
+    if not files:
+        parser.error("No historical game extracts found")
+    reports = []
+    for path in files:
+        season = int(path.stem.removeprefix("games_"))
+        reports.append(team_season_records(json.loads(path.read_text()), season))
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps({
+        "status": "retrospective_descriptive_results_only",
+        "opponent_adjusted": False,
+        "pregame_available": False,
+        "seasons": reports,
+    }, indent=2, sort_keys=True) + "\n")
+
+
+if __name__ == "__main__":
+    main()
