@@ -92,15 +92,10 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     </div>
     <details><summary>Historical program ranking coverage and sources</summary>
       <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
-      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
+      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th><th>Source evidence</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
         const score = historical?.program_rankings?.[window]
-        return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td></tr>
+        return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td><td>{score?.sources?.length ? <details><summary>{score.sources.length} sourced seasons</summary><ul>{score.sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : 'No reviewed source records published'}</td></tr>
       })}</tbody></table></div>
-      <p>Historical source identifiers are displayed only when the independently reviewed publication includes them.</p>
-      {(['10', '5', '3'] as const).map(window => {
-        const sources = historical?.program_rankings?.[window]?.sources
-        return sources?.length ? <details key={window}><summary>{window}-season source records</summary><ul>{sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : null
-      })}
     </details>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
