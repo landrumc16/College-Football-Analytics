@@ -38,3 +38,10 @@
 5. After approval, verify production deployment, live commit, desktop/mobile behavior, and final acceptance.
 
 This ledger records observed evidence, not a release declaration.
+
+## Post-validation product changes (not yet CI-certified)
+- After validated executable SHA `dc870f3`, the V4 development branch received Hype Index and Program Trajectory discovery differentiation (`2812148`), responsive browser assertions (`83ff354`), standalone compact Poll Comparison navigation and display (`9c134a0`), and browser coverage (`221e56c`).
+- The owner-approved Poll Comparison requirement is now recorded in `docs/V4-ROADMAP.md` (November 8 amendment). It is limited to School / Our Model / AP / Coaches / CFP, approximately 30 rows, with verified-source fallbacks.
+- **Verification status:** no passing CI run for these executable commits has been observed in this work session. Existing run `42516899396` does not certify them. Re-run V4 validation and inspect actual screenshots before requesting owner approval.
+- **Known follow-up:** current poll table uses a deterministic union/truncation by minimum observed rank, but needs an explicit fixture test confirming useful overlap and the 30-row cap when the union exceeds 30. Do not claim the overlap acceptance criterion is verified.
+- No merge to `main`, challenger promotion, or production deployment authorized.
