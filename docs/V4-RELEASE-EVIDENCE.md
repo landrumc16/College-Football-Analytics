@@ -14,6 +14,14 @@
 - **Critical scope limitation:** Artifact metadata identifies the workflow head as `main` at `c8a92ba7fa7d083c6acdfc950b89f091094151f4`, NOT `v4-development`. Thus this successful run does not certify the V4 development candidate. Do not claim otherwise.
 - Retrospective baseline is not a genuine pregame prediction archive.
 
+## Candidate-specific passing validation — 2026-11-08
+- Workflow: https://github.com/landrumc16/College-Football-Analytics/actions/runs/42516899396
+- Tested branch: `v4-development`; tested SHA: `dc870f3cf94691627580bd132d76f13a1ba99564` (verified from uploaded artifact workflow metadata).
+- Job `validate` (128841788757): **completed / success**, all steps successful.
+- Verified passing checks: Python regression suite; challenger guard; frozen workbook parity; retrospective baseline generation; baseline source and coverage checks; frontend production build; incumbent season report staging; Chromium mobile/PWA/historical journeys; production PWA artifacts.
+- Artifacts: retrospective baseline `13632175551`; browser evidence `13632135845` (uploaded, not yet visually inspected).
+- This is the verified tested code candidate; any subsequent documentation-only commit must be distinguished from the tested SHA. No merge or production deployment is implied.
+
 ## Product and research release boundaries
 - Consolidated Team Profiles, historical discovery views, Stock Watch, and Contenders/Pretenders have been implemented with explicit unavailable states for unsupported data.
 - Historical publication requires reviewed source attestation and descriptive-only status; no unsupported historical ranks or movement may be synthesized.
@@ -23,7 +31,7 @@
 - Historical data coverage and actual user-facing completeness remain subject to candidate-specific verification.
 
 ## Outstanding release gates
-1. Run `.github/workflows/v4-validation.yml` explicitly on **`v4-development`**, and verify the run's `head_branch` and `head_sha` equal the frozen candidate. Capture full job results and artifacts.
+1. **Satisfied for code candidate `dc870f3`:** V4 validation ran on `v4-development`, completed successfully, and produced artifacts. Revalidate if executable code changes.
 2. Inspect actual candidate desktop/mobile screenshots and confirm Team Profile, historical pages, navigation, favorites, predictions, CFP, and missing-data behavior.
 3. Confirm all M6 acceptance requirements against the November 6 scope amendment; record any verified limitations.
 4. Freeze the tested candidate SHA, finalize release notes, and obtain explicit owner approval **before** merging.
