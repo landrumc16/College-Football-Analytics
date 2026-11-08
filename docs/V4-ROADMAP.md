@@ -220,6 +220,16 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 - **Scope rule:** These are approved V4 features, not a new version or a justification to bypass the current historical pregame provenance blocker. Build them alongside the existing roadmap; do not delay core predictive integrity for cosmetic scoring.
 
 
+### M6 compact Poll Comparison tab — APPROVED 2026-11-08
+
+**Owner decision:** Do not crowd the existing Rankings tab. Provide a separate **Poll Comparison** navigation entry showing **only School, Our Model, AP, Coaches and CFP** rankings, limited to approximately 30 schools. Include overlap between the model's Top 30 and public Top 25 polls so differences and unranked cases are apparent. Keep the page straightforward and mobile-readable; no additional statistical columns.
+
+- Use verified dated AP/Coaches snapshots and verified CFP snapshots when available; do not manufacture CFP rankings before release or infer missing poll entries from model ranks.
+- Use existing incumbent model rankings without changing the model; display unavailable states clearly when verified public polls are missing.
+- Avoid hiding important overlap through arbitrary truncation: establish a deterministic, transparent 30-row selection and ordering rule and test it with overlapping/non-overlapping poll fixtures.
+- Preserve the existing Rankings tab layout; retain the detailed research methodology separately in Research & Data.
+- **Acceptance:** dedicated navigation, five columns, responsive rendering, verified-data and missing-data cases, deterministic 30-row selection, and browser tests on mobile and desktop.
+
 ### K–L final product differentiation amendment — APPROVED 2026-11-08
 
 **Product decision:** Hype Index and Program Trajectory must provide **independent, complementary decisions**, not two ranking-movement dashboards. Preserve the historical definitions and safeguards in K and L above. Implement as a focused V4 M6 product-completion pass, not a new version, prediction engine, or open-ended research cycle.
