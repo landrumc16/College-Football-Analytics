@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { isPublishedHistoricalIntelligence } from './historicalPublication'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number }
 type Program = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number; seasons_observed: number; preseason_top25: number }> }
@@ -16,7 +17,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onT
       .then(response => { if (!response.ok) throw new Error('Verified historical program data has not been published yet.'); return response.json() })
       .then((payload: Payload) => {
         if (active) {
-          if (payload.schema_version !== 1 || payload.status !== 'descriptive_only' || !Array.isArray(payload.programs)) throw new Error('Unsupported historical research format.')
+          if (!isPublishedHistoricalIntelligence(payload)) throw new Error('Historical research is awaiting independent source review.')
           setData(payload)
         }
       })
