@@ -92,9 +92,13 @@ try {
           if (!response.ok || !contentType.includes('json')) return 'unavailable';
           const payload = await response.json();
           return payload.schema_version === 1 && payload.status === 'descriptive_only'
+            && payload.source_review_attested === true && payload.predictive_validation === false
             && Array.isArray(payload.programs) ? 'published' : 'invalid';
         });
         if (historicalResponse === 'invalid') throw new Error('Historical research asset failed provenance schema gate');
+        if (historicalResponse === 'unavailable') {
+          await page.getByText('No rankings are estimated from missing data.', { exact: false }).waitFor();
+        }
         if (historicalResponse === 'published') {
           await page.getByText('Descriptive research only', { exact: false }).first().waitFor();
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
@@ -129,7 +133,7 @@ try {
       }
       const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
       if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
-      if (section === 'rankings' || section === 'predictions' || section === 'cfp') {
+      if (['rankings', 'predictions', 'cfp', 'profile', 'stock', 'contenders', 'programs', 'hype', 'trajectory'].includes(section)) {
         await page.screenshot({ path: `web/mobile-evidence/${section}-${width}.png`, fullPage: true });
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
