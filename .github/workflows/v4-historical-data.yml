@@ -10,6 +10,8 @@ on:
       - 'tests/test_v4_source_integrity.py'
       - 'src/cfb_analytics/v4_coverage_summary.py'
       - 'tests/test_v4_coverage_summary.py'
+      - 'src/cfb_analytics/v4_team_season_records.py'
+      - 'tests/test_v4_team_season_records.py'
       - '.github/workflows/v4-historical-data.yml'
 
 permissions:
@@ -29,7 +31,7 @@ jobs:
       - name: Install project and run historical source integrity tests
         run: |
           python -m pip install -e '.[dev]'
-          python -m pytest -q tests/test_v4_source_integrity.py tests/test_v4_coverage_summary.py
+          python -m pytest -q tests/test_v4_source_integrity.py tests/test_v4_coverage_summary.py tests/test_v4_team_season_records.py
       - name: Fetch ten completed source seasons and compute checksums
         run: python scripts/fetch_historical_schedules.py --start-season 2016 --end-season 2025 --output historical-data
       - name: Generate chronology-safe retrospective Elo diagnostic
@@ -73,6 +75,8 @@ jobs:
           PY
       - name: Generate research-only ten-season coverage summary
         run: python -m cfb_analytics.v4_coverage_summary --input historical-data --output historical-data/ten_season_summary.json
+      - name: Generate audited retrospective team-season records
+        run: python -m cfb_analytics.v4_team_season_records --input historical-data --output historical-data/team_season_records.json
       - name: Upload coverage manifest and extracted games
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,6 +85,7 @@ jobs:
           path: |
             historical-data/coverage.json
             historical-data/ten_season_summary.json
+            historical-data/team_season_records.json
             historical-data/games_20*.json
             historical-data/walkforward_report.json
             historical-data/walkforward_predictions.json
