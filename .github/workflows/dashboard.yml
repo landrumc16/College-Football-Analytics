@@ -20,6 +20,7 @@ on:
       - 'tests/**'
       - 'pyproject.toml'
       - 'data/season-*-report.json'
+      - 'data/poll-2026-snapshot.json'
       - '.github/workflows/dashboard.yml'
 
 permissions:
@@ -269,6 +270,11 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Stage verified official poll snapshot
+        run: |
+          if [ -s data/poll-2026-snapshot.json ]; then
+            cp data/poll-2026-snapshot.json web/dist/poll-snapshot.json
+          fi
       - name: Validate installable app resources
         run: |
           python - <<'PY'
