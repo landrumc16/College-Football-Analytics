@@ -60,3 +60,33 @@ def retrospective_season_ratings(games: list[dict], season: int, *,
         "teams": [{"team": team, "rating": round(ratings[team], 6),
                    "games": counts[team]} for team in sorted(fbs)],
     }
+
+
+def main() -> None:
+    import argparse
+    import json
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(description="Generate research-only retrospective season Elo ratings")
+    parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    paths = sorted(args.input.glob("games_20*.json"))
+    if not paths:
+        parser.error("No historical game extracts found")
+    seasons = [
+        retrospective_season_ratings(json.loads(path.read_text()),
+                                     int(path.stem.removeprefix("games_")))
+        for path in paths
+    ]
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps({
+        "status": "retrospective_schedule_adjusted_research_only",
+        "comparable_across_seasons_verified": False,
+        "program_rankings_publishable": False,
+        "seasons": seasons,
+    }, indent=2, sort_keys=True) + "\n")
+
+
+if __name__ == "__main__":
+    main()
