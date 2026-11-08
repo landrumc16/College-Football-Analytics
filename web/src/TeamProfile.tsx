@@ -69,7 +69,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const opponentStrength = upcoming.map(g => ({ opponent: g.home === team ? g.away : g.home, rank: rankings.find(r => r.team === (g.home === team ? g.away : g.home))?.rank }))
   const rankedOpponents = opponentStrength.filter(g => g.rank != null).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
   const games = schedule.filter(g => g.home === team || g.away === team).sort((a, b) => a.week - b.week)
-    const ap = poll?.ap_top25.find(r => r.team === team)?.rank
+  const ap = poll?.ap_top25.find(r => r.team === team)?.rank
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice">
@@ -82,8 +82,8 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Current Strength', current ? current.rating.toFixed(1) : 'Unavailable')}
       {tile('Record', current ? current.wins + '–' + current.losses : 'Unavailable')}
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
-      {tile('AP Poll', ap ? '#' + ap : 'Unranked / unavailable')}
-      {tile('Coaches Poll', coaches ? '#' + coaches : 'Unranked / unavailable')}
+      {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
+      {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
       {tile('10-Year Program Rank', historical?.program_rankings?.['10']?.rank ? '#' + historical.program_rankings['10'].rank : 'Insufficient data')}
       {tile('5-Year Program Rank', historical?.program_rankings?.['5']?.rank ? '#' + historical.program_rankings['5'].rank : 'Insufficient data')}
       {tile('3-Year Program Rank', historical?.program_rankings?.['3']?.rank ? '#' + historical.program_rankings['3'].rank : 'Insufficient data')}
@@ -91,13 +91,13 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('3-Year Momentum', label(historical?.trajectory?.recent.classification))}
       {tile('AP Hype Index', label(historical?.hype.AP?.historical_tendency))}
       {tile('Coaches Hype Index', label(historical?.hype.Coaches?.historical_tendency))}
-      {tile('Team Stock Watch', 'Verified four-week stock index unavailable')}
+      {tile('Team Stock Watch', 'Insufficient verified weekly snapshots')}
       {tile('Results vs Forecast', resultsVsForecast)}
-      {tile('Contenders & Pretenders', 'Independent classification unavailable')}
+      {tile('Contenders & Pretenders', 'Too Early to Tell — no validated diagnostic')}
       {tile('Current CFP Outlook', playoffOutlook)}
-      {tile('Upcoming Matchup Confidence', forecastConfidence == null ? 'No upcoming forecast' : (forecastConfidence * 100).toFixed(1) + '% maximum confidence')}
+      {tile('Upcoming Matchup Confidence', forecastConfidence == null ? 'No upcoming forecast' : (forecastConfidence * 100).toFixed(1) + '% highest single-game confidence')}
       {tile('Strongest Remaining Opponent', rankedOpponents.length ? '#' + rankedOpponents[0].rank + ' ' + rankedOpponents[0].opponent : 'Unavailable')}
-      {tile('Wins vs Model Expectation', performanceRecord?.wins_above_expected == null ? 'Insufficient forecasts' : (performanceRecord.wins_above_expected > 0 ? '+' : '') + performanceRecord.wins_above_expected.toFixed(2))}
+      {tile('Wins vs Model Expectation', performanceRecord?.wins_above_expected == null || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : (performanceRecord.wins_above_expected > 0 ? '+' : '') + performanceRecord.wins_above_expected.toFixed(2))}
       {tile('Conference Title Odds', conferenceTeam ? (100 * conferenceTeam.conference_title_odds).toFixed(1) + '%' : 'Unavailable')}
       {tile('Head Coach & Coordinators', 'Verified staff data unavailable')}
       {tile('Roster Continuity & Transfers', 'Verified roster data unavailable')}
