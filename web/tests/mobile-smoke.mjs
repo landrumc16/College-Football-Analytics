@@ -54,11 +54,26 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'profile']) {
+    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', profile: 'Team Profile' };
+      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
       if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
+      if (section === 'stock' || section === 'contenders') {
+        // These views must remain usable without publishing unsupported metrics.
+        const unavailable = section === 'stock'
+          ? 'Verified stock movement is unavailable.'
+          : 'Independent contender classifications are unavailable.';
+        await page.getByText(unavailable, { exact: false }).waitFor();
+        await page.getByLabel('Find a team profile').fill(firstTeam);
+        const teamRow = page.getByRole('row').filter({ hasText: firstTeam }).first();
+        await teamRow.getByRole('button', { name: 'View Team Profile' }).click();
+        await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+        if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
+          throw new Error(`Discovery did not preserve the selected team in ${section}`);
+        }
+        await page.getByLabel('Choose dashboard section').selectOption(section);
+      }
       if (section === 'profile') {
         await page.getByLabel('Choose school').selectOption(firstTeam);
         await page.getByText('Contenders & Pretenders', { exact: true }).waitFor();
