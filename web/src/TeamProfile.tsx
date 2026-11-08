@@ -24,7 +24,12 @@ const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Predic
   if (p.home !== game.home || p.away !== game.away ||
       !Number.isFinite(p.home_win_probability) ||
       p.home_win_probability < 0 || p.home_win_probability > 1 ||
-      (p.predicted_winner !== p.home && p.predicted_winner !== p.away)) return null
+      (p.predicted_winner !== p.home && p.predicted_winner !== p.away) ||
+      (p.predicted_winner === p.home && p.home_win_probability < 0.5) ||
+      (p.predicted_winner === p.away && p.home_win_probability > 0.5) ||
+      (p.home_margin != null && (!Number.isFinite(p.home_margin) ||
+        (p.predicted_winner === p.home && p.home_margin < 0) ||
+        (p.predicted_winner === p.away && p.home_margin > 0)))) return null
   return p
 }
 
@@ -137,9 +142,9 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Opponent</th><th>Result / forecast</th></tr></thead><tbody>{games.map(g => {
         const opponent = g.home === team ? g.away : g.home
         const p = matchingForecast(predictions, g)
-        const outcome = g.completed && g.home_score != null && g.away_score != null
+        const outcome = g.completed && g.home_score != null && g.away_score != null && Number.isFinite(g.home_score) && Number.isFinite(g.away_score)
           ? g.home + ' ' + g.home_score + '–' + g.away_score + ' ' + g.away
-          : p ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
+          : g.completed ? 'Final score unavailable' : p ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
         return <tr key={g.game_id}><td>{g.week}</td><td>{opponent}</td><td>{outcome}</td></tr>
       })}</tbody></table></div>
       {!games.length && <p>No published games for this program.</p>}
