@@ -1,0 +1,40 @@
+name: Refresh official college football polls
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Poll publication windows, 15-minute intervals, UTC.
+    - cron: '*/15 16-22 * 8-12 0'
+    - cron: '*/15 23 * 11-12 2'
+    - cron: '*/15 0-5 * 11-12 3'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: official-poll-refresh
+  cancel-in-progress: false
+
+jobs:
+  polls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Poll verified published rankings
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: PYTHONPATH=src python -m cfb_analytics.poll_refresh
+      - name: Commit only changed verified poll data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/poll-2026-snapshot.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh verified official poll snapshot"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
