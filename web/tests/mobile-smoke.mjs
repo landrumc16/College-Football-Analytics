@@ -59,6 +59,14 @@ try {
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
       const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
       if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
+      if (section === 'hype') {
+        await page.getByText('Expectations vs. reality:', { exact: false }).waitFor();
+        await page.getByText('Historical AP and Coaches evidence is kept separate', { exact: false }).waitFor();
+      }
+      if (section === 'trajectory') {
+        await page.getByText('Program development:', { exact: false }).waitFor();
+        await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
+      }
       if (section === 'stock' || section === 'contenders') {
         // These views must remain usable without publishing unsupported metrics.
         const unavailable = section === 'stock'
