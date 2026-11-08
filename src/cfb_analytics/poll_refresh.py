@@ -76,6 +76,17 @@ def main():
     if not found:
         print("No complete polls available; retaining last valid snapshot")
         return
+    ap_week = output["poll_weeks"].get("ap_top25")
+    coaches_week = output["poll_weeks"].get("coaches_top25")
+    if ap_week is None or ap_week != coaches_week:
+        print("AP and Coaches poll weeks not aligned; waiting for both")
+        return
+    output["week"] = ap_week
+    if output["poll_weeks"].get("cfp_top25") is not None:
+        # Publication date is independently required for official CFP comparison.
+        # The CFBD weekly endpoint does not supply a verified publication date.
+        output.pop("cfp_top25", None)
+        output["poll_weeks"].pop("cfp_top25", None)
     if output != existing:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(output, indent=2) + "\n")
