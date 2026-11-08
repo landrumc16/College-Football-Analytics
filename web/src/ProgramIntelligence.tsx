@@ -5,13 +5,14 @@ type WindowScore = { rank: number | null; strength: number | null; seasons_avail
 type Program = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number; seasons_observed: number; preseason_top25: number }> }
 type Payload = { schema_version: number; status: string; latest_completed_season: number; programs: Program[] }
 
-export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onTeam: (team: string) => void; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
+export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [] }: { onTeam: (team: string) => void; teams?: string[]; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [poll, setPoll] = useState<'AP' | 'Coaches'>('AP')
   const [window, setWindow] = useState<'10' | '5' | '3'>('10')
   useEffect(() => {
+    if (view === 'stock' || view === 'contenders') return
     let active = true
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
       .then(response => { if (!response.ok) throw new Error('Verified historical program data has not been published yet.'); return response.json() })
@@ -23,9 +24,10 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onT
       })
       .catch(e => { if (active) setError(String(e.message || e)) })
     return () => { active = false }
-  }, [])
+  }, [view])
   const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.toLowerCase()))
     .sort((a, b) => view === 'hype' ? (b.hype[poll]?.dropped_out ?? -1) - (a.hype[poll]?.dropped_out ?? -1) || a.team.localeCompare(b.team) : view === 'trajectory' ? (a.trajectory?.recent.classification || 'zz').localeCompare(b.trajectory?.recent.classification || 'zz') || a.team.localeCompare(b.team) : (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team))
+  const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.localeCompare(b))
   if (view === 'stock' || view === 'contenders') return <section className="notice">
     <h2>{view === 'stock' ? 'Team Stock Watch' : 'Contenders & Pretenders'}</h2>
     <p>{view === 'stock'
@@ -33,12 +35,10 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onT
       : 'Independent classification requires a validated, schedule-adjusted expected-record model and sufficient as-of-date evidence. CFP odds and season-total forecast gaps are not substitutes.'}</p>
     <p role="status">{view === 'stock' ? 'Verified stock movement is unavailable.' : 'Independent contender classifications are unavailable.'} No scores or classifications have been inferred.</p>
     <label>Find a team <input aria-label="Find a team profile" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
-    {error && <p role="status">{error}</p>}
-    {data && <><p>Historical program research through {data.latest_completed_season}; this publication does not contain independently verified {view === 'stock' ? 'weekly stock snapshots' : 'contender diagnostics'}.</p>
-      <div className="table-wrap"><table><thead><tr><th>Program</th><th>{view === 'stock' ? 'Four-week movement' : 'Classification'}</th><th>Team details</th></tr></thead>
-      <tbody>{programs.map(item => <tr key={item.team}><td>{item.team}</td><td>{view === 'stock' ? 'Insufficient verified snapshots' : 'Too Early to Tell'}</td><td><button type="button" onClick={() => onTeam(item.team)}>View Team Profile</button></td></tr>)}</tbody></table></div>
-      {!programs.length && <p>No programs match this search.</p>}
-    </>}
+    <p>Current-season programs are listed for navigation only; no unverified historical indicators are assigned.</p>
+    <div className="table-wrap"><table><thead><tr><th>Program</th><th>{view === 'stock' ? 'Four-week movement' : 'Classification'}</th><th>Team details</th></tr></thead>
+    <tbody>{discoverableTeams.map(team => <tr key={team}><td>{team}</td><td>{view === 'stock' ? 'Insufficient verified snapshots' : 'Too Early to Tell'}</td><td><button type="button" onClick={() => onTeam(team)}>View Team Profile</button></td></tr>)}</tbody></table></div>
+    {!discoverableTeams.length && <p>No programs match this search.</p>}
   </section>
   return <section className="notice">
     <h2>{view === 'hype' ? 'Historical Hype Index' : view === 'trajectory' ? 'Program Trajectory & Momentum' : 'Historical Program Rankings'}</h2>
