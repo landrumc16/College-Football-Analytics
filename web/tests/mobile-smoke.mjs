@@ -76,8 +76,8 @@ try {
       }
       if (section === 'profile') {
         await page.getByLabel('Choose school').selectOption(firstTeam);
-        await page.getByText('Contenders & Pretenders', { exact: true }).waitFor();
-        await page.getByText('Team Stock Watch', { exact: true }).waitFor();
+        await page.locator('small').getByText('Contenders & Pretenders', { exact: true }).waitFor();
+        await page.locator('small').getByText('Team Stock Watch', { exact: true }).waitFor();
         for (const heading of ['Head Coach & Coordinators', 'Roster Continuity & Transfers', 'Opponent-Specific Matchup Factors']) {
           await page.getByText(heading, { exact: true }).waitFor();
         }
