@@ -17,7 +17,7 @@ type ConferenceTeam = { team: string; conference_title_odds: number; conference_
 const label = (value: string | undefined) => value?.replaceAll('_', ' ') || 'Unavailable'
 const predictedForecast = (predictions: Prediction[], gameId: number, team: string): number | null => {
   const p = predictions.find(item => item.game_id === gameId)
-  if (!p || !Number.isFinite(p.home_win_probability)) return null
+  if (!p || !Number.isFinite(p.home_win_probability) || p.home_win_probability < 0 || p.home_win_probability > 1 || (p.home !== team && p.away !== team)) return null
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
@@ -120,9 +120,10 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Opponent</th><th>Result / forecast</th></tr></thead><tbody>{games.map(g => {
         const opponent = g.home === team ? g.away : g.home
         const p = predicted.get(g.game_id)
+        const validForecast = p && Number.isFinite(p.home_win_probability) && p.home_win_probability >= 0 && p.home_win_probability <= 1 && (p.home === team || p.away === team)
         const outcome = g.completed && g.home_score != null && g.away_score != null
           ? g.home + ' ' + g.home_score + '–' + g.away_score + ' ' + g.away
-          : p ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
+          : validForecast ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
         return <tr key={g.game_id}><td>{g.week}</td><td>{opponent}</td><td>{outcome}</td></tr>
       })}</tbody></table></div>
       {!games.length && <p>No published games for this program.</p>}
