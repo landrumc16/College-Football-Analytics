@@ -44,8 +44,8 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const performanceRecord = performance[team]
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
   const conferenceTeam = conference?.[1].find(row => row.team === team)
-  const stock = performanceRecord?.wins_above_expected == null || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : performanceRecord.wins_above_expected >= 1 ? 'Outperforming forecast' : performanceRecord.wins_above_expected <= -1 ? 'Underperforming forecast' : 'Near expectation'
-  const contender = playoff?.cfp_field == null ? 'Insufficient simulation data' : playoff.cfp_field >= 0.5 ? 'Playoff contender' : playoff.cfp_field >= 0.15 ? 'On the bubble' : 'Outside current projection'
+  const resultsVsForecast = performanceRecord?.wins_above_expected == null || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : performanceRecord.wins_above_expected >= 1 ? 'Outperforming forecast' : performanceRecord.wins_above_expected <= -1 ? 'Underperforming forecast' : 'Near expectation'
+  const playoffOutlook = playoff?.cfp_field == null ? 'Insufficient simulation data' : playoff.cfp_field >= 0.5 ? 'Playoff contender' : playoff.cfp_field >= 0.15 ? 'On the bubble' : 'Outside current projection'
   const upcoming = schedule.filter(g => !g.completed && (g.home === team || g.away === team))
   const upcomingForecasts = upcoming.map(g => predictedForecast(predictions, g.game_id, team)).filter((p): p is number => p !== null)
   const forecastConfidence = upcomingForecasts.length ? Math.max(...upcomingForecasts.map(p => Math.max(p, 1 - p))) : null
@@ -75,8 +75,10 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('3-Year Momentum', label(historical?.trajectory?.recent.classification))}
       {tile('AP Hype Index', label(historical?.hype.AP?.historical_tendency))}
       {tile('Coaches Hype Index', label(historical?.hype.Coaches?.historical_tendency))}
-      {tile('Team Stock Watch', stock)}
-      {tile('Contenders & Pretenders', contender)}
+      {tile('Team Stock Watch', 'Verified four-week stock index unavailable')}
+      {tile('Results vs Forecast', resultsVsForecast)}
+      {tile('Contenders & Pretenders', 'Independent classification unavailable')}
+      {tile('Current CFP Outlook', playoffOutlook)}
       {tile('Upcoming Matchup Confidence', forecastConfidence == null ? 'No upcoming forecast' : (forecastConfidence * 100).toFixed(1) + '% maximum confidence')}
       {tile('Strongest Remaining Opponent', rankedOpponents.length ? '#' + rankedOpponents[0].rank + ' ' + rankedOpponents[0].opponent : 'Unavailable')}
       {tile('Wins vs Model Expectation', performanceRecord?.wins_above_expected == null ? 'Insufficient forecasts' : (performanceRecord.wins_above_expected > 0 ? '+' : '') + performanceRecord.wins_above_expected.toFixed(2))}
@@ -90,8 +92,8 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     </div>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
-    <details><summary>Contender and confidence methodology</summary><p>Contender labels reflect published CFP simulation probabilities, not a separate validated model. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
-    <details><summary>Stock Watch methodology</summary><p>Stock Watch compares actual wins with the published model’s expected wins for games with forecasts. At least three forecasted games are required. This is a descriptive performance signal, not a prediction of future improvement.</p></details>
+    <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
+    <details><summary>Stock Watch and results versus forecast</summary><p>The approved Team Stock Watch requires a verified 0–100 time-aware index and a four-week change. Neither is inferred from season-total wins above expectation. Results versus Forecast separately compares actual wins with the published model’s expected wins for games with forecasts; at least three forecasted games are required. It is descriptive, not a validated trajectory signal.</p></details>
     <details><summary>Upcoming prediction explanations</summary>
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching, roster, and matchup-specific contributions remain unavailable until validated.</p>
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Matchup</th><th>Team win probability</th><th>Current rating gap</th><th>Forecast</th></tr></thead><tbody>{upcoming.map(g => {
