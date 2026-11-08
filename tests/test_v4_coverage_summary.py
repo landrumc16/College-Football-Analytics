@@ -20,11 +20,11 @@ def test_coverage_summary_retains_provenance_and_blocks_publication():
 
 def test_mismatched_diagnostic_is_rejected():
     coverage = {"seasons": {"2025": {
-        "source_url": "https://example.org/source", "source_sha256": "abc",
-        "extracted_sha256": "def", "completed_fbs_vs_fbs": 800,
+        "source_url": "https://example.org/source", "source_sha256": "a" * 64,
+        "extracted_sha256": "b" * 64, "completed_fbs_vs_fbs": 800,
         "completed_fbs_vs_other": 60}}}
     with pytest.raises(ValueError, match="count mismatch"):
-        build_coverage_summary(coverage, {"by_season": {"2025": {
+        build_coverage_summary(coverage, {"type": "retrospective_walk_forward_baseline", "by_season": {"2025": {
             "games": 799, "brier": 0.2, "logloss": 0.6}}})
 
 
