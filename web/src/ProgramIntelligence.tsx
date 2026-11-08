@@ -10,6 +10,8 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [poll, setPoll] = useState<'AP' | 'Coaches'>('AP')
+  const [direction, setDirection] = useState('all')
+  const [hypeOrder, setHypeOrder] = useState('dropouts')
   const [window, setWindow] = useState<'10' | '5' | '3'>('10')
   useEffect(() => {
     if (view === 'stock' || view === 'contenders') return
@@ -29,7 +31,15 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     return () => { active = false }
   }, [view])
   const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.trim().toLowerCase()))
-    .sort((a, b) => view === 'hype' ? (b.hype[poll]?.dropped_out ?? -1) - (a.hype[poll]?.dropped_out ?? -1) || a.team.localeCompare(b.team) : view === 'trajectory' ? (a.trajectory?.recent.classification || 'zz').localeCompare(b.trajectory?.recent.classification || 'zz') || a.team.localeCompare(b.team) : (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team))
+    .filter(p => view !== 'trajectory' || direction === 'all' || (p.trajectory?.recent.classification || 'insufficient_data') === direction)
+    .sort((a, b) => {
+      if (view === 'hype') {
+        const metric = hypeOrder === 'entries' ? 'entered_top25' : hypeOrder === 'preseason' ? 'preseason_top25' : 'dropped_out'
+        return (b.hype[poll]?.[metric] ?? -1) - (a.hype[poll]?.[metric] ?? -1) || a.team.localeCompare(b.team)
+      }
+      if (view === 'trajectory') return (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team)
+      return (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team)
+    })
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
   if (view === 'stock' || view === 'contenders') return <section className="notice">
     <h2>{view === 'stock' ? 'Team Stock Watch' : 'Contenders & Pretenders'}</h2>
@@ -45,11 +55,13 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   </section>
   return <section className="notice">
     <h2>{view === 'hype' ? 'Historical Hype Index' : view === 'trajectory' ? 'Program Trajectory & Momentum' : 'Historical Program Rankings'}</h2>
+    {view === 'hype' && <p><strong>Expectations vs. reality:</strong> Which programs repeatedly exceed or fall short of preseason poll expectations? Historical AP and Coaches evidence is kept separate from current-season model-versus-poll disagreement. This is not a forecast.</p>}
+    {view === 'trajectory' && <p><strong>Program development:</strong> Is on-field strength improving over several seasons, or was one season an outlier? Long-term strength and recent momentum are different measures. Poll popularity does not determine trajectory.</p>}
     <p>{view === 'trajectory' ? 'Compare ten-year direction and three-year momentum using the shared historical program research. Missing verified coverage is not inferred.' : view === 'hype' ? 'Compare preseason AP and Coaches expectations with final Top 25 results. Unranked is never treated as a fabricated rank 26. Historical tendency requires all ten seasons.' : 'Opponent-adjusted historical strength, not current-season power rankings. A rank is only shown when all seasons in the selected window have verified coverage.'}</p>
     {error && <p role="status">{error} No rankings are estimated from missing data.</p>}
     {!data && !error && <p role="status">Checking independently reviewed historical research…</p>}
     {data && <><p>Through the {data.latest_completed_season} completed season · Descriptive research only</p>
-      {view === 'trajectory' ? null : view === 'hype' ? <label>Poll <select value={poll} onChange={e => setPoll(e.target.value as 'AP' | 'Coaches')}><option value="AP">AP Poll</option><option value="Coaches">Coaches Poll</option></select></label> : <label>Ranking window <select value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label>}
+      {view === 'trajectory' ? <><label>Momentum <select aria-label="Filter trajectory momentum" value={direction} onChange={e => setDirection(e.target.value)}><option value="all">All programs</option><option value="rapidly_rising">Rapidly rising</option><option value="steadily_improving">Steadily improving</option><option value="stable">Stable</option><option value="steadily_declining">Steadily declining</option><option value="rapidly_declining">Rapidly declining</option><option value="insufficient_data">Insufficient data</option></select></label><label>Strength window <select aria-label="Trajectory strength window" value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label></> : view === 'hype' ? <><label>Poll <select value={poll} onChange={e => setPoll(e.target.value as 'AP' | 'Coaches')}><option value="AP">AP Poll</option><option value="Coaches">Coaches Poll</option></select></label><label>Explore <select aria-label="Sort historical hype" value={hypeOrder} onChange={e => setHypeOrder(e.target.value)}><option value="dropouts">Most preseason Top 25 dropouts</option><option value="entries">Most unranked-to-Top-25 entries</option><option value="preseason">Most preseason Top 25 appearances</option></select></label></> : <label>Ranking window <select value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label>}
       <input aria-label="Search historical programs" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} />
       {view === 'trajectory' ? <div className="table-wrap"><table><thead><tr><th>Program</th><th>10-year trajectory</th><th>3-year momentum</th><th>10-year rank</th><th>5-year rank</th><th>3-year rank</th></tr></thead><tbody>{programs.map(p => <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{p.trajectory?.long_term.classification.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{p.trajectory?.recent.classification.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{p.program_rankings?.['10']?.rank ?? '—'}</td><td>{p.program_rankings?.['5']?.rank ?? '—'}</td><td>{p.program_rankings?.['3']?.rank ?? '—'}</td></tr>)}</tbody></table></div> : view === 'hype' ? <div className="table-wrap"><table><thead><tr><th>Program</th><th>Historical tendency</th><th>Seasons</th><th>Preseason Top 25</th><th>Dropped out</th><th>Entered Top 25</th></tr></thead><tbody>{programs.map(p => { const h = p.hype[poll]; return <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{h?.historical_tendency.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{h?.seasons_observed ?? '—'} / 10</td><td>{h?.preseason_top25 ?? '—'}</td><td>{h?.dropped_out ?? '—'}</td><td>{h?.entered_top25 ?? '—'}</td></tr> })}</tbody></table></div> : <div className="table-wrap"><table><thead><tr><th>Rank</th><th>Program</th><th>Strength</th><th>Verified seasons</th><th>Source details</th><th>10-year trajectory</th><th>3-year momentum</th><th>AP hype</th><th>Coaches hype</th></tr></thead><tbody>{programs.map(p => {
         const score = p.program_rankings?.[window]
