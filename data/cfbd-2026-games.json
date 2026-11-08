@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-08T07:08:09.520681+00:00",
+  "retrieved_at": "2026-11-08T17:07:37.398294+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3678,
-    "completed": 3137,
-    "pending": 541
+    "completed": 3158,
+    "pending": 520
   },
   "games": [
     {
@@ -34586,9 +34586,9 @@
       "week": 10,
       "home": "Oregon State",
       "away": "Texas State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 21,
+      "away_score": 42,
       "neutral_site": false,
       "start_date": "2026-11-08T03:30:00.000Z"
     },
@@ -34730,9 +34730,9 @@
       "week": 10,
       "home": "UNLV",
       "away": "Wyoming",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 35,
+      "away_score": 41,
       "neutral_site": false,
       "start_date": "2026-11-08T03:30:00.000Z"
     },
@@ -35942,9 +35942,9 @@
       "week": 10,
       "home": "Tiffin",
       "away": "Ohio Dominican",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 21,
+      "away_score": 26,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -36002,9 +36002,9 @@
       "week": 10,
       "home": "Roosevelt",
       "away": "Saginaw Valley State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 30,
+      "away_score": 44,
       "neutral_site": false,
       "start_date": "2026-11-07T19:00:00.000Z"
     },
@@ -36038,9 +36038,9 @@
       "week": 10,
       "home": "Benedict",
       "away": "Central State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 45,
+      "away_score": 38,
       "neutral_site": false,
       "start_date": "2026-11-07T19:00:00.000Z"
     },
@@ -36446,9 +36446,9 @@
       "week": 10,
       "home": "California (PA)",
       "away": "Gannon",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 27,
+      "away_score": 7,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -36578,9 +36578,9 @@
       "week": 10,
       "home": "Seton Hill",
       "away": "Lock Haven",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 23,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -36698,9 +36698,9 @@
       "week": 10,
       "home": "Grove City",
       "away": "Case Western Reserve",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 21,
+      "away_score": 16,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -36710,9 +36710,9 @@
       "week": 10,
       "home": "Union",
       "away": "Rochester (NY)",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 27,
+      "away_score": 0,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -36794,9 +36794,9 @@
       "week": 10,
       "home": "Alfred",
       "away": "Alfred State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 12,
+      "away_score": 14,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -36914,9 +36914,9 @@
       "week": 10,
       "home": "St. John Fisher",
       "away": "SUNY Morrisville",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 56,
+      "away_score": 21,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -37250,9 +37250,9 @@
       "week": 10,
       "home": "Claremont Mudd Scripps",
       "away": "Azusa Pacific",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 31,
+      "away_score": 10,
       "neutral_site": false,
       "start_date": "2026-11-08T01:00:00.000Z"
     },
@@ -37382,9 +37382,9 @@
       "week": 10,
       "home": "Lyon",
       "away": "Hendrix",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 24,
+      "away_score": 44,
       "neutral_site": false,
       "start_date": "2026-11-07T19:00:00.000Z"
     },
@@ -37394,9 +37394,9 @@
       "week": 10,
       "home": "Fitchburg State",
       "away": "Plymouth State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 13,
+      "away_score": 31,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37406,9 +37406,9 @@
       "week": 10,
       "home": "Dean",
       "away": "Framingham State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 7,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37418,9 +37418,9 @@
       "week": 10,
       "home": "Worcester State",
       "away": "Mass Maritime",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 28,
+      "away_score": 27,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37430,9 +37430,9 @@
       "week": 10,
       "home": "Westfield State",
       "away": "UMass Dartmouth",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 45,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37454,9 +37454,9 @@
       "week": 10,
       "home": "WPI",
       "away": "MIT",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 24,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37466,9 +37466,9 @@
       "week": 10,
       "home": "Juniata",
       "away": "Catholic",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 31,
+      "away_score": 35,
       "neutral_site": false,
       "start_date": "2026-11-07T17:00:00.000Z"
     },
@@ -37634,9 +37634,9 @@
       "week": 10,
       "home": "Marietta",
       "away": "Wilmington (OH)",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 38,
+      "away_score": 10,
       "neutral_site": false,
       "start_date": "2026-11-07T18:30:00.000Z"
     },
@@ -37826,9 +37826,9 @@
       "week": 10,
       "home": "Christopher Newport",
       "away": "The College of New Jersey",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 42,
+      "away_score": 0,
       "neutral_site": false,
       "start_date": "2026-11-07T18:00:00.000Z"
     },
@@ -38358,7 +38358,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T00:30:00.000Z"
     },
     {
       "game_id": 401858520,
@@ -38706,7 +38706,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-11T05:00:00.000Z"
+      "start_date": "2026-11-12T00:30:00.000Z"
     },
     {
       "game_id": 401866687,
@@ -42462,7 +42462,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-18T05:00:00.000Z"
+      "start_date": "2026-11-19T00:30:00.000Z"
     },
     {
       "game_id": 401866694,
@@ -44145,5 +44145,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-08T07:05:49.705922+00:00"
+  "data_changed_at": "2026-11-08T17:07:37.398294+00:00"
 }
