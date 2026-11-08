@@ -31,3 +31,27 @@ def test_neutral_field_changes_expectation():
     home = retrospective_season_ratings([game("1", "A", "B", 21, 7)], 2025)
     neutral = retrospective_season_ratings([game("1", "A", "B", 21, 7, neutral=True)], 2025)
     assert neutral["teams"][0]["rating"] > home["teams"][0]["rating"]
+
+
+def test_equivalent_utc_instants_are_one_simultaneous_batch():
+    same_instant = [
+        game("1", "A", "B", 20, 10, "2025-09-01T17:00:00+00:00"),
+        game("2", "A", "C", 20, 10, "2025-09-01T12:00:00-05:00"),
+    ]
+    normalized = [
+        {**row, "kickoff": "2025-09-01T17:00:00+00:00"}
+        for row in same_instant
+    ]
+    assert retrospective_season_ratings(same_instant, 2025) == retrospective_season_ratings(normalized, 2025)
+
+
+def test_chronological_order_respects_offsets_not_text_order():
+    games = [
+        game("1", "A", "B", 20, 10, "2025-09-01T11:00:00-05:00"),
+        game("2", "A", "C", 20, 10, "2025-09-01T16:30:00+00:00"),
+    ]
+    normalized = [
+        {**games[0], "kickoff": "2025-09-01T16:00:00+00:00"},
+        games[1],
+    ]
+    assert retrospective_season_ratings(games, 2025) == retrospective_season_ratings(normalized, 2025)
