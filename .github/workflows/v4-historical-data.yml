@@ -28,10 +28,10 @@ jobs:
         run: |
           python -m pip install -e '.[dev]'
           python -m pytest -q tests/test_v4_source_integrity.py
-      - name: Fetch four source seasons and compute checksums
-        run: python scripts/fetch_historical_schedules.py --output historical-data
+      - name: Fetch ten completed source seasons and compute checksums
+        run: python scripts/fetch_historical_schedules.py --start-season 2016 --end-season 2025 --output historical-data
       - name: Generate chronology-safe retrospective Elo diagnostic
-        run: python scripts/walkforward_baseline.py historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --output historical-data
+        run: python scripts/walkforward_baseline.py historical-data/games_20*.json --output historical-data
       - name: Validate extracted source coverage and provenance
         run: |
           python - <<'PY'
@@ -42,7 +42,7 @@ jobs:
 
           root = Path("historical-data")
           report = json.loads((root / "coverage.json").read_text())
-          assert set(report["seasons"]) == {"2022", "2023", "2024", "2025"}
+          assert set(report["seasons"]) == {str(y) for y in range(2016, 2026)}
           for season, meta in sorted(report["seasons"].items()):
               source = root / f"cfb_schedules_{season}.parquet"
               extracted = root / f"games_{season}.json"
@@ -62,6 +62,7 @@ jobs:
           diagnostic = json.loads((root / "walkforward_report.json").read_text())
           assert len(predictions) == sum(v["completed_fbs_vs_fbs"] for v in report["seasons"].values())
           assert diagnostic["overall"]["games"] == len(predictions)
+          assert set(diagnostic["by_season"]) == {str(y) for y in range(2016, 2026)}
           assert all(0 < p["home_probability"] < 1 for p in predictions)
           assert len({(p["season"], p["game_id"]) for p in predictions}) == len(predictions)
           print("Retrospective chronological Elo diagnostic verified; NOT frozen V3.4.2 or release-gate evidence")
@@ -73,10 +74,7 @@ jobs:
           name: v4-historical-source-coverage
           path: |
             historical-data/coverage.json
-            historical-data/games_2022.json
-            historical-data/games_2023.json
-            historical-data/games_2024.json
-            historical-data/games_2025.json
+            historical-data/games_20*.json
             historical-data/walkforward_report.json
             historical-data/walkforward_predictions.json
           if-no-files-found: warn
