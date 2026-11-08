@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
 
-type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number }
+type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
 type HistoryPayload = { schema_version: number; status: string; programs: History[] }
 type Team = { team: string; rank: number; rating: number; wins: number; losses: number; projected_wins: number }
@@ -90,6 +90,18 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div>
+    <details><summary>Historical program ranking coverage and sources</summary>
+      <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
+      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
+        const score = historical?.program_rankings?.[window]
+        return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td></tr>
+      })}</tbody></table></div>
+      <p>Historical source identifiers are displayed only when the independently reviewed publication includes them.</p>
+      {(['10', '5', '3'] as const).map(window => {
+        const sources = historical?.program_rankings?.[window]?.sources
+        return sources?.length ? <details key={window}><summary>{window}-season source records</summary><ul>{sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : null
+      })}
+    </details>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
