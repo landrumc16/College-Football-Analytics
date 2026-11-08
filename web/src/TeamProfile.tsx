@@ -15,9 +15,22 @@ type Performance = { actual_wins: number; expected_wins: number; games_with_fore
 type ConferenceTeam = { team: string; conference_title_odds: number; conference_wins: number; conference_losses: number }
 
 const label = (value: string | undefined) => value?.replaceAll('_', ' ') || 'Unavailable'
-const predictedForecast = (predictions: Prediction[], gameId: number, team: string): number | null => {
-  const p = predictions.find(item => item.game_id === gameId)
-  if (!p || !Number.isFinite(p.home_win_probability) || p.home_win_probability < 0 || p.home_win_probability > 1 || (p.home !== team && p.away !== team)) return null
+/** Only use a forecast when its game ID and both opponents match the schedule. */
+const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Prediction | null => {
+  if (game.completed) return null
+  const matches = predictions.filter(p => p.game_id === game.game_id)
+  if (matches.length !== 1) return null
+  const p = matches[0]
+  if (p.home !== game.home || p.away !== game.away ||
+      !Number.isFinite(p.home_win_probability) ||
+      p.home_win_probability < 0 || p.home_win_probability > 1 ||
+      (p.predicted_winner !== p.home && p.predicted_winner !== p.away)) return null
+  return p
+}
+
+const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: string): number | null => {
+  const p = matchingForecast(predictions, game)
+  if (!p || (team !== game.home && team !== game.away)) return null
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
@@ -47,13 +60,12 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const resultsVsForecast = performanceRecord?.wins_above_expected == null || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : performanceRecord.wins_above_expected >= 1 ? 'Outperforming forecast' : performanceRecord.wins_above_expected <= -1 ? 'Underperforming forecast' : 'Near expectation'
   const playoffOutlook = playoff?.cfp_field == null ? 'Insufficient simulation data' : playoff.cfp_field >= 0.5 ? 'Playoff contender' : playoff.cfp_field >= 0.15 ? 'On the bubble' : 'Outside current projection'
   const upcoming = schedule.filter(g => !g.completed && (g.home === team || g.away === team))
-  const upcomingForecasts = upcoming.map(g => predictedForecast(predictions, g.game_id, team)).filter((p): p is number => p !== null)
+  const upcomingForecasts = upcoming.map(g => predictedForecast(predictions, g, team)).filter((p): p is number => p !== null)
   const forecastConfidence = upcomingForecasts.length ? Math.max(...upcomingForecasts.map(p => Math.max(p, 1 - p))) : null
   const opponentStrength = upcoming.map(g => ({ opponent: g.home === team ? g.away : g.home, rank: rankings.find(r => r.team === (g.home === team ? g.away : g.home))?.rank }))
   const rankedOpponents = opponentStrength.filter(g => g.rank != null).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
   const games = schedule.filter(g => g.home === team || g.away === team).sort((a, b) => a.week - b.week)
-  const predicted = new Map(predictions.map(p => [p.game_id, p]))
-  const ap = poll?.ap_top25.find(r => r.team === team)?.rank
+    const ap = poll?.ap_top25.find(r => r.team === team)?.rank
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice">
@@ -105,11 +117,11 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching, roster, and matchup-specific contributions remain unavailable until validated.</p>
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Matchup</th><th>Team win probability</th><th>Current rating gap</th><th>Forecast</th></tr></thead><tbody>{upcoming.map(g => {
         const opponent = g.home === team ? g.away : g.home
-        const forecast = predicted.get(g.game_id)
+        const forecast = matchingForecast(predictions, g)
         const ourRating = rankings.find(r => r.team === team)?.rating
         const theirRating = rankings.find(r => r.team === opponent)?.rating
         const gap = ourRating == null || theirRating == null ? null : ourRating - theirRating
-        const probability = predictedForecast(predictions, g.game_id, team)
+        const probability = predictedForecast(predictions, g, team)
         return <tr key={g.game_id}><td>{g.week}</td><td>{g.away} at {g.home}</td><td>{probability == null ? "Unavailable" : (probability * 100).toFixed(1) + "%"}</td><td>{gap == null ? "Unavailable" : (gap > 0 ? "+" : "") + gap.toFixed(1)}</td><td>{forecast?.confidence || "Unavailable"}</td></tr>
       })}</tbody></table></div>
       {!upcoming.length && <p>No remaining scheduled games.</p>}
@@ -119,11 +131,10 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       <p>Completed games show actual scores; future games show the existing published model forecast only when one is available.</p>
       <div className="table-wrap"><table><thead><tr><th>Week</th><th>Opponent</th><th>Result / forecast</th></tr></thead><tbody>{games.map(g => {
         const opponent = g.home === team ? g.away : g.home
-        const p = predicted.get(g.game_id)
-        const validForecast = p && Number.isFinite(p.home_win_probability) && p.home_win_probability >= 0 && p.home_win_probability <= 1 && (p.home === team || p.away === team)
+        const p = matchingForecast(predictions, g)
         const outcome = g.completed && g.home_score != null && g.away_score != null
           ? g.home + ' ' + g.home_score + '–' + g.away_score + ' ' + g.away
-          : validForecast ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
+          : p ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
         return <tr key={g.game_id}><td>{g.week}</td><td>{opponent}</td><td>{outcome}</td></tr>
       })}</tbody></table></div>
       {!games.length && <p>No published games for this program.</p>}
