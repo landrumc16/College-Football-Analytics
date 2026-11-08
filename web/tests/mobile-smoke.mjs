@@ -17,8 +17,8 @@ try {
   if (!ready) throw new Error('Dashboard development server did not start');
   browser = await chromium.launch({ headless: true });
   await mkdir('web/mobile-evidence', { recursive: true });
-  for (const width of [375, 390, 768]) {
-    const page = await browser.newPage({ viewport: { width, height: 844 }, deviceScaleFactor: 1 });
+  for (const width of [375, 390, 768, 1536]) {
+    const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -138,7 +138,7 @@ try {
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
-    console.log(`Mobile navigation smoke passed at ${width}px`);
+    console.log(`Browser navigation smoke passed at ${width}px`);
     await page.close();
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
     await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));
