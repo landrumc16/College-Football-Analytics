@@ -41,13 +41,17 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   onChoose: (team: string) => void;
 }) {
   const [history, setHistory] = useState<HistoryPayload | null>(null)
+  const [historyStatus, setHistoryStatus] = useState<'loading' | 'published' | 'unavailable'>('loading')
   useEffect(() => {
     let active = true
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('Not published'); return r.json() })
       .then((data: HistoryPayload) => {
-        if (active && isPublishedHistoricalIntelligence(data)) setHistory(data)
-      }).catch(() => { /* Historical metrics remain explicitly unavailable. */ })
+        if (active) {
+          if (isPublishedHistoricalIntelligence(data)) { setHistory(data); setHistoryStatus('published') }
+          else setHistoryStatus('unavailable')
+        }
+      }).catch(() => { if (active) setHistoryStatus('unavailable') })
     return () => { active = false }
   }, [])
   const current = rankings.find(r => r.team === team)
@@ -103,6 +107,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div>
     <details><summary>Historical program ranking coverage and sources</summary>
+      <p role="status">{historyStatus === 'published' ? 'Independently reviewed historical research is published.' : historyStatus === 'loading' ? 'Checking historical publication status…' : 'Historical research has not passed the publication gate; rankings, trajectory, and hype remain unavailable.'}</p>
       <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
       <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th><th>Source evidence</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
         const score = historical?.program_rankings?.[window]
