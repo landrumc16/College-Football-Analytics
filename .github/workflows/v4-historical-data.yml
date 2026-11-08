@@ -53,7 +53,9 @@ jobs:
               assert len(rows) == meta["extracted_games"]
               integrity = validate_season_games(rows, int(season))
               assert integrity["fbs_fbs"] == meta["completed_fbs_vs_fbs"]
-              assert meta["completed_fbs_vs_fbs"] >= 700
+              # The COVID-disrupted 2020 season had materially fewer games.
+              # Retain it with explicit coverage rather than pretending it was normal.
+              assert meta["completed_fbs_vs_fbs"] >= (400 if int(season) == 2020 else 700)
               assert meta["missing_fbs_kickoff"] == 0
               assert len({(r["season"], r["game_id"]) for r in rows}) == len(rows)
               assert all(r["season"] == int(season) for r in rows)
