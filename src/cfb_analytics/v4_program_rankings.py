@@ -24,6 +24,7 @@ def rank_programs(rows: list[dict], latest_season: int, windows: tuple[int, ...]
     if len(set(windows)) != len(windows):
         raise ValueError("Duplicate windows")
     by_team = defaultdict(dict)
+    sources_by_team = defaultdict(dict)
     for row in rows:
         if not all(k in row for k in ("team", "season", "strength", "source")):
             raise ValueError("Missing required program season fields")
@@ -37,6 +38,7 @@ def rank_programs(rows: list[dict], latest_season: int, windows: tuple[int, ...]
         if season in by_team[team]:
             raise ValueError("Duplicate team-season strength")
         by_team[team][season] = float(score)
+        sources_by_team[team][season] = source.strip()
     output = {team: {"team": team, "windows": {}} for team in sorted(by_team)}
     for window in windows:
         seasons = range(latest_season - window + 1, latest_season + 1)
@@ -47,6 +49,9 @@ def rank_programs(rows: list[dict], latest_season: int, windows: tuple[int, ...]
             output[team]["windows"][str(window)] = {
                 "rank": None, "strength": score, "seasons_available": len(present),
                 "seasons_required": window,
+                "years": list(present),
+                "sources": [{"season": year, "source": sources_by_team[team][year]} for year in present],
+                "publishable": score is not None,
             }
             if score is not None:
                 scores[team] = score
