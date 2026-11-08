@@ -7,7 +7,8 @@ implied by generating this research artifact.
 from __future__ import annotations
 
 from collections import defaultdict
-from math import exp, isfinite
+from datetime import datetime, timezone
+from math import isfinite
 
 from .v4_source_integrity import validate_season_games
 
@@ -24,12 +25,15 @@ def retrospective_season_ratings(games: list[dict], season: int, *,
     counts = defaultdict(int)
     # All games are sorted by actual kickoff. Simultaneous games must be
     # predicted from the same pre-batch ratings; final scores update only after.
-    ordered = sorted(games, key=lambda g: (g["kickoff"], g["game_id"]))
+    def kickoff_utc(game: dict) -> datetime:
+        return datetime.fromisoformat(game["kickoff"].replace("Z", "+00:00")).astimezone(timezone.utc)
+
+    ordered = sorted(games, key=lambda g: (kickoff_utc(g), g["game_id"]))
     index = 0
     while index < len(ordered):
-        kickoff = ordered[index]["kickoff"]
+        kickoff = kickoff_utc(ordered[index])
         batch = []
-        while index < len(ordered) and ordered[index]["kickoff"] == kickoff:
+        while index < len(ordered) and kickoff_utc(ordered[index]) == kickoff:
             batch.append(ordered[index])
             index += 1
         deltas = defaultdict(float)
