@@ -1,0 +1,213 @@
+{
+  "season": 2026,
+  "source": "CFBD rankings endpoint (2026 regular season)",
+  "poll_weeks": {
+    "coaches_top25": 11,
+    "ap_top25": 11
+  },
+  "coaches_top25": [
+    {
+      "team": "Georgia",
+      "rank": 1
+    },
+    {
+      "team": "Utah",
+      "rank": 2
+    },
+    {
+      "team": "Notre Dame",
+      "rank": 3
+    },
+    {
+      "team": "UCLA",
+      "rank": 4
+    },
+    {
+      "team": "Indiana",
+      "rank": 5
+    },
+    {
+      "team": "Miami",
+      "rank": 6
+    },
+    {
+      "team": "Alabama",
+      "rank": 7
+    },
+    {
+      "team": "Texas",
+      "rank": 8
+    },
+    {
+      "team": "Tennessee",
+      "rank": 9
+    },
+    {
+      "team": "Texas Tech",
+      "rank": 10
+    },
+    {
+      "team": "Wake Forest",
+      "rank": 11
+    },
+    {
+      "team": "BYU",
+      "rank": 12
+    },
+    {
+      "team": "Kentucky",
+      "rank": 13
+    },
+    {
+      "team": "USC",
+      "rank": 14
+    },
+    {
+      "team": "Iowa",
+      "rank": 15
+    },
+    {
+      "team": "Houston",
+      "rank": 16
+    },
+    {
+      "team": "Ole Miss",
+      "rank": 17
+    },
+    {
+      "team": "Boise State",
+      "rank": 18
+    },
+    {
+      "team": "Oregon",
+      "rank": 19
+    },
+    {
+      "team": "Ohio State",
+      "rank": 20
+    },
+    {
+      "team": "Arizona",
+      "rank": 21
+    },
+    {
+      "team": "LSU",
+      "rank": 22
+    },
+    {
+      "team": "SMU",
+      "rank": 23
+    },
+    {
+      "team": "South Carolina",
+      "rank": 24
+    },
+    {
+      "team": "New Mexico",
+      "rank": 25
+    }
+  ],
+  "ap_top25": [
+    {
+      "team": "Georgia",
+      "rank": 1
+    },
+    {
+      "team": "Utah",
+      "rank": 2
+    },
+    {
+      "team": "Notre Dame",
+      "rank": 3
+    },
+    {
+      "team": "UCLA",
+      "rank": 4
+    },
+    {
+      "team": "Miami",
+      "rank": 5
+    },
+    {
+      "team": "Indiana",
+      "rank": 6
+    },
+    {
+      "team": "Alabama",
+      "rank": 7
+    },
+    {
+      "team": "Texas",
+      "rank": 8
+    },
+    {
+      "team": "Tennessee",
+      "rank": 9
+    },
+    {
+      "team": "Texas Tech",
+      "rank": 10
+    },
+    {
+      "team": "Wake Forest",
+      "rank": 11
+    },
+    {
+      "team": "BYU",
+      "rank": 12
+    },
+    {
+      "team": "Kentucky",
+      "rank": 13
+    },
+    {
+      "team": "Houston",
+      "rank": 14
+    },
+    {
+      "team": "USC",
+      "rank": 15
+    },
+    {
+      "team": "Iowa",
+      "rank": 16
+    },
+    {
+      "team": "Boise State",
+      "rank": 17
+    },
+    {
+      "team": "Oregon",
+      "rank": 18
+    },
+    {
+      "team": "Ole Miss",
+      "rank": 19
+    },
+    {
+      "team": "South Carolina",
+      "rank": 20
+    },
+    {
+      "team": "Ohio State",
+      "rank": 21
+    },
+    {
+      "team": "Arizona",
+      "rank": 22
+    },
+    {
+      "team": "New Mexico",
+      "rank": 23
+    },
+    {
+      "team": "LSU",
+      "rank": 24
+    },
+    {
+      "team": "SMU",
+      "rank": 25
+    }
+  ],
+  "week": 11
+}
