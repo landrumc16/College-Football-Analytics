@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { isPublishedHistoricalIntelligence } from './historicalPublication'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -32,7 +33,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('Not published'); return r.json() })
       .then((data: HistoryPayload) => {
-        if (active && data.schema_version === 1 && data.status === 'descriptive_only' && Array.isArray(data.programs)) setHistory(data)
+        if (active && isPublishedHistoricalIntelligence(data)) setHistory(data)
       }).catch(() => { /* Historical metrics remain explicitly unavailable. */ })
     return () => { active = false }
   }, [])
