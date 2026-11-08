@@ -58,11 +58,19 @@ try {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'polls') {
         await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
-        const headers = page.getByRole('columnheader');
-        for (const label of ['School', 'Our Model', 'AP', 'Coaches', 'CFP']) await headers.getByText(label, { exact: true }).waitFor().catch(async () => {
-          // Missing verified poll data is an explicitly supported state.
-          await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).waitFor();
-        });
+        const unavailable = await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).count();
+        if (!unavailable) {
+          for (const label of ['Our Model', 'AP', 'Coaches', 'CFP']) {
+            const button = page.getByRole('button', { name: `Sort by ${label} ranking` });
+            await button.click();
+            if (await button.getAttribute('aria-pressed') !== 'true') throw new Error(`Poll sort did not select ${label}`);
+            const key = { 'Our Model': 1, AP: 2, Coaches: 3, CFP: 4 }[label];
+            const values = await page.locator('section.notice table tbody tr').evaluateAll((rows, index) => rows.map(row => row.querySelectorAll('td')[index]?.textContent?.trim() || '—'), key);
+            const ranked = values.filter(value => /^\\d+$/.test(value)).map(Number);
+            if (ranked.some((rank, i) => i > 0 && rank < ranked[i - 1])) throw new Error(`${label} poll is not sorted numerically`);
+            if (values.length > 30) throw new Error('Poll comparison exceeded 30 rows');
+          }
+        }
       }
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
       const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
