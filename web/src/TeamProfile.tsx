@@ -102,6 +102,14 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
         return sources?.length ? <details key={window}><summary>{window}-season source records</summary><ul>{sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : null
       })}
     </details>
+    <details><summary>Historical ranking coverage and sources</summary>
+      <p>Historical program ranks require independently reviewed, comparable opponent-adjusted strengths for every season in the selected window. Missing years are not estimated.</p>
+      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Source records</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
+        const record = historical?.program_rankings?.[window]
+        const sources = record?.sources || []
+        return <tr key={window}><td>{window} years</td><td>{record?.rank == null ? 'Unavailable' : '#' + record.rank}</td><td>{record ? record.seasons_available + '/' + record.seasons_required : 'Unavailable'}</td><td>{sources.length ? <details><summary>{sources.length} sourced seasons</summary><ul>{sources.map(entry => <li key={entry.season}>{entry.season}: {entry.source}</li>)}</ul></details> : 'No reviewed source records published'}</td></tr>
+      })}</tbody></table></div>
+    </details>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
