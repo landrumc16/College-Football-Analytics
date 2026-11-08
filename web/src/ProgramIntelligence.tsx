@@ -5,7 +5,7 @@ type WindowScore = { rank: number | null; strength: number | null; seasons_avail
 type Program = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number; seasons_observed: number; preseason_top25: number }> }
 type Payload = { schema_version: number; status: string; latest_completed_season: number; programs: Program[] }
 
-export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onTeam: (team: string) => void; view?: 'rankings' | 'hype' | 'trajectory' }) {
+export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onTeam: (team: string) => void; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
@@ -26,6 +26,20 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings' }: { onT
   }, [])
   const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.toLowerCase()))
     .sort((a, b) => view === 'hype' ? (b.hype[poll]?.dropped_out ?? -1) - (a.hype[poll]?.dropped_out ?? -1) || a.team.localeCompare(b.team) : view === 'trajectory' ? (a.trajectory?.recent.classification || 'zz').localeCompare(b.trajectory?.recent.classification || 'zz') || a.team.localeCompare(b.team) : (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team))
+  if (view === 'stock' || view === 'contenders') return <section className="notice">
+    <h2>{view === 'stock' ? 'Team Stock Watch' : 'Contenders & Pretenders'}</h2>
+    <p>{view === 'stock'
+      ? 'Four-week movement requires verified, dated weekly snapshots and a validated 0–100 stock formula. Current rankings and season totals are not substitutes.'
+      : 'Independent classification requires a validated, schedule-adjusted expected-record model and sufficient as-of-date evidence. CFP odds and season-total forecast gaps are not substitutes.'}</p>
+    <p role="status">{view === 'stock' ? 'Verified stock movement is unavailable.' : 'Independent contender classifications are unavailable.'} No scores or classifications have been inferred.</p>
+    <label>Find a team <input aria-label="Find a team profile" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
+    {error && <p role="status">{error}</p>}
+    {data && <><p>Historical program research through {data.latest_completed_season}; this publication does not contain independently verified {view === 'stock' ? 'weekly stock snapshots' : 'contender diagnostics'}.</p>
+      <div className="table-wrap"><table><thead><tr><th>Program</th><th>{view === 'stock' ? 'Four-week movement' : 'Classification'}</th><th>Team details</th></tr></thead>
+      <tbody>{programs.map(item => <tr key={item.team}><td>{item.team}</td><td>{view === 'stock' ? 'Insufficient verified snapshots' : 'Too Early to Tell'}</td><td><button type="button" onClick={() => onTeam(item.team)}>View Team Profile</button></td></tr>)}</tbody></table></div>
+      {!programs.length && <p>No programs match this search.</p>}
+    </>}
+  </section>
   return <section className="notice">
     <h2>{view === 'hype' ? 'Historical Hype Index' : view === 'trajectory' ? 'Program Trajectory & Momentum' : 'Historical Program Rankings'}</h2>
     <p>{view === 'trajectory' ? 'Compare ten-year direction and three-year momentum using the shared historical program research. Missing verified coverage is not inferred.' : view === 'hype' ? 'Compare preseason AP and Coaches expectations with final Top 25 results. Unranked is never treated as a fabricated rank 26. Historical tendency requires all ten seasons.' : 'Opponent-adjusted historical strength, not current-season power rankings. A rank is only shown when all seasons in the selected window have verified coverage.'}</p>
