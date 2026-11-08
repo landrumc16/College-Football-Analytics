@@ -78,6 +78,12 @@ try {
       if (section === 'hype') {
         await page.getByText('Expectations vs. reality:', { exact: false }).waitFor();
         await page.getByText('Historical AP and Coaches evidence is kept separate', { exact: false }).waitFor();
+        await page.getByRole('heading', { name: 'Current-season poll perception vs. Our Model' }).waitFor();
+        const currentUnavailable = await page.getByText('Current-season poll comparison is unavailable', { exact: false }).count();
+        if (!currentUnavailable) {
+          await page.getByLabel('Sort current poll perception').selectOption('disagreement');
+          await page.getByLabel('Sort current poll perception').selectOption('poll');
+        }
       }
       if (section === 'trajectory') {
         await page.getByText('Program development:', { exact: false }).waitFor();
