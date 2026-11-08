@@ -32,6 +32,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ ! -f data/poll-2026-snapshot.json ]; then
+            echo 'No verified poll snapshot to publish yet.'
+            exit 0
+          fi
           git add data/poll-2026-snapshot.json
           if ! git diff --cached --quiet; then
             git commit -m "Refresh verified official poll snapshot"
