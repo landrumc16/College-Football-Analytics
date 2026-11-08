@@ -140,5 +140,8 @@ jobs:
           fi
           if ! git diff --cached --quiet; then
             git commit -m "Refresh CFBD season snapshot"
-            git push
+            # Concurrent source updates can advance main while the API is running.
+            # Rebase rather than force-push; fail closed if data conflicts.
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
