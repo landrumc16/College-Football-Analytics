@@ -54,8 +54,16 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
+    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
+      if (section === 'polls') {
+        await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
+        const headers = page.getByRole('columnheader');
+        for (const label of ['School', 'Our Model', 'AP', 'Coaches', 'CFP']) await headers.getByText(label, { exact: true }).waitFor().catch(async () => {
+          // Missing verified poll data is an explicitly supported state.
+          await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).waitFor();
+        });
+      }
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
       const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
       if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
