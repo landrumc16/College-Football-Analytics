@@ -13,6 +13,9 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   const [window, setWindow] = useState<'10' | '5' | '3'>('10')
   useEffect(() => {
     if (view === 'stock' || view === 'contenders') return
+    // Each historical view must not inherit a previous request's stale error.
+    setError('')
+    setData(null)
     let active = true
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
       .then(response => { if (!response.ok) throw new Error('Verified historical program data has not been published yet.'); return response.json() })
@@ -25,9 +28,9 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
       .catch(e => { if (active) setError(String(e.message || e)) })
     return () => { active = false }
   }, [view])
-  const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.toLowerCase()))
+  const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.trim().toLowerCase()))
     .sort((a, b) => view === 'hype' ? (b.hype[poll]?.dropped_out ?? -1) - (a.hype[poll]?.dropped_out ?? -1) || a.team.localeCompare(b.team) : view === 'trajectory' ? (a.trajectory?.recent.classification || 'zz').localeCompare(b.trajectory?.recent.classification || 'zz') || a.team.localeCompare(b.team) : (a.program_rankings?.[window]?.rank ?? Infinity) - (b.program_rankings?.[window]?.rank ?? Infinity) || a.team.localeCompare(b.team))
-  const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.localeCompare(b))
+  const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
   if (view === 'stock' || view === 'contenders') return <section className="notice">
     <h2>{view === 'stock' ? 'Team Stock Watch' : 'Contenders & Pretenders'}</h2>
     <p>{view === 'stock'
