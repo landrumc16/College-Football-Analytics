@@ -7,12 +7,20 @@ from pathlib import Path
 
 def build_coverage_summary(coverage: dict, walkforward: dict) -> dict:
     seasons = coverage["seasons"]
+    if not isinstance(seasons, dict) or not seasons:
+        raise ValueError("Historical coverage must contain seasons")
+    if walkforward.get("type") != "retrospective_walk_forward_baseline":
+        raise ValueError("Unexpected historical diagnostic type")
     by_season = {}
     for year in sorted(seasons):
         source = seasons[year]
         diagnostic = walkforward["by_season"].get(year)
         if diagnostic is None:
             raise ValueError(f"Missing diagnostic season {year}")
+        if not isinstance(source.get("source_sha256"), str) or len(source["source_sha256"]) != 64:
+            raise ValueError(f"Invalid source checksum: {year}")
+        if not isinstance(source.get("extracted_sha256"), str) or len(source["extracted_sha256"]) != 64:
+            raise ValueError(f"Invalid extract checksum: {year}")
         if source["completed_fbs_vs_fbs"] != diagnostic["games"]:
             raise ValueError(f"Historical game count mismatch: {year}")
         by_season[year] = {
