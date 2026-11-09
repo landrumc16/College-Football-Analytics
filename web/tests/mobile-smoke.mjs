@@ -77,6 +77,18 @@ try {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
         await page.getByRole('columnheader', { name: 'Last 5' }).waitFor();
         await page.getByRole('columnheader', { name: 'Vs forecast' }).waitFor();
+        const rows = page.locator('.program-intelligence-table tbody tr');
+        if (await rows.count() === 0) throw new Error('Program Intelligence has no current-season comparisons');
+        if (await rows.count() > 25) throw new Error('Initial Program Intelligence view is not bounded');
+        const firstRow = await rows.first().innerText();
+        if (/Too Early to Tell|Insufficient verified snapshots/.test(firstRow)) throw new Error('Legacy placeholders returned');
+        if (width <= 390) {
+          const fits = await page.locator('.program-intelligence-table').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.left >= -1 && rect.right <= document.documentElement.clientWidth + 1;
+          });
+          if (!fits) throw new Error('Program Intelligence table exceeds mobile viewport');
+        }
         await page.getByLabel('Sort program intelligence').selectOption('recent');
         await page.getByLabel('Sort program intelligence').selectOption('rank');
         await page.getByLabel('Filter programs by conference').selectOption('all');
