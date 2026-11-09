@@ -33,6 +33,18 @@ def build_program_intelligence(strength_rows: list[dict], poll_rows: list[dict],
         })["hype"][record["poll"]] = {
             key: value for key, value in record.items() if key not in ("team", "poll")
         }
+    # Preserve independently sourced season observations for a real time-series
+    # chart; never interpolate or replace missing seasons with aggregate ranks.
+    season_history = {}
+    for row in strength_rows:
+        season_history.setdefault(row["team"], []).append({
+            "season": row["season"], "strength": row["strength"], "source": row["source"],
+        })
+    for team, records in season_history.items():
+        if team in by_team:
+            by_team[team]["season_strength_history"] = sorted(
+                records, key=lambda record: record["season"]
+            )
     return {
         "schema_version": 1,
         "status": "descriptive_only",
