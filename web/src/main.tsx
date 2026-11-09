@@ -138,7 +138,7 @@ function App() {
             Array.isArray(data.ap_top25) && Array.isArray(data.coaches_top25) &&
             data.ap_top25.length > 0 && data.coaches_top25.length > 0 && data.source &&
             (!data.cfp_top25?.length || (typeof data.cfp_published_at === 'string' &&
-              /^\\d{4}-\\d{2}-\\d{2}$/.test(data.cfp_published_at) &&
+              /^\d{4}-\d{2}-\d{2}$/.test(data.cfp_published_at) &&
               !Number.isNaN(Date.parse(data.cfp_published_at)) &&
               data.cfp_published_at.startsWith(String(data.season) + '-'))) &&
             [data.ap_top25, data.coaches_top25, ...(data.cfp_top25 ? [data.cfp_top25] : [])].every(poll =>
