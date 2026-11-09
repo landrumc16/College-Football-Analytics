@@ -19,6 +19,7 @@ def validate_program_sources(strength_rows: list[dict], poll_rows: list[dict],
     earliest = latest_season - expected_seasons + 1
     coverage = defaultdict(set)
     poll_coverage = defaultdict(set)
+    observed = set()
     for kind, rows in (("strength", strength_rows), ("poll", poll_rows)):
         for row in rows:
             season = row.get("season")
@@ -38,6 +39,10 @@ def validate_program_sources(strength_rows: list[dict], poll_rows: list[dict],
             team = row.get("team")
             if not isinstance(team, str) or not team.strip():
                 raise ValueError(f"{kind}: missing team")
+            identity = (kind, team, season, row.get("poll") if kind == "poll" else None)
+            if identity in observed:
+                raise ValueError(f"{kind}: duplicate team-season observation")
+            observed.add(identity)
             if kind == "strength":
                 coverage[team].add(season)
             else:
