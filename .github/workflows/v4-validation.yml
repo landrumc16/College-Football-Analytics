@@ -2,7 +2,7 @@ name: V4 development validation
 
 on:
   push:
-    branches: [v4-development, program-intelligence-redesign]
+    branches: [v4-development, program-intelligence-redesign, v5-development]
   workflow_dispatch:
 
 permissions:
