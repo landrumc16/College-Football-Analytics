@@ -25,6 +25,15 @@ try {
     await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
+    // V5 public onboarding and privacy disclosure must be available at every viewport.
+    const about = page.getByLabel('About, privacy and getting started');
+    await about.locator('summary').click();
+    await about.getByText('Favorites are stored only in this browser', { exact: false }).waitFor();
+    await about.getByText('No account or cross-device synchronization', { exact: false }).waitFor();
+    const feedback = about.getByRole('link', { name: 'the project issue form' });
+    if (!(await feedback.getAttribute('href'))?.endsWith('/issues/new')) throw new Error('Public feedback destination missing');
+    await about.locator('summary').click();
+
     if (await page.getByText('Waiting for live data').count()) throw new Error('Dashboard failed to load season report');
     // Guard the approved four-section mobile homepage against regressions.
     for (const title of ['My Teams', 'Featured Games', 'Upset Watch', 'Games That Matter']) {
