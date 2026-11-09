@@ -167,6 +167,10 @@ try {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
+        await page.getByRole('button', { name: 'Compare this school' }).click();
+        await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
+        if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Profile-to-Compare lost selected school');
+        await page.getByLabel('Choose dashboard section').selectOption('profile');
       }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
