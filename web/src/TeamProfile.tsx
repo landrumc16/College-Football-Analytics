@@ -51,7 +51,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   useEffect(() => {
     let active = true
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
-      .then(r => { if (!r.ok) throw new Error('Not published'); return r.json() })
+      .then(r => { if (!r.ok || !r.headers.get('content-type')?.includes('json')) throw new Error('Not published'); return r.json() })
       .then((data: HistoryPayload) => {
         if (active) {
           if (isPublishedHistoricalIntelligence(data)) { setHistory(data); setHistoryStatus('published') }
