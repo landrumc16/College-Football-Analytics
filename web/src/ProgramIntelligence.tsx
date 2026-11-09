@@ -87,6 +87,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     })
   // Bound initial table length on narrow screens; filtering and sorting still apply to the full dataset.
   const [showAll, setShowAll] = useState(false)
+  const [overviewOrder, setOverviewOrder] = useState<'rank' | 'recent' | 'expectations' | 'cfp'>('rank')
   const visiblePrograms = showAll ? programs : programs.slice(0, 25)
   const morePrograms = programs.length > 25
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
@@ -101,7 +102,15 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     const current = currentRankings.filter(team => Number.isFinite(team.rank) && team.rank > 0)
       .filter(team => team.team.toLowerCase().includes(query.trim().toLowerCase()))
       .filter(team => conference === 'all' || (conferenceTeams[conference] || []).includes(team.team))
-      .sort((a, b) => a.rank - b.rank)
+      .sort((a, b) => {
+        if (overviewOrder === 'recent') {
+          const x = recentForm(a.team), y = recentForm(b.team)
+          return (y.count ? y.wins / y.count : -1) - (x.count ? x.wins / x.count : -1) || a.rank - b.rank
+        }
+        if (overviewOrder === 'expectations') return (performance[b.team]?.wins_above_expected ?? -Infinity) - (performance[a.team]?.wins_above_expected ?? -Infinity) || a.rank - b.rank
+        if (overviewOrder === 'cfp') return (postseason.find(p => p.team === b.team)?.cfp_field ?? -1) - (postseason.find(p => p.team === a.team)?.cfp_field ?? -1) || a.rank - b.rank
+        return a.rank - b.rank
+      })
     const visible = showAll ? current : current.slice(0, 25)
     return <section className="notice">
       <h2>Program Intelligence</h2>
@@ -111,8 +120,9 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
         <p><strong>Recent form:</strong> wins and losses across the last five completed games with scores, ordered by published week. This is not a multi-season trajectory or a four-week change in model rating.</p>
         <p><strong>Expectations:</strong> verified current AP/Coaches Poll rank can be compared with the model. Disagreement is not proof that either ranking is wrong.</p>
       </div>
-      <label>Find a program <input aria-label="Find a program" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
+      <label>Find a program <input aria-label="Find a program" list="program-intelligence-teams" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /><datalist id="program-intelligence-teams">{currentRankings.map(team => <option key={team.team} value={team.team} />)}</datalist></label>
       <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
+      <label>Sort by <select aria-label="Sort program intelligence" value={overviewOrder} onChange={e => setOverviewOrder(e.target.value as typeof overviewOrder)}><option value="rank">Model ranking</option><option value="recent">Recent win rate</option><option value="expectations">Wins above tracked forecasts</option><option value="cfp">CFP probability</option></select></label>
       <div className="table-wrap"><table><thead><tr><th>Program</th><th>Model rank</th><th>Record</th><th>Last 5</th><th>Vs forecast</th><th>AP Poll</th><th>CFP chance</th><th>Team</th></tr></thead><tbody>{visible.map(team => {
         const ap = currentPoll && currentPoll.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
         const form = recentForm(team.team)
