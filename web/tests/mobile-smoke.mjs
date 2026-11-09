@@ -135,7 +135,12 @@ try {
         await page.getByLabel('Find a program').fill(firstTeam);
         const row = page.getByRole('row').filter({ hasText: firstTeam }).first();
         const overviewTrend = (await row.locator('td').nth(7).textContent() || '').trim();
-        await row.getByRole('button', { name: 'View team' }).click();
+        await row.getByRole('button', { name: `Compare ${firstTeam} with another school` }).click();
+        await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
+        if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Program-to-comparison navigation lost the selected team');
+        await page.getByLabel('Choose dashboard section').selectOption('programs');
+        await page.getByLabel('Find a program').fill(firstTeam);
+        await page.getByRole('row').filter({ hasText: firstTeam }).first().getByRole('button', { name: 'View team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         const profileTrend = page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' });
         await profileTrend.waitFor();
