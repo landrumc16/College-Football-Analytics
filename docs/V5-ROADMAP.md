@@ -100,3 +100,11 @@ V5 is complete ONLY when:
 
 ## Execution order and handoff
 Begin M1 implementation and M2 inventory in parallel without blocking public readiness on speculative data acquisition. Then complete M2 -> M3 -> M4 -> M5 -> M6. Keep a compact milestone status and exact next action in this file or existing project tracking documentation; do not spawn new roadmaps. If interrupted, record exact commit, verified results, outstanding blocker, and next action. Never claim completion from workflow success alone.
+
+## Execution checkpoint — November 9, 2026
+- Development HEAD before this note: `ef31e704b736a07d2e314684ec8721769ced235c`. Production remains at the V4 baseline; no release authorization.
+- M1 implementation in progress: public onboarding, local-only favorites/privacy disclosure, GitHub feedback link, browser-profile isolation test, and recoverable report-fetch error with a retry browser test. Existing freshness, PWA and incumbent model code are preserved.
+- M1 acceptance remains open: full frontend build, real Chromium journeys/screenshots, PWA update/install checks, and operational alert evidence are not yet verified on this branch. No GitHub workflow run was returned for the preceding development commits; no pass is claimed.
+- M2 existing assets identified: `v4_team_season_records.py`, `v4_coverage_summary.py`, `v4_program_provenance.py`, `v4_program_intelligence_cli.py`, `v4_program_trajectory.py`, and the existing historical source checks. Reuse these; do not rebuild or infer unsupported preseason rankings.
+- M2 evidence blocker: the V4 Program Intelligence release gate explicitly records that no independently source-reviewed `web/public/v4-program-intelligence.json` is published. The CLI requires full ten-season strength and poll coverage plus independent source review before publishing. Historical 3/5/10-year trajectory and Hype Index must remain unavailable until real verified source inputs satisfy that gate.
+- Next action: validate the M1 implementation on a runnable candidate and run the existing historical coverage/provenance tools against available verified assets. Publish historical intelligence only after source authenticity and required coverage are independently established. Then proceed to M3–M6 without weakening gates.
