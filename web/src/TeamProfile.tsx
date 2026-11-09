@@ -93,7 +93,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
-      {tile('Wins vs Current Model Top 25', String(winsAgainstCurrentTop25))}
+      {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}
       {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
