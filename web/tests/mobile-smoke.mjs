@@ -88,6 +88,7 @@ try {
       if (section === 'trajectory') {
         await page.getByText('Program development:', { exact: false }).waitFor();
         await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
+        await page.getByText('Combined interpretations use only independently classified historical poll expectations', { exact: false }).waitFor();
       }
       if (section === 'stock' || section === 'contenders') {
         // These views must remain usable without publishing unsupported metrics.
