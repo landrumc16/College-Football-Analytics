@@ -62,3 +62,23 @@ def test_same_game_different_models_are_independently_reported():
     other["model_id"] = "baseline"
     result = evaluate_archived_forecasts([forecast(), other])
     assert set(result["models"]) == {"baseline", "incumbent"}
+
+
+def test_paired_comparison_uses_only_common_games():
+    a1 = forecast("g1", 0.8, True)
+    a2 = forecast("g2", 0.1, False)
+    b1 = forecast("g1", 0.6, True)
+    b1["model_id"] = "baseline"
+    result = evaluate_archived_forecasts([a1, a2, b1])
+    comparison = result["paired_baseline_comparisons"][0]
+    assert comparison["matched_games"] == 1
+    assert comparison["model_a"] == "baseline"
+    assert comparison["model_a_brier"] == pytest.approx(0.16)
+    assert comparison["model_b_brier"] == pytest.approx(0.04)
+
+
+def test_conflicting_outcomes_for_same_game_are_rejected():
+    other = forecast("g1", 0.2, False)
+    other["model_id"] = "baseline"
+    with pytest.raises(ValueError, match="Conflicting final outcomes"):
+        evaluate_archived_forecasts([forecast(), other])
