@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
-type Program = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number; seasons_observed: number; preseason_top25: number }> }
+type Program = { season_strength_history?: { season: number; strength: number; source: string }[]; team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number; seasons_observed: number; preseason_top25: number }> }
 function combinedInsight(program: Program, poll: 'AP' | 'Coaches'): string {
   const hype = program.hype[poll]?.historical_tendency
   const trajectory = program.trajectory?.recent.classification
@@ -14,6 +14,30 @@ function combinedInsight(program: Program, poll: 'AP' | 'Coaches'): string {
     : expectation === 'overhyped' && movement === 'declining' ? 'Reputation may mask decline'
     : expectation === 'overhyped' && movement === 'rising' ? 'Improving; expectations may run ahead'
     : 'Declining; expectations may be too negative'
+}
+function StrengthChart({ program }: { program: Program }) {
+  const rows = (program.season_strength_history || []).filter(r => Number.isInteger(r.season) && Number.isFinite(r.strength) && !!r.source).sort((a, b) => a.season - b.season)
+  if (rows.length < 2) return <p role="status">No verified season-by-season strength chart is available for this program.</p>
+  const first = rows[0].season
+  const last = rows[rows.length - 1].season
+  const min = Math.min(...rows.map(r => r.strength))
+  const max = Math.max(...rows.map(r => r.strength))
+  const x = (season: number) => 40 + 440 * (season - first) / Math.max(1, last - first)
+  const y = (strength: number) => 160 - 125 * (strength - min) / Math.max(1, max - min)
+  // Separate runs at missing seasons; no connecting lines across data gaps.
+  const segments: typeof rows[] = []
+  rows.forEach(row => {
+    if (!segments.length || row.season !== segments[segments.length - 1][segments[segments.length - 1].length - 1].season + 1) segments.push([])
+    segments[segments.length - 1].push(row)
+  })
+  return <figure><svg role="img" aria-label={`Verified season strength history for ${program.team}`} viewBox="0 0 520 200" style={{ width: '100%', maxWidth: 720, height: 'auto' }}>
+    <line x1="40" y1="165" x2="490" y2="165" stroke="currentColor" opacity=".5"/>
+    {segments.map((segment, i) => <polyline key={i} fill="none" stroke="currentColor" strokeWidth="2.5" points={segment.map(row => `${x(row.season)},${y(row.strength)}`).join(' ')} />)}
+    {rows.map(row => <circle key={row.season} cx={x(row.season)} cy={y(row.strength)} r="4" fill="currentColor"><title>{`${row.season}: strength ${row.strength.toFixed(2)} · ${row.source}`}</title></circle>)}
+    <text x="40" y="190" fill="currentColor" fontSize="13">{first}</text><text x="480" y="190" textAnchor="end" fill="currentColor" fontSize="13">{last}</text>
+    <text x="45" y="20" fill="currentColor" fontSize="12">Strength {max.toFixed(1)}</text>
+    <text x="45" y="155" fill="currentColor" fontSize="12">{min.toFixed(1)}</text>
+  </svg><figcaption>Verified schedule-adjusted strength by completed season. Gaps indicate missing data; higher means stronger, not a predicted finish.</figcaption></figure>
 }
 type CurrentPoll = { season: number; week: number; source: string; ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
 type CurrentRanking = { team: string; rank: number }
@@ -27,6 +51,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   const [direction, setDirection] = useState('all')
   const [hypeOrder, setHypeOrder] = useState('dropouts')
   const [perceptionOrder, setPerceptionOrder] = useState<'poll' | 'disagreement'>('poll')
+  const [chartTeam, setChartTeam] = useState('')
   const [window, setWindow] = useState<'10' | '5' | '3'>('10')
   useEffect(() => {
     if (view === 'stock' || view === 'contenders') return
@@ -79,6 +104,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     {data && <><p>Through the {data.latest_completed_season} completed season · Descriptive research only</p>
       {view === 'trajectory' ? <><label>Momentum <select aria-label="Filter trajectory momentum" value={direction} onChange={e => setDirection(e.target.value)}><option value="all">All programs</option><option value="rapidly_rising">Rapidly rising</option><option value="steadily_improving">Steadily improving</option><option value="stable">Stable</option><option value="steadily_declining">Steadily declining</option><option value="rapidly_declining">Rapidly declining</option><option value="insufficient_data">Insufficient data</option></select></label><label>Strength window <select aria-label="Trajectory strength window" value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label></> : view === 'hype' ? <><label>Poll <select value={poll} onChange={e => setPoll(e.target.value as 'AP' | 'Coaches')}><option value="AP">AP Poll</option><option value="Coaches">Coaches Poll</option></select></label><label>Explore <select aria-label="Sort historical hype" value={hypeOrder} onChange={e => setHypeOrder(e.target.value)}><option value="dropouts">Most preseason Top 25 dropouts</option><option value="entries">Most unranked-to-Top-25 entries</option><option value="preseason">Most preseason Top 25 appearances</option></select></label></> : <label>Ranking window <select value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label>}
       <input aria-label="Search historical programs" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} />
+      {view === 'trajectory' && data && <section className="accuracy-summary"><h3>Program strength history</h3><label>Chart program <select aria-label="Chart program strength" value={chartTeam} onChange={e => setChartTeam(e.target.value)}><option value="">Select a program</option>{programs.map(p => <option key={p.team} value={p.team}>{p.team}</option>)}</select></label>{chartTeam && <StrengthChart program={data.programs.find(p => p.team === chartTeam) || { team: chartTeam, program_rankings: null, trajectory: null, hype: {} }} />}</section>}
       {view === 'trajectory' && <p>Combined interpretations use only independently classified historical poll expectations and verified recent strength momentum. They are descriptive context, not an additional score or a forecast.</p>}
       {view === 'trajectory' ? <div className="table-wrap"><table><thead><tr><th>Program</th><th>10-year trajectory</th><th>3-year momentum</th><th>10-year rank</th><th>5-year rank</th><th>3-year rank</th><th>AP + trajectory</th><th>Coaches + trajectory</th></tr></thead><tbody>{programs.map(p => <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{p.trajectory?.long_term.classification.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{p.trajectory?.recent.classification.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{p.program_rankings?.['10']?.rank ?? '—'}</td><td>{p.program_rankings?.['5']?.rank ?? '—'}</td><td>{p.program_rankings?.['3']?.rank ?? '—'}</td><td>{combinedInsight(p, 'AP')}</td><td>{combinedInsight(p, 'Coaches')}</td></tr>)}</tbody></table></div> : view === 'hype' ? <div className="table-wrap"><table><thead><tr><th>Program</th><th>Historical tendency</th><th>Seasons</th><th>Preseason Top 25</th><th>Dropped out</th><th>Entered Top 25</th></tr></thead><tbody>{programs.map(p => { const h = p.hype[poll]; return <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{h?.historical_tendency.replaceAll('_', ' ') || 'Insufficient data'}</td><td>{h?.seasons_observed ?? '—'} / 10</td><td>{h?.preseason_top25 ?? '—'}</td><td>{h?.dropped_out ?? '—'}</td><td>{h?.entered_top25 ?? '—'}</td></tr> })}</tbody></table></div> : <div className="table-wrap"><table><thead><tr><th>Rank</th><th>Program</th><th>Strength</th><th>Verified seasons</th><th>Source details</th><th>10-year trajectory</th><th>3-year momentum</th><th>AP hype</th><th>Coaches hype</th></tr></thead><tbody>{programs.map(p => {
         const score = p.program_rankings?.[window]
