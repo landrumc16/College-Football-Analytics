@@ -19,6 +19,7 @@ def test_shared_team_and_comparison_contract_is_serializable():
     assert programs["A"]["program_rankings"]["10"]["rank"] == 1
     assert programs["B"]["program_rankings"]["10"]["rank"] == 2
     assert programs["A"]["trajectory"]["long_term"]["classification"] == "stable"
+    assert programs["A"]["trajectory"]["medium_term"]["classification"] == "stable"
     assert programs["A"]["hype"]["AP"]["dropped_out"] == 0
     assert programs["B"]["hype"] == {}
     assert report["predictive_validation"] is False
@@ -47,3 +48,4 @@ def test_chart_series_uses_only_original_sourced_seasons_and_preserves_gaps():
         {"season": 2024, "strength": 6.0, "source": "verified-2024"},
     ]
     assert report["programs"][0]["trajectory"]["recent"]["classification"] == "insufficient_data"
+    assert report["programs"][0]["trajectory"]["medium_term"]["classification"] == "insufficient_data"
