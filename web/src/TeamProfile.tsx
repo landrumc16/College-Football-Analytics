@@ -107,7 +107,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     </div>
     <div className="accuracy-summary"><h3>Program development and expectations</h3>
       <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. This describes results, not a measured change in team strength.</p>
-      <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord.games_with_forecasts} tracked games).`}</p>
+      <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
       <p><strong>Long-term trajectory:</strong> {historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
       <p>AP/Coaches historical expectations: {historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
     </div>
