@@ -43,11 +43,12 @@ type CurrentPoll = { season: number; week: number; source: string; ap_top25: { t
 type CurrentRanking = { team: string; rank: number }
 type Payload = { schema_version: number; status: string; latest_completed_season: number; programs: Program[] }
 
-export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
+export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason, conferenceTeams = {} }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; conferenceTeams?: Record<string, string[]>; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [poll, setPoll] = useState<'AP' | 'Coaches'>('AP')
+  const [conference, setConference] = useState('all')
   const [direction, setDirection] = useState('all')
   const [hypeOrder, setHypeOrder] = useState('dropouts')
   const [perceptionOrder, setPerceptionOrder] = useState<'poll' | 'disagreement'>('poll')
@@ -70,7 +71,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
       .catch(e => { if (active) setError(String(e.message || e)) })
     return () => { active = false }
   }, [view])
-  const programs = (data?.programs || []).filter(p => p.team.toLowerCase().includes(query.trim().toLowerCase()))
+  const programs = (data?.programs || []).filter(p => conference === 'all' || (conferenceTeams[conference] || []).includes(p.team)).filter(p => p.team.toLowerCase().includes(query.trim().toLowerCase()))
     .filter(p => view !== 'trajectory' || direction === 'all' || (p.trajectory?.recent.classification || 'insufficient_data') === direction)
     .sort((a, b) => {
       if (view === 'hype') {
@@ -103,6 +104,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     {!data && !error && <p role="status">Checking independently reviewed historical research…</p>}
     {data && <><p>Through the {data.latest_completed_season} completed season · Descriptive research only</p>
       {view === 'trajectory' ? <><label>Momentum <select aria-label="Filter trajectory momentum" value={direction} onChange={e => setDirection(e.target.value)}><option value="all">All programs</option><option value="rapidly_rising">Rapidly rising</option><option value="steadily_improving">Steadily improving</option><option value="stable">Stable</option><option value="steadily_declining">Steadily declining</option><option value="rapidly_declining">Rapidly declining</option><option value="insufficient_data">Insufficient data</option></select></label><label>Strength window <select aria-label="Trajectory strength window" value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label></> : view === 'hype' ? <><label>Poll <select value={poll} onChange={e => setPoll(e.target.value as 'AP' | 'Coaches')}><option value="AP">AP Poll</option><option value="Coaches">Coaches Poll</option></select></label><label>Explore <select aria-label="Sort historical hype" value={hypeOrder} onChange={e => setHypeOrder(e.target.value)}><option value="dropouts">Most preseason Top 25 dropouts</option><option value="entries">Most unranked-to-Top-25 entries</option><option value="preseason">Most preseason Top 25 appearances</option></select></label></> : <label>Ranking window <select value={window} onChange={e => setWindow(e.target.value as '10' | '5' | '3')}><option value="10">10 seasons</option><option value="5">5 seasons</option><option value="3">3 seasons</option></select></label>}
+      <label>Conference <select aria-label="Filter historical programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
       <input aria-label="Search historical programs" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} />
       {view === 'trajectory' && data && <section className="accuracy-summary"><h3>Program strength history</h3><label>Chart program <select aria-label="Chart program strength" value={chartTeam} onChange={e => setChartTeam(e.target.value)}><option value="">Select a program</option>{programs.map(p => <option key={p.team} value={p.team}>{p.team}</option>)}</select></label>{chartTeam && <StrengthChart program={data.programs.find(p => p.team === chartTeam) || { team: chartTeam, program_rankings: null, trajectory: null, hype: {} }} />}</section>}
       {view === 'trajectory' && <p>Combined interpretations use only independently classified historical poll expectations and verified recent strength momentum. They are descriptive context, not an additional score or a forecast.</p>}
