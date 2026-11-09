@@ -33,3 +33,17 @@ def test_poll_only_team_keeps_missing_strength_as_missing():
     assert team["program_rankings"] is None
     assert team["trajectory"] is None
     assert team["hype"]["Coaches"]["entered_top25"] == 1
+
+
+def test_chart_series_uses_only_original_sourced_seasons_and_preserves_gaps():
+    strength = [
+        dict(team="A", season=2022, strength=2.5, source="verified-2022"),
+        dict(team="A", season=2024, strength=6.0, source="verified-2024"),
+    ]
+    report = build_program_intelligence(strength, [], 2025)
+    series = report["programs"][0]["season_strength_history"]
+    assert series == [
+        {"season": 2022, "strength": 2.5, "source": "verified-2022"},
+        {"season": 2024, "strength": 6.0, "source": "verified-2024"},
+    ]
+    assert report["programs"][0]["trajectory"]["recent"]["classification"] == "insufficient_data"
