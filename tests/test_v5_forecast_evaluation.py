@@ -92,3 +92,19 @@ def test_conflicting_kickoff_for_same_game_is_rejected():
     other["kickoff_time"] = "2025-09-03T18:00:00-05:00"
     with pytest.raises(ValueError, match="Conflicting kickoff"):
         evaluate_archived_forecasts([forecast(), other])
+
+
+def test_confidence_segments_cover_each_game_without_inventing_empty_metrics():
+    result = evaluate_archived_forecasts([
+        forecast("g1", 0.51, True),
+        forecast("g2", 0.65, False),
+        forecast("g3", 0.85, True),
+        forecast("g4", 0.15, False),
+    ])
+    segments = result["models"]["incumbent"]["confidence_segments"]
+    assert [segments[name]["games"] for name in ("low", "medium", "high")] == [1, 1, 2]
+    assert segments["high"]["accuracy"] == 1
+    assert segments["low"]["brier"] == pytest.approx((.51 - 1) ** 2)
+    empty = evaluate_archived_forecasts([forecast()])["models"]["incumbent"]["confidence_segments"]
+    assert empty["low"]["games"] == 0
+    assert empty["low"]["accuracy"] is None
