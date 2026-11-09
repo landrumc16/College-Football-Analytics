@@ -77,8 +77,18 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
         groups = [[] for _ in range(bins)]
         for p, y in predictions:
             groups[min(int(p * bins), bins - 1)].append((p, y))
+        # Segment by the confidence of the chosen winner, not home-team bias.
+        segments = {}
+        for label, lower, upper in (("low", .5, .6), ("medium", .6, .75), ("high", .75, 1.0000001)):
+            selected = [(p, y) for p, y in predictions if lower <= max(p, 1 - p) < upper]
+            segments[label] = {
+                "games": len(selected),
+                "accuracy": (sum((p >= .5) == bool(y) for p, y in selected) / len(selected)) if selected else None,
+                "brier": (sum((p - y) ** 2 for p, y in selected) / len(selected)) if selected else None,
+            }
         models[model] = {
             "games": count,
+            "confidence_segments": segments,
             "brier": brier,
             "logloss": logloss,
             "accuracy": correct / count,
