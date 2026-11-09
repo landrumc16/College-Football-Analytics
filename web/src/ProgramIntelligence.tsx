@@ -41,9 +41,12 @@ function StrengthChart({ program }: { program: Program }) {
 }
 type CurrentPoll = { season: number; week: number; source: string; ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
 type CurrentRanking = { team: string; rank: number; rating?: number; wins?: number; losses?: number; projected_wins?: number }
+type CompletedGame = { week: number; home: string; away: string; completed: boolean; home_score: number | null; away_score: number | null }
+type TeamPerformance = { actual_wins: number; expected_wins: number; games_with_forecasts: number; wins_above_expected: number | null }
+type Postseason = { team: string; cfp_field: number; national_title: number }
 type Payload = { schema_version: number; status: string; latest_completed_season: number; programs: Program[] }
 
-export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason, conferenceTeams = {} }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; conferenceTeams?: Record<string, string[]>; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' | 'overview' }) {
+export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason, conferenceTeams = {}, schedule = [], performance = {}, postseason = [] }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; conferenceTeams?: Record<string, string[]>; schedule?: CompletedGame[]; performance?: Record<string, TeamPerformance>; postseason?: Postseason[]; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' | 'overview' }) {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
@@ -87,6 +90,13 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   const visiblePrograms = showAll ? programs : programs.slice(0, 25)
   const morePrograms = programs.length > 25
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
+  const recentForm = (team: string) => {
+    const games = schedule.filter(g => g.completed && (g.home === team || g.away === team) && Number.isInteger(g.week) && g.home_score != null && g.away_score != null && Number.isFinite(g.home_score) && Number.isFinite(g.away_score))
+      .sort((a, b) => b.week - a.week).slice(0, 5)
+    const wins = games.filter(g => (g.home === team ? g.home_score! > g.away_score! : g.away_score! > g.home_score!)).length
+    const ties = games.filter(g => g.home_score === g.away_score).length
+    return { count: games.length, wins, losses: games.length - wins - ties }
+  }
   if (view === 'overview' || view === 'stock' || view === 'contenders') {
     const current = currentRankings.filter(team => Number.isFinite(team.rank) && team.rank > 0)
       .filter(team => team.team.toLowerCase().includes(query.trim().toLowerCase()))
@@ -98,18 +108,21 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
       <p>Three useful questions: how strong is a program now, is it improving, and is it meeting expectations? The published incumbent model provides current team strength. Multiweek momentum and historical expectations are shown only when verified records exist.</p>
       <div className="accuracy-summary"><h3>What the numbers mean</h3>
         <p><strong>Strength:</strong> current published model ranking, not a historical program ranking or a guarantee of future wins.</p>
-        <p><strong>Momentum:</strong> not yet established without comparable dated snapshots. A team's current rank alone cannot establish improvement.</p>
+        <p><strong>Recent form:</strong> wins and losses across the last five completed games with scores, ordered by published week. This is not a multi-season trajectory or a four-week change in model rating.</p>
         <p><strong>Expectations:</strong> verified current AP/Coaches Poll rank can be compared with the model. Disagreement is not proof that either ranking is wrong.</p>
       </div>
       <label>Find a program <input aria-label="Find a program" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
       <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
-      <div className="table-wrap"><table><thead><tr><th>Program</th><th>Model rank</th><th>Record</th><th>AP Poll</th><th>Momentum</th><th>Team</th></tr></thead><tbody>{visible.map(team => {
+      <div className="table-wrap"><table><thead><tr><th>Program</th><th>Model rank</th><th>Record</th><th>Last 5</th><th>Vs forecast</th><th>AP Poll</th><th>CFP chance</th><th>Team</th></tr></thead><tbody>{visible.map(team => {
         const ap = currentPoll && currentPoll.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
-        return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{ap == null ? 'Not Top 25 / unavailable' : `#${ap}`}</td><td>Awaiting dated history</td><td><button type="button" onClick={() => onTeam(team.team)}>View team</button></td></tr>
+        const form = recentForm(team.team)
+        const forecast = performance[team.team]
+        const odds = postseason.find(p => p.team === team.team)?.cfp_field
+        return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{form.count ? `${form.wins}–${form.losses} (${form.count} games)` : '—'}</td><td>{forecast?.games_with_forecasts > 0 && forecast.wins_above_expected != null ? `${forecast.wins_above_expected > 0 ? '+' : ''}${forecast.wins_above_expected.toFixed(1)} wins` : '—'}</td><td>{ap == null ? '—' : `#${ap}`}</td><td>{odds != null && Number.isFinite(odds) && odds >= 0 && odds <= 1 ? `${(odds * 100).toFixed(0)}%` : '—'}</td><td><button type="button" onClick={() => onTeam(team.team)}>View team</button></td></tr>
       })}</tbody></table></div>
       {current.length > 25 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show first 25' : `Show all ${current.length} programs`}</button></p>}
       {!current.length && <p role="status">No published current-season rankings match this search.</p>}
-      <p><small>Current-season model ranking and verified polls are displayed independently. No synthetic stock scores, contender labels, or historical trends are inferred.</small></p>
+      <p><small>Recent form is computed from completed games; forecast differences use the existing tracked prediction archive, not retrospective guesses. CFP percentages are published model projections, not guarantees. No synthetic stock scores, contender labels, or historical trends are inferred.</small></p>
     </section>
   }
   return <section className="notice">
