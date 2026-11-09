@@ -1,8 +1,8 @@
 # College Football Analytics V4.0 — Release Candidate Notes
 
 **Status:** Development candidate; not authorized for production.  
-**Validated executable commit:** `19e5db95124a30aae8a265bf80ccbabd55d3f5ab`.  
-**Validation:** [V4 workflow 42544623801](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544623801) and [Python/dashboard workflow 42544623798](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544623798) succeeded.
+**Validated executable commit:** `cad394fe52a2566f60582b66eec1aca4e02dc1ae`.  
+**Validation:** [V4 workflow 42557010119](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42557010119) and [Python/dashboard workflow 42557010236](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42557010236) succeeded for this exact executable SHA.
 
 ## Fan-facing changes
 
@@ -10,7 +10,7 @@
 - Historical Hype Index: separate AP and Coaches preseason-to-final Top 25 expectations and outcomes, emphasizing recent completed seasons where a verified ten-season history exists; distinguishes historical tendency from current-season poll/model disagreement.
 - Program Trajectory: independently calculated ten-season direction, five-season direction, and three-season momentum; verified season-by-season strength chart with gaps for missing years; derived combined interpretations of hype and momentum, not a new prediction score.
 - Consolidated Team Profiles expose the available historical classifications; the primary dashboard stays focused on current football information.
-- Current-season poll comparisons use the incumbent model's rankings and explicitly describe disagreement as **not** proven poll error.
+- Current-season AP/Coaches poll comparisons use the incumbent model's rankings, support conference filtering independently of historical publication, and explicitly describe disagreement as **not** proven poll error.
 
 ## Important limitations
 
@@ -20,7 +20,7 @@
 - **Contenders & Pretenders:** No unsupported independent expected-record or contender classifications are published.
 - **Weekly perception movement:** No changes are inferred without dated poll snapshots.
 - **Experimental challenger:** Research-only; not promoted. The incumbent prediction model remains the sole production prediction engine.
-- **Visual acceptance:** Browser screenshot artifact exists but has not been independently inspected and approved as a final visual acceptance package.
+- **Visual acceptance:** Forty actual browser screenshots from V4 validation artifact `13647902100` (375, 390, 768, 1536 pixels; ten views) have been downloaded and visually inspected as a contact sheet. The Team Profile contrast defect was corrected and checked in a 390px capture. Full-resolution, long-page visual acceptance remains open.
 
 ## Release gate
 
