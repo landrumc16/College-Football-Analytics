@@ -78,8 +78,9 @@ try {
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Top 25 wins' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Rating' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Coaches Poll' }).waitFor({ state: 'attached' });
-        if (await page.locator('.program-intelligence-table tbody tr:first-child td').count() !== 11) {
+        if (await page.locator('.program-intelligence-table tbody tr:first-child td').count() !== 12) {
           throw new Error('Program Intelligence comparison columns are out of sync with mobile cards');
         }
         if (await page.getByText('Verified historical program development').count()) {
