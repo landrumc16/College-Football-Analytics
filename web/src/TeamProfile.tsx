@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
+import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -64,9 +65,13 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const playoff = cfp.find(r => r.team === team)
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
+  const lastFive = recentForm(schedule, team)
+  const seasonTrend = seasonFormTrend(schedule, team)
+  const winsAgainstCurrentTop25 = winsVsCurrentTop25(schedule, team, rankings)
+  const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
   const conferenceTeam = conference?.[1].find(row => row.team === team)
-  const resultsVsForecast = performanceRecord?.wins_above_expected == null || !Number.isFinite(performanceRecord.wins_above_expected) || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : performanceRecord.wins_above_expected >= 1 ? 'Outperforming forecast' : performanceRecord.wins_above_expected <= -1 ? 'Underperforming forecast' : 'Near expectation'
+  const resultsVsForecast = forecastGap == null ? 'Insufficient tracked forecasts' : forecastGap >= 1 ? 'Outperforming forecast' : forecastGap <= -1 ? 'Underperforming forecast' : 'Near expectation'
   const playoffOutlook = playoff?.cfp_field == null ? 'Insufficient simulation data' : playoff.cfp_field >= 0.5 ? 'Playoff contender' : playoff.cfp_field >= 0.15 ? 'On the bubble' : 'Outside current projection'
   const upcoming = schedule.filter(g => !g.completed && (g.home === team || g.away === team))
   const upcomingForecasts = upcoming.map(g => predictedForecast(predictions, g, team)).filter((p): p is number => p !== null)
@@ -89,28 +94,26 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
-      {tile('10-Year Program Rank', historical?.program_rankings?.['10']?.rank != null ? '#' + historical.program_rankings['10'].rank : 'Insufficient data')}
-      {tile('5-Year Program Rank', historical?.program_rankings?.['5']?.rank != null ? '#' + historical.program_rankings['5'].rank : 'Insufficient data')}
-      {tile('3-Year Program Rank', historical?.program_rankings?.['3']?.rank != null ? '#' + historical.program_rankings['3'].rank : 'Insufficient data')}
-      {tile('10-Year Trajectory', label(historical?.trajectory?.long_term.classification))}
-      {tile('5-Year Direction', label(historical?.trajectory?.medium_term?.classification))}
-      {tile('3-Year Momentum', label(historical?.trajectory?.recent.classification))}
-      {tile('AP Hype Index', label(historical?.hype.AP?.historical_tendency))}
-      {tile('Coaches Hype Index', label(historical?.hype.Coaches?.historical_tendency))}
-      {tile('Team Stock Watch', 'Insufficient verified weekly snapshots')}
+      {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
+      {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
+      {tile('Current-Season Form Trend', seasonTrend ?? 'Requires 8 scored games')}
+      {tile('Conference', conference?.[0] || 'Unavailable')}
+      {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
       {tile('Results vs Forecast', resultsVsForecast)}
-      {tile('Contenders & Pretenders', 'Too Early to Tell — no validated diagnostic')}
       {tile('Current CFP Outlook', playoffOutlook)}
       {tile('Upcoming Matchup Confidence', forecastConfidence == null ? 'No upcoming forecast' : (forecastConfidence * 100).toFixed(1) + '% strongest pick confidence')}
       {tile('Strongest Remaining Opponent', rankedOpponents.length ? '#' + rankedOpponents[0].rank + ' ' + rankedOpponents[0].opponent : 'Unavailable')}
-      {tile('Wins vs Model Expectation', performanceRecord?.wins_above_expected == null || !Number.isFinite(performanceRecord.wins_above_expected) || performanceRecord.games_with_forecasts < 3 ? 'Insufficient forecasts' : (performanceRecord.wins_above_expected > 0 ? '+' : '') + performanceRecord.wins_above_expected.toFixed(2))}
+      {tile('Wins vs Model Expectation', forecastGap == null ? 'Insufficient forecasts' : (forecastGap > 0 ? '+' : '') + forecastGap.toFixed(2))}
       {tile('Conference Title Odds', conferenceTeam ? (100 * conferenceTeam.conference_title_odds).toFixed(1) + '%' : 'Unavailable')}
-      {tile('Head Coach & Coordinators', 'Verified staff data unavailable')}
-      {tile('Roster Continuity & Transfers', 'Verified roster data unavailable')}
-      {tile('Opponent-Specific Matchup Factors', 'Verified matchup factors unavailable')}
       {tile('Recruiting Development', recruitingRecord ? recruitingRecord.average_wins_above_recruiting_baseline.toFixed(2) + ' wins vs talent baseline' : 'Insufficient research')}
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
+    </div>
+    <div className="accuracy-summary"><h3>Program development and expectations</h3>
+      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form trend: {seasonTrend ?? 'not enough scored games'} (two non-overlapping four-game windows, requiring a two-win difference to classify a change). This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
+      <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
+      <p><strong>Long-term trajectory:</strong> {historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
+      <p>AP/Coaches historical expectations: {historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
     </div>
     <details><summary>Historical program ranking coverage and sources</summary>
       <p role="status">{historyStatus === 'published' ? 'Independently reviewed historical research is published.' : historyStatus === 'loading' ? 'Checking historical publication status…' : 'Historical research has not passed the publication gate; rankings, trajectory, and hype remain unavailable.'}</p>
