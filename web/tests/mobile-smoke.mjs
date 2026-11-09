@@ -86,7 +86,11 @@ try {
         }
       }
       if (section === 'hype' || section === 'trajectory' || section === 'programs') {
-        await page.getByLabel('Filter historical programs by conference').waitFor();
+        if (await page.getByLabel('Filter historical programs by conference').count()) {
+          await page.getByLabel('Filter historical programs by conference').selectOption('all');
+        } else {
+          await page.getByText(/Historical research is awaiting independent source review|Verified historical program data has not been published yet|No rankings are estimated from missing data/).first().waitFor();
+        }
       }
       if (section === 'trajectory') {
         await page.getByText('Program development:', { exact: false }).waitFor();
