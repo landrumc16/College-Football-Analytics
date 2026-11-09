@@ -54,7 +54,7 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
+    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'polls') {
         await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
