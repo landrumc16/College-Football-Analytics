@@ -18,10 +18,14 @@ def historical_coverage_inventory(strength_rows: list[dict], poll_rows: list[dic
     diagnostics = validate_program_sources(strength_rows, poll_rows, latest_season)
     strength = defaultdict(set)
     polls = defaultdict(set)
+    strength_sources = defaultdict(dict)
+    poll_sources = defaultdict(dict)
     for row in strength_rows:
         strength[row["team"]].add(row["season"])
+        strength_sources[row["team"]][row["season"]] = row["source"]
     for row in poll_rows:
         polls[(row["team"], row["poll"])].add(row["season"])
+        poll_sources[(row["team"], row["poll"])][row["season"]] = row["source"]
     teams = sorted(set(strength) | {team for team, _ in polls})
     windows = (3, 5, 10)
     records = []
@@ -31,12 +35,15 @@ def historical_coverage_inventory(strength_rows: list[dict], poll_rows: list[dic
         records.append({
             "team": team,
             "strength_seasons": sorted(available_strength),
+            "strength_sources": [{"season": year, "source": strength_sources[team][year]} for year in sorted(available_strength)],
             "poll_seasons": {poll: sorted(years) for poll, years in by_poll.items()},
+            "poll_sources": {poll: [{"season": year, "source": poll_sources[(team, poll)][year]} for year in sorted(years)] for poll, years in by_poll.items()},
             "windows": {
                 str(window): {
                     "strength_complete": all(year in available_strength for year in range(latest_season - window + 1, latest_season + 1)),
                     "strength_missing": [year for year in range(latest_season - window + 1, latest_season + 1) if year not in available_strength],
                     "poll_complete": {poll: all(year in by_poll[poll] for year in range(latest_season - window + 1, latest_season + 1)) for poll in by_poll},
+                    "strength_and_both_polls_complete": all(year in available_strength and year in by_poll["AP"] and year in by_poll["Coaches"] for year in range(latest_season - window + 1, latest_season + 1)),
                     "poll_missing": {poll: [year for year in range(latest_season - window + 1, latest_season + 1) if year not in by_poll[poll]] for poll in by_poll},
                 } for window in windows
             },
@@ -53,6 +60,7 @@ def historical_coverage_inventory(strength_rows: list[dict], poll_rows: list[dic
                 "strength_complete": sum(record["windows"][str(window)]["strength_complete"] for record in records),
                 "ap_complete": sum(record["windows"][str(window)]["poll_complete"]["AP"] for record in records),
                 "coaches_complete": sum(record["windows"][str(window)]["poll_complete"]["Coaches"] for record in records),
+                "strength_and_both_polls_complete": sum(record["windows"][str(window)]["strength_and_both_polls_complete"] for record in records),
             } for window in windows
         },
         "teams": records,
