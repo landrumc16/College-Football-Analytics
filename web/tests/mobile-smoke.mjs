@@ -73,106 +73,26 @@ try {
         }
       }
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
-      if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
-      if (section === 'hype') {
-        await page.getByText('Expectations vs. reality:', { exact: false }).waitFor();
-        await page.getByText('Historical AP and Coaches evidence is kept separate', { exact: false }).waitFor();
-        await page.getByRole('heading', { name: 'Current-season poll perception vs. Our Model' }).waitFor();
-        await page.getByLabel('Choose AP or Coaches Poll').selectOption('Coaches');
-        await page.getByLabel('Choose AP or Coaches Poll').selectOption('AP');
-        // The validated fixture can legitimately lack a current-season poll snapshot.
-        // Exercise the conference selector only when the poll comparison is published.
-        const currentConference = page.getByLabel('Filter current poll perception by conference');
-        if (await currentConference.count()) {
-          const conferenceChoices = await currentConference.locator('option').count();
-          if (conferenceChoices > 1) {
-            const firstConference = await currentConference.locator('option').nth(1).getAttribute('value');
-            await currentConference.selectOption(firstConference);
-            await currentConference.selectOption('all');
-          }
-        } else {
-          await page.getByText('Current-season poll comparison is unavailable without a verified poll snapshot for this season.').waitFor();
-        }
-        const currentUnavailable = await page.getByText('Current-season poll comparison is unavailable', { exact: false }).count();
-        if (!currentUnavailable) {
-          await page.getByLabel('Sort current poll perception').selectOption('disagreement');
-          await page.getByLabel('Sort current poll perception').selectOption('poll');
-        }
-      }
-      if (section === 'hype' || section === 'trajectory' || section === 'programs') {
-        if (await page.getByLabel('Filter historical programs by conference').count()) {
-          await page.getByLabel('Filter historical programs by conference').selectOption('all');
-        } else {
-          await page.getByText(/Historical research is awaiting independent source review|Verified historical program data has not been published yet|No rankings are estimated from missing data/).first().waitFor();
-        }
-      }
-      if (section === 'trajectory') {
-        await page.getByText('Program development:', { exact: false }).waitFor();
-        await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
-        if (await page.getByLabel('Chart program strength').count()) {
-          const selector = page.getByLabel('Chart program strength');
-          const options = await selector.locator('option').count();
-          if (options > 1) {
-            const value = await selector.locator('option').nth(1).getAttribute('value');
-            await selector.selectOption(value);
-            await page.getByText(/Verified schedule-adjusted strength|No verified season-by-season strength chart/).waitFor();
-          }
-        }
-        if (await page.getByRole('columnheader', { name: 'AP + trajectory' }).count()) {
-          await page.getByRole('columnheader', { name: 'Coaches + trajectory' }).waitFor();
-        }
-      }
-      if (section === 'stock' || section === 'contenders') {
-        // These views must remain usable without publishing unsupported metrics.
-        const unavailable = section === 'stock'
-          ? 'Verified stock movement is unavailable.'
-          : 'Independent contender classifications are unavailable.';
-        await page.getByText(unavailable, { exact: false }).waitFor();
-        await page.getByLabel('Find a team profile').fill(firstTeam);
-        const teamRow = page.getByRole('row').filter({ hasText: firstTeam }).first();
-        await teamRow.getByRole('button', { name: 'View Team Profile' }).click();
+      if (['programs', 'hype', 'trajectory', 'stock', 'contenders'].includes(section)) {
+        await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
+        await page.getByRole('columnheader', { name: 'Last 5' }).waitFor();
+        await page.getByRole('columnheader', { name: 'Vs forecast' }).waitFor();
+        await page.getByLabel('Sort program intelligence').selectOption('recent');
+        await page.getByLabel('Sort program intelligence').selectOption('rank');
+        await page.getByLabel('Filter programs by conference').selectOption('all');
+        await page.getByLabel('Find a program').fill(firstTeam);
+        const row = page.getByRole('row').filter({ hasText: firstTeam }).first();
+        await row.getByRole('button', { name: 'View team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
-          throw new Error(`Discovery did not preserve the selected team in ${section}`);
+          throw new Error(`Program Intelligence did not preserve selected team for ${section}`);
         }
         await page.getByLabel('Choose dashboard section').selectOption(section);
       }
       if (section === 'profile') {
+        await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
-        await page.locator('small').getByText('Contenders & Pretenders', { exact: true }).waitFor();
-        await page.locator('small').getByText('Team Stock Watch', { exact: true }).waitFor();
-        for (const heading of ['Head Coach & Coordinators', 'Roster Continuity & Transfers', 'Opponent-Specific Matchup Factors']) {
-          await page.getByText(heading, { exact: true }).waitFor();
-        }
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
-      }
-      if (['programs', 'hype', 'trajectory'].includes(section)) {
-        // The optional historical asset is deliberately not published without
-        // verified source coverage. Check its absence is explicit and safe.
-        const historicalResponse = await page.evaluate(async () => {
-          const response = await fetch('./v4-program-intelligence.json', { cache: 'no-store' });
-          const contentType = response.headers.get('content-type') || '';
-          if (!response.ok || !contentType.includes('json')) return 'unavailable';
-          const payload = await response.json();
-          return payload.schema_version === 1 && payload.status === 'descriptive_only'
-            && payload.source_review_attested === true && payload.predictive_validation === false
-            && Array.isArray(payload.programs) ? 'published' : 'invalid';
-        });
-        if (historicalResponse === 'invalid') throw new Error('Historical research asset failed provenance schema gate');
-        if (historicalResponse === 'unavailable') {
-          await page.getByText('No rankings are estimated from missing data.', { exact: false }).waitFor();
-        }
-        if (historicalResponse === 'published') {
-          await page.getByText('Descriptive research only', { exact: false }).first().waitFor();
-          const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
-          if (await link.count()) {
-            await link.click();
-            await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
-            await page.getByLabel('Choose dashboard section').selectOption(section);
-          }
-        }
-
       }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
