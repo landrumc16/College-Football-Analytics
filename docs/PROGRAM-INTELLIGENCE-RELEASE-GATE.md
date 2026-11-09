@@ -10,7 +10,7 @@ Development branch: `program-intelligence-redesign` · PR #14 · production bran
 - **Playoff outlook:** incumbent published CFP field probability, not a separately validated contender label.
 - **Quality wins:** wins against opponents ranked in the **current** model Top 25, not historical opponent rank at kickoff.
 - **Historical direction:** displayed only from `v4-program-intelligence.json` after `isPublishedHistoricalIntelligence` provenance gate; no missing seasons are imputed.
-- **Polls:** current AP rank is separate from preseason expectations; absent rank is displayed as unavailable rather than assumed to indicate a specific historical standing.
+- **Quality wins:** the same shared `winsVsCurrentTop25` function counts completed victories against opponents in today's model Top 25; it does not reconstruct kickoff-day rankings.\n- **Polls:** current AP and Coaches ranks are separate from preseason expectations; absent rank is displayed as unavailable rather than assumed to indicate a specific historical standing.
 - **Shared calculations:** `web/src/programMetrics.ts` is consumed by both `ProgramIntelligence.tsx` and `TeamProfile.tsx`.
 
 ## Verification and remaining release gates
