@@ -52,6 +52,7 @@ function App() {
   const [pollSnapshot, setPollSnapshot] = useState<PollSnapshot | null>(null)
   const [pollUnavailable, setPollUnavailable] = useState(false)
   const [error, setError] = useState('')
+  const [refreshAttempt, setRefreshAttempt] = useState(0)
   const [offline, setOffline] = useState(!navigator.onLine)
   const [pollSort, setPollSort] = useState<'model' | 'ap' | 'coaches' | 'cfp'>('model')
   const [tab, setTab] = useState<'home' | 'rankings' | 'polls' | 'predictions' | 'conferences' | 'cfp' | 'matchup' | 'schedule' | 'research' | 'programs' | 'profile' | 'hype' | 'trajectory' | 'stock' | 'contenders'>('home')
@@ -78,14 +79,16 @@ function App() {
   }, [])
 
   useEffect(() => {
+    setError('')
     fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('No published season report is available yet.'); return r.json() })
       .then((data: Report) => {
         if (!Array.isArray(data.rankings) || !Array.isArray(data.predictions)) throw new Error('Invalid report format')
         setReport(data)
+        setError('')
       })
       .catch(e => setError(String(e.message || e)))
-  }, [])
+  }, [refreshAttempt])
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'v34-recruiting-research.json', { cache: 'no-store' })
@@ -192,7 +195,7 @@ function App() {
     <header className="brand-header"><img className="brand-logo" src={`${import.meta.env.BASE_URL}icons/icon-512.png`} alt="College Football Analytics collegiate logo" width="112" height="112" /><div className="brand-copy"><div className="eyebrow">COLLEGE FOOTBALL · SEASON INTELLIGENCE</div><h1>College Football <span>Analytics</span></h1><p>Rankings, predictions and playoff outlooks—backed by data.</p></div></header>
     <details className="install-guide" aria-label="About, privacy and getting started"><summary>New here? How this works · Privacy &amp; About</summary><div className="install-guide-content"><p><strong>Start here:</strong> This Week highlights upcoming games. Use Explore Dashboard for Rankings, Program Intelligence, Team Profiles, predictions, and playoff forecasts. Save up to three schools under My Teams.</p><p><strong>Your saved teams:</strong> Favorites are stored only in this browser on this device. No account or cross-device synchronization is provided. Clearing site data, private browsing, or browser storage restrictions can remove saved teams. Other browser profiles have separate selections.</p><p><strong>Data and forecasts:</strong> Published report timestamps and freshness warnings appear above the dashboard. Predictions and playoff odds are model estimates, not guarantees; see Research &amp; Data for methods, evidence, and limitations. Historical metrics without verified sources are not published.</p><p><strong>Privacy:</strong> Favorite selections remain in your browser storage and are not sent to an account service by this feature. The app retrieves published football data and may be subject to ordinary hosting and network logs; do not treat browser storage as a secure backup.</p><p><strong>Feedback:</strong> Report issues or suggest improvements through <a href="https://github.com/landrumc16/College-Football-Analytics/issues/new" target="_blank" rel="noopener noreferrer">the project issue form</a>. GitHub may require sign-in; avoid including personal information in public issues.</p></div></details>
     {!installed && <details className="install-guide"><summary>Add College Football Analytics to your phone</summary><div className="install-guide-content"><p>Get one-tap access from your home screen—no app store needed.</p>{installPrompt && <button type="button" onClick={async () => { const prompt = installPrompt; setInstallPrompt(null); await prompt.prompt(); await prompt.userChoice }}>Install App</button>}<p><strong>iPhone:</strong> Open this page in Safari, tap Share, then choose <strong>Add to Home Screen</strong> and tap Add.</p><p><strong>Android:</strong> Open this page in Chrome, tap the three-dot menu, then choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p></div></details>}
-    {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Run the repository's refresh workflow to publish a season report.</p></section> : null}
+    {error ? <section className="notice"><strong>Waiting for live data</strong><p>{error}</p><p>Check your connection and retry. If the report remains unavailable, the published data may need a refresh.</p><button type="button" onClick={() => setRefreshAttempt(n => n + 1)}>Retry loading data</button></section> : null}
     {report && <>
       {report.source?.includes("DEMO") && <section className="notice"><strong>Historical demonstration — not live rankings</strong><p>This view uses the frozen 2026 Week 7 workbook baseline. Live rankings will replace it after the CFBD refresh is verified.</p></section>}
       {(freshnessUnknown || staleData) && <section className="notice"><strong>Data freshness warning</strong><p>{freshnessUnknown ? 'This report has no valid retrieval timestamp; live-data freshness cannot be verified.' : 'This report was retrieved more than 72 hours ago (or has a future timestamp). Rankings and forecasts may be outdated.'}</p></section>}
