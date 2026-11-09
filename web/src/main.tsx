@@ -98,15 +98,18 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const controller = new AbortController()
     setError('')
-    fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store' })
+    fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store', signal: controller.signal })
       .then(r => { if (!r.ok) throw new Error('No published season report is available yet.'); return r.json() })
       .then((data: Report) => {
         if (!Array.isArray(data.rankings) || !Array.isArray(data.predictions)) throw new Error('Invalid report format')
+        if (controller.signal.aborted) return
         setReport(data)
         setError('')
       })
-      .catch(e => setError(String(e.message || e)))
+      .catch(e => { if (!controller.signal.aborted) setError(String(e.message || e)) })
+    return () => controller.abort()
   }, [refreshAttempt])
 
   useEffect(() => {
