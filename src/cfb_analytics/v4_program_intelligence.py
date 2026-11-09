@@ -25,7 +25,7 @@ def build_program_intelligence(strength_rows: list[dict], poll_rows: list[dict],
         by_team.setdefault(record["team"], {
             "team": record["team"], "program_rankings": None, "trajectory": None, "hype": {},
         })["trajectory"] = {
-            "long_term": record["long_term"], "recent": record["recent"],
+            "long_term": record["long_term"], "medium_term": record["medium_term"], "recent": record["recent"],
         }
     for record in hype["program_polls"]:
         by_team.setdefault(record["team"], {
