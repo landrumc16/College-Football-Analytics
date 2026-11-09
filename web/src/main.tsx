@@ -101,9 +101,9 @@ function App() {
     const controller = new AbortController()
     setError('')
     fetch(import.meta.env.BASE_URL + 'season-report.json', { cache: 'no-store', signal: controller.signal })
-      .then(r => { if (!r.ok) throw new Error('No published season report is available yet.'); return r.json() })
+      .then(r => { if (!r.ok || !r.headers.get('content-type')?.includes('json')) throw new Error('No valid published season report is available yet.'); return r.json() })
       .then((data: Report) => {
-        if (!Array.isArray(data.rankings) || !Array.isArray(data.predictions)) throw new Error('Invalid report format')
+        if (!Number.isInteger(data.season) || !Array.isArray(data.rankings) || !Array.isArray(data.predictions)) throw new Error('Invalid report format')
         if (controller.signal.aborted) return
         setReport(data)
         setError('')
@@ -134,7 +134,7 @@ function App() {
     fetch(import.meta.env.BASE_URL + 'poll-snapshot.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('Poll snapshot unavailable'); return r.json() })
       .then((data: PollSnapshot) => {
-        if (data.season === 2026 && Number.isInteger(data.week) &&
+        if (Number.isInteger(data.season) && data.season >= 2026 && Number.isInteger(data.week) &&
             Array.isArray(data.ap_top25) && Array.isArray(data.coaches_top25) &&
             data.ap_top25.length > 0 && data.coaches_top25.length > 0 && data.source &&
             (!data.cfp_top25?.length || (typeof data.cfp_published_at === 'string' &&
