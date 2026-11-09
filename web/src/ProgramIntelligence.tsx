@@ -62,7 +62,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
     setData(null)
     let active = true
     fetch(import.meta.env.BASE_URL + 'v4-program-intelligence.json', { cache: 'no-store' })
-      .then(response => { if (!response.ok) throw new Error('Verified historical program data has not been published yet.'); return response.json() })
+      .then(response => { if (!response.ok || !response.headers.get('content-type')?.includes('json')) throw new Error('Verified historical program data has not been published yet.'); return response.json() })
       .then((payload: Payload) => {
         if (active) {
           if (!isPublishedHistoricalIntelligence(payload)) throw new Error('Historical research is awaiting independent source review.')
