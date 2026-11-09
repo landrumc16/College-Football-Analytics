@@ -75,10 +75,20 @@ def test_paired_comparison_uses_only_common_games():
     assert comparison["model_a"] == "baseline"
     assert comparison["model_a_brier"] == pytest.approx(0.16)
     assert comparison["model_b_brier"] == pytest.approx(0.04)
+    assert comparison["model_a_logloss"] == pytest.approx(-math.log(0.6))
+    assert comparison["model_b_logloss"] == pytest.approx(-math.log(0.8))
 
 
 def test_conflicting_outcomes_for_same_game_are_rejected():
     other = forecast("g1", 0.2, False)
     other["model_id"] = "baseline"
     with pytest.raises(ValueError, match="Conflicting final outcomes"):
+        evaluate_archived_forecasts([forecast(), other])
+
+
+def test_conflicting_kickoff_for_same_game_is_rejected():
+    other = forecast("g1", 0.2, True)
+    other["model_id"] = "baseline"
+    other["kickoff_time"] = "2025-09-03T18:00:00-05:00"
+    with pytest.raises(ValueError, match="Conflicting kickoff"):
         evaluate_archived_forecasts([forecast(), other])
