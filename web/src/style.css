@@ -209,7 +209,7 @@ a:hover{color:#fff1dd}
 
 /* V4 compact, responsive consolidated school profile */
 .team-profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,165px),1fr));gap:.7rem;margin:1rem 0}
-.team-profile-tile{display:flex;flex-direction:column;gap:.4rem;padding:1rem;border:1px solid var(--border,rgba(128,128,128,.25));border-radius:.7rem;min-width:0;background:var(--surface,#fff)}
-.team-profile-tile small{font-size:.78rem;line-height:1.35;opacity:.8}
+.team-profile-tile{display:flex;flex-direction:column;gap:.4rem;padding:1rem;border:1px solid var(--border,rgba(128,128,128,.25));border-radius:.7rem;min-width:0;background:#142238;color:#f5f0e6}
+.team-profile-tile small{font-size:.78rem;line-height:1.35;color:#b6c8db}
 .team-profile-tile strong{font-size:1.12rem;line-height:1.3;overflow-wrap:anywhere;text-transform:capitalize}
 @media(max-width:480px){.team-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.team-profile-tile{padding:.75rem}.team-profile-tile strong{font-size:1rem}}
