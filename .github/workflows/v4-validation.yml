@@ -61,6 +61,8 @@ jobs:
           # Use npm install until a reviewed lockfile is introduced.
           npm install --no-audit --no-fund
           npm run build
+      - name: Validate historical publication boundary with adversarial fixtures
+        run: node web/tests/historical-publication.mjs
 
       - name: Stage validated incumbent season report for browser smoke
         run: |
