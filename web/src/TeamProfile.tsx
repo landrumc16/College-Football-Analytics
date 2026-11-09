@@ -66,6 +66,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
   const lastFive = recentForm(schedule, team)
+  const winsAgainstCurrentTop25 = schedule.filter(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null && (g.home === team ? g.home_score > g.away_score : g.away_score > g.home_score) && rankings.some(r => r.team === (g.home === team ? g.away : g.home) && r.rank <= 25)).length
   const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
   const conferenceTeam = conference?.[1].find(row => row.team === team)
@@ -92,6 +93,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
+      {tile('Wins vs Current Model Top 25', String(winsAgainstCurrentTop25))}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}
       {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
@@ -106,7 +108,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div>
     <div className="accuracy-summary"><h3>Program development and expectations</h3>
-      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. This describes results, not a measured change in team strength.</p>
+      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
       <p><strong>Long-term trajectory:</strong> {historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
       <p>AP/Coaches historical expectations: {historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
