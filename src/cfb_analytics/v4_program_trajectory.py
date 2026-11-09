@@ -10,7 +10,7 @@ from math import isfinite
 
 
 def program_trajectories(rows: list[dict], latest_season: int, *,
-                         long_window: int = 10, recent_window: int = 3,
+                         long_window: int = 10, medium_window: int = 5, recent_window: int = 3,
                          steady_threshold: float = 1.0,
                          rapid_threshold: float = 3.0) -> dict:
     """Return descriptive trend and momentum in strength units per season.
@@ -22,7 +22,7 @@ def program_trajectories(rows: list[dict], latest_season: int, *,
     """
     if not isinstance(latest_season, int) or isinstance(latest_season, bool):
         raise ValueError("Invalid latest season")
-    if long_window < 2 or recent_window < 2 or long_window < recent_window:
+    if long_window < 2 or recent_window < 2 or not recent_window <= medium_window <= long_window:
         raise ValueError("Invalid trend windows")
     if not (0 <= steady_threshold < rapid_threshold) or not all(
         isfinite(v) for v in (steady_threshold, rapid_threshold)
@@ -65,7 +65,7 @@ def program_trajectories(rows: list[dict], latest_season: int, *,
     for team in sorted(histories):
         history = histories[team]
         result = {"team": team}
-        for window, key in ((long_window, "long_term"), (recent_window, "recent")):
+        for window, key in ((long_window, "long_term"), (medium_window, "medium_term"), (recent_window, "recent")):
             years = list(range(latest_season - window + 1, latest_season + 1))
             available = [year for year in years if year in history]
             rate = slope([history[year] for year in years]) if len(available) == window else None
