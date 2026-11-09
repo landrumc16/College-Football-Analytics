@@ -36,6 +36,7 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
     if not isinstance(bins, int) or isinstance(bins, bool) or bins < 2 or bins > 100:
         raise ValueError("Invalid calibration bin count")
     by_model = defaultdict(list)
+    by_game = defaultdict(dict)
     seen = set()
     for row in rows:
         if not isinstance(row, dict):
@@ -59,6 +60,9 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
         if not isinstance(outcome, bool):
             raise ValueError("Final home-win outcome must be boolean")
         by_model[model].append((float(p), int(outcome)))
+        if game in by_game and any(existing_outcome != outcome for _, existing_outcome in by_game[game].values()):
+            raise ValueError("Conflicting final outcomes for game")
+        by_game[game][model] = (float(p), outcome)
     models = {}
     for model, predictions in sorted(by_model.items()):
         count = len(predictions)
@@ -81,8 +85,21 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
                 for i, group in enumerate(groups)
             ],
         }
+    comparisons = []
+    model_names = sorted(by_model)
+    for i, left in enumerate(model_names):
+        for right in model_names[i + 1:]:
+            matched = [(models[left], models[right]) for models in by_game.values() if left in models and right in models]
+            if not matched:
+                continue
+            def mean_brier(index):
+                return sum((pair[index][0] - int(pair[index][1])) ** 2 for pair in matched) / len(matched)
+            comparisons.append({"model_a": left, "model_b": right, "matched_games": len(matched),
+                                "model_a_brier": mean_brier(0), "model_b_brier": mean_brier(1),
+                                "scope": "paired_games_only_no_promotion_claim"})
     return {
         "status": "verified_archive_inputs_required",
+        "paired_baseline_comparisons": comparisons,
         "models": models,
         "total_forecasts": len(seen),
         "predictive_promotion_authorized": False,
