@@ -104,7 +104,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
       <label>Find a program <input aria-label="Find a program" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
       <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
       <div className="table-wrap"><table><thead><tr><th>Program</th><th>Model rank</th><th>Record</th><th>AP Poll</th><th>Momentum</th><th>Team</th></tr></thead><tbody>{visible.map(team => {
-        const ap = currentPoll?.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
+        const ap = currentPoll && currentPoll.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
         return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{ap == null ? 'Not Top 25 / unavailable' : `#${ap}`}</td><td>Awaiting dated history</td><td><button type="button" onClick={() => onTeam(team.team)}>View team</button></td></tr>
       })}</tbody></table></div>
       {current.length > 25 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show first 25' : `Show all ${current.length} programs`}</button></p>}
