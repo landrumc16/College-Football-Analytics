@@ -100,7 +100,17 @@ try {
           }
         }
       }
-      if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+      if (section === 'predictions') {
+        await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+        const firstPrediction = report.predictions[0];
+        await page.getByRole('button', { name: 'Compare teams' }).first().click();
+        await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
+        if (await page.getByLabel('First school').inputValue() !== firstPrediction.home || await page.getByLabel('Second school').inputValue() !== firstPrediction.away) {
+          throw new Error('Prediction-to-Compare did not preserve both schools');
+        }
+        await page.getByRole('region', { name: 'Side-by-side team comparison' }).waitFor();
+        await page.getByLabel('Choose dashboard section').selectOption('predictions');
+      }
       if (['programs', 'hype', 'trajectory', 'stock', 'contenders'].includes(section)) {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
