@@ -56,6 +56,20 @@ try {
     await page.getByRole('button', { name: 'Save Team' }).click();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
+    // A separate browser profile must not inherit another user's local favorites.
+    const isolatedContext = await browser.newContext({ viewport: { width, height: 844 } });
+    try {
+      const isolatedPage = await isolatedContext.newPage();
+      await isolatedPage.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+      await isolatedPage.getByRole('heading', { name: 'My Teams' }).waitFor();
+      if (await isolatedPage.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).count()) {
+        throw new Error('Favorite leaked into a separate browser profile');
+      }
+      const isolatedFavorites = await isolatedPage.evaluate(() => JSON.parse(localStorage.getItem('cfba-favorites-v1') || '[]'));
+      if (isolatedFavorites.some(Boolean)) throw new Error('New browser profile inherited favorites');
+    } finally {
+      await isolatedContext.close();
+    }
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).click();
     await page.reload({ waitUntil: 'networkidle' });
