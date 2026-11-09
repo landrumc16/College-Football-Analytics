@@ -5,7 +5,7 @@ Development branch: `program-intelligence-redesign` · PR #14 · production bran
 ## Published analysis contracts
 
 - **Current strength:** incumbent model ranking/rating and season record from `season-report.json`; no challenger promotion.
-- **Recent form:** last five completed, scored games, ordered by published week. **Season trend** compares non-overlapping five-game windows and is published only after ten scored, non-tied games; a difference of at least two wins indicates changing short-term results, not a change in model strength or multi-season trajectory.
+- **Recent form:** last five completed, scored games, ordered by published week. **Season trend** compares non-overlapping four-game windows and is published only after eight scored, non-tied games; a difference of at least two wins indicates changing short-term results, not a change in model strength or multi-season trajectory.
 - **Forecast performance:** wins above tracked expectation only with at least three archived forecasted games. No retrospective estimates are substituted.
 - **Playoff outlook:** incumbent published CFP field probability, not a separately validated contender label.
 - **Quality wins:** wins against opponents ranked in the **current** model Top 25, not historical opponent rank at kickoff.
