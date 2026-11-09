@@ -70,6 +70,11 @@ try {
     } finally {
       await isolatedContext.close();
     }
+    // A saved school must open its complete Team Profile, not just its schedule.
+    await page.getByRole('button', { name: 'Team profile' }).first().click();
+    await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+    if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite-to-profile navigation lost the selected team');
+    await page.getByLabel('Choose dashboard section').selectOption('home');
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).click();
     await page.reload({ waitUntil: 'networkidle' });
@@ -162,7 +167,7 @@ try {
         await page.getByLabel('School Schedule').waitFor();
       }
       if (section === 'compare') {
-        await page.getByRole('heading', { name: 'Hypothetical Matchup' }).waitFor();
+        await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         const secondTeam = report.rankings.find(team => team.team !== firstTeam)?.team;
         if (!secondTeam) throw new Error('Need two distinct teams for comparison');
         await page.getByLabel('First school').selectOption(firstTeam);
@@ -210,7 +215,7 @@ try {
         await pollPage.getByLabel('Choose dashboard section').selectOption('cfp');
         await pollPage.getByText('Official CFP snapshot:', { exact: false }).waitFor();
         const official = pollPage.locator('section.predictions-intro').filter({ hasText: 'Official CFP snapshot:' });
-        await official.getByRole('row').filter({ hasText: topTeam }).getByText('#1').waitFor();
+        await official.getByRole('row').filter({ hasText: topTeam }).locator('td').nth(2).getByText('#1').waitFor();
       } finally { await pollPage.close(); }
     }
     console.log(`Browser navigation smoke passed at ${width}px`);
