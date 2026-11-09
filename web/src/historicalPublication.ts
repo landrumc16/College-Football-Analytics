@@ -27,10 +27,10 @@ export function isPublishedHistoricalIntelligence(payload: unknown): payload is 
       !Array.isArray(coverage.required_window) || coverage.required_window.length !== 2 ||
       coverage.required_window[1] !== data.latest_completed_season ||
       coverage.required_window[0] !== (data.latest_completed_season as number) - 9 ||
-      typeof coverage.strength_programs_full_window !== 'number' ||
-      coverage.strength_programs_full_window < 1 ||
-      typeof coverage.poll_programs_full_window !== 'number' ||
-      coverage.poll_programs_full_window < 1) return false
+      !Number.isInteger(coverage.strength_programs_full_window) ||
+      (coverage.strength_programs_full_window as number) < 1 ||
+      !Number.isInteger(coverage.poll_programs_full_window) ||
+      (coverage.poll_programs_full_window as number) < 1) return false
 
   const seen = new Set<string>()
   return data.programs.every(program => {
