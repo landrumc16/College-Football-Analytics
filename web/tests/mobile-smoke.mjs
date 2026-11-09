@@ -85,6 +85,9 @@ try {
           await page.getByLabel('Sort current poll perception').selectOption('poll');
         }
       }
+      if (section === 'hype' || section === 'trajectory' || section === 'programs') {
+        await page.getByLabel('Filter historical programs by conference').waitFor();
+      }
       if (section === 'trajectory') {
         await page.getByText('Program development:', { exact: false }).waitFor();
         await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
