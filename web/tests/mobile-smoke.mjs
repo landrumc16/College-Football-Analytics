@@ -75,8 +75,8 @@ try {
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
       if (['programs', 'hype', 'trajectory', 'stock', 'contenders'].includes(section)) {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
-        await page.getByRole('columnheader', { name: 'Last 5' }).waitFor();
-        await page.getByRole('columnheader', { name: 'Vs forecast' }).waitFor();
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
         const rows = page.locator('.program-intelligence-table tbody tr');
         if (await rows.count() === 0) throw new Error('Program Intelligence has no current-season comparisons');
         if (await rows.count() > 25) throw new Error('Initial Program Intelligence view is not bounded');
