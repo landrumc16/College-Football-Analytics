@@ -225,13 +225,14 @@ a:hover{color:#fff1dd}
   .program-intelligence-table td:first-child{font-size:17px;font-weight:800;text-align:left;display:block;color:#f5f0e6}
   .program-intelligence-table td:not(:first-child)::before{color:#a7b5c9;font-size:12px;font-weight:600;text-align:left;flex-shrink:0}
   .program-intelligence-table td:nth-child(2)::before{content:"Model rank"}
-  .program-intelligence-table td:nth-child(3)::before{content:"Record"}
-  .program-intelligence-table td:nth-child(4)::before{content:"Top 25 wins"}
-  .program-intelligence-table td:nth-child(5)::before{content:"Last 5"}
-  .program-intelligence-table td:nth-child(6)::before{content:"Vs forecast"}
-  .program-intelligence-table td:nth-child(7)::before{content:"AP Poll"}
-  .program-intelligence-table td:nth-child(8)::before{content:"Coaches Poll"}
-  .program-intelligence-table td:nth-child(9)::before{content:"CFP chance"}
-  .program-intelligence-table td:nth-child(10)::before{content:"3-year direction"}
+  .program-intelligence-table td:nth-child(3)::before{content:"Model rating"}
+  .program-intelligence-table td:nth-child(4)::before{content:"Record"}
+  .program-intelligence-table td:nth-child(5)::before{content:"Top 25 wins"}
+  .program-intelligence-table td:nth-child(6)::before{content:"Last 5"}
+  .program-intelligence-table td:nth-child(7)::before{content:"Vs forecast"}
+  .program-intelligence-table td:nth-child(8)::before{content:"AP Poll"}
+  .program-intelligence-table td:nth-child(9)::before{content:"Coaches Poll"}
+  .program-intelligence-table td:nth-child(10)::before{content:"CFP chance"}
+  .program-intelligence-table td:nth-child(11)::before{content:"3-year direction"}
   .program-intelligence-table td:last-child{justify-content:flex-end;padding-top:8px}
 }
