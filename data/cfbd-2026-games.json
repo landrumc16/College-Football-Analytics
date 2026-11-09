@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-08T17:07:37.398294+00:00",
+  "retrieved_at": "2026-11-09T21:28:48.810138+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3678,
+    "scheduled": 3683,
     "completed": 3158,
-    "pending": 520
+    "pending": 525
   },
   "games": [
     {
@@ -38046,7 +38046,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T20:30:00.000Z"
     },
     {
       "game_id": 401856858,
@@ -38058,7 +38058,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T20:30:00.000Z"
     },
     {
       "game_id": 401856859,
@@ -38070,7 +38070,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T17:00:00.000Z"
     },
     {
       "game_id": 401856860,
@@ -38094,7 +38094,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T22:30:00.000Z"
     },
     {
       "game_id": 401856862,
@@ -38106,7 +38106,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T19:00:00.000Z"
     },
     {
       "game_id": 401856863,
@@ -38118,7 +38118,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T02:30:00.000Z"
     },
     {
       "game_id": 401856864,
@@ -38130,7 +38130,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T00:30:00.000Z"
     },
     {
       "game_id": 401856882,
@@ -38154,7 +38154,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T20:30:00.000Z"
     },
     {
       "game_id": 401856884,
@@ -38166,7 +38166,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T23:15:00.000Z"
     },
     {
       "game_id": 401856885,
@@ -38178,7 +38178,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T00:30:00.000Z"
     },
     {
       "game_id": 401856886,
@@ -38202,7 +38202,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T21:15:00.000Z"
     },
     {
       "game_id": 401856888,
@@ -38214,7 +38214,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T20:00:00.000Z"
     },
     {
       "game_id": 401856889,
@@ -38298,7 +38298,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T00:00:00.000Z"
     },
     {
       "game_id": 401858299,
@@ -38310,7 +38310,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-15T00:30:00.000Z"
     },
     {
       "game_id": 401858300,
@@ -39354,7 +39354,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T17:00:00.000Z"
+      "start_date": "2026-11-14T17:30:00.000Z"
     },
     {
       "game_id": 401868940,
@@ -39762,7 +39762,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T17:00:00.000Z"
+      "start_date": "2026-11-14T18:00:00.000Z"
     },
     {
       "game_id": 401906675,
@@ -39930,7 +39930,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T19:00:00.000Z"
+      "start_date": "2026-11-14T18:00:00.000Z"
     },
     {
       "game_id": 401907218,
@@ -40674,7 +40674,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T17:00:00.000Z"
+      "start_date": "2026-11-14T23:00:00.000Z"
     },
     {
       "game_id": 401908100,
@@ -40710,7 +40710,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T20:00:00.000Z"
+      "start_date": "2026-11-14T19:00:00.000Z"
     },
     {
       "game_id": 401908171,
@@ -40890,7 +40890,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T21:00:00.000Z"
+      "start_date": "2026-11-14T20:00:00.000Z"
     },
     {
       "game_id": 401908338,
@@ -40950,7 +40950,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T17:00:00.000Z"
+      "start_date": "2026-11-14T16:30:00.000Z"
     },
     {
       "game_id": 401908400,
@@ -41082,7 +41082,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T18:00:00.000Z"
+      "start_date": "2026-11-14T17:00:00.000Z"
     },
     {
       "game_id": 401908575,
@@ -41382,7 +41382,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T19:00:00.000Z"
+      "start_date": "2026-11-14T18:00:00.000Z"
     },
     {
       "game_id": 401908832,
@@ -41406,7 +41406,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T18:30:00.000Z"
+      "start_date": "2026-11-14T17:45:00.000Z"
     },
     {
       "game_id": 401908853,
@@ -41550,7 +41550,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-14T05:00:00.000Z"
+      "start_date": "2026-11-14T18:00:00.000Z"
     },
     {
       "game_id": 401908959,
@@ -41755,6 +41755,66 @@
       "away_score": null,
       "neutral_site": false,
       "start_date": "2026-11-14T18:00:00.000Z"
+    },
+    {
+      "game_id": 401933675,
+      "season": 2026,
+      "week": 11,
+      "home": "Benedict",
+      "away": "Kentucky State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T15:30:00.000Z"
+    },
+    {
+      "game_id": 401933695,
+      "season": 2026,
+      "week": 11,
+      "home": "North Greenville",
+      "away": "UNC Pembroke",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T18:00:00.000Z"
+    },
+    {
+      "game_id": 401933696,
+      "season": 2026,
+      "week": 11,
+      "home": "Chapman",
+      "away": "Claremont Mudd Scripps",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T21:00:00.000Z"
+    },
+    {
+      "game_id": 401933697,
+      "season": 2026,
+      "week": 11,
+      "home": "Pomona Pitzer",
+      "away": "Cal Lutheran",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T21:00:00.000Z"
+    },
+    {
+      "game_id": 401933698,
+      "season": 2026,
+      "week": 11,
+      "home": "Redlands",
+      "away": "Azusa Pacific",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T21:05:00.000Z"
     },
     {
       "game_id": 401856746,
@@ -44145,5 +44205,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-08T17:07:37.398294+00:00"
+  "data_changed_at": "2026-11-09T21:28:48.810138+00:00"
 }
