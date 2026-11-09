@@ -176,6 +176,28 @@ try {
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
+    // A correctly dated official CFP snapshot must render, rather than being
+    // discarded by the poll-date format gate. This fixture is browser-test-only.
+    if (width === 390) {
+      const pollPage = await browser.newPage({ viewport: { width, height: 844 } });
+      const topTeam = report.rankings[0].team;
+      await pollPage.route('**/poll-snapshot.json', route => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ season: report.season, week: 10,
+          source: 'Browser test fixture — not published research',
+          ap_top25: [{ team: topTeam, rank: 1 }],
+          coaches_top25: [{ team: topTeam, rank: 1 }],
+          cfp_top25: [{ team: topTeam, rank: 1 }],
+          cfp_published_at: `${report.season}-11-01` }),
+      }));
+      try {
+        await pollPage.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+        await pollPage.getByLabel('Choose dashboard section').selectOption('cfp');
+        await pollPage.getByText('Official CFP snapshot:', { exact: false }).waitFor();
+        const official = pollPage.locator('section.predictions-intro').filter({ hasText: 'Official CFP snapshot:' });
+        await official.getByRole('row').filter({ hasText: topTeam }).getByText('#1').waitFor();
+      } finally { await pollPage.close(); }
+    }
     console.log(`Browser navigation smoke passed at ${width}px`);
     await page.close();
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
