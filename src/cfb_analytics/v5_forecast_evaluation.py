@@ -92,3 +92,24 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             "No retrospective prediction may be presented as a frozen pregame forecast",
         ],
     }
+
+
+def main() -> None:
+    """Score a supplied independently verified frozen archive without publishing it."""
+    import argparse
+    import json
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--archive", type=Path, required=True,
+                        help="JSON array of frozen pregame forecasts with verified final outcomes")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    rows = json.loads(args.archive.read_text(encoding="utf-8"))
+    report = evaluate_archived_forecasts(rows)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
