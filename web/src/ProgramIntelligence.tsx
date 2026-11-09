@@ -40,10 +40,10 @@ function StrengthChart({ program }: { program: Program }) {
   </svg><figcaption>Verified schedule-adjusted strength by completed season. Gaps indicate missing data; higher means stronger, not a predicted finish.</figcaption></figure>
 }
 type CurrentPoll = { season: number; week: number; source: string; ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
-type CurrentRanking = { team: string; rank: number }
+type CurrentRanking = { team: string; rank: number; rating?: number; wins?: number; losses?: number; projected_wins?: number }
 type Payload = { schema_version: number; status: string; latest_completed_season: number; programs: Program[] }
 
-export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason, conferenceTeams = {} }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; conferenceTeams?: Record<string, string[]>; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' }) {
+export default function ProgramIntelligence({ onTeam, view = 'rankings', teams = [], currentPoll = null, currentRankings = [], currentSeason, conferenceTeams = {} }: { onTeam: (team: string) => void; teams?: string[]; currentPoll?: CurrentPoll | null; currentRankings?: CurrentRanking[]; currentSeason?: number; conferenceTeams?: Record<string, string[]>; view?: 'rankings' | 'hype' | 'trajectory' | 'stock' | 'contenders' | 'overview' }) {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
@@ -87,18 +87,31 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
   const visiblePrograms = showAll ? programs : programs.slice(0, 25)
   const morePrograms = programs.length > 25
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
-  if (view === 'stock' || view === 'contenders') return <section className="notice">
-    <h2>{view === 'stock' ? 'Team Stock Watch' : 'Contenders & Pretenders'}</h2>
-    <p>{view === 'stock'
-      ? 'Four-week movement requires verified, dated weekly snapshots and a validated 0–100 stock formula. Current rankings and season totals are not substitutes.'
-      : 'Independent classification requires a validated, schedule-adjusted expected-record model and sufficient as-of-date evidence. CFP odds and season-total forecast gaps are not substitutes.'}</p>
-    <p role="status">{view === 'stock' ? 'Verified stock movement is unavailable.' : 'Independent contender classifications are unavailable.'} No scores or classifications have been inferred.</p>
-    <label>Find a team <input aria-label="Find a team profile" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
-    <p>Current-season programs are listed for navigation only; no unverified historical indicators are assigned.</p>
-    <div className="table-wrap"><table><thead><tr><th>Program</th><th>{view === 'stock' ? 'Four-week movement' : 'Classification'}</th><th>Team details</th></tr></thead>
-    <tbody>{discoverableTeams.map(team => <tr key={team}><td>{team}</td><td>{view === 'stock' ? 'Insufficient verified snapshots' : 'Too Early to Tell'}</td><td><button type="button" onClick={() => onTeam(team)}>View Team Profile</button></td></tr>)}</tbody></table></div>
-    {!discoverableTeams.length && <p>No programs match this search.</p>}
-  </section>
+  if (view === 'overview' || view === 'stock' || view === 'contenders') {
+    const current = currentRankings.filter(team => Number.isFinite(team.rank) && team.rank > 0)
+      .filter(team => team.team.toLowerCase().includes(query.trim().toLowerCase()))
+      .filter(team => conference === 'all' || (conferenceTeams[conference] || []).includes(team.team))
+      .sort((a, b) => a.rank - b.rank)
+    const visible = showAll ? current : current.slice(0, 25)
+    return <section className="notice">
+      <h2>Program Intelligence</h2>
+      <p>Three useful questions: how strong is a program now, is it improving, and is it meeting expectations? The published incumbent model provides current team strength. Multiweek momentum and historical expectations are shown only when verified records exist.</p>
+      <div className="accuracy-summary"><h3>What the numbers mean</h3>
+        <p><strong>Strength:</strong> current published model ranking, not a historical program ranking or a guarantee of future wins.</p>
+        <p><strong>Momentum:</strong> not yet established without comparable dated snapshots. A team's current rank alone cannot establish improvement.</p>
+        <p><strong>Expectations:</strong> verified current AP/Coaches Poll rank can be compared with the model. Disagreement is not proof that either ranking is wrong.</p>
+      </div>
+      <label>Find a program <input aria-label="Find a program" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /></label>
+      <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
+      <div className="table-wrap"><table><thead><tr><th>Program</th><th>Model rank</th><th>Record</th><th>AP Poll</th><th>Momentum</th><th>Team</th></tr></thead><tbody>{visible.map(team => {
+        const ap = currentPoll?.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
+        return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{ap == null ? 'Not Top 25 / unavailable' : `#${ap}`}</td><td>Awaiting dated history</td><td><button type="button" onClick={() => onTeam(team.team)}>View team</button></td></tr>
+      })}</tbody></table></div>
+      {current.length > 25 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show first 25' : `Show all ${current.length} programs`}</button></p>}
+      {!current.length && <p role="status">No published current-season rankings match this search.</p>}
+      <p><small>Current-season model ranking and verified polls are displayed independently. No synthetic stock scores, contender labels, or historical trends are inferred.</small></p>
+    </section>
+  }
   return <section className="notice">
     <h2>{view === 'hype' ? 'Historical Hype Index' : view === 'trajectory' ? 'Program Trajectory & Momentum' : 'Historical Program Rankings'}</h2>
     {view === 'hype' && <p><strong>Expectations vs. reality:</strong> Which programs repeatedly exceed or fall short of preseason poll expectations? Historical AP and Coaches evidence is kept separate from current-season model-versus-poll disagreement. This is not a forecast.</p>}
