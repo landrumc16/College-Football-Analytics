@@ -37,6 +37,7 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
         raise ValueError("Invalid calibration bin count")
     by_model = defaultdict(list)
     by_game = defaultdict(dict)
+    game_kickoffs = {}
     seen = set()
     for row in rows:
         if not isinstance(row, dict):
@@ -53,6 +54,9 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
         kickoff_at = _timestamp(row.get("kickoff_time"))
         if forecast_at >= kickoff_at:
             raise ValueError("Forecast is not pregame")
+        if game in game_kickoffs and game_kickoffs[game] != kickoff_at:
+            raise ValueError("Conflicting kickoff times for game")
+        game_kickoffs[game] = kickoff_at
         p = row.get("home_win_probability")
         outcome = row.get("home_won")
         if not isinstance(p, (int, float)) or isinstance(p, bool) or not isfinite(p) or not 0 <= p <= 1:
@@ -92,10 +96,17 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             matched = [(models[left], models[right]) for models in by_game.values() if left in models and right in models]
             if not matched:
                 continue
-            def mean_brier(index):
-                return sum((pair[index][0] - int(pair[index][1])) ** 2 for pair in matched) / len(matched)
+            def paired_metrics(index):
+                brier = sum((pair[index][0] - int(pair[index][1])) ** 2 for pair in matched) / len(matched)
+                logloss = -sum(int(pair[index][1]) * log(max(pair[index][0], 1e-15)) +
+                               (1 - int(pair[index][1])) * log(max(1 - pair[index][0], 1e-15))
+                               for pair in matched) / len(matched)
+                return brier, logloss
+            a_brier, a_logloss = paired_metrics(0)
+            b_brier, b_logloss = paired_metrics(1)
             comparisons.append({"model_a": left, "model_b": right, "matched_games": len(matched),
-                                "model_a_brier": mean_brier(0), "model_b_brier": mean_brier(1),
+                                "model_a_brier": a_brier, "model_b_brier": b_brier,
+                                "model_a_logloss": a_logloss, "model_b_logloss": b_logloss,
                                 "scope": "paired_games_only_no_promotion_claim"})
     return {
         "status": "verified_archive_inputs_required",
