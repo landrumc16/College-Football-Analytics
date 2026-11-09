@@ -106,13 +106,14 @@ try {
         await page.getByLabel('Filter programs by conference').selectOption('all');
         await page.getByLabel('Find a program').fill(firstTeam);
         const row = page.getByRole('row').filter({ hasText: firstTeam }).first();
-        const overviewTrend = (await row.locator('td').nth(7).innerText()).trim();
+        const overviewTrend = (await row.locator('td').nth(7).textContent() || '').trim();
         await row.getByRole('button', { name: 'View team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         const profileTrend = page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' });
         await profileTrend.waitFor();
-        if ((await profileTrend.locator('strong').innerText()).trim() !== (overviewTrend === '—' ? 'Requires 10 scored games' : overviewTrend)) {
-          throw new Error('Team Profile and Program Intelligence disagree on current-season form trend');
+        const profileTrendValue = (await profileTrend.locator('strong').textContent() || '').trim();
+        if (profileTrendValue !== (overviewTrend === '—' ? 'Requires 10 scored games' : overviewTrend)) {
+          throw new Error(`Team Profile and Program Intelligence disagree on current-season form trend for ${firstTeam}: overview=${JSON.stringify(overviewTrend)}, profile=${JSON.stringify(profileTrendValue)}`);
         }
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
           throw new Error(`Program Intelligence did not preserve selected team for ${section}`);
