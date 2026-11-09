@@ -182,6 +182,11 @@ try {
     await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));
     await failedPage.goto('http://127.0.0.1:4178/');
     await failedPage.getByText('Waiting for live data').waitFor();
+    // A transient refresh failure must recover without requiring an app reinstall.
+    await failedPage.unroute('**/season-report.json');
+    await failedPage.getByRole('button', { name: 'Retry loading data' }).click();
+    await failedPage.getByRole('heading', { name: 'My Teams' }).waitFor();
+    if (await failedPage.getByText('Waiting for live data').count()) throw new Error('Refresh retry did not clear the failure');
     await failedPage.close();
   }
 } finally {
