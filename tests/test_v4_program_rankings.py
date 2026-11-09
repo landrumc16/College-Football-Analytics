@@ -41,3 +41,21 @@ def test_no_future_data_duplicates_or_invalid_strength():
         rank_programs([dict(team="A", season=2025, strength=1, source="")], 2025)
     with pytest.raises(ValueError, match="Duplicate windows"):
         rank_programs([], 2025, (3, 3))
+
+
+def test_window_provenance_is_complete_and_sparse_windows_are_unpublishable():
+    report = rank_programs(rows("Complete", [2] * 10) + rows("Partial", [8] * 3, 2023), 2025)
+    teams = {p["team"]: p["windows"] for p in report["programs"]}
+    full = teams["Complete"]["10"]
+    assert full["publishable"] is True
+    assert full["years"] == list(range(2016, 2026))
+    assert full["sources"] == [
+        {"season": year, "source": f"verified-{year}"} for year in range(2016, 2026)
+    ]
+    partial = teams["Partial"]["10"]
+    assert partial["publishable"] is False
+    assert partial["rank"] is None
+    assert partial["strength"] is None
+    assert partial["years"] == [2023, 2024, 2025]
+    assert len(partial["sources"]) == 3
+    assert teams["Partial"]["3"]["publishable"] is True

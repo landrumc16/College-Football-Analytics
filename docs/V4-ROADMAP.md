@@ -220,6 +220,49 @@ Implement A, B, D and H as core model/operations improvements; E and F as the ma
 - **Scope rule:** These are approved V4 features, not a new version or a justification to bypass the current historical pregame provenance blocker. Build them alongside the existing roadmap; do not delay core predictive integrity for cosmetic scoring.
 
 
+### M6 compact Poll Comparison tab — APPROVED 2026-11-08
+
+**Owner decision:** Do not crowd the existing Rankings tab. Provide a separate **Poll Comparison** navigation entry showing **only School, Our Model, AP, Coaches and CFP** rankings, limited to approximately 30 schools. Include overlap between the model's Top 30 and public Top 25 polls so differences and unranked cases are apparent. Keep the page straightforward and mobile-readable; no additional statistical columns.
+
+- Use verified dated AP/Coaches snapshots and verified CFP snapshots when available; do not manufacture CFP rankings before release or infer missing poll entries from model ranks.
+- Use existing incumbent model rankings without changing the model; display unavailable states clearly when verified public polls are missing.
+- Avoid hiding important overlap through arbitrary truncation: establish a deterministic, transparent 30-row selection and ordering rule and test it with overlapping/non-overlapping poll fixtures.
+- Preserve the existing Rankings tab layout; retain the detailed research methodology separately in Research & Data.
+- **Acceptance:** dedicated navigation, five columns, responsive rendering, verified-data and missing-data cases, deterministic 30-row selection, and browser tests on mobile and desktop.
+
+### K–L final product differentiation amendment — APPROVED 2026-11-08
+
+**Product decision:** Hype Index and Program Trajectory must provide **independent, complementary decisions**, not two ranking-movement dashboards. Preserve the historical definitions and safeguards in K and L above. Implement as a focused V4 M6 product-completion pass, not a new version, prediction engine, or open-ended research cycle.
+
+**K. Hype Index: \"Are expectations ahead of or behind reality?\"**
+- **Historical preseason expectations versus outcomes** remains the canonical historical Hype Index: AP and Coaches preseason vs final results over up to 10 completed seasons, latest five weighted more heavily, preseason tier adjustment, explicit sample sizes, missing/unranked states, and confidence/coverage. Distinguish preseason Top 25 exits and unranked-to-Top-25 arrivals from numeric movement within a poll.
+- **Current-season poll perception versus model assessment** is a *separate labeled lens*, not silently merged with historical tendency. Compare AP and Coaches ranks independently to the validated incumbent model's current team-strength ranking, including rank direction and magnitude. Do not equate rank gap with calibrated win probability, betting value, or proof that voters are wrong; describe model-versus-poll disagreement. Include current poll date, model timestamp, team mapping, and absent-poll cases.
+- **Perception movement** (gap widening/narrowing over recent weeks) is optional and **unavailable until genuine dated poll and model snapshots exist**. Do not manufacture prior weeks from current data.
+- **Dedicated Hype discovery:** sortable/filterable FBS leaderboard by conference and AP/Coaches lens; clearly labeled overhyped / broadly aligned / underhyped only when defensible thresholds and coverage permit; historical preseason sleepers and poll dropouts; concise evidence-backed \"why\" with poll, model, season and coverage references. The historical and current-season measures must be visually and verbally distinct.
+- **Team Profile:** concise hype summary, historical AP/Coaches breakdown, current poll-model disagreement where supported, and link to detailed Research & Data methodology. No duplicate team record or parallel calculation.
+- **Validation:** deterministic known-team fixtures for over/under/aligned, tie and unranked handling, AP/Coaches differences, missing data, date freshness, conference filtering, and no accidental mixing of historical and current values. Descriptive insight only; do not change production predictions.
+
+**L. Program Trajectory: \"Is the program sustainably strengthening or weakening?\"**
+- Use **verified opponent/schedule-adjusted season performance** on a comparable scale over up to 10 completed seasons. Show a 10-year chart, 5-year directional trend, and 3-year momentum; distinguish a sustained change from a single exceptional season. Show coverage, season labels and normalization method; handle 2020, realignment, coaching transitions, and FBS entry explicitly.
+- **Separate absolute strength from direction**: a strong program may be declining; a weaker one may be rapidly improving. Use predeclared thresholds for rapidly rising, steadily improving, stable, steadily declining, rapidly declining; avoid classifying short or discontinuous series.
+- **Consistency / expectations:** where verified season-level sources support it, show year-to-year volatility and performance against an independent preseason expectation baseline. Do not reuse poll hype as the primary trajectory measure or count the same signal twice. Recruiting, coaching and roster development are separately labeled contextual evidence only when source-backed; no unsupported causal claims.
+- **Dedicated Trajectory discovery:** sortable/filterable FBS leaderboard by 10-year direction, 5-year trend, 3-year momentum, program-strength level and conference; interactive season chart and plain-language explanation of change, reversals and uncertainty. Team Profile provides the same metrics and Research & Data methodology, without duplicate definitions.
+- **Validation:** rising/falling/stable, one-season spike, high-strength decline, low-strength rise, schedule changes, sparse seasons, FBS transitions, missing sources and mobile chart accessibility. Historical descriptive metrics must never leak future information into predictions.
+
+**Combined insight (derived presentation, not a third competing score):**
+- Show a compact two-axis interpretation when both underlying signals are available: **underhyped + rising** = potentially overlooked improving program; **overhyped + declining** = reputation potentially masking decline; **overhyped + rising** = improving but expectations may run ahead; **underhyped + declining** = weakening with potentially excessive pessimism.
+- Label the comparison lens (historical preseason tendency or current-season model/poll gap); never collapse distinct time horizons into a single opaque score. Where either metric is unavailable, show the available component and explain the missing one rather than invent a quadrant.
+- Avoid predictions of future outcomes or investment/betting claims from these descriptive combinations.
+
+**Completion sequence and acceptance gate:**
+1. **Data contracts (M2):** verify historical polls, dated current polls/model rankings, 10-season opponent-adjusted performance and identity aliases; document exact coverage, missing years and provenance. Never fill gaps synthetically.
+2. **Independent calculations (M3–M5):** reuse existing data infrastructure; separate historical hype, current poll-model gap, trajectory and combined display logic; add deterministic fixtures and tests. No incumbent prediction change.
+3. **Fan-facing implementation (M6):** two clearly distinct national discovery pages, conference sorting/filtering, meaningful evidence and charts, mobile-first layout, single Team Profile integration and Research & Data definitions; no duplicated computations.
+4. **Verification (M7):** regression/build/browser/PWA checks, verified-data vs unavailable-state UI tests, source freshness, no V3 feature regressions, and updated release evidence tied to exact tested SHA. Capture desktop/mobile screenshots for owner visual review.
+5. **Release control:** V4 remains on `v4-development` until verified and explicitly approved by owner; do not merge to `main` or claim deployment without approval. The November 6 release decision allowing honest unavailable states and retaining the validated incumbent model remains in force.
+
+**Definition of done:** A fan can explain the difference after viewing either page; each offers a useful independent leaderboard and team-level explanation; the combined interpretation adds value without double-counting; every published number has source coverage and an honest missing-data fallback; automated checks and visual review pass.
+
 ### M6 team-first information architecture — APPROVED
 
 **Primary rule:** Each school's existing Team Page is the single consolidated destination for its metrics. Cross-school pages (Hype Index, Rankings, Team Stock Watch, Contenders & Pretenders) are comparison/discovery views that deep-link to the same Team Page; never create duplicate team profiles or independent metric definitions.

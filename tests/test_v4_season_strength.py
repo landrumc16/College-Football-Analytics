@@ -1,0 +1,57 @@
+from cfb_analytics.v4_season_strength import retrospective_season_ratings
+
+
+def game(game_id, home, away, hs, aws, kickoff="2025-09-01T17:00:00+00:00", neutral=False):
+    return {"season": 2025, "game_id": game_id, "week": 1, "kickoff": kickoff,
+            "home": home, "away": away, "home_score": hs, "away_score": aws,
+            "home_division": "FBS", "away_division": "FBS",
+            "fbs_game": True, "fbs_participant": True, "neutral_site": neutral}
+
+
+def test_opponent_results_affect_subsequent_strength():
+    schedule = [game("1", "A", "B", 24, 10),
+                game("2", "A", "C", 24, 10, "2025-09-08T17:00:00+00:00")]
+    result = retrospective_season_ratings(schedule, 2025)
+    ratings = {r["team"]: r["rating"] for r in result["teams"]}
+    assert ratings["A"] > ratings["C"]
+    assert ratings["B"] < 1500
+    assert result["predictive_validation"] is False
+    assert result["comparable_across_seasons_verified"] is False
+
+
+def test_order_independent_for_simultaneous_games():
+    rows = [game("1", "A", "B", 20, 10),
+            game("2", "A", "C", 20, 10)]
+    a = retrospective_season_ratings(rows, 2025)
+    b = retrospective_season_ratings(list(reversed(rows)), 2025)
+    assert a == b
+
+
+def test_neutral_field_changes_expectation():
+    home = retrospective_season_ratings([game("1", "A", "B", 21, 7)], 2025)
+    neutral = retrospective_season_ratings([game("1", "A", "B", 21, 7, neutral=True)], 2025)
+    assert neutral["teams"][0]["rating"] > home["teams"][0]["rating"]
+
+
+def test_equivalent_utc_instants_are_one_simultaneous_batch():
+    same_instant = [
+        game("1", "A", "B", 20, 10, "2025-09-01T17:00:00+00:00"),
+        game("2", "A", "C", 20, 10, "2025-09-01T12:00:00-05:00"),
+    ]
+    normalized = [
+        {**row, "kickoff": "2025-09-01T17:00:00+00:00"}
+        for row in same_instant
+    ]
+    assert retrospective_season_ratings(same_instant, 2025) == retrospective_season_ratings(normalized, 2025)
+
+
+def test_chronological_order_respects_offsets_not_text_order():
+    games = [
+        game("1", "A", "B", 20, 10, "2025-09-01T11:00:00-05:00"),
+        game("2", "A", "C", 20, 10, "2025-09-01T16:30:00+00:00"),
+    ]
+    normalized = [
+        {**games[0], "kickoff": "2025-09-01T16:00:00+00:00"},
+        games[1],
+    ]
+    assert retrospective_season_ratings(games, 2025) == retrospective_season_ratings(normalized, 2025)

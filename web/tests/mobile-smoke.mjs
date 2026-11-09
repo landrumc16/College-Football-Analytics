@@ -17,8 +17,8 @@ try {
   if (!ready) throw new Error('Dashboard development server did not start');
   browser = await chromium.launch({ headless: true });
   await mkdir('web/mobile-evidence', { recursive: true });
-  for (const width of [375, 390, 768]) {
-    const page = await browser.newPage({ viewport: { width, height: 844 }, deviceScaleFactor: 1 });
+  for (const width of [375, 390, 768, 1536]) {
+    const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -54,15 +54,94 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'profile']) {
+    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
+      if (section === 'polls') {
+        await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
+        const unavailable = await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).count();
+        if (!unavailable) {
+          for (const label of ['Our Model', 'AP', 'Coaches', 'CFP']) {
+            const button = page.getByRole('button', { name: `Sort by ${label} ranking` });
+            await button.click();
+            if (await button.getAttribute('aria-pressed') !== 'true') throw new Error(`Poll sort did not select ${label}`);
+            const key = { 'Our Model': 1, AP: 2, Coaches: 3, CFP: 4 }[label];
+            const values = await page.locator('section.notice table tbody tr').evaluateAll((rows, index) => rows.map(row => row.querySelectorAll('td')[index]?.textContent?.trim() || '—'), key);
+            const ranked = values.filter(value => /^\d+$/.test(value)).map(Number);
+            if (ranked.some((rank, i) => i > 0 && rank < ranked[i - 1])) throw new Error(`${label} poll is not sorted numerically`);
+            if (values.length > 30) throw new Error('Poll comparison exceeded 30 rows');
+          }
+        }
+      }
       if (section === 'predictions') await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', profile: 'Team Profile' };
+      const v4Headings = { programs: 'Historical Program Rankings', hype: 'Historical Hype Index', trajectory: 'Program Trajectory & Momentum', stock: 'Team Stock Watch', contenders: 'Contenders & Pretenders', profile: 'Team Profile' };
       if (v4Headings[section]) await page.getByRole('heading', { name: v4Headings[section], exact: true }).waitFor();
+      if (section === 'hype') {
+        await page.getByText('Expectations vs. reality:', { exact: false }).waitFor();
+        await page.getByText('Historical AP and Coaches evidence is kept separate', { exact: false }).waitFor();
+        await page.getByRole('heading', { name: 'Current-season poll perception vs. Our Model' }).waitFor();
+        await page.getByLabel('Choose AP or Coaches Poll').selectOption('Coaches');
+        await page.getByLabel('Choose AP or Coaches Poll').selectOption('AP');
+        // The validated fixture can legitimately lack a current-season poll snapshot.
+        // Exercise the conference selector only when the poll comparison is published.
+        const currentConference = page.getByLabel('Filter current poll perception by conference');
+        if (await currentConference.count()) {
+          const conferenceChoices = await currentConference.locator('option').count();
+          if (conferenceChoices > 1) {
+            const firstConference = await currentConference.locator('option').nth(1).getAttribute('value');
+            await currentConference.selectOption(firstConference);
+            await currentConference.selectOption('all');
+          }
+        } else {
+          await page.getByText('Current-season poll comparison is unavailable without a verified poll snapshot for this season.').waitFor();
+        }
+        const currentUnavailable = await page.getByText('Current-season poll comparison is unavailable', { exact: false }).count();
+        if (!currentUnavailable) {
+          await page.getByLabel('Sort current poll perception').selectOption('disagreement');
+          await page.getByLabel('Sort current poll perception').selectOption('poll');
+        }
+      }
+      if (section === 'hype' || section === 'trajectory' || section === 'programs') {
+        if (await page.getByLabel('Filter historical programs by conference').count()) {
+          await page.getByLabel('Filter historical programs by conference').selectOption('all');
+        } else {
+          await page.getByText(/Historical research is awaiting independent source review|Verified historical program data has not been published yet|No rankings are estimated from missing data/).first().waitFor();
+        }
+      }
+      if (section === 'trajectory') {
+        await page.getByText('Program development:', { exact: false }).waitFor();
+        await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
+        if (await page.getByLabel('Chart program strength').count()) {
+          const selector = page.getByLabel('Chart program strength');
+          const options = await selector.locator('option').count();
+          if (options > 1) {
+            const value = await selector.locator('option').nth(1).getAttribute('value');
+            await selector.selectOption(value);
+            await page.getByText(/Verified schedule-adjusted strength|No verified season-by-season strength chart/).waitFor();
+          }
+        }
+        if (await page.getByRole('columnheader', { name: 'AP + trajectory' }).count()) {
+          await page.getByRole('columnheader', { name: 'Coaches + trajectory' }).waitFor();
+        }
+      }
+      if (section === 'stock' || section === 'contenders') {
+        // These views must remain usable without publishing unsupported metrics.
+        const unavailable = section === 'stock'
+          ? 'Verified stock movement is unavailable.'
+          : 'Independent contender classifications are unavailable.';
+        await page.getByText(unavailable, { exact: false }).waitFor();
+        await page.getByLabel('Find a team profile').fill(firstTeam);
+        const teamRow = page.getByRole('row').filter({ hasText: firstTeam }).first();
+        await teamRow.getByRole('button', { name: 'View Team Profile' }).click();
+        await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+        if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
+          throw new Error(`Discovery did not preserve the selected team in ${section}`);
+        }
+        await page.getByLabel('Choose dashboard section').selectOption(section);
+      }
       if (section === 'profile') {
         await page.getByLabel('Choose school').selectOption(firstTeam);
-        await page.getByText('Contenders & Pretenders', { exact: true }).waitFor();
-        await page.getByText('Team Stock Watch', { exact: true }).waitFor();
+        await page.locator('small').getByText('Contenders & Pretenders', { exact: true }).waitFor();
+        await page.locator('small').getByText('Team Stock Watch', { exact: true }).waitFor();
         for (const heading of ['Head Coach & Coordinators', 'Roster Continuity & Transfers', 'Opponent-Specific Matchup Factors']) {
           await page.getByText(heading, { exact: true }).waitFor();
         }
@@ -77,9 +156,13 @@ try {
           if (!response.ok || !contentType.includes('json')) return 'unavailable';
           const payload = await response.json();
           return payload.schema_version === 1 && payload.status === 'descriptive_only'
+            && payload.source_review_attested === true && payload.predictive_validation === false
             && Array.isArray(payload.programs) ? 'published' : 'invalid';
         });
         if (historicalResponse === 'invalid') throw new Error('Historical research asset failed provenance schema gate');
+        if (historicalResponse === 'unavailable') {
+          await page.getByText('No rankings are estimated from missing data.', { exact: false }).waitFor();
+        }
         if (historicalResponse === 'published') {
           await page.getByText('Descriptive research only', { exact: false }).first().waitFor();
           const link = page.getByRole('button', { name: firstTeam, exact: true }).first();
@@ -114,12 +197,12 @@ try {
       }
       const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
       if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
-      if (section === 'rankings' || section === 'predictions' || section === 'cfp') {
+      if (['rankings', 'predictions', 'cfp', 'profile', 'stock', 'contenders', 'programs', 'hype', 'trajectory'].includes(section)) {
         await page.screenshot({ path: `web/mobile-evidence/${section}-${width}.png`, fullPage: true });
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
-    console.log(`Mobile navigation smoke passed at ${width}px`);
+    console.log(`Browser navigation smoke passed at ${width}px`);
     await page.close();
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
     await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));

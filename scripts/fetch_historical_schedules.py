@@ -1,4 +1,4 @@
-"""Download and audit historical SportsDataverse schedules, 2022-2025.
+"""Download and audit historical SportsDataverse schedules for selected seasons.
 
 Requires: pip install pyarrow. Never treats retrospective data as archived forecasts.
 """
@@ -17,7 +17,7 @@ COLUMNS = ["game_id", "season", "week", "season_type", "start_date",
            "fbs_game", "fbs_participant"]
 
 
-def run(output: Path, seasons=range(2022, 2026)):
+def run(output: Path, seasons=range(2016, 2026)):
     output.mkdir(parents=True, exist_ok=True)
     report = {"source": URL, "seasons": {}, "scope": "historical results only; no pregame predictions"}
     for season in seasons:
@@ -135,5 +135,9 @@ def run(output: Path, seasons=range(2022, 2026)):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=Path("historical-data"))
+    parser.add_argument("--start-season", type=int, default=2016)
+    parser.add_argument("--end-season", type=int, default=2025)
     args = parser.parse_args()
-    run(args.output)
+    if not 2000 <= args.start_season <= args.end_season <= 2025:
+        parser.error("Require 2000 <= start-season <= end-season <= 2025 (completed seasons only)")
+    run(args.output, range(args.start_season, args.end_season + 1))

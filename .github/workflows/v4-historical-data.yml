@@ -6,6 +6,18 @@ on:
     branches: [v4-development]
     paths:
       - 'scripts/fetch_historical_schedules.py'
+      - 'src/cfb_analytics/v4_source_integrity.py'
+      - 'tests/test_v4_source_integrity.py'
+      - 'src/cfb_analytics/v4_coverage_summary.py'
+      - 'tests/test_v4_coverage_summary.py'
+      - 'src/cfb_analytics/v4_team_season_records.py'
+      - 'tests/test_v4_team_season_records.py'
+      - 'src/cfb_analytics/v4_season_strength.py'
+      - 'tests/test_v4_season_strength.py'
+      - 'src/cfb_analytics/v4_schedule_context.py'
+      - 'tests/test_v4_schedule_context.py'
+      - 'src/cfb_analytics/v4_scale_diagnostics.py'
+      - 'tests/test_v4_scale_diagnostics.py'
       - '.github/workflows/v4-historical-data.yml'
 
 permissions:
@@ -22,20 +34,25 @@ jobs:
           python-version: '3.11'
       - name: Install source reader
         run: python -m pip install pyarrow
-      - name: Fetch four source seasons and compute checksums
-        run: python scripts/fetch_historical_schedules.py --output historical-data
+      - name: Install project and run historical source integrity tests
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pytest -q tests/test_v4_source_integrity.py tests/test_v4_coverage_summary.py tests/test_v4_team_season_records.py tests/test_v4_season_strength.py tests/test_v4_schedule_context.py tests/test_v4_scale_diagnostics.py
+      - name: Fetch ten completed source seasons and compute checksums
+        run: python scripts/fetch_historical_schedules.py --start-season 2016 --end-season 2025 --output historical-data
       - name: Generate chronology-safe retrospective Elo diagnostic
-        run: python scripts/walkforward_baseline.py historical-data/games_2022.json historical-data/games_2023.json historical-data/games_2024.json historical-data/games_2025.json --output historical-data
+        run: python scripts/walkforward_baseline.py historical-data/games_20*.json --output historical-data
       - name: Validate extracted source coverage and provenance
         run: |
           python - <<'PY'
           import hashlib
           import json
+          from cfb_analytics.v4_source_integrity import validate_season_games
           from pathlib import Path
 
           root = Path("historical-data")
           report = json.loads((root / "coverage.json").read_text())
-          assert set(report["seasons"]) == {"2022", "2023", "2024", "2025"}
+          assert set(report["seasons"]) == {str(y) for y in range(2016, 2026)}
           for season, meta in sorted(report["seasons"].items()):
               source = root / f"cfb_schedules_{season}.parquet"
               extracted = root / f"games_{season}.json"
@@ -44,7 +61,11 @@ jobs:
               assert hashlib.sha256(source.read_bytes()).hexdigest() == meta["source_sha256"]
               assert hashlib.sha256(extracted.read_bytes()).hexdigest() == meta["extracted_sha256"]
               assert len(rows) == meta["extracted_games"]
-              assert meta["completed_fbs_vs_fbs"] >= 700
+              integrity = validate_season_games(rows, int(season))
+              assert integrity["fbs_fbs"] == meta["completed_fbs_vs_fbs"]
+              # The COVID-disrupted 2020 season had materially fewer games.
+              # Retain it with explicit coverage rather than pretending it was normal.
+              assert meta["completed_fbs_vs_fbs"] >= (400 if int(season) == 2020 else 700)
               assert meta["missing_fbs_kickoff"] == 0
               assert len({(r["season"], r["game_id"]) for r in rows}) == len(rows)
               assert all(r["season"] == int(season) for r in rows)
@@ -53,10 +74,21 @@ jobs:
           diagnostic = json.loads((root / "walkforward_report.json").read_text())
           assert len(predictions) == sum(v["completed_fbs_vs_fbs"] for v in report["seasons"].values())
           assert diagnostic["overall"]["games"] == len(predictions)
+          assert set(diagnostic["by_season"]) == {str(y) for y in range(2016, 2026)}
           assert all(0 < p["home_probability"] < 1 for p in predictions)
           assert len({(p["season"], p["game_id"]) for p in predictions}) == len(predictions)
           print("Retrospective chronological Elo diagnostic verified; NOT frozen V3.4.2 or release-gate evidence")
           PY
+      - name: Generate research-only ten-season coverage summary
+        run: python -m cfb_analytics.v4_coverage_summary --input historical-data --output historical-data/ten_season_summary.json
+      - name: Generate audited retrospective team-season records
+        run: python -m cfb_analytics.v4_team_season_records --input historical-data --output historical-data/team_season_records.json
+      - name: Generate retrospective opponent-aware season ratings
+        run: python -m cfb_analytics.v4_season_strength --input historical-data --output historical-data/season_strength_research.json
+      - name: Generate retrospective schedule and opponent quality context
+        run: python -m cfb_analytics.v4_schedule_context --input historical-data --ratings historical-data/season_strength_research.json --output historical-data/schedule_context_research.json
+      - name: Check cross-season strength scale and sample coverage
+        run: python -m cfb_analytics.v4_scale_diagnostics --ratings historical-data/season_strength_research.json --output historical-data/scale_diagnostics.json
       - name: Upload coverage manifest and extracted games
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,10 +96,12 @@ jobs:
           name: v4-historical-source-coverage
           path: |
             historical-data/coverage.json
-            historical-data/games_2022.json
-            historical-data/games_2023.json
-            historical-data/games_2024.json
-            historical-data/games_2025.json
+            historical-data/ten_season_summary.json
+            historical-data/team_season_records.json
+            historical-data/season_strength_research.json
+            historical-data/schedule_context_research.json
+            historical-data/scale_diagnostics.json
+            historical-data/games_20*.json
             historical-data/walkforward_report.json
             historical-data/walkforward_predictions.json
           if-no-files-found: warn
