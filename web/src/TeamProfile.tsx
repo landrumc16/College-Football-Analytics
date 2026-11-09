@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
-import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25 } from './programMetrics'
+import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -66,6 +66,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
   const lastFive = recentForm(schedule, team)
+  const seasonTrend = seasonFormTrend(schedule, team)
   const winsAgainstCurrentTop25 = winsVsCurrentTop25(schedule, team, rankings)
   const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
@@ -95,6 +96,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
       {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
+      {tile('Current-Season Form Trend', seasonTrend ?? 'Requires 10 scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}
       {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
       {tile('Results vs Forecast', resultsVsForecast)}
@@ -108,7 +110,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div>
     <div className="accuracy-summary"><h3>Program development and expectations</h3>
-      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
+      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form trend: {seasonTrend ?? 'not enough scored games'} (two non-overlapping five-game windows, requiring a two-win difference to classify a change). This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
       <p><strong>Long-term trajectory:</strong> {historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
       <p>AP/Coaches historical expectations: {historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
