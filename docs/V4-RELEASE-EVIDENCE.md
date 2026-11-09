@@ -56,3 +56,11 @@ This ledger records observed evidence, not a release declaration.
 - Commit `d1fa7ee5f60a7b057f3e76ee90c0add31743d97e` passed GitHub Actions run [42544406627](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544406627): `pytest` and `dashboard-build` jobs both succeeded. Dashboard job generated historical demo JSON, validated it, built the dashboard, validated the published report and uploaded a preview artifact.
 - Separate V4 development validation run [42544406648](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544406648) was still **in progress** when inspected; do not infer browser, PWA, historical parity or provenance success from the passing build/test workflow alone.
 - Release remains gated on completed V4 validation, source-review evidence, visual inspection of actual screenshots, and explicit owner approval.
+
+## November 8 — passing executable candidate (after browser regression fix)
+- Exact executable commit: `19e5db95124a30aae8a265bf80ccbabd55d3f5ab`.
+- [V4 development validation 42544623801](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544623801): **success**. Job `validate` passed Python regressions, challenger release guard, frozen workbook parity, reproducible 2026 baseline, source/fixture provenance, baseline coverage, frontend production build, validated incumbent report staging, Chromium mobile/PWA/historical journeys, and production PWA artifact verification.
+- [Python model tests 42544623798](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544623798): **success**, including `pytest` and dashboard build jobs.
+- V4 validation artifacts: `v4-mobile-browser-evidence` (artifact 13643145387; 30,852,825 bytes) and `v4-frozen-2026-retrospective-baseline` (artifact 13642753007). Artifact existence **does not establish human visual acceptance**.
+- **Remaining owner-approval gates:** visually inspect actual desktop/mobile screenshots, verify each release-required feature and independently reviewed historical publication coverage, record release notes and any non-blocking limitations. Historical research absent independent review must stay unavailable; no promotion of challenger.
+- `main` and production deployment remain untouched.
