@@ -88,6 +88,15 @@ try {
       if (section === 'trajectory') {
         await page.getByText('Program development:', { exact: false }).waitFor();
         await page.getByText('Poll popularity does not determine trajectory.', { exact: false }).waitFor();
+        if (await page.getByLabel('Chart program strength').count()) {
+          const selector = page.getByLabel('Chart program strength');
+          const options = await selector.locator('option').count();
+          if (options > 1) {
+            const value = await selector.locator('option').nth(1).getAttribute('value');
+            await selector.selectOption(value);
+            await page.getByText(/Verified schedule-adjusted strength|No verified season-by-season strength chart/).waitFor();
+          }
+        }
         if (await page.getByRole('columnheader', { name: 'AP + trajectory' }).count()) {
           await page.getByRole('columnheader', { name: 'Coaches + trajectory' }).waitFor();
         }
