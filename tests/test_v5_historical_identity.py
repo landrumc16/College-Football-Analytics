@@ -45,3 +45,34 @@ def test_separate_poll_sources_are_not_duplicates():
 def test_future_season_rejected():
     with pytest.raises(ValueError, match="outside completed window"):
         validate_program_sources([strength(2026)], [], 2025)
+
+
+@pytest.mark.parametrize("bad_strength", [None, True, float("nan"), float("inf"), "12"])
+def test_invalid_strength_rejected(bad_strength):
+    row = strength(2025)
+    row["strength"] = bad_strength
+    with pytest.raises(ValueError, match="Invalid comparable season strength"):
+        validate_program_sources([row], [], 2025)
+
+
+@pytest.mark.parametrize("bad_rank", [True, 0, 26, 2.5, "12"])
+def test_invalid_preseason_rank_rejected(bad_rank):
+    row = poll(2025)
+    row["preseason_rank"] = bad_rank
+    with pytest.raises(ValueError, match="Invalid preseason_rank"):
+        validate_program_sources([], [row], 2025)
+
+
+def test_missing_poll_snapshot_rejected_not_assumed_unranked():
+    row = poll(2025)
+    del row["preseason_rank"]
+    with pytest.raises(ValueError, match="Missing preseason_rank"):
+        validate_program_sources([], [row], 2025)
+
+
+def test_explicit_unranked_snapshot_is_allowed():
+    row = poll(2025)
+    row["preseason_rank"] = None
+    row["final_rank"] = None
+    coverage = validate_program_sources([], [row], 2025)
+    assert coverage["poll_programs_full_window"] == 0
