@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
-type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
+type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
 type HistoryPayload = { schema_version: number; status: string; programs: History[] }
 type Team = { team: string; rank: number; rating: number; wins: number; losses: number; projected_wins: number }
 type Poll = { ap_top25: { team: string; rank: number }[]; coaches_top25: { team: string; rank: number }[] }
@@ -93,6 +93,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('5-Year Program Rank', historical?.program_rankings?.['5']?.rank != null ? '#' + historical.program_rankings['5'].rank : 'Insufficient data')}
       {tile('3-Year Program Rank', historical?.program_rankings?.['3']?.rank != null ? '#' + historical.program_rankings['3'].rank : 'Insufficient data')}
       {tile('10-Year Trajectory', label(historical?.trajectory?.long_term.classification))}
+      {tile('5-Year Direction', label(historical?.trajectory?.medium_term?.classification))}
       {tile('3-Year Momentum', label(historical?.trajectory?.recent.classification))}
       {tile('AP Hype Index', label(historical?.hype.AP?.historical_tendency))}
       {tile('Coaches Hype Index', label(historical?.hype.Coaches?.historical_tendency))}
