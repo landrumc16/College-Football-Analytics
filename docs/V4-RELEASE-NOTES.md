@@ -1,8 +1,8 @@
 # College Football Analytics V4.0 — Release Candidate Notes
 
 **Status:** Development candidate; not authorized for production.  
-**Validated executable commit:** `cad394fe52a2566f60582b66eec1aca4e02dc1ae`.  
-**Validation:** [V4 workflow 42557010119](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42557010119) and [Python/dashboard workflow 42557010236](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42557010236) succeeded for this exact executable SHA.
+**Validated executable commit:** `0096dab52584541c4b5234a0a2102681848c22b4`.  
+**Validation:** [V4 workflow 42563594154](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42563594154) and [Python/dashboard workflow 42563594199](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42563594199) succeeded for this exact executable SHA.
 
 ## Fan-facing changes
 
@@ -27,3 +27,10 @@
 The passing workflows verify regression, workbook parity, baseline provenance, frontend build, Chromium journeys, and PWA checks. They do **not** establish historical-source publication, complete feature acceptance, or visual signoff. Before merging: inspect desktop/mobile screenshots, resolve release-required product gaps, update evidence against the final executable SHA, and obtain explicit owner approval.
 
 **No merge to `main`, GitHub Pages V4 deployment, or challenger promotion is authorized by these notes.**
+
+## Final candidate follow-up (November 9)
+
+- Historical discovery tables now initially display 25 rows with an explicit control to reveal all matching programs. Search and conference filters continue to operate on the complete data set.
+- Full V4 workflow `42563594154` and Python model workflow `42563594199` both completed successfully for executable commit `0096dab52584541c4b5234a0a2102681848c22b4`.
+- The V4 workflow uploaded 40 desktop/tablet/mobile browser captures as artifact `13650163957` (`v4-mobile-browser-evidence`). Captures exist but full-resolution human visual acceptance has not yet been established.
+- **Owner approval remains blocked** until visual acceptance and explicit disposition of historical source authenticity and coverage. The November 6 decision permits honest unavailable states, not fabricated historical findings. No further features should be added solely to postpone this decision.
