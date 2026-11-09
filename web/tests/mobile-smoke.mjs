@@ -77,7 +77,7 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
-    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'programs', 'profile']) {
+    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'compare', 'programs', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'polls') {
         await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
@@ -160,6 +160,21 @@ try {
       if (section === 'schedule') {
         await page.getByRole('heading', { name: 'School Season Schedule' }).waitFor();
         await page.getByLabel('School Schedule').waitFor();
+      }
+      if (section === 'compare') {
+        await page.getByRole('heading', { name: 'Hypothetical Matchup' }).waitFor();
+        const secondTeam = report.rankings.find(team => team.team !== firstTeam)?.team;
+        if (!secondTeam) throw new Error('Need two distinct teams for comparison');
+        await page.getByLabel('First school').selectOption(firstTeam);
+        await page.getByLabel('Second school').selectOption(secondTeam);
+        const comparison = page.getByRole('region', { name: 'Side-by-side team comparison' });
+        await comparison.getByRole('heading', { name: 'Side-by-side team comparison' }).waitFor();
+        await comparison.getByRole('columnheader', { name: firstTeam }).waitFor();
+        await comparison.getByRole('columnheader', { name: secondTeam }).waitFor();
+        await comparison.getByRole('button', { name: `View ${firstTeam} profile` }).click();
+        await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+        if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Compare-to-profile navigation lost team selection');
+        await page.getByLabel('Choose dashboard section').selectOption('compare');
       }
       if (section === 'matchup') {
         await page.getByRole('heading', { name: 'Hypothetical Matchup' }).waitFor();
