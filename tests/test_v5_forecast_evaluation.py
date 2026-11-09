@@ -72,6 +72,10 @@ def test_paired_comparison_uses_only_common_games():
     result = evaluate_archived_forecasts([a1, a2, b1])
     comparison = result["paired_baseline_comparisons"][0]
     assert comparison["matched_games"] == 1
+    assert comparison["coverage_of_model_a"] == 1
+    assert comparison["coverage_of_model_b"] == 0.5
+    assert result["distinct_games"] == 2
+    assert result["model_coverage"]["incumbent"]["share_of_distinct_games"] == 1
     assert comparison["model_a"] == "baseline"
     assert comparison["model_a_brier"] == pytest.approx(0.16)
     assert comparison["model_b_brier"] == pytest.approx(0.04)
