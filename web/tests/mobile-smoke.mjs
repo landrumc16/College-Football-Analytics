@@ -112,7 +112,7 @@ try {
         const profileTrend = page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' });
         await profileTrend.waitFor();
         const profileTrendValue = (await profileTrend.locator('strong').textContent() || '').trim();
-        if (profileTrendValue !== (overviewTrend === '—' ? 'Requires 10 scored games' : overviewTrend)) {
+        if (profileTrendValue !== (overviewTrend === '—' ? 'Requires 8 scored games' : overviewTrend)) {
           throw new Error(`Team Profile and Program Intelligence disagree on current-season form trend for ${firstTeam}: overview=${JSON.stringify(overviewTrend)}, profile=${JSON.stringify(profileTrendValue)}`);
         }
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
