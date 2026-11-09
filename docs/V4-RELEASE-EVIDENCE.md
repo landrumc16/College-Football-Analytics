@@ -51,3 +51,8 @@ This ledger records observed evidence, not a release declaration.
 - **Verification not yet established:** No full Python, frontend, Chromium, or PWA run was executed for these changes in this session. The previous successful CI run `42516899396` covers only `dc870f3`.
 - **Release gates remain open:** current candidate build/test, reviewed source publication and coverage, actual desktop/mobile screenshot review, product acceptance and release notes. A committed test is not a passing test.
 - **Production unchanged:** no merge, deployment, or challenger-model promotion.
+
+## November 8 — verified workflow status for conference-filter candidate
+- Commit `d1fa7ee5f60a7b057f3e76ee90c0add31743d97e` passed GitHub Actions run [42544406627](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544406627): `pytest` and `dashboard-build` jobs both succeeded. Dashboard job generated historical demo JSON, validated it, built the dashboard, validated the published report and uploaded a preview artifact.
+- Separate V4 development validation run [42544406648](https://github.com/landrumc16/College-Football-Analytics/actions/runs/42544406648) was still **in progress** when inspected; do not infer browser, PWA, historical parity or provenance success from the passing build/test workflow alone.
+- Release remains gated on completed V4 validation, source-review evidence, visual inspection of actual screenshots, and explicit owner approval.
