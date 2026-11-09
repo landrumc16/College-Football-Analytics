@@ -16,3 +16,13 @@ export function trackedWinsAboveExpected(p?: TrackedPerformance): number | null 
   return p && p.games_with_forecasts >= 3 && p.wins_above_expected != null &&
     Number.isFinite(p.wins_above_expected) ? p.wins_above_expected : null
 }
+
+/** Current-rank quality wins: opponents ranked today, never represented as kickoff rank. */
+export function winsVsCurrentTop25(schedule: CompletedGame[], team: string, rankings: { team: string; rank: number }[]): number {
+  const ranked = new Set(rankings.filter(r => Number.isInteger(r.rank) && r.rank >= 1 && r.rank <= 25).map(r => r.team))
+  return schedule.filter(g => g.completed && (g.home === team || g.away === team) &&
+    g.home_score != null && g.away_score != null &&
+    Number.isFinite(g.home_score) && Number.isFinite(g.away_score) &&
+    ranked.has(g.home === team ? g.away : g.home) &&
+    (g.home === team ? g.home_score > g.away_score : g.away_score > g.home_score)).length
+}
