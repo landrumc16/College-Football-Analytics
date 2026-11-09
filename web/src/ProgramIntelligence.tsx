@@ -126,6 +126,15 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
         const direction = data?.programs.find(p => p.team === team.team)?.trajectory?.recent?.classification
         return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{winsVsCurrentTop25(schedule, team.team, currentRankings)}</td><td>{form.count ? `${form.wins}–${form.losses} (${form.count} games)` : '—'}</td><td>{forecastGap != null ? `${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(1)} wins` : '—'}</td><td>{ap == null ? '—' : `#${ap}`}</td><td>{coaches == null ? '—' : `#${coaches}`}</td><td>{odds != null && Number.isFinite(odds) && odds >= 0 && odds <= 1 ? `${(odds * 100).toFixed(0)}%` : '—'}</td><td>{direction && direction !== 'insufficient_data' ? direction.replaceAll('_', ' ') : '—'}</td><td><button type="button" onClick={() => onTeam(team.team)}>View team</button></td></tr>
       })}</tbody></table></div>
+      {data && <details className="accuracy-summary">
+        <summary>Verified historical program development</summary>
+        <p>Explore published season-by-season strength without substituting missing seasons. This chart is historical, not a current-season momentum forecast.</p>
+        <label>Program history <select aria-label="Choose historical program" value={chartTeam} onChange={e => setChartTeam(e.target.value)}>
+          <option value="">Choose a program</option>
+          {data.programs.filter(p => (p.season_strength_history || []).length >= 2).sort((a,b) => a.team.localeCompare(b.team)).map(p => <option key={p.team} value={p.team}>{p.team}</option>)}
+        </select></label>
+        {chartTeam && data.programs.some(p => p.team === chartTeam) && <StrengthChart program={data.programs.find(p => p.team === chartTeam)!} />}
+      </details>}
       {current.length > 25 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show first 25' : `Show all ${current.length} programs`}</button></p>}
       {!current.length && <p role="status">No published current-season rankings match this search.</p>}
       <p><small>Top 25 wins count victories against opponents in the current model Top 25, not their ranking at kickoff. AP and Coaches Poll columns are current polls, not preseason expectations.</small></p>
