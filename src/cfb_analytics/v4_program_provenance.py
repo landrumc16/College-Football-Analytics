@@ -7,6 +7,7 @@ prevents publishing an empty or incomplete historical dataset as authoritative.
 from __future__ import annotations
 
 from collections import defaultdict
+from math import isfinite
 from urllib.parse import urlparse
 
 
@@ -44,11 +45,20 @@ def validate_program_sources(strength_rows: list[dict], poll_rows: list[dict],
                 raise ValueError(f"{kind}: duplicate team-season observation")
             observed.add(identity)
             if kind == "strength":
+                strength = row.get("strength")
+                if not isinstance(strength, (int, float)) or isinstance(strength, bool) or not isfinite(strength):
+                    raise ValueError("Invalid comparable season strength")
                 coverage[team].add(season)
             else:
                 poll = row.get("poll")
                 if poll not in ("AP", "Coaches"):
                     raise ValueError("Unknown poll")
+                for field in ("preseason_rank", "final_rank"):
+                    if field not in row:
+                        raise ValueError(f"Missing {field} poll snapshot")
+                    rank = row[field]
+                    if rank is not None and (not isinstance(rank, int) or isinstance(rank, bool) or not 1 <= rank <= 25):
+                        raise ValueError(f"Invalid {field} poll rank")
                 poll_coverage[(team, poll)].add(season)
     return {
         "status": "provenance_format_checked_not_independently_verified",
