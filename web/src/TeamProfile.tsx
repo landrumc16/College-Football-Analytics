@@ -40,11 +40,11 @@ const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: 
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, onChoose }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, onChoose, onCompare }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
-  onChoose: (team: string) => void;
+  onChoose: (team: string) => void; onCompare: (team: string) => void;
 }) {
   const [history, setHistory] = useState<HistoryPayload | null>(null)
   const [historyStatus, setHistoryStatus] = useState<'loading' | 'published' | 'unavailable'>('loading')
@@ -83,7 +83,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice">
-    <h2>Team Profile</h2>
+    <h2>Team Profile</h2><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button>
     <label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
     </select></label>
