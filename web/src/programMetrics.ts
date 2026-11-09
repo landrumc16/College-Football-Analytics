@@ -26,3 +26,16 @@ export function winsVsCurrentTop25(schedule: CompletedGame[], team: string, rank
     ranked.has(g.home === team ? g.away : g.home) &&
     (g.home === team ? g.home_score > g.away_score : g.away_score > g.home_score)).length
 }
+
+/** Two non-overlapping five-game windows; never infer a trend from fewer than ten scored games. */
+export function seasonFormTrend(schedule: CompletedGame[], team: string): 'Improving' | 'Declining' | 'Steady' | null {
+  const scored = schedule.filter(g => g.completed && (g.home === team || g.away === team) &&
+    Number.isInteger(g.week) && g.home_score != null && g.away_score != null &&
+    Number.isFinite(g.home_score) && Number.isFinite(g.away_score) &&
+    g.home_score !== g.away_score).sort((a, b) => b.week - a.week)
+  if (scored.length < 10) return null
+  const wins = (games: typeof scored) => games.filter(g =>
+    g.home === team ? g.home_score! > g.away_score! : g.away_score! > g.home_score!).length
+  const difference = wins(scored.slice(0, 5)) - wins(scored.slice(5, 10))
+  return difference >= 2 ? 'Improving' : difference <= -2 ? 'Declining' : 'Steady'
+}
