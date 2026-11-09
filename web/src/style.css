@@ -235,6 +235,6 @@ a:hover{color:#fff1dd}
   .program-intelligence-table td:nth-child(10)::before{content:"AP Poll"}
   .program-intelligence-table td:nth-child(11)::before{content:"Coaches Poll"}
   .program-intelligence-table td:nth-child(12)::before{content:"CFP chance"}
-  .program-intelligence-table td:nth-child(13)::before{content:"3-year direction"}
+  .program-intelligence-table td:nth-child(13):not(:last-child)::before{content:"3-year direction"}
   .program-intelligence-table td:last-child{justify-content:flex-end;padding-top:8px}
 }
