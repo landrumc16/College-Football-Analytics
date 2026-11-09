@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
-import { recentForm, trackedWinsAboveExpected } from './programMetrics'
+import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25 } from './programMetrics'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -66,7 +66,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
   const lastFive = recentForm(schedule, team)
-  const winsAgainstCurrentTop25 = schedule.filter(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null && (g.home === team ? g.home_score > g.away_score : g.away_score > g.home_score) && rankings.some(r => r.team === (g.home === team ? g.away : g.home) && r.rank <= 25)).length
+  const winsAgainstCurrentTop25 = winsVsCurrentTop25(schedule, team, rankings)
   const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
   const conferenceTeam = conference?.[1].find(row => row.team === team)
