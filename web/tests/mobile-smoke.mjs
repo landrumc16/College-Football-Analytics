@@ -77,6 +77,15 @@ try {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Top 25 wins' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Coaches Poll' }).waitFor({ state: 'attached' });
+        if (await page.locator('.program-intelligence-table tbody tr:first-child td').count() !== 11) {
+          throw new Error('Program Intelligence comparison columns are out of sync with mobile cards');
+        }
+        if (await page.getByText('Verified historical program development').count()) {
+          await page.getByText('Verified historical program development').click();
+          await page.getByLabel('Choose historical program').waitFor();
+        }
         const rows = page.locator('.program-intelligence-table tbody tr');
         if (await rows.count() === 0) throw new Error('Program Intelligence has no current-season comparisons');
         if (await rows.count() > 25) throw new Error('Initial Program Intelligence view is not bounded');
