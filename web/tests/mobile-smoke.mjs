@@ -81,13 +81,18 @@ try {
         await page.getByRole('heading', { name: 'Current-season poll perception vs. Our Model' }).waitFor();
         await page.getByLabel('Choose AP or Coaches Poll').selectOption('Coaches');
         await page.getByLabel('Choose AP or Coaches Poll').selectOption('AP');
+        // The validated fixture can legitimately lack a current-season poll snapshot.
+        // Exercise the conference selector only when the poll comparison is published.
         const currentConference = page.getByLabel('Filter current poll perception by conference');
-        await currentConference.waitFor();
-        const conferenceChoices = await currentConference.locator('option').count();
-        if (conferenceChoices > 1) {
-          const firstConference = await currentConference.locator('option').nth(1).getAttribute('value');
-          await currentConference.selectOption(firstConference);
-          await currentConference.selectOption('all');
+        if (await currentConference.count()) {
+          const conferenceChoices = await currentConference.locator('option').count();
+          if (conferenceChoices > 1) {
+            const firstConference = await currentConference.locator('option').nth(1).getAttribute('value');
+            await currentConference.selectOption(firstConference);
+            await currentConference.selectOption('all');
+          }
+        } else {
+          await page.getByText('Current-season poll comparison is unavailable without a verified poll snapshot for this season.').waitFor();
         }
         const currentUnavailable = await page.getByText('Current-season poll comparison is unavailable', { exact: false }).count();
         if (!currentUnavailable) {
