@@ -101,6 +101,7 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
         }
     comparisons = []
     model_names = sorted(by_model)
+    distinct_games = len(by_game)
     for i, left in enumerate(model_names):
         for right in model_names[i + 1:]:
             matched = [(models[left], models[right]) for models in by_game.values() if left in models and right in models]
@@ -117,12 +118,18 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             comparisons.append({"model_a": left, "model_b": right, "matched_games": len(matched),
                                 "model_a_brier": a_brier, "model_b_brier": b_brier,
                                 "model_a_logloss": a_logloss, "model_b_logloss": b_logloss,
+                                "coverage_of_model_a": len(matched) / len(by_model[left]),
+                                "coverage_of_model_b": len(matched) / len(by_model[right]),
                                 "scope": "paired_games_only_no_promotion_claim"})
     return {
         "status": "verified_archive_inputs_required",
         "paired_baseline_comparisons": comparisons,
         "models": models,
         "total_forecasts": len(seen),
+        "distinct_games": distinct_games,
+        "model_coverage": {model: {"scored_games": len(predictions),
+                                   "share_of_distinct_games": len(predictions) / distinct_games if distinct_games else None}
+                           for model, predictions in sorted(by_model.items())},
         "predictive_promotion_authorized": False,
         "limitations": [
             "Scores are valid only if archived timestamps and final outcomes are independently verified",
