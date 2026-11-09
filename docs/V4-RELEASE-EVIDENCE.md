@@ -45,3 +45,9 @@ This ledger records observed evidence, not a release declaration.
 - **Verification status:** no passing CI run for these executable commits has been observed in this work session. Existing run `42516899396` does not certify them. Re-run V4 validation and inspect actual screenshots before requesting owner approval.
 - **Known follow-up:** current poll table uses a deterministic union/truncation by minimum observed rank, but needs an explicit fixture test confirming useful overlap and the 30-row cap when the union exceeds 30. Do not claim the overlap acceptance criterion is verified.
 - No merge to `main`, challenger promotion, or production deployment authorized.
+
+## November 8 follow-up — trajectory windows and source-backed chart
+- Development branch implementation commits: `e0c25cc` source-backed strength series; `2054cfd` interactive historical chart with gaps; `43143bb` and `96290b3` regression/browser assertions; `dac5e72` five-year trajectory calculation; `e3df3a2` shared payload integration; `be986a8` national trajectory table; `ce27c8d` Team Profile; `a203c78` five-year regression assertions.
+- **Verification not yet established:** No full Python, frontend, Chromium, or PWA run was executed for these changes in this session. The previous successful CI run `42516899396` covers only `dc870f3`.
+- **Release gates remain open:** current candidate build/test, reviewed source publication and coverage, actual desktop/mobile screenshot review, product acceptance and release notes. A committed test is not a passing test.
+- **Production unchanged:** no merge, deployment, or challenger-model promotion.
