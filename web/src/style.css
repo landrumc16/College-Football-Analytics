@@ -230,5 +230,6 @@ a:hover{color:#fff1dd}
   .program-intelligence-table td:nth-child(5)::before{content:"Vs forecast"}
   .program-intelligence-table td:nth-child(6)::before{content:"AP Poll"}
   .program-intelligence-table td:nth-child(7)::before{content:"CFP chance"}
+  .program-intelligence-table td:nth-child(8)::before{content:"3-year direction"}
   .program-intelligence-table td:last-child{justify-content:flex-end;padding-top:8px}
 }
