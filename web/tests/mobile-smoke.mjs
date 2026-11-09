@@ -66,7 +66,7 @@ try {
             if (await button.getAttribute('aria-pressed') !== 'true') throw new Error(`Poll sort did not select ${label}`);
             const key = { 'Our Model': 1, AP: 2, Coaches: 3, CFP: 4 }[label];
             const values = await page.locator('section.notice table tbody tr').evaluateAll((rows, index) => rows.map(row => row.querySelectorAll('td')[index]?.textContent?.trim() || '—'), key);
-            const ranked = values.filter(value => /^\\d+$/.test(value)).map(Number);
+            const ranked = values.filter(value => /^\d+$/.test(value)).map(Number);
             if (ranked.some((rank, i) => i > 0 && rank < ranked[i - 1])) throw new Error(`${label} poll is not sorted numerically`);
             if (values.length > 30) throw new Error('Poll comparison exceeded 30 rows');
           }
