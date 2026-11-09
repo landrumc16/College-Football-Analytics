@@ -105,15 +105,15 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
         if (overviewOrder === 'cfp') return (postseason.find(p => p.team === b.team)?.cfp_field ?? -1) - (postseason.find(p => p.team === a.team)?.cfp_field ?? -1) || a.rank - b.rank
         return a.rank - b.rank
       })
-    const visible = showAll ? current : current.slice(0, 25)
+    const visible = showAll ? current : current.slice(0, 10)
     return <section className="notice">
       <h2>Program Intelligence</h2>
       <p>Three useful questions: how strong is a program now, is it improving, and is it meeting expectations? The published incumbent model provides current team strength. Multiweek momentum and historical expectations are shown only when verified records exist.</p>
-      <div className="accuracy-summary"><h3>What the numbers mean</h3>
+      <details className="accuracy-summary"><summary>How to read these comparisons</summary>
         <p><strong>Strength:</strong> current published model ranking, not a historical program ranking or a guarantee of future wins.</p>
         <p><strong>Recent form:</strong> wins and losses across the last five completed games with scores, ordered by published week. This is not a multi-season trajectory or a four-week change in model rating.</p>
         <p><strong>Expectations:</strong> verified current AP/Coaches Poll rank can be compared with the model. Disagreement is not proof that either ranking is wrong.</p>
-      </div>
+      </details>
       <label>Find a program <input aria-label="Find a program" list="program-intelligence-teams" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /><datalist id="program-intelligence-teams">{currentRankings.map(team => <option key={team.team} value={team.team} />)}</datalist></label>
       <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
       <label>Sort by <select aria-label="Sort program intelligence" value={overviewOrder} onChange={e => setOverviewOrder(e.target.value as typeof overviewOrder)}><option value="rank">Model ranking</option><option value="recent">Recent win rate</option><option value="expectations">Wins above tracked forecasts</option><option value="cfp">CFP probability</option></select></label>
@@ -135,7 +135,7 @@ export default function ProgramIntelligence({ onTeam, view = 'rankings', teams =
         </select></label>
         {chartTeam && data.programs.some(p => p.team === chartTeam) && <StrengthChart program={data.programs.find(p => p.team === chartTeam)!} />}
       </details>}
-      {current.length > 25 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show first 25' : `Show all ${current.length} programs`}</button></p>}
+      {current.length > 10 && <p><button type="button" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show top 10' : `Show all ${current.length} programs`}</button></p>}
       {!current.length && <p role="status">No published current-season rankings match this search.</p>}
       <p><small>Top 25 wins count victories against opponents in the current model Top 25, not their ranking at kickoff. AP and Coaches Poll columns are current polls, not preseason expectations.</small></p>
       <p role="status"><small>{data ? 'Reviewed historical program research is available for eligible schools.' : 'Multi-season direction is shown only when independently reviewed historical research is published.'}</small></p>
