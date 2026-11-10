@@ -218,6 +218,10 @@ try {
       if (await page.getByLabel('Choose dashboard section').inputValue() !== section) {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
+      // Only the CFP page may display the CFP projection's full statistical table.
+      if (section !== 'cfp' && await page.getByRole('columnheader', { name: 'Avg Seed If Selected' }).count()) {
+        throw new Error(`Unrelated CFP projection table leaked into ${section}`);
+      }
       const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
       if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
       if (['rankings', 'predictions', 'compare', 'cfp', 'profile', 'stock', 'contenders', 'programs', 'hype', 'trajectory'].includes(section)) {
