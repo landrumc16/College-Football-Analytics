@@ -7,6 +7,7 @@ eligible-FBS roster. Research-only records remain unverified.
 from .v5_program_hype import hype_measurements
 from .v5_program_trajectory import trajectory_measurements
 from .v5_program_report_card import build_report_cards
+from math import isfinite
 
 
 def assemble_report_cards(*, poll_rows, season_records, current_rankings,
@@ -28,10 +29,12 @@ def assemble_report_cards(*, poll_rows, season_records, current_rankings,
         if team in strength:
             raise ValueError("Duplicate incumbent strength")
         rating=row.get("rating")
-        if type(rating) not in (int,float):
+        if type(rating) not in (int,float) or not isfinite(rating):
             raise ValueError("Invalid incumbent rating")
         strength[team]={"value":rating,"source":strength_source,
                         "verified":strength_reviewed}
+    if strength_reviewed and (not isinstance(strength_source,str) or not strength_source.startswith("https://")):
+        raise ValueError("Reviewed incumbent strength requires source URL")
     measurements={}
     for team in eligible_fbs:
         measurements[team]={}
