@@ -102,11 +102,13 @@ try {
       }
       if (section === 'predictions') {
         await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-        const firstPrediction = report.predictions[0];
-        await page.getByRole('button', { name: 'Compare teams' }).first().click();
+        const firstCard = page.locator('.prediction-card').first();
+        const matchup = (await firstCard.locator('.prediction-matchup').innerText()).split('@').map(part => part.trim());
+        if (matchup.length !== 2 || !matchup.every(Boolean)) throw new Error('Prediction card lacks a valid matchup');
+        await firstCard.getByRole('button', { name: 'Compare teams' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
-        if (await page.getByLabel('First school').inputValue() !== firstPrediction.home || await page.getByLabel('Second school').inputValue() !== firstPrediction.away) {
-          throw new Error('Prediction-to-Compare did not preserve both schools');
+        if (await page.getByLabel('First school').inputValue() !== matchup[1] || await page.getByLabel('Second school').inputValue() !== matchup[0]) {
+          throw new Error('Prediction-to-Compare did not preserve the visible card matchup');
         }
         await page.getByRole('region', { name: 'Side-by-side team comparison' }).waitFor();
         await page.getByLabel('Choose dashboard section').selectOption('predictions');
@@ -210,7 +212,7 @@ try {
       }
       const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
       if (horizontalOverflow) throw new Error(`Page-wide horizontal overflow in ${section} at ${width}px`);
-      if (['rankings', 'predictions', 'cfp', 'profile', 'stock', 'contenders', 'programs', 'hype', 'trajectory'].includes(section)) {
+      if (['rankings', 'predictions', 'compare', 'cfp', 'profile', 'stock', 'contenders', 'programs', 'hype', 'trajectory'].includes(section)) {
         await page.screenshot({ path: `web/mobile-evidence/${section}-${width}.png`, fullPage: true });
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
