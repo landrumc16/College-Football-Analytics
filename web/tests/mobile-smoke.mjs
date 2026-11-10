@@ -82,6 +82,12 @@ try {
 
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
+    // Opening Team Profile directly from navigation must select a real school.
+    await page.getByLabel('Choose dashboard section').selectOption('profile');
+    if (await page.getByLabel('Choose school').inputValue() !== report.rankings[0].team) {
+      throw new Error('Direct Team Profile navigation did not select the first available school');
+    }
+    await page.getByLabel('Choose dashboard section').selectOption('home');
     for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'compare', 'programs', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'polls') {
