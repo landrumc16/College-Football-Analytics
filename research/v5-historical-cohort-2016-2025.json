@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "status": "research_only_not_publishable",
+  "seasons": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "source": {
+    "workflow_run": 42728326802,
+    "artifact_id": 13723239129,
+    "artifact_name": "v4-historical-source-coverage",
+    "artifact_sha256": "96d4e72aed06b67e6705af316232a36ca6529b318ae16010ef0b4bb44e725a47",
+    "source_file_sha256_checks_passed": 10,
+    "extracted_file_sha256_checks_passed": 10
+  },
+  "definition": "Completed FBS-versus-FBS games in archived games_YEAR.json involving each program; counts are not season strength or poll observations",
+  "programs": [
+    {
+      "team": "Alabama",
+      "completed_fbs_games_by_season": [
+        14,
+        13,
+        14,
+        12,
+        13,
+        14,
+        12,
+        13,
+        12,
+        14
+      ],
+      "total_completed_fbs_games": 131
+    },
+    {
+      "team": "Clemson",
+      "completed_fbs_games_by_season": [
+        14,
+        13,
+        14,
+        14,
+        11,
+        12,
+        13,
+        12,
+        13,
+        12
+      ],
+      "total_completed_fbs_games": 128
+    },
+    {
+      "team": "Georgia",
+      "completed_fbs_games_by_season": [
+        12,
+        14,
+        13,
+        13,
+        10,
+        14,
+        14,
+        13,
+        13,
+        13
+      ],
+      "total_completed_fbs_games": 129
+    },
+    {
+      "team": "Michigan",
+      "completed_fbs_games_by_season": [
+        13,
+        13,
+        13,
+        13,
+        6,
+        14,
+        14,
+        15,
+        13,
+        13
+      ],
+      "total_completed_fbs_games": 127
+    },
+    {
+      "team": "Notre Dame",
+      "completed_fbs_games_by_season": [
+        12,
+        13,
+        13,
+        13,
+        12,
+        13,
+        13,
+        12,
+        16,
+        12
+      ],
+      "total_completed_fbs_games": 129
+    },
+    {
+      "team": "Ohio State",
+      "completed_fbs_games_by_season": [
+        13,
+        14,
+        14,
+        14,
+        8,
+        13,
+        13,
+        12,
+        16,
+        13
+      ],
+      "total_completed_fbs_games": 130
+    },
+    {
+      "team": "Oklahoma",
+      "completed_fbs_games_by_season": [
+        13,
+        14,
+        14,
+        13,
+        10,
+        12,
+        13,
+        13,
+        12,
+        12
+      ],
+      "total_completed_fbs_games": 126
+    },
+    {
+      "team": "Oregon",
+      "completed_fbs_games_by_season": [
+        11,
+        12,
+        12,
+        13,
+        7,
+        13,
+        12,
+        13,
+        13,
+        14
+      ],
+      "total_completed_fbs_games": 120
+    },
+    {
+      "team": "Penn State",
+      "completed_fbs_games_by_season": [
+        14,
+        13,
+        13,
+        12,
+        9,
+        12,
+        13,
+        12,
+        16,
+        12
+      ],
+      "total_completed_fbs_games": 126
+    },
+    {
+      "team": "Texas",
+      "completed_fbs_games_by_season": [
+        12,
+        13,
+        14,
+        13,
+        10,
+        12,
+        13,
+        14,
+        16,
+        13
+      ],
+      "total_completed_fbs_games": 130
+    }
+  ],
+  "publication_blockers": [
+    "AP and Coaches preseason/final poll snapshots not independently verified",
+    "Opponent-adjusted strength comparability across seasons not established",
+    "2020 schedule disruption requires methodological treatment"
+  ],
+  "source_review_attested": false,
+  "predictive_validation": false
+}
