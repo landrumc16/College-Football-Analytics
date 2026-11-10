@@ -89,13 +89,14 @@ jobs:
         run: python -m cfb_analytics.v4_schedule_context --input historical-data --ratings historical-data/season_strength_research.json --output historical-data/schedule_context_research.json
       - name: Check cross-season strength scale and sample coverage
         run: python -m cfb_analytics.v4_scale_diagnostics --ratings historical-data/season_strength_research.json --output historical-data/scale_diagnostics.json
-      - name: Upload coverage manifest and extracted games
+      - name: Upload independently inspectable source files and research evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: v4-historical-source-coverage
           path: |
             historical-data/coverage.json
+            historical-data/cfb_schedules_20*.parquet
             historical-data/ten_season_summary.json
             historical-data/team_season_records.json
             historical-data/season_strength_research.json
