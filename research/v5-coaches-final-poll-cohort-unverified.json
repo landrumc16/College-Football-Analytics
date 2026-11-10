@@ -1,0 +1,618 @@
+{
+  "status": "research_only_not_publishable",
+  "source": {
+    "repository": "bigjoetx/college-football-final-rankings",
+    "path": "co_2001_2025.json",
+    "blob_sha": "0343c1628b4d14ba3555db3e5cd23d0f60117417",
+    "upstream_description": "CollegeFootballData-derived final Coaches rankings; independently cross-check before use",
+    "url": "https://github.com/bigjoetx/college-football-final-rankings/blob/main/co_2001_2025.json"
+  },
+  "limitations": [
+    "Final-only: no preseason observations",
+    "Not independently cross-checked against official season polls",
+    "Null ranks mean absent from source top 25, pending full snapshot verification",
+    "Do not feed directly into Hype Index or publication CLI"
+  ],
+  "rows": [
+    {
+      "team": "Alabama",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Clemson",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Georgia",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Michigan",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 10
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Ohio State",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 6
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Oregon",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Penn State",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": 7
+    },
+    {
+      "team": "Texas",
+      "season": 2016,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Alabama",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Clemson",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Georgia",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Michigan",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 11
+    },
+    {
+      "team": "Ohio State",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Oregon",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Penn State",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": 8
+    },
+    {
+      "team": "Texas",
+      "season": 2017,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Alabama",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Clemson",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Georgia",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 8
+    },
+    {
+      "team": "Michigan",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 14
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Ohio State",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Oregon",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Penn State",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 17
+    },
+    {
+      "team": "Texas",
+      "season": 2018,
+      "poll": "Coaches",
+      "final_rank": 9
+    },
+    {
+      "team": "Alabama",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 8
+    },
+    {
+      "team": "Clemson",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Georgia",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Michigan",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 19
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 11
+    },
+    {
+      "team": "Ohio State",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 6
+    },
+    {
+      "team": "Oregon",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Penn State",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": 9
+    },
+    {
+      "team": "Texas",
+      "season": 2019,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Alabama",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Clemson",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Georgia",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 7
+    },
+    {
+      "team": "Michigan",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Ohio State",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 6
+    },
+    {
+      "team": "Oregon",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Penn State",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Texas",
+      "season": 2020,
+      "poll": "Coaches",
+      "final_rank": 20
+    },
+    {
+      "team": "Alabama",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Clemson",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 16
+    },
+    {
+      "team": "Georgia",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Michigan",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 9
+    },
+    {
+      "team": "Ohio State",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 10
+    },
+    {
+      "team": "Oregon",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": 21
+    },
+    {
+      "team": "Penn State",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Texas",
+      "season": 2021,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Alabama",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Clemson",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 12
+    },
+    {
+      "team": "Georgia",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Michigan",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 18
+    },
+    {
+      "team": "Ohio State",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Oregon",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 16
+    },
+    {
+      "team": "Penn State",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 7
+    },
+    {
+      "team": "Texas",
+      "season": 2022,
+      "poll": "Coaches",
+      "final_rank": 25
+    },
+    {
+      "team": "Alabama",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Clemson",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 20
+    },
+    {
+      "team": "Georgia",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Michigan",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 14
+    },
+    {
+      "team": "Ohio State",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 10
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 15
+    },
+    {
+      "team": "Oregon",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 7
+    },
+    {
+      "team": "Penn State",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 13
+    },
+    {
+      "team": "Texas",
+      "season": 2023,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Alabama",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 17
+    },
+    {
+      "team": "Clemson",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 11
+    },
+    {
+      "team": "Georgia",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 6
+    },
+    {
+      "team": "Michigan",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 2
+    },
+    {
+      "team": "Ohio State",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 1
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Oregon",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Penn State",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Texas",
+      "season": 2024,
+      "poll": "Coaches",
+      "final_rank": 3
+    },
+    {
+      "team": "Alabama",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 9
+    },
+    {
+      "team": "Clemson",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Georgia",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 5
+    },
+    {
+      "team": "Michigan",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 22
+    },
+    {
+      "team": "Notre Dame",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 11
+    },
+    {
+      "team": "Ohio State",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 6
+    },
+    {
+      "team": "Oklahoma",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 10
+    },
+    {
+      "team": "Oregon",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 4
+    },
+    {
+      "team": "Penn State",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": null
+    },
+    {
+      "team": "Texas",
+      "season": 2025,
+      "poll": "Coaches",
+      "final_rank": 13
+    }
+  ]
+}
