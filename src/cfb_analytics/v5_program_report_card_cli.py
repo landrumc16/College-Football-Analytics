@@ -18,7 +18,13 @@ def main():
     data=json.loads(args.input.read_text(encoding="utf-8"))
     if not isinstance(data,dict) or not {"as_of","eligible_fbs","measurements"} <= data.keys():
         parser.error("Missing required source-attested input fields")
-    result=build_report_cards(data["measurements"],eligible_fbs=data["eligible_fbs"],as_of=data["as_of"],minimum_coverage=args.minimum_coverage)
+    roster=data["eligible_fbs"]
+    if not isinstance(roster,list) or len(roster)<120:
+        parser.error("Refusing cohort-only grades: national FBS peer roster required")
+    if not data.get("eligible_fbs_reviewed") or not isinstance(data.get("eligible_fbs_source"),str) or not data["eligible_fbs_source"].startswith("https://"):
+        parser.error("Missing independently reviewed eligible-FBS roster provenance")
+    result=build_report_cards(data["measurements"],eligible_fbs=roster,as_of=data["as_of"],minimum_coverage=args.minimum_coverage)
+    result["eligible_fbs_source"]=data["eligible_fbs_source"]
     if not all(c["national_grades_available"] for c in result["coverage"].values()):
         parser.error("Insufficient verified national FBS coverage: refusing publication")
     if not any(p["overall_grade"] is not None for p in result["programs"]):
