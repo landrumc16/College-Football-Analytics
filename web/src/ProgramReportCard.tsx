@@ -6,10 +6,18 @@ type Report = { schema_version: number; as_of: string; peer_universe: string; el
 
 function valid(report: Report): boolean {
   return report?.schema_version === 1 && report.peer_universe === 'eligible_FBS' &&
-    Number.isInteger(report.eligible_fbs_count) && report.eligible_fbs_count > 0 &&
+    Number.isInteger(report.eligible_fbs_count) && report.eligible_fbs_count >= 120 &&
     typeof report.as_of === 'string' && !!report.as_of &&
     Array.isArray(report.programs) && report.programs.length === report.eligible_fbs_count && new Set(report.programs.map(p => p.team)).size === report.eligible_fbs_count &&
-    ['hype', 'trajectory', 'strength'].every(k => typeof report.coverage?.[k]?.national_grades_available === 'boolean')
+    ['hype', 'trajectory', 'strength'].every(k => typeof report.coverage?.[k]?.national_grades_available === 'boolean') &&
+    report.programs.every(p => typeof p.team === 'string' && !!p.team &&
+      ['hype', 'trajectory', 'strength'].every(k => {
+        const c = p.categories?.[k as 'hype' | 'trajectory' | 'strength']
+        return c && (c.score === null && c.grade === null ||
+          typeof c.grade === 'string' && typeof c.score === 'number' && Number.isFinite(c.score) && c.score >= 0 && c.score <= 100)
+      }) &&
+      (p.overall_score === null && p.overall_grade === null ||
+        typeof p.overall_score === 'number' && Number.isFinite(p.overall_score) && p.overall_score >= 0 && p.overall_score <= 100 && typeof p.overall_grade === 'string'))
 }
 const display = (category?: Category) => category?.grade != null && category.score != null && Number.isFinite(category.score) && category.score >= 0 && category.score <= 100
   ? `${category.grade} (${category.score.toFixed(1)})` : 'N/A'
