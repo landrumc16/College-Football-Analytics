@@ -58,3 +58,13 @@ def test_duplicate_canonical_identity_rejected():
     mapping["26"] = mapping["25"]
     with pytest.raises(ValueError, match="unique"):
         build_poll_history(snapshots, mapping, 2024, 2025)
+
+
+def test_unranked_both_endpoints_remains_in_full_cohort():
+    snapshots, mapping = fixture()
+    mapping["27"] = "Team 27"
+    rows = build_poll_history(snapshots, mapping, 2024, 2025)
+    assert len(rows) == 108
+    absent = [r for r in rows if r["team"] == "Team 27"]
+    assert len(absent) == 4
+    assert all(r["preseason_rank"] is None and r["final_rank"] is None for r in absent)
