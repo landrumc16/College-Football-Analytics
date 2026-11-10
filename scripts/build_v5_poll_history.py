@@ -15,9 +15,9 @@ def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
     years = set(range(start, end + 1))
     if {item["season"] for item in snapshots} != years or len(snapshots) != len(years):
         raise ValueError("Poll snapshots must cover every requested season exactly once")
-    if len(set(team_ids.values())) != len(team_ids) or not all(team_ids.values()):
+    if not team_ids or len(set(team_ids.values())) != len(team_ids) or not all(team_ids.values()):
         raise ValueError("Team mapping must contain unique nonempty canonical names")
-    output = []
+    # Every mapped cohort program needs an explicit observation even when\n    # absent from both top-25 snapshots; otherwise coverage is overstated.\n    output = []
     for item in sorted(snapshots, key=lambda row: row["season"]):
         year = item["season"]
         source = item["source_url"]
@@ -32,7 +32,7 @@ def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
                 if len(snapshot) != 25 or sorted(ranks) != list(range(1, 26)) or len(set(ids)) != 25:
                     raise ValueError(f"{year} {poll} {phase}: invalid top 25")
                 pairs[phase] = {team_id: rank for team_id, rank in zip(ids, ranks)}
-            for team_id in sorted(set(pairs["preseason"]) | set(pairs["final"])):
+            for team_id in sorted(set(pairs["preseason"]) | set(pairs["final"]) | set(team_ids)):
                 if team_id not in team_ids:
                     raise ValueError(f"{year}: unmapped team ID {team_id}")
                 output.append({
