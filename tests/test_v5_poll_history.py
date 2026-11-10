@@ -39,11 +39,12 @@ def test_missing_year_rejected():
         build_poll_history(snapshots[:1], mapping, 2024, 2025)
 
 
-def test_unmapped_team_rejected():
+def test_cohort_subset_does_not_require_mapping_all_ranked_teams():
     snapshots, mapping = fixture()
-    del mapping["26"]
-    with pytest.raises(ValueError, match="unmapped team ID"):
-        build_poll_history(snapshots, mapping, 2024, 2025)
+    mapping = {"1": "Team 1", "26": "Team 26"}
+    rows = build_poll_history(snapshots, mapping, 2024, 2025)
+    assert len(rows) == 8
+    assert {r["team"] for r in rows} == {"Team 1", "Team 26"}
 
 
 def test_duplicate_rank_rejected():
