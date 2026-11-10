@@ -1,0 +1,75 @@
+"""Acquire and validate authentic preseason/final AP and Coaches snapshots.
+
+Research-only output. Publication requires independent source and identity review.
+SportsDataverse documents regular week 1 as preseason, postseason week 1
+as final, and null-ranked exit rows as non-ranked.
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import json
+from pathlib import Path
+from urllib.request import urlopen
+
+BASE = ("https://github.com/sportsdataverse/sportsdataverse-data/"
+        "releases/download/cfb_poll_analytics/cfb_poll_analytics_{year}.csv")
+
+
+def extract_snapshots(data: bytes, year: int) -> dict:
+    rows = list(csv.DictReader(data.decode("utf-8-sig").splitlines()))
+    if not rows:
+        raise ValueError(f"{year}: empty poll source")
+    snapshots = {}
+    for poll in ("ap", "coaches"):
+        for phase, season_type in (("preseason", 2), ("final", 3)):
+            selected = [r for r in rows if int(r["season"]) == year
+                        and int(r["season_type"]) == season_type
+                        and int(r["week"]) == 1 and r["poll"].lower() == poll
+                        and r["rank"] not in ("", "null", "NA")]
+            if len(selected) != 25:
+                raise ValueError(f"{year} {poll} {phase}: expected 25 ranks, got {len(selected)}")
+            ranks = [int(r["rank"]) for r in selected]
+            ids = [str(r["team_id"]).strip() for r in selected]
+            if sorted(ranks) != list(range(1, 26)) or len(set(ids)) != 25 or not all(ids):
+                raise ValueError(f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs")
+            snapshots[f"{poll}_{phase}"] = [
+                {"team_id": team_id, "rank": rank}
+                for rank, team_id in sorted(zip(ranks, ids))
+            ]
+    return {"season": year, "source_url": BASE.format(year=year),
+            "source_sha256": hashlib.sha256(data).hexdigest(),
+            "snapshots": snapshots}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-season", type=int, default=2016)
+    parser.add_argument("--end-season", type=int, default=2025)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.start_season > args.end_season:
+        parser.error("Invalid season range")
+    args.output.mkdir(parents=True, exist_ok=True)
+    manifest = []
+    for year in range(args.start_season, args.end_season + 1):
+        url = BASE.format(year=year)
+        with urlopen(url, timeout=90) as response:
+            raw = response.read()
+        snapshot = extract_snapshots(raw, year)
+        (args.output / f"poll_source_{year}.csv").write_bytes(raw)
+        (args.output / f"poll_snapshots_{year}.json").write_text(
+            json.dumps(snapshot, indent=2) + "\n", encoding="utf-8")
+        manifest.append({"season": year, "sha256": snapshot["source_sha256"],
+                         "source_url": url, "snapshot_sizes":
+                         {k: len(v) for k, v in snapshot["snapshots"].items()}})
+    (args.output / "poll_manifest.json").write_text(json.dumps({
+        "status": "research_only_requires_independent_source_and_team_identity_review",
+        "source_documentation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md",
+        "seasons": manifest, "publishable": False
+    }, indent=2) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
