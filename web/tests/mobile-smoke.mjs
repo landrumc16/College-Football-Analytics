@@ -88,7 +88,7 @@ try {
       throw new Error('Direct Team Profile navigation did not select the first available school');
     }
     await page.getByLabel('Choose dashboard section').selectOption('home');
-    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'compare', 'programs', 'profile']) {
+    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
       await page.getByLabel('Choose dashboard section').selectOption(section);
       if (section === 'polls') {
         await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
@@ -119,7 +119,9 @@ try {
         await page.getByRole('region', { name: 'Side-by-side team comparison' }).waitFor();
         await page.getByLabel('Choose dashboard section').selectOption('predictions');
       }
-      if (['programs', 'hype', 'trajectory', 'stock', 'contenders'].includes(section)) {
+      if (section === 'hype') await page.getByRole('heading', { name: 'Historical Hype Index', exact: true }).waitFor();
+      if (section === 'trajectory') await page.getByRole('heading', { name: 'Program Trajectory & Momentum', exact: true }).waitFor();
+      if (['programs', 'stock', 'contenders'].includes(section)) {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
