@@ -9,6 +9,7 @@ on:
       - 'tests/test_v5_historical_polls.py'
       - 'scripts/build_v5_poll_history.py'
       - 'tests/test_v5_poll_history.py'
+      - 'research/v5-cohort-espn-team-ids.json'
       - '.github/workflows/v5-historical-polls.yml'
 
 permissions:
@@ -29,6 +30,12 @@ jobs:
           python -m pytest -q tests/test_v5_historical_polls.py tests/test_v5_poll_history.py
       - name: Fetch genuine AP and Coaches snapshots for 2016-2025
         run: python scripts/fetch_v5_historical_polls.py --output historical-polls
+      - name: Convert validated snapshots into research-only cohort history
+        run: |
+          python scripts/build_v5_poll_history.py \
+            --snapshots historical-polls \
+            --team-ids research/v5-cohort-espn-team-ids.json \
+            --output historical-polls/cohort-poll-history.json
       - name: Upload raw polls, snapshot extracts and checksums
         if: always()
         uses: actions/upload-artifact@v4
