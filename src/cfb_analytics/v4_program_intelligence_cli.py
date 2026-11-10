@@ -47,8 +47,8 @@ def main() -> None:
     for row in polls:
         poll_by_team.setdefault((row["team"], row["poll"]), set()).add(row["season"])
     eligible = {team for team, observed in strength_by_team.items() if years <= observed}
-    if not any(team in eligible and years <= observed for (team, _poll), observed in poll_by_team.items()):
-        parser.error("No program has matching ten-season strength and poll coverage; refusing publication")
+    if not any(team in eligible and all(years <= poll_by_team.get((team, poll), set()) for poll in ("AP", "Coaches")) for team in eligible):
+        parser.error("No program has matching ten-season strength, AP, and Coaches coverage; refusing publication")
     if not args.reviewed_sources:
         parser.error("Source authenticity and comparable opponent-adjusted strength require independent review; use --reviewed-sources only after verification")
     report = build_program_intelligence(strength, polls, args.latest_completed_season)
