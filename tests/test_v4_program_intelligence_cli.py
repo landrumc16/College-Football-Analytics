@@ -41,3 +41,28 @@ def test_cli_refuses_empty_sources_even_with_attestation(tmp_path):
         "--reviewed-sources"], capture_output=True, text=True)
     assert result.returncode != 0
     assert not out.exists()
+
+
+def test_cli_refuses_disjoint_full_window_cohorts(tmp_path):
+    strength = tmp_path / "strength.json"
+    polls = tmp_path / "polls.json"
+    output = tmp_path / "published.json"
+    source = "sha256:" + "a" * 64
+    strength.write_text(json.dumps([
+        dict(team="Strength Only", season=y, strength=10.0, source=source)
+        for y in range(2016, 2026)
+    ]))
+    polls.write_text(json.dumps([
+        dict(team="Poll Only", season=y, poll="AP", preseason_rank=5,
+             final_rank=8, source=source)
+        for y in range(2016, 2026)
+    ]))
+    result = subprocess.run([
+        sys.executable, "-m", "cfb_analytics.v4_program_intelligence_cli",
+        "--strength-input", str(strength), "--poll-input", str(polls),
+        "--latest-completed-season", "2025", "--output", str(output),
+        "--reviewed-sources",
+    ], capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "matching ten-season strength and poll coverage" in result.stderr
+    assert not output.exists()
