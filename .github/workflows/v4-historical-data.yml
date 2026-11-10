@@ -3,7 +3,7 @@ name: V4 historical source coverage
 on:
   workflow_dispatch:
   push:
-    branches: [v4-development]
+    branches: [v4-development, v5-development]
     paths:
       - 'scripts/fetch_historical_schedules.py'
       - 'src/cfb_analytics/v4_source_integrity.py'
