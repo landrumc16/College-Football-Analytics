@@ -73,6 +73,16 @@ def reconcile(observations):
         identities.add((kind, payload[0]) if kind == "game_final" else (kind, payload[0], payload[1]))
     if len(identities) != 1:
         raise ValueError("Cannot reconcile different games or poll editions")
+    # A provider host must not attest to incompatible payloads, even through
+    # multiple URLs. Such evidence is disputed, not independent confirmation.
+    host_payloads = {}
+    for (_, payload), rows in candidates.items():
+        for row in rows:
+            host = urlsplit(row["source"]).hostname.lower()
+            if host in host_payloads and host_payloads[host] != payload:
+                return {"status": "disputed", "kind": observations[0]["kind"],
+                        "data": None, "sources": sorted({r["source"] for r in observations})}
+            host_payloads[host] = payload
     confirmed = []
     for (kind, payload), rows in candidates.items():
         sources = {r["source"] for r in rows}
