@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-10T18:42:30.638252+00:00",
+  "retrieved_at": "2026-11-11T05:43:38.030345+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3683,
-    "completed": 3158,
-    "pending": 525
+    "completed": 3161,
+    "pending": 522
   },
   "games": [
     {
@@ -38642,9 +38642,9 @@
       "week": 11,
       "home": "Akron",
       "away": "Western Michigan",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 14,
+      "away_score": 42,
       "neutral_site": false,
       "start_date": "2026-11-11T00:00:00.000Z"
     },
@@ -38654,9 +38654,9 @@
       "week": 11,
       "home": "Bowling Green",
       "away": "Kent State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 33,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-11T00:00:00.000Z"
     },
@@ -38666,9 +38666,9 @@
       "week": 11,
       "home": "Miami (OH)",
       "away": "Ohio",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 34,
+      "away_score": 17,
       "neutral_site": false,
       "start_date": "2026-11-11T01:00:00.000Z"
     },
@@ -44205,5 +44205,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-10T18:42:30.638252+00:00"
+  "data_changed_at": "2026-11-11T05:43:38.030345+00:00"
 }
