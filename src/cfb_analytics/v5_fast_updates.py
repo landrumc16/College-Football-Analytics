@@ -4,6 +4,7 @@ A single source can be shown provisionally. Only independent matching
 observations become confirmed and eligible for downstream model ingestion.
 """
 from datetime import datetime, timezone
+from urllib.parse import urlsplit
 
 KINDS = {"game_final", "ap_top25", "coaches_top25", "cfp_top25"}
 
@@ -59,7 +60,7 @@ def reconcile(observations):
         raise ValueError("No observations")
     candidates = {}
     for row in observations:
-        if not isinstance(row.get("source"), str) or not row["source"].startswith("https://"):
+        if not isinstance(row.get("source"), str) or not row["source"].startswith("https://") or not urlsplit(row["source"]).hostname:
             raise ValueError("Missing source URL")
         _timestamp(row.get("published_at"))
         key = (row["kind"], _payload(row))
@@ -69,7 +70,8 @@ def reconcile(observations):
     confirmed = []
     for (kind, payload), rows in candidates.items():
         sources = {r["source"] for r in rows}
-        if len(sources) >= 2:
+        independent_hosts = {urlsplit(source).hostname for source in sources}
+        if len(independent_hosts) >= 2:
             confirmed.append((max(_timestamp(r["published_at"]) for r in rows), kind, payload, rows))
     if len(confirmed) > 1:
         raise ValueError("Conflicting independently confirmed payloads")
