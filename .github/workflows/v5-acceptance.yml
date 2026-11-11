@@ -63,12 +63,13 @@ jobs:
           manifest=json.loads((d/'manifest.webmanifest').read_text())
           assert manifest['display']=='standalone'
           snapshot=json.loads(Path('data/poll-2026-snapshot.json').read_text())
+          assert snapshot.get('season') == 2026
           for key in ('ap_top25','coaches_top25','cfp_top25'):
-              if key in snapshot:
-                  rows=snapshot[key]
-                  assert len(rows)==25, key
-                  assert {r['rank'] for r in rows}==set(range(1,26)), key
-                  assert len({r['team'] for r in rows})==25, key
+              assert key in snapshot, f'Missing required poll: {key}'
+              rows=snapshot[key]
+              assert len(rows)==25, key
+              assert {r['rank'] for r in rows}==set(range(1,26)), key
+              assert len({r['team'] for r in rows})==25, key
           PY
       - uses: actions/upload-artifact@v4
         if: always()
