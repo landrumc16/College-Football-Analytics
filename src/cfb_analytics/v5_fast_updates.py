@@ -67,6 +67,12 @@ def reconcile(observations):
         candidates.setdefault(key, []).append(row)
     if len({kind for kind, _ in candidates}) != 1:
         raise ValueError("Cannot reconcile mixed update kinds")
+    # Never reconcile different games or poll editions in one publication.
+    identities = set()
+    for kind, payload in candidates:
+        identities.add((kind, payload[0]) if kind == "game_final" else (kind, payload[0], payload[1]))
+    if len(identities) != 1:
+        raise ValueError("Cannot reconcile different games or poll editions")
     confirmed = []
     for (kind, payload), rows in candidates.items():
         sources = {r["source"] for r in rows}
