@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 from pathlib import Path
-from .v5_fast_updates import reconcile, _timestamp
+from .v5_fast_updates import reconcile, _timestamp, _payload
 
 
 def publish(observations, previous=None):
@@ -27,7 +27,7 @@ def publish(observations, previous=None):
                 newer = (incoming.get("season"), incoming.get("week"))
                 if newer < older:
                     raise ValueError("Refusing to replace newer confirmed poll")
-                if newer == older and confirmed.get("rankings") != incoming.get("rankings"):
+                if newer == older and _payload(confirmed) != _payload(incoming):
                     raise ValueError("Conflicting confirmed rankings for same poll week")
             elif confirmed.get("game_id") != incoming.get("game_id"):
                 raise ValueError("Game identifier mismatch")
