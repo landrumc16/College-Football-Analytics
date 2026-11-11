@@ -69,3 +69,15 @@ def test_different_poll_editions_rejected():
     other["week"]=12
     with pytest.raises(ValueError,match="poll editions"):
         reconcile([poll(),other])
+
+
+def test_same_provider_conflicting_urls_cannot_attest_to_confirmation():
+    conflicting=final('https://scores.example.org/game/alternate',score=27)
+    result=reconcile([final(),final(B),conflicting])
+    assert result['status']=='disputed'
+    assert result['data'] is None
+
+def test_poll_rows_in_different_order_are_equivalent():
+    second=poll(B)
+    second['rankings'].reverse()
+    assert reconcile([poll(),second])['status']=='confirmed'
