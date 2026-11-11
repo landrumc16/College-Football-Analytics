@@ -48,3 +48,19 @@ def test_invalid_future_or_naive_timestamp_rejected():
 def test_mixed_kinds_rejected():
     with pytest.raises(ValueError,match="mixed"):
         reconcile([final(),poll()])
+
+def test_two_urls_same_host_not_independent():
+    second=final("https://scores.example.org/game/alternate")
+    assert reconcile([final(),second])["status"]=="provisional"
+
+def test_different_games_rejected():
+    other=final(B)
+    other["game_id"]="different"
+    with pytest.raises(ValueError,match="different games"):
+        reconcile([final(),other])
+
+def test_different_poll_editions_rejected():
+    other=poll(B)
+    other["week"]=12
+    with pytest.raises(ValueError,match="poll editions"):
+        reconcile([poll(),other])
