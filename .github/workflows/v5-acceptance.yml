@@ -42,6 +42,15 @@ jobs:
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
+      - name: Check historical publication safeguards
+        run: node web/tests/historical-publication.mjs
+      - name: Install browser acceptance dependencies
+        working-directory: web
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Run real Chromium mobile and desktop journeys
+        run: node web/tests/mobile-smoke.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'
@@ -64,7 +73,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v5-frontend-build
-          path: web/dist/
-          retention-days: 7
+          name: v5-browser-and-build-evidence
+          path: |
+            web/dist/
+            web/mobile-evidence/
+          retention-days: 14
           if-no-files-found: warn
