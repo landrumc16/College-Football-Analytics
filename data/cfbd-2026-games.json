@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-11T05:43:38.030345+00:00",
+  "retrieved_at": "2026-11-11T18:45:11.418974+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3683,
@@ -42210,7 +42210,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T05:00:00.000Z"
+      "start_date": "2026-11-21T20:30:00.000Z"
     },
     {
       "game_id": 401858533,
@@ -44205,5 +44205,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-11T05:43:38.030345+00:00"
+  "data_changed_at": "2026-11-11T18:45:11.418974+00:00"
 }
