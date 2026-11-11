@@ -81,6 +81,9 @@ def reconcile(observations):
             confirmed.append((max(_timestamp(r["published_at"]) for r in rows), kind, payload, rows))
     if len(confirmed) > 1:
         raise ValueError("Conflicting independently confirmed payloads")
+    if confirmed and len(candidates) > 1:
+        return {"status": "disputed", "kind": observations[0]["kind"],
+                "data": None, "sources": sorted({r["source"] for r in observations})}
     if confirmed:
         _, kind, payload, rows = confirmed[0]
         return {"status": "confirmed", "kind": kind, "data": rows[0],
