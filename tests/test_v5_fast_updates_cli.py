@@ -46,3 +46,20 @@ def test_unrelated_confirmed_game_rejected():
     old["game_id"]="another"
     with pytest.raises(ValueError,match="identifier"):
         publish([final(),final(B)],{"confirmed":old})
+
+
+def test_same_confirmed_poll_different_row_order_is_idempotent():
+    previous=poll()
+    second=poll(B)
+    second["rankings"].reverse()
+    result=publish([poll(),second],{"confirmed":previous})
+    assert result["status"]=="confirmed"
+    assert result["model_ingestion_allowed"]
+
+
+def test_disputed_majority_does_not_replace_prior_confirmed():
+    previous={"confirmed":final(A,28)}
+    out=publish([final(A,29),final(B,29),final("https://third.example.org/game/1",30)],previous)
+    assert out["status"]=="disputed"
+    assert out["confirmed"]["home_score"]==28
+    assert out["model_ingestion_allowed"] is False
