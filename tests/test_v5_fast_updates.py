@@ -3,7 +3,7 @@ from cfb_analytics.v5_fast_updates import reconcile
 
 A="https://scores.example.org/game/1"
 B="https://conference.example.org/game/1"
-DATE="2026-11-10T21:00:00-06:00"
+DATE="2025-11-10T21:00:00-06:00"
 
 def final(source=A, score=28):
     return dict(kind="game_final",game_id="123",home="Texas",away="Oklahoma",
@@ -48,6 +48,11 @@ def test_invalid_future_or_naive_timestamp_rejected():
 def test_mixed_kinds_rejected():
     with pytest.raises(ValueError,match="mixed"):
         reconcile([final(),poll()])
+
+def test_confirmed_majority_with_disagreement_is_disputed():
+    result=reconcile([final(),final(B),final("https://third.example.org/game/1",score=27)])
+    assert result["status"]=="disputed"
+    assert result["data"] is None
 
 def test_two_urls_same_host_not_independent():
     second=final("https://scores.example.org/game/alternate")
