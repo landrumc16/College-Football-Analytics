@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 from pathlib import Path
-from .v5_fast_updates import reconcile
+from .v5_fast_updates import reconcile, _timestamp
 
 
 def publish(observations, previous=None):
@@ -18,7 +18,22 @@ def publish(observations, previous=None):
     previous = previous or {}
     confirmed = previous.get("confirmed")
     if result["status"] == "confirmed":
-        confirmed = result["data"]
+        incoming = result["data"]
+        if confirmed is not None:
+            if confirmed.get("kind") != incoming["kind"]:
+                raise ValueError("Confirmed snapshot kind mismatch")
+            if incoming["kind"] != "game_final":
+                older = (confirmed.get("season"), confirmed.get("week"))
+                newer = (incoming.get("season"), incoming.get("week"))
+                if newer < older:
+                    raise ValueError("Refusing to replace newer confirmed poll")
+                if newer == older and confirmed.get("rankings") != incoming.get("rankings"):
+                    raise ValueError("Conflicting confirmed rankings for same poll week")
+            elif confirmed.get("game_id") != incoming.get("game_id"):
+                raise ValueError("Game identifier mismatch")
+            elif _timestamp(incoming["published_at"]) < _timestamp(confirmed["published_at"]):
+                raise ValueError("Refusing older confirmed game update")
+        confirmed = incoming
     if confirmed is not None and confirmed.get("kind") != result["kind"]:
         raise ValueError("Confirmed snapshot kind mismatch")
     return {
