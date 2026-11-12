@@ -30,7 +30,7 @@ def test_matching_independent_reports_promote():
 def test_old_poll_cannot_replace_new_poll():
     newer=poll()
     newer["week"]=12
-    with pytest.raises(ValueError,match="older"):
+    with pytest.raises(ValueError,match="newer confirmed poll"):
         publish([poll(),poll(B)],{"confirmed":newer})
 
 
