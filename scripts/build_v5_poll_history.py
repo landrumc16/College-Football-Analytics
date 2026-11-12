@@ -9,6 +9,8 @@ import argparse
 import json
 from pathlib import Path
 
+from scripts.fetch_v5_historical_polls import valid_top25
+
 
 def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
                        start: int = 2016, end: int = 2025) -> list[dict]:
@@ -30,7 +32,7 @@ def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
                 snapshot = item["snapshots"][f"{poll}_{phase}"]
                 ranks = [entry["rank"] for entry in snapshot]
                 ids = [str(entry["team_id"]) for entry in snapshot]
-                if len(snapshot) != 25 or sorted(ranks) != list(range(1, 26)) or len(set(ids)) != 25:
+                if not valid_top25(ranks, ids):
                     raise ValueError(f"{year} {poll} {phase}: invalid top 25")
                 pairs[phase] = {team_id: rank for team_id, rank in zip(ids, ranks)}
             # Source rankings outside the reviewed cohort are not errors.
