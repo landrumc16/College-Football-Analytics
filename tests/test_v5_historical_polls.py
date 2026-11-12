@@ -56,3 +56,22 @@ def test_refuses_incomplete_or_corrupt_snapshots(mutation):
 def test_rejects_wrong_season():
     with pytest.raises(ValueError):
         extract_snapshots(encode(source_rows(2023)), 2024)
+
+
+def test_genuine_tied_poll_positions_are_preserved():
+    rows = source_rows()
+    # A tied No. 14 produces positions 14, 14, 16 (not a duplicate error).
+    ap_final = [row for row in rows if row['poll'] == 'ap' and row['season_type'] == 3]
+    ap_final[14]['rank'] = 14
+    result = extract_snapshots(encode(rows), 2024)
+    ranks = [entry['rank'] for entry in result['snapshots']['ap_final']]
+    assert ranks.count(14) == 2 and 15 not in ranks and 16 in ranks
+
+
+def test_invalid_duplicate_rank_without_competition_gap_is_rejected():
+    rows = source_rows()
+    ap_final = [row for row in rows if row['poll'] == 'ap' and row['season_type'] == 3]
+    ap_final[14]['rank'] = 14
+    ap_final[15]['rank'] = 15  # still invalid: competition rank must skip 15
+    with pytest.raises(ValueError):
+        extract_snapshots(encode(rows), 2024)
