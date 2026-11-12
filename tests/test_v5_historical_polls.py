@@ -20,7 +20,8 @@ def source_rows(year=2024):
 def encode(rows):
     buf = io.StringIO()
     writer = csv.DictWriter(buf, fieldnames=["season", "season_type", "week",
-                                            "poll", "team_id", "rank",\n                                            "prev_rank", "weeks_ranked"])
+                                            "poll", "team_id", "rank",
+                                            "prev_rank", "weeks_ranked"])
     writer.writeheader()
     writer.writerows(rows)
     return buf.getvalue().encode()
