@@ -37,6 +37,8 @@ jobs:
       - name: Install dependencies
         working-directory: web
         run: npm install --no-package-lock
+      - name: Stage actual season report for browser acceptance
+        run: cp data/season-2026-report.json web/public/season-report.json
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
