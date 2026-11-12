@@ -4,7 +4,7 @@ from cfb_analytics.v4_program_provenance import validate_program_sources
 
 
 def test_source_coverage_is_diagnostic_not_verified():
-    rows = [dict(team="A", season=y, source="https://example.org/verified-data")
+    rows = [dict(team="A", season=y, strength=10.0 + y - 2016, source="https://example.org/verified-data")
             for y in range(2016, 2026)]
     report = validate_program_sources(rows, [], 2025)
     assert report["strength_programs_full_window"] == 1
