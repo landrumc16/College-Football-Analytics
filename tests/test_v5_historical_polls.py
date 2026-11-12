@@ -46,7 +46,7 @@ def test_refuses_incomplete_or_corrupt_snapshots(mutation):
     if mutation == "missing":
         rows.pop()
     elif mutation == "duplicate_rank":
-        rows[-1]["rank"] = 24
+        rows[-1]["rank"] = 23  # invalid: duplicates No. 23 while No. 24 remains
     else:
         rows[-1]["team_id"] = rows[-2]["team_id"]
     with pytest.raises(ValueError):
