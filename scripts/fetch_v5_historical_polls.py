@@ -33,12 +33,25 @@ def extract_snapshots(data: bytes, year: int) -> dict:
     if not rows:
         raise ValueError(f"{year}: empty poll source")
     snapshots = {}
+    source_weeks = {}
     for poll in ("ap", "coaches"):
         for phase, season_type in (("preseason", 2), ("final", 3)):
             selected = [r for r in rows if int(r["season"]) == year
                         and int(r["season_type"]) == season_type
                         and int(r["week"]) == 1 and r["poll"].lower() == poll
                         and r["rank"] not in ("", "null", "NA")]
+            source_week = 1
+            if not selected and year == 2025 and phase == "preseason":
+                candidate = [r for r in rows if int(r["season"]) == year
+                             and int(r["season_type"]) == 2
+                             and int(r["week"]) == 2 and r["poll"].lower() == poll
+                             and r["rank"] not in ("", "null", "NA")]
+                if len(candidate) == 25 and all(
+                    r.get("prev_rank", "") == "" and r.get("weeks_ranked") == "1"
+                    for r in candidate
+                ):
+                    selected = candidate
+                    source_week = 2
             if len(selected) != 25:
                 raise ValueError(f"{year} {poll} {phase}: expected 25 ranks, got {len(selected)}")
             ranks = [int(r["rank"]) for r in selected]
@@ -48,13 +61,14 @@ def extract_snapshots(data: bytes, year: int) -> dict:
                     f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs; "
                     f"ranks={ranks!r}; team_ids={ids!r}"
                 )
-            source_weeks[f"{poll}_{phase}"] = source_week\n            snapshots[f"{poll}_{phase}"] = [
+            source_weeks[f"{poll}_{phase}"] = source_week
+            snapshots[f"{poll}_{phase}"] = [
                 {"team_id": team_id, "rank": rank}
                 for rank, team_id in sorted(zip(ranks, ids))
             ]
     return {"season": year, "source_url": BASE.format(year=year),
             "source_sha256": hashlib.sha256(data).hexdigest(),
-            "snapshots": snapshots}
+            "source_weeks": source_weeks, "snapshots": snapshots}
 
 
 def fetch_source(url: str) -> bytes:
