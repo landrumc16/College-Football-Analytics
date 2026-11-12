@@ -19,6 +19,15 @@ BASE = ("https://github.com/sportsdataverse/sportsdataverse-data/"
         "releases/download/cfb_poll_analytics/cfb_poll_analytics_{year}.csv")
 
 
+def valid_top25(ranks: list[int], ids: list[str]) -> bool:
+    """Allow genuine tied poll positions (competition ranking: 1, 2, 2, 4)."""
+    if len(ranks) != 25 or len(ids) != 25 or len(set(ids)) != 25 or not all(ids):
+        return False
+    ordered = sorted(ranks)
+    return all(rank == index or (index > 1 and rank == ordered[index - 2])
+               for index, rank in enumerate(ordered, start=1))
+
+
 def extract_snapshots(data: bytes, year: int) -> dict:
     rows = list(csv.DictReader(data.decode("utf-8-sig").splitlines()))
     if not rows:
@@ -34,7 +43,7 @@ def extract_snapshots(data: bytes, year: int) -> dict:
                 raise ValueError(f"{year} {poll} {phase}: expected 25 ranks, got {len(selected)}")
             ranks = [int(r["rank"]) for r in selected]
             ids = [str(r["team_id"]).strip() for r in selected]
-            if sorted(ranks) != list(range(1, 26)) or len(set(ids)) != 25 or not all(ids):
+            if not valid_top25(ranks, ids):
                 raise ValueError(\n                    f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs; "\n                    f"ranks={ranks!r}; team_ids={ids!r}"\n                )
             snapshots[f"{poll}_{phase}"] = [
                 {"team_id": team_id, "rank": rank}
