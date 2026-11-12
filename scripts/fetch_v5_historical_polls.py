@@ -1,8 +1,9 @@
 """Acquire and validate authentic preseason/final AP and Coaches snapshots.
 
 Research-only output. Publication requires independent source and identity review.
-SportsDataverse documents regular week 1 as preseason, postseason week 1
-as final, and null-ranked exit rows as non-ranked.
+SportsDataverse generally labels regular week 1 as preseason and postseason
+week 1 as final. The 2025 week-2 candidate requires separate source review;
+no extracted snapshot is automatically approved for publication.
 """
 from __future__ import annotations
 
@@ -106,7 +107,8 @@ def main() -> None:
         (args.output / f"poll_snapshots_{year}.json").write_text(
             json.dumps(snapshot, indent=2) + "\n", encoding="utf-8")
         manifest.append({"season": year, "sha256": snapshot["source_sha256"],
-                         "source_url": url, "snapshot_sizes":
+                         "source_url": url, "source_weeks": snapshot["source_weeks"],
+                         "snapshot_sizes":
                          {k: len(v) for k, v in snapshot["snapshots"].items()}})
     (args.output / "poll_manifest.json").write_text(json.dumps({
         "status": "research_only_requires_independent_source_and_team_identity_review",
