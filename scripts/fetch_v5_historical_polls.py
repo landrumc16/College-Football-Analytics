@@ -86,8 +86,9 @@ def main() -> None:
     for year in range(args.start_season, args.end_season + 1):
         url = BASE.format(year=year)
         raw = fetch_source(url)
-        snapshot = extract_snapshots(raw, year)
+        # Preserve source evidence even when a season fails validation.
         (args.output / f"poll_source_{year}.csv").write_bytes(raw)
+        snapshot = extract_snapshots(raw, year)
         (args.output / f"poll_snapshots_{year}.json").write_text(
             json.dumps(snapshot, indent=2) + "\n", encoding="utf-8")
         manifest.append({"season": year, "sha256": snapshot["source_sha256"],
