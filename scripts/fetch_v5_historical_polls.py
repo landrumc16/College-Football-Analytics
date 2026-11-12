@@ -48,7 +48,7 @@ def extract_snapshots(data: bytes, year: int) -> dict:
                     f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs; "
                     f"ranks={ranks!r}; team_ids={ids!r}"
                 )
-            snapshots[f"{poll}_{phase}"] = [
+            source_weeks[f"{poll}_{phase}"] = source_week\n            snapshots[f"{poll}_{phase}"] = [
                 {"team_id": team_id, "rank": rank}
                 for rank, team_id in sorted(zip(ranks, ids))
             ]
