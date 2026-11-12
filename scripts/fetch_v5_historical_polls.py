@@ -11,6 +11,8 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+from time import sleep
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 BASE = ("https://github.com/sportsdataverse/sportsdataverse-data/"
@@ -43,6 +45,22 @@ def extract_snapshots(data: bytes, year: int) -> dict:
             "snapshots": snapshots}
 
 
+def fetch_source(url: str) -> bytes:
+    """Retry transient source outages, but fail immediately on missing releases."""
+    for attempt in range(3):
+        try:
+            with urlopen(url, timeout=90) as response:
+                return response.read()
+        except HTTPError as exc:
+            if exc.code not in (429, 500, 502, 503, 504) or attempt == 2:
+                raise RuntimeError(f"Poll source request failed: {url} (HTTP {exc.code})") from exc
+        except URLError as exc:
+            if attempt == 2:
+                raise RuntimeError(f"Poll source unavailable after 3 attempts: {url}") from exc
+        sleep(attempt + 1)
+    raise AssertionError("unreachable")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--start-season", type=int, default=2016)
@@ -55,8 +73,7 @@ def main() -> None:
     manifest = []
     for year in range(args.start_season, args.end_season + 1):
         url = BASE.format(year=year)
-        with urlopen(url, timeout=90) as response:
-            raw = response.read()
+        raw = fetch_source(url)
         snapshot = extract_snapshots(raw, year)
         (args.output / f"poll_source_{year}.csv").write_bytes(raw)
         (args.output / f"poll_snapshots_{year}.json").write_text(
