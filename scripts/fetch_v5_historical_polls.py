@@ -35,7 +35,7 @@ def extract_snapshots(data: bytes, year: int) -> dict:
             ranks = [int(r["rank"]) for r in selected]
             ids = [str(r["team_id"]).strip() for r in selected]
             if sorted(ranks) != list(range(1, 26)) or len(set(ids)) != 25 or not all(ids):
-                raise ValueError(f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs")
+                raise ValueError(\n                    f"{year} {poll} {phase}: duplicate or invalid ranks/team IDs; "\n                    f"ranks={ranks!r}; team_ids={ids!r}"\n                )
             snapshots[f"{poll}_{phase}"] = [
                 {"team_id": team_id, "rank": rank}
                 for rank, team_id in sorted(zip(ranks, ids))
