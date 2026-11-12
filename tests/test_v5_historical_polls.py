@@ -20,7 +20,7 @@ def source_rows(year=2024):
 def encode(rows):
     buf = io.StringIO()
     writer = csv.DictWriter(buf, fieldnames=["season", "season_type", "week",
-                                            "poll", "team_id", "rank"])
+                                            "poll", "team_id", "rank",\n                                            "prev_rank", "weeks_ranked"])
     writer.writeheader()
     writer.writerows(rows)
     return buf.getvalue().encode()
@@ -75,3 +75,28 @@ def test_invalid_duplicate_rank_without_competition_gap_is_rejected():
     ap_final[15]['rank'] = 15  # still invalid: competition rank must skip 15
     with pytest.raises(ValueError):
         extract_snapshots(encode(rows), 2024)
+
+
+def test_2025_week_two_unranked_prior_week_candidate_is_research_only():
+    rows = source_rows(2025)
+    for row in rows:
+        row["prev_rank"] = ""
+        row["weeks_ranked"] = "1"
+        if row["season_type"] == 2:
+            row["week"] = 2
+    result = extract_snapshots(encode(rows), 2025)
+    assert result["source_weeks"]["ap_preseason"] == 2
+    assert result["source_weeks"]["coaches_preseason"] == 2
+    assert result["source_weeks"]["ap_final"] == 1
+
+
+def test_2025_week_two_with_prior_rank_is_not_misclassified_as_preseason():
+    rows = source_rows(2025)
+    for row in rows:
+        row["prev_rank"] = ""
+        row["weeks_ranked"] = "1"
+        if row["season_type"] == 2:
+            row["week"] = 2
+    rows[0]["prev_rank"] = "1"
+    with pytest.raises(ValueError, match="2025 ap preseason"):
+        extract_snapshots(encode(rows), 2025)
