@@ -32,7 +32,7 @@ jobs:
         run: python scripts/fetch_v5_historical_polls.py --output historical-polls
       - name: Convert validated snapshots into research-only cohort history
         run: |
-          python scripts/build_v5_poll_history.py \
+          python -m scripts.build_v5_poll_history \
             --snapshots historical-polls \
             --team-ids research/v5-cohort-espn-team-ids.json \
             --output historical-polls/cohort-poll-history.json
