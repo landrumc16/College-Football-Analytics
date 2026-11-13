@@ -197,7 +197,7 @@ jobs:
           PY
   build:
     if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -486,7 +486,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Retrieve validated report
@@ -596,3 +596,29 @@ jobs:
           echo "Published dashboard smoke test failed" >&2
           exit 1
 
+
+      - name: Check out deployed revision for live browser verification
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install production browser verification dependencies
+        working-directory: web
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify live desktop, mobile and PWA journeys
+        env:
+          DASHBOARD_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          mkdir -p web/mobile-evidence
+          git rev-parse HEAD > web/mobile-evidence/production-sha.txt
+          node web/tests/mobile-smoke.mjs
+      - name: Preserve live production verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-live-production-browser-evidence
+          path: web/mobile-evidence/
+          if-no-files-found: warn
+          retention-days: 30

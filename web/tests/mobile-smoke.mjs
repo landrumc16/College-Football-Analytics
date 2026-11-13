@@ -2,11 +2,40 @@ import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
+import { createServer } from 'node:http';
+import { connect } from 'node:net';
 
+// The same journeys validate the local build and the actual published app.
+const liveUrl = process.env.DASHBOARD_URL;
+const baseUrl = liveUrl ? new URL('./', liveUrl).href : 'http://127.0.0.1:4178/';
+let denyNetwork = false;
+const connections = new Set();
+const networkGate = liveUrl ? createServer() : null;
+if (networkGate) {
+  // Closing these browser-only tunnels makes the live origin truly unreachable
+  // to service-worker fetches without affecting the public site or other users.
+  networkGate.on('connect', (request, socket, head) => {
+    if (denyNetwork) { socket.destroy(); return; }
+    const destination = new URL(`https://${request.url}`);
+    const upstream = connect(Number(destination.port) || 443, destination.hostname);
+    for (const connection of [socket, upstream]) {
+      connections.add(connection);
+      connection.on('close', () => connections.delete(connection));
+      connection.on('error', () => { socket.destroy(); upstream.destroy(); });
+    }
+    upstream.once('connect', () => {
+      socket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
+      if (head.length) upstream.write(head);
+      socket.pipe(upstream); upstream.pipe(socket);
+    });
+  });
+  await new Promise(resolve => networkGate.listen(0, '127.0.0.1', resolve));
+}
 const startServer = () => spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
-let server = startServer();
+let server = liveUrl ? null : startServer();
 let browser;
 async function waitForPreview() {
+  if (liveUrl) return;
   let ready = false;
   for (let attempt = 0; attempt < 40; attempt++) {
     try {
@@ -35,14 +64,15 @@ async function assertReportCard(page, team) {
 
 try {
   await waitForPreview();
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true,
+    ...(networkGate ? { proxy: { server: `http://127.0.0.1:${networkGate.address().port}` } } : {}) });
   await mkdir('web/mobile-evidence', { recursive: true });
   for (const width of [375, 390, 768, 1536]) {
     const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+    await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByLabel('Choose dashboard section').waitFor();
     // V5 public onboarding and privacy disclosure must be available at every viewport.
@@ -80,7 +110,7 @@ try {
     const isolatedContext = await browser.newContext({ viewport: { width, height: 844 } });
     try {
       const isolatedPage = await isolatedContext.newPage();
-      await isolatedPage.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+      await isolatedPage.goto(baseUrl, { waitUntil: 'networkidle' });
       await isolatedPage.getByRole('heading', { name: 'My Teams' }).waitFor();
       if (await isolatedPage.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).count()) {
         throw new Error('Favorite leaked into a separate browser profile');
@@ -317,7 +347,7 @@ try {
           cfp_published_at: `${report.season}-11-01` }),
       }));
       try {
-        await pollPage.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+        await pollPage.goto(baseUrl, { waitUntil: 'networkidle' });
         await pollPage.getByLabel('Choose dashboard section').selectOption('cfp');
         await pollPage.getByText('Official CFP snapshot:', { exact: false }).waitFor();
         const official = pollPage.locator('section.predictions-intro').filter({ hasText: 'Official CFP snapshot:' });
@@ -334,7 +364,7 @@ try {
     await page.close();
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
     await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));
-    await failedPage.goto('http://127.0.0.1:4178/');
+    await failedPage.goto(baseUrl);
     await failedPage.getByText('Waiting for live data').waitFor();
     // A transient refresh failure must recover without requiring an app reinstall.
     await failedPage.unroute('**/season-report.json');
@@ -346,7 +376,7 @@ try {
   const android = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true,
     userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36' });
   const app = await android.newPage();
-  await app.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+  await app.goto(baseUrl, { waitUntil: 'networkidle' });
   await app.evaluate(() => navigator.serviceWorker.ready);
   await app.reload({ waitUntil: 'networkidle' });
   await app.waitForFunction(() => navigator.serviceWorker.controller !== null);
@@ -368,9 +398,14 @@ try {
   await android.setOffline(true);
   // A real unavailable server also covers Chromium builds whose emulated
   // offline flag does not consistently reach service-worker fetches.
-  const stopped = new Promise(resolve => server.once('exit', resolve));
-  process.kill(-server.pid, 'SIGTERM');
-  await stopped;
+  if (networkGate) {
+    denyNetwork = true;
+    for (const connection of connections) connection.destroy();
+  } else {
+    const stopped = new Promise(resolve => server.once('exit', resolve));
+    process.kill(-server.pid, 'SIGTERM');
+    await stopped;
+  }
   await app.reload({ waitUntil: 'load' });
   await app.getByRole('heading', { name: 'You are offline' }).waitFor();
   await app.screenshot({ path: 'web/mobile-evidence/android-pwa-offline.png', fullPage: true });
@@ -379,7 +414,8 @@ try {
     return (await Promise.all(keys.map(async key => (await (await caches.open(key)).keys()).map(r => r.url)))).flat();
   });
   if (cached.some(url => /\.json(?:$|\?)/.test(url))) throw new Error('PWA cached live JSON as current data');
-  server = startServer();
+  if (networkGate) denyNetwork = false;
+  else server = startServer();
   await waitForPreview();
   await android.setOffline(false);
   await app.getByRole('link', { name: 'Try again' }).click();
@@ -388,9 +424,13 @@ try {
   console.log('Android Chrome emulation: installability, update, offline and recovery passed');
 } finally {
   await browser?.close();
+  if (networkGate) {
+    for (const connection of connections) connection.destroy();
+    await new Promise(resolve => networkGate.close(resolve));
+  }
   // npm launches Vite as a child; terminate the entire process group so
   // inherited handles cannot keep the GitHub Actions job alive.
-  if (server.pid) {
+  if (server?.pid) {
     try { process.kill(-server.pid, 'SIGTERM'); } catch (error) {
       if (error.code !== 'ESRCH') throw error;
     }
