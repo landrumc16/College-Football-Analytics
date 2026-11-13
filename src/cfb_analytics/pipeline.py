@@ -232,8 +232,9 @@ def run_snapshot(snapshot_path: Path, roster_path: Path, output_path: Path):
 
 
 def _has_verified_pregame_provenance(game: dict, forecast: dict) -> bool:
-    """Exclude historical forecasts unless publication demonstrably preceded kickoff."""
+    """Require complete source-to-publication-to-kickoff provenance."""
     from datetime import datetime, timezone
+
     def aware(value):
         if not isinstance(value, str):
             return None
@@ -242,9 +243,18 @@ def _has_verified_pregame_provenance(game: dict, forecast: dict) -> bool:
             return timestamp.astimezone(timezone.utc) if timestamp.tzinfo else None
         except ValueError:
             return None
+
+    if forecast.get("source") != "generated_before_kickoff":
+        return False
+    if not isinstance(forecast.get("model_id"), str) or not forecast["model_id"].strip():
+        return False
+    retrieved = aware(forecast.get("source_retrieved_at"))
     published = aware(forecast.get("forecast_recorded_at"))
-    kickoff = aware(game.get("start_date"))
-    return published is not None and kickoff is not None and published < kickoff
+    scheduled = aware(forecast.get("scheduled_kickoff_at"))
+    actual_kickoff = aware(game.get("start_date"))
+    return (all(value is not None for value in (retrieved, published, scheduled, actual_kickoff))
+            and retrieved <= published < scheduled
+            and scheduled == actual_kickoff)
 
 
 def build_performance_against_expectations(snapshot: dict, roster: list[dict],
