@@ -44,3 +44,10 @@ Compared all 25 **2020 AP preseason** placements from the permanent archive with
 Reopened the College Poll Archive [2020 AP preseason poll](https://collegepollarchive.com/football/ap/seasons.cfm?appollid=1169&seasonid=2020), [2020 AP final poll](https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1185), and [Top-25 preseason-to-final turnover table](https://collegepollarchive.com/football/ap/research/preseason-final-poll-turnover.cfm?filter=Top25). The source pages confirm the published 2020 preseason/final poll identities and the external summary's **9** figure. The permanent archive's direct set subtraction remains **10**. The reason for the difference in College Poll Archive's aggregate is **not independently established**; do not assert a source error or claim a complete rank-by-rank verification solely from the aggregate. Keep 2020's interpretive exception and its unreviewed publication gate.
 
 The same independent turnover table lists **12** for 2025, agreeing with the corrected archived AP set subtraction. This is an anchor check, not independent verification of all 25 ranks.
+
+
+## 2026-11-13 explicit 2020 AP final rank-by-rank check
+
+Re-read College Poll Archive's [2020 final AP poll](https://collegepollarchive.com/football/ap/seasons.cfm?appollid=1185), ranks 1–25, and compared its published ordering with the retained `research/archive/polls/poll-snapshots-2020.json` final AP rows. The full ordering agrees: Alabama, Ohio State, Clemson, Texas A&M, Notre Dame, Oklahoma, Georgia, Cincinnati, Iowa State, Northwestern, BYU, Indiana, Florida, Coastal Carolina, Louisiana, Iowa, Liberty, North Carolina, Texas, Oklahoma State, USC, Miami (FL), Ball State, San Jose State, Buffalo.
+
+**Scope of evidence:** This is a complete **2020 AP final** 25-row independent rank-order check, not a check of Coaches polls or other seasons. The independent 2020 preseason-vs-final turnover summary still says 9, versus the archived membership subtraction of 10. Do not treat this full final-poll check alone as resolving the turnover difference or as a source-review attestation for all historical polls.
