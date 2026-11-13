@@ -9,11 +9,16 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime, timezone
 from math import isfinite, log
+import re
 
 
 def _timestamp(value: str) -> datetime:
     if not isinstance(value, str):
         raise ValueError("Timestamp must be ISO-8601 with timezone")
+    # Reject date-only strings and non-ISO timezone abbreviations; both can
+    # otherwise be silently accepted or ambiguously interpreted by parsers.
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})", value):
+        raise ValueError("Timestamp must be a full timezone-aware ISO-8601 datetime")
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
