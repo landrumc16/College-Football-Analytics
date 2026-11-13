@@ -16,17 +16,17 @@
 | 2017 | Alabama | Alabama | 9 | 9 | Anchor checks agree; full rows pending |
 | 2018 | Alabama | Clemson | 11 | 11 | Final AP tied No. 7 Florida/Georgia retained; full rows pending |
 | 2019 | Clemson | LSU | 8 | 8 | Anchor checks agree; full rows pending |
-| 2020 | Clemson | Alabama | 10 | 9 | **Mismatch — investigate** |
+| 2020 | Clemson | Alabama | 10 | 9 | Ranked-team memberships reconciled; external summary differs (see below) |
 | 2021 | Alabama | Georgia | 14 | 14 | Anchor checks agree; full rows pending |
 | 2022 | Alabama | Georgia | 15 | 15 | Anchor checks agree; full rows pending |
 | 2023 | Georgia | Michigan | 8 | 8 | Anchor checks agree; full rows pending |
 | 2024 | Georgia | Ohio State | 13 | 13 | Anchor checks agree; full rows pending |
-| 2025 | Ohio State (week 2, invalid) | Indiana | 11 | 12 | **Invalid preseason source; must replace** |
+| 2025 | Texas (authentic August AP) | Indiana | Pending recomputation from corrected archive | 12 | Corrected preseason retained separately; final and full rows still require independent review |
 
 ## Publication blockers
 
-1. Replace the 2025 week-2 AP and Coaches preseason data with authentic August 2025 poll rankings and separate provenance.
-2. Resolve the 2020 AP turnover discrepancy, including special 2020 poll eligibility/context.
+1. **Completed archival correction:** the 2025 week-2 AP and Coaches preseason substitution was replaced in `research/archive/polls/poll-snapshots-2025.json` with authentic August 2025 rankings and separate source URLs. Independently review all corrected rows before publication.
+2. **Resolved at ranked-team membership level:** 2020 AP archive yields 10 preseason dropouts, while the external summary says 9. Retain the 10 observed memberships, record the discrepancy, and account for special 2020 eligibility/context in interpretation.
 3. Independently compare **every ranked team and rank** across all 40 snapshots (1,000 top-25 placements), not merely #1 and turnover anchors; confirm 2018 ties and other tied ranks.
 4. Independently cross-check 2016–2025 game outcomes and season aggregation for program trajectories, including 2020 treatment.
 5. Only then attest source review and allow Hype Index/Report Cards to publish. Do not promote the research-only artifact or fabricate passing status.
