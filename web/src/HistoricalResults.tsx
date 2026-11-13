@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 type Window = { wins: number; losses: number; win_pct: number; seasons: number[] }
 type Row = { team: string; windows: Record<string, Window> }
+const historicalAliases: Record<string, string> = { 'Miami (FL)': 'Miami', 'Appalachian State': 'App State', 'ULM': 'UL Monroe', 'Sam Houston State': 'Sam Houston' }
+const historicalName = (name: string) => historicalAliases[name] || name
 type Payload = { schema_version: number; status: string; source_review_attested: boolean; national_grades_available: boolean; latest_completed_season: number; excluded_seasons: number[]; programs: Row[] }
 function valid(p: Payload): boolean {
   return p?.schema_version === 1 && p.status === 'research_preview_not_independently_source_attested' &&
@@ -27,16 +29,16 @@ export default function HistoricalResults({ onTeam, team, compareTeam }: { onTea
       .catch(e => { if(active) setMessage(String(e.message||e)) })
     return () => { active=false }
   }, [])
-  const rows=(data?.programs||[]).filter(r=>(!team || r.team===team || r.team===compareTeam) && r.team.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>
+  const rows=(data?.programs||[]).filter(r=>(!team || r.team===historicalName(team) || r.team===historicalName(compareTeam || '')) && r.team.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>
     (b.windows[span]?.win_pct ?? -1)-(a.windows[span]?.win_pct ?? -1)||a.team.localeCompare(b.team))
   return <section className="accuracy-summary" aria-label="Historical FBS results">
     <h3>{compareTeam ? 'Historical FBS results comparison' : team ? `${team} · historical FBS results` : 'Historical FBS results · 2016–2025'}</h3>
     <p>Actual completed FBS-versus-FBS wins and losses. Compare 3-, 5-, and 10-year windows, excluding the disrupted 2020 season. These are <strong>unadjusted win percentages</strong>, not strength rankings, national grades, or forecasts. Independent source review remains outstanding.</p>
     {data ? <><p>{data.programs.length} programs represented · {data.programs.filter(r=>r.windows[span]).length} with complete selected-window coverage.</p>
-      {team && !data.programs.some(r=>r.team===team) && <p role="status">No independently documented historical results for {team}; no estimate is shown.</p>}
-      {compareTeam && !data.programs.some(r=>r.team===compareTeam) && <p role="status">No independently documented historical results for {compareTeam}; no estimate is shown.</p>}
-      {team && data.programs.some(r=>r.team===team) && !data.programs.find(r=>r.team===team)?.windows[span] && <p role="status">{team} has insufficient verified season coverage for the selected window; no estimate is shown.</p>}
-      {compareTeam && data.programs.some(r=>r.team===compareTeam) && !data.programs.find(r=>r.team===compareTeam)?.windows[span] && <p role="status">{compareTeam} has insufficient verified season coverage for the selected window; no estimate is shown.</p>}
+      {team && !data.programs.some(r=>r.team===historicalName(team)) && <p role="status">No independently documented historical results for {team}; no estimate is shown.</p>}
+      {compareTeam && !data.programs.some(r=>r.team===historicalName(compareTeam)) && <p role="status">No independently documented historical results for {compareTeam}; no estimate is shown.</p>}
+      {team && data.programs.some(r=>r.team===team) && !data.programs.find(r=>r.team===historicalName(team))?.windows[span] && <p role="status">{team} has insufficient verified season coverage for the selected window; no estimate is shown.</p>}
+      {compareTeam && data.programs.some(r=>r.team===compareTeam) && !data.programs.find(r=>r.team===historicalName(compareTeam))?.windows[span] && <p role="status">{compareTeam} has insufficient verified season coverage for the selected window; no estimate is shown.</p>}
       <label>Window <select aria-label="Historical results window" value={span} onChange={e=>setSpan(e.target.value)}><option value="3">3 years</option><option value="5">5 years</option><option value="10">10 years (2020 excluded)</option></select></label>
       {!team && <label>Search <input aria-label="Search historical results" value={query} onChange={e=>setQuery(e.target.value)} /></label>}
       <div className="table-wrap"><table><thead><tr><th>Program</th><th>FBS wins</th><th>FBS losses</th><th>Win %</th><th>Seasons</th></tr></thead><tbody>{rows.map(r=>{const w=r.windows[span];return <tr key={r.team}><td><button type="button" onClick={()=>onTeam(r.team)}>{r.team}</button></td><td>{w?.wins ?? '—'}</td><td>{w?.losses ?? '—'}</td><td>{w ? (100*w.win_pct).toFixed(1)+'%' : 'N/A'}</td><td>{w?.seasons.join(', ') ?? 'Insufficient coverage'}</td></tr>})}</tbody></table></div>
