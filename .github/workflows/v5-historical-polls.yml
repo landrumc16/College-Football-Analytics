@@ -12,6 +12,7 @@ on:
       - 'tests/test_v5_espn_identity_resolution.py'
       - 'tests/test_v5_poll_history.py'
       - 'research/v5-cohort-espn-team-ids.json'
+      - 'research/v5-national-identity-candidates.json'
       - '.github/workflows/v5-historical-polls.yml'
 
 permissions:
@@ -75,6 +76,38 @@ jobs:
           assert len(candidates["mapping"]) == candidates["resolved_candidates"]
           assert len(candidates["unresolved_ids"]) + candidates["resolved_candidates"] == candidates["ranked_ids"]
           print(f"Candidate IDs: {candidates['resolved_candidates']}/{candidates['ranked_ids']}")
+          PY
+      - name: Assemble complete national poll history without publishing unreviewed evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.build_v5_poll_history import build_poll_history
+          root = Path("historical-polls")
+          observed = json.loads((root / "national-identity-candidates.json").read_text())
+          retained = json.loads(Path("research/v5-national-identity-candidates.json").read_text())
+          assert retained["status"] == "candidate_only_requires_independent_identity_review"
+          assert retained["publishable"] is False
+          assert retained["identity_review_attested"] is False
+          assert not observed["unresolved_ids"] and not observed["duplicate_canonical_names"]
+          assert observed["mapping"] == retained["mapping"], "Directory identities changed: review before generating history"
+          snapshots = [json.loads((root / f"poll_snapshots_{year}.json").read_text()) for year in range(2016, 2026)]
+          rows = build_poll_history(snapshots, retained["mapping"], require_ranked_ids_mapped=True)
+          assert len(rows) == 86 * 10 * 2
+          assert len({(row["team"], row["season"], row["poll"]) for row in rows}) == len(rows)
+          assert len({row["team"] for row in rows}) == 86
+          for row in rows:
+              assert row["source"].startswith("https://") and len(row["source_sha256"]) == 64
+          (root / "national-poll-history-research-only.json").write_text(json.dumps({
+              "status": "research_only_requires_independent_poll_and_identity_review",
+              "publishable": False,
+              "identity_review_attested": False,
+              "poll_source_review_attested": False,
+              "seasons": list(range(2016, 2026)),
+              "program_count": 86,
+              "observations": rows,
+          }, indent=2) + "\\n")
+          print(f"Validated {len(rows)} national poll observations across 86 programs; publication gated")
           PY
       - name: Upload raw polls, snapshot extracts and checksums
         if: always()
