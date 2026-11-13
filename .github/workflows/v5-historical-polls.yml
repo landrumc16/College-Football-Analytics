@@ -48,10 +48,14 @@ jobs:
           root = Path("historical-polls")
           snapshots = [json.loads((root / f"poll_snapshots_{year}.json").read_text()) for year in range(2016, 2026)]
           cohort = json.loads(Path("research/v5-cohort-espn-team-ids.json").read_text())
+          historical = json.loads(Path("web/public/v5-historical-results-preview.json").read_text())
+          current = json.loads(Path("data/season-2026-report.json").read_text())
+          canonical = {row["team"] for row in historical["programs"]}
+          canonical.update(row["team"] for row in current["rankings"])
           with urlopen(DIRECTORY_URL, timeout=30) as response:
               directory = json.load(response)
           (root / "espn-directory-source.json").write_text(json.dumps(directory, indent=2) + chr(10))
-          result = candidate_mapping(snapshots, directory, cohort)
+          result = candidate_mapping(snapshots, directory, cohort, canonical_teams=canonical)
           (root / "national-identity-candidates.json").write_text(json.dumps(result, indent=2) + chr(10))
           print("Ranked IDs:", result["ranked_ids"], "Candidates:", result["resolved_candidates"])
           print("Unresolved IDs:", result["unresolved_ids"])
