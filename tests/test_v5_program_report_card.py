@@ -46,3 +46,12 @@ def test_unverified_not_published():
     m["A"]["hype"]["value"]=float("nan")
     with pytest.raises(ValueError):
         build_report_cards(m,eligible_fbs=["A","B"],as_of="2026-11-10")
+
+
+@pytest.mark.parametrize("flag", ["false", "true", 0, 1, None])
+def test_nonboolean_verification_flags_cannot_publish_grades(flag):
+    m=fixture({"A":{c:1 for c in ("hype","trajectory","strength")},
+               "B":{c:2 for c in ("hype","trajectory","strength")}})
+    m["A"]["hype"]["verified"]=flag
+    with pytest.raises(ValueError,match="boolean"):
+        build_report_cards(m,eligible_fbs=["A","B"],as_of="2026-11-13")
