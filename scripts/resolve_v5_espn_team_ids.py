@@ -81,6 +81,7 @@ def main() -> None:
     p.add_argument("--poll-snapshots", type=Path, required=True)
     p.add_argument("--reviewed-cohort", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--mapping-output", type=Path, help="Converter-compatible mapping, only when complete")
     p.add_argument("--team-season-records", type=Path, required=True)
     p.add_argument("--directory-json", type=Path, help="Previously acquired ESPN directory JSON (offline/reproducible)")
     p.add_argument("--start-season", type=int, default=2016)
@@ -104,6 +105,16 @@ def main() -> None:
                                canonical_teams=canonical)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + chr(10), encoding="utf-8")
+    if args.mapping_output:
+        if result["unresolved_ids"] or result["duplicate_canonical_names"]:
+            raise ValueError(
+                "National identity mapping incomplete or ambiguous; review "
+                f"{args.output} before building poll history"
+            )
+        args.mapping_output.parent.mkdir(parents=True, exist_ok=True)
+        args.mapping_output.write_text(
+            json.dumps(result["mapping"], indent=2) + chr(10), encoding="utf-8"
+        )
 
 
 if __name__ == "__main__":
