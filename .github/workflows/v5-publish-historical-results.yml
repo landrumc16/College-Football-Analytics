@@ -1,0 +1,58 @@
+name: V5 publish descriptive historical results
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v5-development
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download existing historical source artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/13723239129/zip > /tmp/v5-source.zip
+          mkdir -p /tmp/v5-source
+          unzip -q /tmp/v5-source.zip -d /tmp/v5-source
+          test -f /tmp/v5-source/team_season_records.json
+      - name: Generate descriptive win-loss windows, fail closed
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          records=json.loads(Path('/tmp/v5-source/team_season_records.json').read_text())
+          seasons={row['season']:{team['team']:team for team in row['teams']} for row in records['seasons']}
+          assert all(y in seasons for y in range(2016,2026))
+          teams=sorted(set().union(*(set(s.keys()) for s in seasons.values())))
+          result=[]
+          for name in teams:
+              windows={}
+              for span in (3,5,10):
+                  years=[y for y in range(2026-span,2026) if y!=2020]
+                  rows=[seasons[y].get(name) for y in years]
+                  if not all(rows): continue
+                  wins=sum(r['fbs_wins'] for r in rows)
+                  losses=sum(r['fbs_losses'] for r in rows)
+                  if wins+losses==0: continue
+                  windows[str(span)]={'wins':wins,'losses':losses,'win_pct':round(wins/(wins+losses),4),'seasons':years}
+              if windows: result.append({'team':name,'windows':windows})
+          assert len(result)>=120, f'Insufficient historical coverage: {len(result)}'
+          output={'schema_version':1,'status':'research_preview_not_independently_source_attested','source_review_attested':False,'national_grades_available':False,'latest_completed_season':2025,'excluded_seasons':[2020],'metric':'Completed FBS-vs-FBS wins and losses; not opponent-adjusted strength','source':'https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_schedules/cfb_schedules_{season}.parquet','programs':result}
+          Path('web/public/v5-historical-results-preview.json').write_text(json.dumps(output,indent=2)+'\n')
+          print('Published descriptive program rows:',len(result))
+          PY
+      - name: Commit research-only application data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/public/v5-historical-results-preview.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data(v5): publish historical FBS results research preview"
+            git push origin HEAD:v5-development
+          fi
