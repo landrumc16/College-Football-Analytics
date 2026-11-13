@@ -56,6 +56,9 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             raise ValueError("Duplicate game-model archived forecast")
         seen.add(key)
         forecast_at = _timestamp(row.get("prediction_time"))
+        retrieved = row.get("source_retrieved_at")
+        if retrieved is not None and _timestamp(retrieved) > forecast_at:
+            raise ValueError("Forecast source was retrieved after prediction was recorded")
         kickoff_at = _timestamp(row.get("kickoff_time"))
         if forecast_at >= kickoff_at:
             raise ValueError("Forecast is not pregame")
