@@ -63,3 +63,22 @@ def test_ncaa_and_espn_remain_comparable_but_not_automatically_attested():
         independent_source="https://stats.ncaa.org/")
     assert result["matching_count"] == 1
     assert result["source_independence_attested"] is False
+
+
+def test_ncaa_origin_github_archive_is_distinct_from_espn_origin():
+    rows = archive([record("Alpha")])
+    result = compare_historical_results(
+        rows, rows,
+        primary_source="https://github.com/sportsdataverse/sportsdataverse-data",
+        independent_source="https://github.com/sportsdataverse/ncaa-mfb-football-raw")
+    assert result["matching_count"] == 1
+    assert result["source_independence_attested"] is False
+
+
+def test_two_ncaa_origin_distributions_are_not_independent():
+    rows = archive([record("Alpha")])
+    with pytest.raises(ValueError, match="same upstream provider"):
+        compare_historical_results(
+            rows, rows,
+            primary_source="https://stats.ncaa.org/",
+            independent_source="https://github.com/sportsdataverse/ncaa-mfb-football-raw")
