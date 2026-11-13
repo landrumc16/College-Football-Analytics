@@ -75,8 +75,7 @@ def main() -> None:
     rows = build_poll_history(snapshots, mapping, args.start_season, args.end_season,
                               require_ranked_ids_mapped=args.require_ranked_ids_mapped)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(rows, indent=2) + "
-", encoding="utf-8")
+    args.output.write_text(json.dumps(rows, indent=2) + chr(10), encoding="utf-8")
 
 
 if __name__ == "__main__":
