@@ -60,3 +60,23 @@ def test_2020_ap_turnover_is_derived_from_ranked_team_ids():
     final = {row["team_id"] for row in data["snapshots"]["ap_final"]}
     assert len(preseason) == len(final) == 25
     assert len(preseason - final) == 10
+
+
+def test_2025_corrected_preseason_and_ap_turnover():
+    """Prevent the invalid week-2 preseason feed from returning unnoticed."""
+    data = json.loads((ROOT / "poll-snapshots-2025.json").read_text())
+    assert data["publishable"] is False
+    assert data["source_review_attested"] is False
+    assert data["source_weeks"]["ap_preseason"] is None
+    assert data["source_weeks"]["coaches_preseason"] is None
+    for poll in ("ap", "coaches"):
+        before = data["snapshots"][f"{poll}_preseason"]
+        after = data["snapshots"][f"{poll}_final"]
+        assert len(before) == len(after) == 25
+        assert before[0]["team_id"] == "251"  # Texas, authentic preseason #1
+        assert after[0]["team_id"] == "84"  # Indiana, final #1
+        assert len({r["team_id"] for r in before}) == 25
+        assert len({r["team_id"] for r in after}) == 25
+    preseason = {r["team_id"] for r in data["snapshots"]["ap_preseason"]}
+    final = {r["team_id"] for r in data["snapshots"]["ap_final"]}
+    assert len(preseason - final) == 12
