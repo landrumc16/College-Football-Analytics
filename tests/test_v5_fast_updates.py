@@ -81,3 +81,17 @@ def test_poll_rows_in_different_order_are_equivalent():
     second=poll(B)
     second['rankings'].reverse()
     assert reconcile([poll(),second])['status']=='confirmed'
+
+def test_espn_subdomains_are_one_provider():
+    assert reconcile([final("https://www.espn.com/college-football/game/1"),
+                      final("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard")])["status"] == "provisional"
+
+
+def test_espn_subdomains_conflicting_scores_are_disputed():
+    assert reconcile([final("https://www.espn.com/college-football/game/1"),
+                      final("https://site.api.espn.com/scoreboard", score=27)])["status"] == "disputed"
+
+
+def test_distinct_upstream_publishers_can_confirm():
+    assert reconcile([final("https://www.espn.com/game/1"),
+                      final("https://stats.ncaa.org/game/1")])["status"] == "confirmed"
