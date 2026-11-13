@@ -133,7 +133,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     {section === 'schedule' && <>{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Upcoming prediction explanations</summary>
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching, roster, and matchup-specific contributions remain unavailable until validated.</p>
-      <div className="table-wrap"><table><thead><tr><th>Week</th><th>Matchup</th><th>Team win probability</th><th>Current rating gap</th><th>Forecast</th></tr></thead><tbody>{upcoming.map(g => {
+      <div className="table-wrap"><table><thead><tr><th scope="col">Week</th><th scope="col">Matchup</th><th scope="col">Team win probability</th><th scope="col">Current rating gap</th><th scope="col">Forecast</th></tr></thead><tbody>{upcoming.map(g => {
         const opponent = g.home === team ? g.away : g.home
         const forecast = matchingForecast(predictions, g)
         const ourRating = rankings.find(r => r.team === team)?.rating
