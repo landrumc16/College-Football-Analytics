@@ -14,7 +14,9 @@ def _provider_family(source: str) -> str | None:
         return "espn"
     if host in {"collegefootballdata.com", "api.collegefootballdata.com"} or host.endswith(".collegefootballdata.com"):
         return "espn"
-    if host in {"sportsdataverse.org", "github.com"}:
+    if host in {"github.com", "raw.githubusercontent.com"} and ("sportsdataverse/ncaa-mfb-football-data" in source.lower() or "sportsdataverse/ncaa-mfb-football-raw" in source.lower()):
+        return "ncaa"
+    if host in {"sportsdataverse.org", "github.com", "raw.githubusercontent.com"}:
         if host == "sportsdataverse.org" or "sportsdataverse/" in source.lower() or "cfbfastr" in source.lower():
             return "espn"
     if host == "stats.ncaa.org" or host.endswith(".ncaa.org"):
