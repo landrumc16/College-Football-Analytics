@@ -116,3 +116,16 @@ def test_confidence_segments_cover_each_game_without_inventing_empty_metrics():
     empty = evaluate_archived_forecasts([forecast()])["models"]["incumbent"]["confidence_segments"]
     assert empty["low"]["games"] == 0
     assert empty["low"]["accuracy"] is None
+
+
+def test_source_retrieval_must_not_postdate_archived_forecast():
+    row = forecast()
+    row["source_retrieved_at"] = "2025-09-01T15:00:01Z"
+    with pytest.raises(ValueError, match="retrieved after prediction"):
+        evaluate_archived_forecasts([row])
+
+
+def test_source_retrieval_before_forecast_is_accepted():
+    row = forecast()
+    row["source_retrieved_at"] = "2025-09-01T14:59:59Z"
+    assert evaluate_archived_forecasts([row])["total_forecasts"] == 1
