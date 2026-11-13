@@ -214,6 +214,14 @@ try {
         await navigate(page, 'predictions');
       }
       if (section === 'hype') await page.getByRole('heading', { name: 'Historical Hype Index', exact: true }).waitFor();
+      if (section === 'hype') {
+        await page.getByText('Current-season poll disagreement', { exact: true }).click();
+        await page.getByRole('region', { name: 'Current-season poll perception', exact: true }).waitFor();
+        await page.getByLabel('Choose AP or Coaches Poll').selectOption('Coaches');
+        await page.getByLabel('Sort current poll perception').selectOption('disagreement');
+        await page.getByLabel('Filter current poll perception by conference').selectOption('all');
+        await page.getByText('Current-season poll disagreement', { exact: true }).click();
+      }
       if (section === 'hype' || section === 'trajectory') {
         await page.getByRole('region', { name: 'Verified national historical intelligence' }).waitFor();
         await page.getByLabel('Choose historical program').selectOption(firstTeam);
@@ -296,7 +304,7 @@ try {
         await profileTab(page, 'Schedule & Predictions');
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
         await page.getByText('Upcoming prediction explanations', { exact: true }).click();
-        await page.getByRole('columnheader', { name: 'Team win probability', exact: true }).waitFor();
+        await page.getByRole('columnheader').filter({ hasText: 'Team win probability' }).waitFor();
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Profile-to-Compare lost selected school');
