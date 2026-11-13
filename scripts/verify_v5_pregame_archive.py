@@ -1,4 +1,4 @@
-"""Verify the genuinely published Week 10 archive against independent NCAA finals."""
+"""Replay the frozen, published forecast cohort against retained independent finals."""
 import csv
 import gzip
 import hashlib
@@ -19,7 +19,7 @@ def verify():
     import json
     frozen = json.loads(raw)
     current = read(ROOT / 'data/pregame-2026-history.json')
-    report = read(ROOT / 'data/season-2026-report.json')
+    report = read(ARCHIVE / 'pregame-evaluation-outcomes.json')
     rosters, _, resolve = ncaa_inputs()
     eligible = set(rosters[2026].values())
     # Match by season-specific identities and date; NCAA's optional ESPN ID
@@ -42,7 +42,7 @@ def verify():
     for g in report['schedule']:
         key = str(g['game_id'])
         f = frozen.get(key)
-        if g['week'] != 10 or not g['completed'] or not f or f.get('source') != 'generated_before_kickoff':
+        if not g['completed'] or not f or f.get('source') != 'generated_before_kickoff':
             continue
         if g['home'] not in eligible or g['away'] not in eligible:
             continue
@@ -69,12 +69,12 @@ def verify():
     baseline = [{**r, 'model_id': 'neutral_50_50', 'home_win_probability': .5} for r in rows]
     result = evaluate_archived_forecasts(rows + baseline)
     result.update(status='independently_verified_published_pregame_subset',
-        evaluation_scope='2026 Week 10 FBS-versus-FBS only',
+        evaluation_scope='2026 Weeks 10–11 FBS-versus-FBS archived subset',
         outcome_as_of=report['retrieved_at'], forecast_publication=receipt,
         eligible_completed_games=report['prediction_accuracy']['eligible_completed_games'],
         forecast_coverage=len(rows)/report['prediction_accuracy']['eligible_completed_games'],
         independent_final_source='https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2026.csv.gz',
-        limitations=['57 verified forecasts from one week; not full-season accuracy or a prediction of future accuracy',
+        limitations=[f'{len(rows)} verified forecasts from two partial weeks; not full-season accuracy or a prediction of future accuracy',
                      'Only frozen, settled FBS-versus-FBS games are scored; legacy records without pregame provenance are excluded',
                      'The 50/50 baseline is a paired neutral reference, not a competing forecast model'])
     return rows, matches, result

@@ -1,5 +1,5 @@
 """Shared V5 Report Card grading; verified peer measurements only."""
-from math import isfinite
+from math import isfinite, fsum
 
 CATEGORIES = ("hype", "trajectory", "strength")
 BANDS = ((97,"A+"),(93,"A"),(90,"A-"),(87,"B+"),(83,"B"),(80,"B-"),(77,"C+"),(73,"C"),(70,"C-"),(67,"D+"),(63,"D"),(60,"D-"),(0,"F"))
@@ -60,6 +60,6 @@ def build_report_cards(measurements, *, eligible_fbs, as_of, minimum_coverage=0.
             score=scores[category].get(team)
             categories[category]={"score":score,"grade":letter_grade(score) if score is not None else None}
         values=[categories[c]["score"] for c in CATEGORIES]
-        overall=sum(values)/3 if all(v is not None for v in values) else None
+        overall=fsum(values)/3 if all(v is not None for v in values) else None
         programs.append({"team":team,"categories":categories,"overall_score":overall,"overall_grade":letter_grade(overall) if overall is not None else None})
     return {"schema_version":1,"as_of":as_of,"peer_universe":"eligible_FBS","eligible_fbs_count":len(peers),"minimum_coverage":minimum_coverage,"scoring":"verified peer midrank percentile; equal one-third weights","coverage":coverage,"programs":programs}

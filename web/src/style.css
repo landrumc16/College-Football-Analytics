@@ -238,3 +238,8 @@ a:hover{color:#fff1dd}
   .program-intelligence-table td:nth-child(13):not(:last-child)::before{content:"3-year direction"}
   .program-intelligence-table td:last-child{justify-content:flex-end;padding-top:8px}
 }
+
+/* Report cards must fit inside comparison panels on narrow screens. */
+.accuracy-summary{min-width:0;overflow-wrap:anywhere}
+.report-card-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media(max-width:700px){.report-card-comparison{grid-template-columns:minmax(0,1fr)}}

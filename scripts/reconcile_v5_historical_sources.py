@@ -173,7 +173,7 @@ def reconcile():
     records = {'seasons': accepted_seasons}
     cards = assemble_report_cards(poll_rows=poll_history, season_records=records,
         current_rankings=report['rankings'], eligible_fbs=eligible,
-        as_of=report['generated_at'], latest_completed_season=2025,
+        as_of=report['retrieved_at'], latest_completed_season=2025,
         poll_reviewed=True, results_reviewed=True, strength_reviewed=True,
         strength_source='https://github.com/landrumc16/College-Football-Analytics/blob/v5-development/data/season-2026-report.json', results_source=SOURCE)
     cards['publication_status'] = 'complete'

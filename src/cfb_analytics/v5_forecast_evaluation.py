@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime, timezone
-from math import isfinite, log
+from math import isfinite, log, fsum
 import re
 
 
@@ -78,8 +78,8 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
     models = {}
     for model, predictions in sorted(by_model.items()):
         count = len(predictions)
-        brier = sum((p - y) ** 2 for p, y in predictions) / count
-        logloss = -sum(y * log(max(p, 1e-15)) + (1 - y) * log(max(1 - p, 1e-15))
+        brier = fsum((p - y) ** 2 for p, y in predictions) / count
+        logloss = -fsum(y * log(max(p, 1e-15)) + (1 - y) * log(max(1 - p, 1e-15))
                        for p, y in predictions) / count
         correct = sum((p >= .5) == bool(y) for p, y in predictions)
         groups = [[] for _ in range(bins)]
@@ -92,7 +92,7 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             segments[label] = {
                 "games": len(selected),
                 "accuracy": (sum((p >= .5) == bool(y) for p, y in selected) / len(selected)) if selected else None,
-                "brier": (sum((p - y) ** 2 for p, y in selected) / len(selected)) if selected else None,
+                "brier": (fsum((p - y) ** 2 for p, y in selected) / len(selected)) if selected else None,
             }
         models[model] = {
             "games": count,
@@ -102,7 +102,7 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             "accuracy": correct / count,
             "calibration": [
                 {"bin": i, "games": len(group),
-                 "mean_predicted": sum(p for p, _ in group) / len(group) if group else None,
+                 "mean_predicted": fsum(p for p, _ in group) / len(group) if group else None,
                  "observed_home_win_rate": sum(y for _, y in group) / len(group) if group else None}
                 for i, group in enumerate(groups)
             ],
@@ -116,8 +116,8 @@ def evaluate_archived_forecasts(rows: list[dict], bins: int = 10) -> dict:
             if not matched:
                 continue
             def paired_metrics(index):
-                brier = sum((pair[index][0] - int(pair[index][1])) ** 2 for pair in matched) / len(matched)
-                logloss = -sum(int(pair[index][1]) * log(max(pair[index][0], 1e-15)) +
+                brier = fsum((pair[index][0] - int(pair[index][1])) ** 2 for pair in matched) / len(matched)
+                logloss = -fsum(int(pair[index][1]) * log(max(pair[index][0], 1e-15)) +
                                (1 - int(pair[index][1])) * log(max(1 - pair[index][0], 1e-15))
                                for pair in matched) / len(matched)
                 return brier, logloss

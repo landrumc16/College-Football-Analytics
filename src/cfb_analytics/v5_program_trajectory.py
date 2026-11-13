@@ -5,7 +5,7 @@ prepares measurements only; source review must occur before publication.
 """
 from __future__ import annotations
 
-from math import isfinite
+from math import isfinite, fsum
 
 
 def trajectory_measurements(records: dict, *, latest_completed_season: int, source: str,
@@ -57,10 +57,10 @@ def trajectory_measurements(records: dict, *, latest_completed_season: int, sour
             windows[span]=wins/(wins+losses)
             mean_year=sum(years)/len(years)
             rates=[by_year[y][team][0]/sum(by_year[y][team]) for y in years]
-            mean_rate=sum(rates)/len(rates)
-            slopes[span]=sum((y-mean_year)*(rate-mean_rate) for y,rate in zip(years,rates))/sum((y-mean_year)**2 for y in years)
+            mean_rate=fsum(rates)/len(rates)
+            slopes[span]=fsum((y-mean_year)*(rate-mean_rate) for y,rate in zip(years,rates))/sum((y-mean_year)**2 for y in years)
         if len(windows)==3:
-            value=sum(slopes.values())/3
+            value=fsum(slopes.values())/3
             if not isfinite(value):
                 raise ValueError("Nonfinite trajectory")
             result[team]={"value":value,"source":source,"verified":source_reviewed,

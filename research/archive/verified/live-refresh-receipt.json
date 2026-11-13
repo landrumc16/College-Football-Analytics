@@ -1,0 +1,8 @@
+{
+  "workflow_run_id": 43511471646,
+  "source_sha": "48ea51b8bbd56eaaf6b79c749ca11556568dc19f",
+  "artifact_id": 14077938593,
+  "artifact_sha256": "001c2d33142939f6645a58e91f6b672ed84cd0143ea2876351ca9c6478f4160a",
+  "retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+  "scope": "Isolated live CFBD refresh and incumbent report; no production write"
+}

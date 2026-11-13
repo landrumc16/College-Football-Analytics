@@ -101,6 +101,8 @@ jobs:
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.report --season "$SEASON"
+      - name: Rebuild reviewed V5 Report Cards from retained history and refreshed incumbent ratings
+        run: PYTHONPATH=src python -m scripts.reconcile_v5_historical_sources
       - name: Verify archived forecast provenance and accuracy
         run: |
           python - <<'PY'
@@ -135,6 +137,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
+          git add web/public/v5-program-report-cards.json web/public/v5-historical-results.json
           if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then
             git add data/cfbd-recruiting-*.json
           fi

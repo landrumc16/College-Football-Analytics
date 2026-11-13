@@ -1,0 +1,658 @@
+{
+  "prediction_accuracy": {
+    "eligible_completed_games": 570
+  },
+  "retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+  "schedule": [
+    {
+      "away": "Arkansas",
+      "away_score": 23,
+      "completed": true,
+      "game_id": 401856738,
+      "home": "Auburn",
+      "home_score": 26,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Oklahoma",
+      "away_score": 23,
+      "completed": true,
+      "game_id": 401856739,
+      "home": "Florida",
+      "home_score": 7,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Alabama",
+      "away_score": 31,
+      "completed": true,
+      "game_id": 401856740,
+      "home": "LSU",
+      "home_score": 13,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Georgia",
+      "away_score": 42,
+      "completed": true,
+      "game_id": 401856741,
+      "home": "Ole Miss",
+      "home_score": 7,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Vanderbilt",
+      "away_score": 25,
+      "completed": true,
+      "game_id": 401856742,
+      "home": "Mississippi State",
+      "home_score": 23,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Texas",
+      "away_score": 34,
+      "completed": true,
+      "game_id": 401856743,
+      "home": "Missouri",
+      "home_score": 20,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Texas A&M",
+      "away_score": 9,
+      "completed": true,
+      "game_id": 401856744,
+      "home": "South Carolina",
+      "home_score": 17,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Kentucky",
+      "away_score": 6,
+      "completed": true,
+      "game_id": 401856745,
+      "home": "Tennessee",
+      "home_score": 34,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "BYU",
+      "away_score": 20,
+      "completed": true,
+      "game_id": 401856849,
+      "home": "Utah",
+      "home_score": 28,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "UCF",
+      "away_score": 33,
+      "completed": true,
+      "game_id": 401856850,
+      "home": "Kansas",
+      "home_score": 32,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Cincinnati",
+      "away_score": 24,
+      "completed": true,
+      "game_id": 401856851,
+      "home": "Houston",
+      "home_score": 31,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Colorado",
+      "away_score": 10,
+      "completed": true,
+      "game_id": 401856852,
+      "home": "Arizona State",
+      "home_score": 20,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Iowa State",
+      "away_score": 31,
+      "completed": true,
+      "game_id": 401856853,
+      "home": "Baylor",
+      "home_score": 42,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Oklahoma State",
+      "away_score": 66,
+      "completed": true,
+      "game_id": 401856854,
+      "home": "Kansas State",
+      "home_score": 28,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "TCU",
+      "away_score": 28,
+      "completed": true,
+      "game_id": 401856855,
+      "home": "Arizona",
+      "home_score": 29,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "West Virginia",
+      "away_score": 48,
+      "completed": true,
+      "game_id": 401856856,
+      "home": "Texas Tech",
+      "home_score": 53,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Clemson",
+      "away_score": 18,
+      "completed": true,
+      "game_id": 401858285,
+      "home": "Syracuse",
+      "home_score": 13,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Duke",
+      "away_score": 41,
+      "completed": true,
+      "game_id": 401858286,
+      "home": "NC State",
+      "home_score": 3,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Louisville",
+      "away_score": 44,
+      "completed": true,
+      "game_id": 401858287,
+      "home": "Georgia Tech",
+      "home_score": 17,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Virginia Tech",
+      "away_score": 28,
+      "completed": true,
+      "game_id": 401858288,
+      "home": "SMU",
+      "home_score": 51,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Florida State",
+      "away_score": 31,
+      "completed": true,
+      "game_id": 401858289,
+      "home": "Boston College",
+      "home_score": 24,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Miami (FL)",
+      "away_score": 24,
+      "completed": true,
+      "game_id": 401858291,
+      "home": "Notre Dame",
+      "home_score": 31,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "North Carolina",
+      "away_score": 38,
+      "completed": true,
+      "game_id": 401858292,
+      "home": "UConn",
+      "home_score": 21,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Nebraska",
+      "away_score": 13,
+      "completed": true,
+      "game_id": 401858510,
+      "home": "Illinois",
+      "home_score": 24,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Michigan State",
+      "away_score": 15,
+      "completed": true,
+      "game_id": 401858511,
+      "home": "Michigan",
+      "home_score": 6,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "UCLA",
+      "away_score": 34,
+      "completed": true,
+      "game_id": 401858512,
+      "home": "Minnesota",
+      "home_score": 20,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Iowa",
+      "away_score": 24,
+      "completed": true,
+      "game_id": 401858513,
+      "home": "Northwestern",
+      "home_score": 10,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Oregon",
+      "away_score": 41,
+      "completed": true,
+      "game_id": 401858514,
+      "home": "Ohio State",
+      "home_score": 28,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Maryland",
+      "away_score": 34,
+      "completed": true,
+      "game_id": 401858515,
+      "home": "Purdue",
+      "home_score": 29,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Penn State",
+      "away_score": 28,
+      "completed": true,
+      "game_id": 401858516,
+      "home": "Washington",
+      "home_score": 25,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Rutgers",
+      "away_score": 10,
+      "completed": true,
+      "game_id": 401858517,
+      "home": "Wisconsin",
+      "home_score": 31,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Boise State",
+      "away_score": 64,
+      "completed": true,
+      "game_id": 401860911,
+      "home": "Colorado State",
+      "home_score": 38,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Texas State",
+      "away_score": 42,
+      "completed": true,
+      "game_id": 401860912,
+      "home": "Oregon State",
+      "home_score": 21,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Fresno State",
+      "away_score": 10,
+      "completed": true,
+      "game_id": 401860913,
+      "home": "Utah State",
+      "home_score": 17,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "UTSA",
+      "away_score": 29,
+      "completed": true,
+      "game_id": 401862817,
+      "home": "Florida Atlantic",
+      "home_score": 60,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "South Florida",
+      "away_score": 17,
+      "completed": true,
+      "game_id": 401862818,
+      "home": "East Carolina",
+      "home_score": 20,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Charlotte",
+      "away_score": 12,
+      "completed": true,
+      "game_id": 401862819,
+      "home": "UAB",
+      "home_score": 23,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Temple",
+      "away_score": 35,
+      "completed": true,
+      "game_id": 401862820,
+      "home": "Navy",
+      "home_score": 42,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Rice",
+      "away_score": 23,
+      "completed": true,
+      "game_id": 401862821,
+      "home": "North Texas",
+      "home_score": 52,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Tulsa",
+      "away_score": 60,
+      "completed": true,
+      "game_id": 401862822,
+      "home": "Tulane",
+      "home_score": 10,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Air Force",
+      "away_score": 24,
+      "completed": true,
+      "game_id": 401862823,
+      "home": "Army",
+      "home_score": 21,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Hawai'i",
+      "away_score": 17,
+      "completed": true,
+      "game_id": 401864532,
+      "home": "UTEP",
+      "home_score": 14,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "New Mexico",
+      "away_score": 31,
+      "completed": true,
+      "game_id": 401864533,
+      "home": "Nevada",
+      "home_score": 3,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Northern Illinois",
+      "away_score": 19,
+      "completed": true,
+      "game_id": 401864534,
+      "home": "San Jos\u00e9 State",
+      "home_score": 30,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Wyoming",
+      "away_score": 41,
+      "completed": true,
+      "game_id": 401864535,
+      "home": "UNLV",
+      "home_score": 35,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Georgia State",
+      "away_score": 39,
+      "completed": true,
+      "game_id": 401869927,
+      "home": "Appalachian State",
+      "home_score": 23,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "ULM",
+      "away_score": 19,
+      "completed": true,
+      "game_id": 401869936,
+      "home": "Arkansas State",
+      "home_score": 17,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Old Dominion",
+      "away_score": 21,
+      "completed": true,
+      "game_id": 401869945,
+      "home": "Coastal Carolina",
+      "home_score": 8,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Marshall",
+      "away_score": 13,
+      "completed": true,
+      "game_id": 401869951,
+      "home": "Georgia Southern",
+      "home_score": 49,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "James Madison",
+      "away_score": 54,
+      "completed": true,
+      "game_id": 401869964,
+      "home": "Southern Miss",
+      "home_score": 23,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "South Alabama",
+      "away_score": 26,
+      "completed": true,
+      "game_id": 401869968,
+      "home": "Louisiana",
+      "home_score": 28,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Liberty",
+      "away_score": 30,
+      "completed": true,
+      "game_id": 401870795,
+      "home": "New Mexico State",
+      "home_score": 14,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Delaware",
+      "away_score": 40,
+      "completed": true,
+      "game_id": 401871073,
+      "home": "Kennesaw State",
+      "home_score": 42,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Missouri State",
+      "away_score": 20,
+      "completed": true,
+      "game_id": 401871074,
+      "home": "Florida International",
+      "home_score": 23,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Sam Houston State",
+      "away_score": 14,
+      "completed": true,
+      "game_id": 401871075,
+      "home": "Jacksonville State",
+      "home_score": 47,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Western Kentucky",
+      "away_score": 42,
+      "completed": true,
+      "game_id": 401871076,
+      "home": "Middle Tennessee",
+      "home_score": 51,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Louisiana Tech",
+      "away_score": 41,
+      "completed": true,
+      "game_id": 401871098,
+      "home": "Troy",
+      "home_score": 17,
+      "neutral_site": false,
+      "week": 10
+    },
+    {
+      "away": "Memphis",
+      "away_score": 52,
+      "completed": true,
+      "game_id": 401862824,
+      "home": "South Florida",
+      "home_score": 41,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Western Michigan",
+      "away_score": 42,
+      "completed": true,
+      "game_id": 401866458,
+      "home": "Akron",
+      "home_score": 14,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Kent State",
+      "away_score": 28,
+      "completed": true,
+      "game_id": 401866459,
+      "home": "Bowling Green",
+      "home_score": 33,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Ohio",
+      "away_score": 17,
+      "completed": true,
+      "game_id": 401866460,
+      "home": "Miami (OH)",
+      "home_score": 34,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Buffalo",
+      "away_score": 28,
+      "completed": true,
+      "game_id": 401866461,
+      "home": "Ball State",
+      "home_score": 7,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Sacramento State",
+      "away_score": 7,
+      "completed": true,
+      "game_id": 401866462,
+      "home": "Central Michigan",
+      "home_score": 28,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Massachusetts",
+      "away_score": 0,
+      "completed": true,
+      "game_id": 401866463,
+      "home": "Toledo",
+      "home_score": 24,
+      "neutral_site": false,
+      "week": 11
+    },
+    {
+      "away": "Louisiana",
+      "away_score": 42,
+      "completed": true,
+      "game_id": 401869969,
+      "home": "ULM",
+      "home_score": 21,
+      "neutral_site": false,
+      "week": 11
+    }
+  ]
+}

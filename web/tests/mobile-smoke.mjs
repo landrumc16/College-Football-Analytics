@@ -311,7 +311,7 @@ try {
     await page.getByText('Prediction Tracking & Calibration', { exact: true }).click();
     const archive = page.getByRole('region', { name: 'Independent pregame forecast verification' });
     await archive.getByRole('heading', { name: 'Independently verified forecast archive' }).waitFor();
-    await archive.getByText('57 predictions', { exact: false }).waitFor();
+    await archive.getByText('65 predictions', { exact: false }).waitFor();
     await page.screenshot({ path: `web/mobile-evidence/forecast-evidence-${width}.png`, fullPage: true });
     console.log(`Browser navigation smoke passed at ${width}px`);
     await page.close();

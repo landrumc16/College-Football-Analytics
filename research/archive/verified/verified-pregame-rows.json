@@ -511,5 +511,77 @@
     "model_id": "workbook_2026_baseline",
     "prediction_time": "2026-11-05T17:35:11.436321+00:00",
     "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401862824",
+    "home_win_probability": 0.5683833270760887,
+    "home_won": false,
+    "kickoff_time": "2026-11-13T01:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866458",
+    "home_win_probability": 0.18747230902575215,
+    "home_won": false,
+    "kickoff_time": "2026-11-11T00:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866459",
+    "home_win_probability": 0.5978887492267219,
+    "home_won": true,
+    "kickoff_time": "2026-11-11T00:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866460",
+    "home_win_probability": 0.5083840564377632,
+    "home_won": true,
+    "kickoff_time": "2026-11-11T01:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866461",
+    "home_win_probability": 0.48831313592382325,
+    "home_won": false,
+    "kickoff_time": "2026-11-12T00:30:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866462",
+    "home_win_probability": 0.8474465326680711,
+    "home_won": true,
+    "kickoff_time": "2026-11-12T00:30:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401866463",
+    "home_win_probability": 0.8955031824975436,
+    "home_won": true,
+    "kickoff_time": "2026-11-11T05:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
+  },
+  {
+    "game_id": "401869969",
+    "home_win_probability": 0.1169096028989004,
+    "home_won": false,
+    "kickoff_time": "2026-11-13T02:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "prediction_time": "2026-11-05T17:35:11.436321+00:00",
+    "source_retrieved_at": "2026-11-05T17:35:08.414413+00:00"
   }
 ]

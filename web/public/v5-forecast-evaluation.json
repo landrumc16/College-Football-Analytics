@@ -1,8 +1,8 @@
 {
-  "distinct_games": 57,
-  "eligible_completed_games": 562,
-  "evaluation_scope": "2026 Week 10 FBS-versus-FBS only",
-  "forecast_coverage": 0.10142348754448399,
+  "distinct_games": 65,
+  "eligible_completed_games": 570,
+  "evaluation_scope": "2026 Weeks 10\u201311 FBS-versus-FBS archived subset",
+  "forecast_coverage": 0.11403508771929824,
   "forecast_publication": {
     "commit": "42aa772a4d8f3d0095865e2a0946ae7e4813a790",
     "conclusion": "success",
@@ -17,23 +17,23 @@
   },
   "independent_final_source": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2026.csv.gz",
   "limitations": [
-    "57 verified forecasts from one week; not full-season accuracy or a prediction of future accuracy",
+    "65 verified forecasts from two partial weeks; not full-season accuracy or a prediction of future accuracy",
     "Only frozen, settled FBS-versus-FBS games are scored; legacy records without pregame provenance are excluded",
     "The 50/50 baseline is a paired neutral reference, not a competing forecast model"
   ],
   "model_coverage": {
     "neutral_50_50": {
-      "scored_games": 57,
+      "scored_games": 65,
       "share_of_distinct_games": 1.0
     },
     "workbook_2026_baseline": {
-      "scored_games": 57,
+      "scored_games": 65,
       "share_of_distinct_games": 1.0
     }
   },
   "models": {
     "neutral_50_50": {
-      "accuracy": 0.45614035087719296,
+      "accuracy": 0.46153846153846156,
       "brier": 0.25,
       "calibration": [
         {
@@ -68,9 +68,9 @@
         },
         {
           "bin": 5,
-          "games": 57,
+          "games": 65,
           "mean_predicted": 0.5,
-          "observed_home_win_rate": 0.45614035087719296
+          "observed_home_win_rate": 0.46153846153846156
         },
         {
           "bin": 6,
@@ -104,9 +104,9 @@
           "games": 0
         },
         "low": {
-          "accuracy": 0.45614035087719296,
+          "accuracy": 0.46153846153846156,
           "brier": 0.25,
-          "games": 57
+          "games": 65
         },
         "medium": {
           "accuracy": null,
@@ -114,12 +114,12 @@
           "games": 0
         }
       },
-      "games": 57,
+      "games": 65,
       "logloss": 0.6931471805599453
     },
     "workbook_2026_baseline": {
-      "accuracy": 0.6140350877192983,
-      "brier": 0.22267659330851503,
+      "accuracy": 0.6461538461538462,
+      "brier": 0.21139170315271996,
       "calibration": [
         {
           "bin": 0,
@@ -129,8 +129,8 @@
         },
         {
           "bin": 1,
-          "games": 4,
-          "mean_predicted": 0.16212209134315048,
+          "games": 6,
+          "mean_predicted": 0.15881171288287574,
           "observed_home_win_rate": 0.0
         },
         {
@@ -147,15 +147,15 @@
         },
         {
           "bin": 4,
-          "games": 6,
-          "mean_predicted": 0.4377198821850736,
-          "observed_home_win_rate": 0.5
+          "games": 7,
+          "mean_predicted": 0.4449474898620379,
+          "observed_home_win_rate": 0.42857142857142855
         },
         {
           "bin": 5,
-          "games": 8,
-          "mean_predicted": 0.5506528908395247,
-          "observed_home_win_rate": 0.375
+          "games": 11,
+          "mean_predicted": 0.552716296314252,
+          "observed_home_win_rate": 0.45454545454545453
         },
         {
           "bin": 6,
@@ -171,9 +171,9 @@
         },
         {
           "bin": 8,
-          "games": 12,
-          "mean_predicted": 0.8375021504955855,
-          "observed_home_win_rate": 0.6666666666666666
+          "games": 14,
+          "mean_predicted": 0.8423553943651887,
+          "observed_home_win_rate": 0.7142857142857143
         },
         {
           "bin": 9,
@@ -184,14 +184,14 @@
       ],
       "confidence_segments": {
         "high": {
-          "accuracy": 0.7727272727272727,
-          "brier": 0.18159081092848586,
-          "games": 22
+          "accuracy": 0.8076923076923077,
+          "brier": 0.15684629644581732,
+          "games": 26
         },
         "low": {
-          "accuracy": 0.42857142857142855,
-          "brier": 0.26141882737603067,
-          "games": 14
+          "accuracy": 0.5,
+          "brier": 0.25693070013562835,
+          "games": 18
         },
         "medium": {
           "accuracy": 0.5714285714285714,
@@ -199,26 +199,26 @@
           "games": 21
         }
       },
-      "games": 57,
-      "logloss": 0.6385431864221272
+      "games": 65,
+      "logloss": 0.6108603105204677
     }
   },
-  "outcome_as_of": "2026-11-09T21:28:48.810138+00:00",
+  "outcome_as_of": "2026-11-13T21:31:49.610923+00:00",
   "paired_baseline_comparisons": [
     {
       "coverage_of_model_a": 1.0,
       "coverage_of_model_b": 1.0,
-      "matched_games": 57,
+      "matched_games": 65,
       "model_a": "neutral_50_50",
       "model_a_brier": 0.25,
       "model_a_logloss": 0.6931471805599453,
       "model_b": "workbook_2026_baseline",
-      "model_b_brier": 0.22267659330851503,
-      "model_b_logloss": 0.6385431864221272,
+      "model_b_brier": 0.21139170315271996,
+      "model_b_logloss": 0.6108603105204677,
       "scope": "paired_games_only_no_promotion_claim"
     }
   ],
   "predictive_promotion_authorized": false,
   "status": "independently_verified_published_pregame_subset",
-  "total_forecasts": 114
+  "total_forecasts": 130
 }

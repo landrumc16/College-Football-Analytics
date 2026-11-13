@@ -511,5 +511,77 @@
       "Louisiana Tech": 41,
       "Troy": 17
     }
+  },
+  {
+    "game_id": "401862824",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6586334",
+    "scores": {
+      "Memphis": 52,
+      "South Florida": 41
+    }
+  },
+  {
+    "game_id": "401866458",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6590524",
+    "scores": {
+      "Akron": 14,
+      "Western Michigan": 42
+    }
+  },
+  {
+    "game_id": "401866459",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6611888",
+    "scores": {
+      "Bowling Green": 33,
+      "Kent State": 28
+    }
+  },
+  {
+    "game_id": "401866460",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6596498",
+    "scores": {
+      "Miami (OH)": 34,
+      "Ohio": 17
+    }
+  },
+  {
+    "game_id": "401866461",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6618384",
+    "scores": {
+      "Ball State": 7,
+      "Buffalo": 28
+    }
+  },
+  {
+    "game_id": "401866462",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6592729",
+    "scores": {
+      "Central Michigan": 28,
+      "Sacramento State": 7
+    }
+  },
+  {
+    "game_id": "401866463",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6591300",
+    "scores": {
+      "Massachusetts": 0,
+      "Toledo": 24
+    }
+  },
+  {
+    "game_id": "401869969",
+    "match": "canonical team pair + scheduled date + identical final scores",
+    "ncaa_contest_id": "6586036",
+    "scores": {
+      "Louisiana": 42,
+      "ULM": 21
+    }
   }
 ]

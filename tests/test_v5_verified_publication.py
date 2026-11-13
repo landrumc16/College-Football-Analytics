@@ -48,12 +48,12 @@ def test_immutable_pregame_publication_and_independent_outcomes_replay():
     assert matches == historical.read(historical.ARCHIVE / 'pregame-outcome-matches.json')
     assert report == historical.read(historical.ROOT / 'web/public/v5-forecast-evaluation.json')
     metrics = report['models']['workbook_2026_baseline']
-    assert metrics['games'] == 57
-    assert metrics['accuracy'] == pytest.approx(35 / 57)
-    assert metrics['brier'] == pytest.approx(.22267659330851503)
-    assert metrics['logloss'] == pytest.approx(.6385431864221272)
-    assert sum(x['games'] for x in metrics['confidence_segments'].values()) == 57
-    assert report['models']['neutral_50_50']['games'] == 57
+    assert metrics['games'] == 65
+    assert metrics['accuracy'] == pytest.approx(42 / 65)
+    assert metrics['brier'] == pytest.approx(.21139170315271996)
+    assert metrics['logloss'] == pytest.approx(.6108603105204677)
+    assert sum(x['games'] for x in metrics['confidence_segments'].values()) == 65
+    assert report['models']['neutral_50_50']['games'] == 65
     assert len(report['paired_baseline_comparisons']) == 1
 
 

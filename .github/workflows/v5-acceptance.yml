@@ -41,6 +41,10 @@ jobs:
         run: |
           cp data/season-2026-report.json web/public/season-report.json
           cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+      - name: Record exact candidate revision
+        run: |
+          mkdir -p web/mobile-evidence
+          git rev-parse HEAD > web/mobile-evidence/tested-sha.txt
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
