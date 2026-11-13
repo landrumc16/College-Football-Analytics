@@ -35,9 +35,9 @@ def test_acquire_retains_original_bytes_hash_columns_and_unverified_status(tmp_p
     with patch("cfb_analytics.v5_ncaa_schedule_acquire.urlopen", side_effect=download):
         inventory = acquire(tmp_path, first=2024, last=2025)
 
-    assert urls == [BASE + f"ncaa_mfb_schedule_{year}.csv.gz" for year in (2024, 2025)]
+    assert urls == [BASE.replace("ncaa_mfb_schedule/", f"ncaa_mfb_{dataset}/") + f"ncaa_mfb_{dataset}_{year}.csv.gz"\n                    for year in (2024, 2025) for dataset in ("schedule", "teams", "linescore")]
     assert inventory["status"] == "raw_ncaa_origin_not_yet_reconciled"
-    assert len(inventory["seasons"]) == 2
+    assert len(inventory["seasons"]) == 6
     assert inventory["seasons"][0]["sha256"] == hashlib.sha256(compressed).hexdigest()
     assert inventory["seasons"][0]["columns"] == ["contest_id", "team_id", "opponent_id"]
     assert (tmp_path / "ncaa_mfb_schedule_2024.csv.gz").read_bytes() == compressed
