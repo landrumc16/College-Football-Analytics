@@ -27,21 +27,23 @@ def acquire(output_dir: Path, *, first: int = 2016, last: int = 2025) -> dict:
                  "upstream": "https://stats.ncaa.org/",
                  "producer": SOURCE, "seasons": []}
     for year in range(first, last + 1):
-        filename = f"ncaa_mfb_schedule_{year}.csv.gz"
-        url = BASE + filename
-        with urlopen(url, timeout=90) as response:
-            compressed = response.read()
-        rows = list(csv.DictReader(gzip.decompress(compressed).decode("utf-8-sig").splitlines()))
-        if not rows:
-            raise ValueError(f"No NCAA schedule rows for {year}")
-        columns = list(rows[0])
-        target = output_dir / filename
-        target.write_bytes(compressed)
-        inventory["seasons"].append({
-            "season": year, "url": url, "sha256": hashlib.sha256(compressed).hexdigest(),
-            "row_count": len(rows), "columns": columns,
-            "first_row": rows[0], "path": filename,
-        })
+        for dataset in ("schedule", "teams", "linescore"):
+            filename = f"ncaa_mfb_{dataset}_{year}.csv.gz"
+            url = BASE.replace("ncaa_mfb_schedule/", f"ncaa_mfb_{dataset}/") + filename
+            with urlopen(url, timeout=90) as response:
+                compressed = response.read()
+            rows = list(csv.DictReader(gzip.decompress(compressed).decode("utf-8-sig").splitlines()))
+            if not rows:
+                raise ValueError(f"No NCAA {dataset} rows for {year}")
+            columns = list(rows[0])
+            target = output_dir / filename
+            target.write_bytes(compressed)
+            inventory["seasons"].append({
+                "season": year, "dataset": dataset, "url": url,
+                "sha256": hashlib.sha256(compressed).hexdigest(),
+                "row_count": len(rows), "columns": columns,
+                "first_row": rows[0], "path": filename,
+            })
     (output_dir / "inventory.json").write_text(
         json.dumps(inventory, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return inventory
