@@ -4,6 +4,7 @@ Rank 26 is an explicitly documented unranked proxy, not a fabricated
 ranking. No historical grades are published until the input is reviewed.
 """
 from collections import defaultdict
+import re
 
 def hype_measurements(rows, *, seasons=range(2016,2026), reviewed=False):
     years=set(seasons)
@@ -11,7 +12,11 @@ def hype_measurements(rows, *, seasons=range(2016,2026), reviewed=False):
         raise ValueError("No seasons")
     observations=defaultdict(dict)
     for row in rows:
-        team,year,poll=row["team"],row["season"],row["poll"]
+        if not isinstance(row, dict):
+            raise ValueError("Invalid poll observation")
+        team,year,poll=row.get("team"),row.get("season"),row.get("poll")
+        if not isinstance(team,str) or not team.strip() or type(year) is not int:
+            raise ValueError("Invalid team or season identity")
         if year not in years or poll not in ("AP","Coaches"):
             raise ValueError("Unexpected season or poll")
         key=(year,poll)
@@ -19,7 +24,7 @@ def hype_measurements(rows, *, seasons=range(2016,2026), reviewed=False):
             raise ValueError("Duplicate team-season-poll")
         source=row.get("source")
         sha=row.get("source_sha256")
-        if not isinstance(source,str) or not source.startswith("https://") or not isinstance(sha,str) or len(sha)!=64:
+        if not isinstance(source,str) or not source.startswith("https://") or not isinstance(sha,str) or re.fullmatch(r"[0-9a-fA-F]{64}",sha) is None:
             raise ValueError("Missing poll provenance")
         pre,final=row["preseason_rank"],row["final_rank"]
         if any(v is not None and (type(v) is not int or not 1<=v<=25) for v in (pre,final)):
