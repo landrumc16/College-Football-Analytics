@@ -1,4 +1,4 @@
-# Version 5.0 release candidate
+# Version 5.0 — released November 13, 2026
 
 V5 adds independently corroborated historical program intelligence and genuinely
 archived prediction-performance reporting to the existing public application.
@@ -38,5 +38,14 @@ emulation and PWA installability/update/offline/recovery checks. Exact tested
 revision, workflow results and inspected screenshot artifacts are recorded in
 [PR #15](https://github.com/landrumc16/College-Football-Analytics/pull/15).
 
-Production merge requires Andy's explicit approval. V5 is not formally released
-until the approved merge, deployment and production smoke verification occur.
+Andy explicitly approved PR #15, which merged the verified candidate
+`f7f69c0517669feb4be2931ff494f28303795dfe`. Version 5.0 is now deployed and formally
+closed. Production revision `7a1dab85f1c733ecde5ac225efd0f5023051ba73` passed the
+[production deployment and live browser/PWA verification](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43521578096).
+A deployment-only runner compatibility repair preserved the approved application
+and incumbent engine. Full provenance and release evidence are in the
+[production closeout](V5-ROADMAP.md#version-50-production-closeout--november-13-2026).
+
+Live application: https://landrumc16.github.io/College-Football-Analytics/
+
+No release blockers remain. No Version 5.1 or Version 6 development is started.
