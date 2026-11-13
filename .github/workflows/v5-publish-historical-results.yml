@@ -47,7 +47,7 @@ jobs:
                     'source_workflow':'v5 historical schedule research',
                     'sha256':hashlib.sha256(raw).hexdigest(),
                     'canonical_path':'team-season-records-2016-2025.json'}
-          (target/'manifest.json').write_text(json.dumps(metadata,indent=2)+'\\n')
+          (target/'manifest.json').write_text(json.dumps(metadata,indent=2)+chr(10))
           print('Saved permanent source records; independently unverified')
           PY
       - name: Validate retained historical source offline
