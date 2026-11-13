@@ -30,7 +30,8 @@ def directory_id_names(payload: dict) -> dict[str, str]:
 
 
 def candidate_mapping(snapshots: list[dict], directory: dict,
-                      reviewed_cohort: dict[str, str]) -> dict:
+                      reviewed_cohort: dict[str, str],
+                      canonical_teams: set[str] | None = None) -> dict:
     names = directory_id_names(directory)
     ids = {
         str(row["team_id"])
@@ -39,6 +40,21 @@ def candidate_mapping(snapshots: list[dict], directory: dict,
         for row in entries
     }
     candidates = {key: names[key] for key in sorted(ids, key=int) if key in names}
+    if canonical_teams is not None:
+        # A display name is not necessarily the app's canonical team name.
+        # Accept only unambiguous exact names or exact school locations.
+        matched: dict[str, str] = {}
+        for league in directory.get("sports", []):
+            for group in league.get("leagues", []):
+                for entry in group.get("teams", []):
+                    team = entry.get("team", entry)
+                    key = str(team.get("id", ""))
+                    options = {team.get("location"), team.get("shortDisplayName"),
+                               team.get("displayName")}
+                    hits = canonical_teams.intersection(x for x in options if isinstance(x, str))
+                    if key in ids and len(hits) == 1:
+                        matched[key] = next(iter(hits))
+        candidates = matched
     # Existing canonical names take precedence; directory display names are
     # candidates only, since program names can differ from app canonical names.
     candidates.update({key: value for key, value in reviewed_cohort.items() if key in ids})
@@ -65,6 +81,7 @@ def main() -> None:
     p.add_argument("--poll-snapshots", type=Path, required=True)
     p.add_argument("--reviewed-cohort", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--team-season-records", type=Path, required=True)
     p.add_argument("--start-season", type=int, default=2016)
     p.add_argument("--end-season", type=int, default=2025)
     args = p.parse_args()
@@ -77,7 +94,10 @@ def main() -> None:
     ]
     with urlopen(DIRECTORY_URL, timeout=30) as response:
         directory = json.load(response)
-    result = candidate_mapping(snapshots, directory, load(args.reviewed_cohort))
+    records = load(args.team_season_records)
+    canonical = {row["team"] for season in records["seasons"] for row in season["teams"]}
+    result = candidate_mapping(snapshots, directory, load(args.reviewed_cohort),
+                               canonical_teams=canonical)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + chr(10), encoding="utf-8")
 
