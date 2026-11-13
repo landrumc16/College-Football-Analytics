@@ -14,7 +14,7 @@ function valid(p: Payload): boolean {
         w.wins+w.losses > 0 && Math.abs(w.win_pct-w.wins/(w.wins+w.losses)) <= 0.000051 &&
         Array.isArray(w.seasons) && !w.seasons.includes(2020)) }))
 }
-export default function HistoricalResults({ onTeam, team }: { onTeam: (team: string) => void; team?: string }) {
+export default function HistoricalResults({ onTeam, team, compareTeam }: { onTeam: (team: string) => void; team?: string; compareTeam?: string }) {
   const [data, setData] = useState<Payload | null>(null)
   const [message, setMessage] = useState('')
   const [span, setSpan] = useState('10')
@@ -27,10 +27,10 @@ export default function HistoricalResults({ onTeam, team }: { onTeam: (team: str
       .catch(e => { if(active) setMessage(String(e.message||e)) })
     return () => { active=false }
   }, [])
-  const rows=(data?.programs||[]).filter(r=>(!team || r.team===team) && r.team.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>
+  const rows=(data?.programs||[]).filter(r=>(!team || r.team===team || r.team===compareTeam) && r.team.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>
     (b.windows[span]?.win_pct ?? -1)-(a.windows[span]?.win_pct ?? -1)||a.team.localeCompare(b.team))
   return <section className="accuracy-summary" aria-label="Historical FBS results">
-    <h3>{team ? `${team} · historical FBS results` : 'Historical FBS results · 2016–2025'}</h3>
+    <h3>{compareTeam ? 'Historical FBS results comparison' : team ? `${team} · historical FBS results` : 'Historical FBS results · 2016–2025'}</h3>
     <p>Actual completed FBS-versus-FBS wins and losses. Compare 3-, 5-, and 10-year windows, excluding the disrupted 2020 season. These are <strong>unadjusted win percentages</strong>, not strength rankings, national grades, or forecasts. Independent source review remains outstanding.</p>
     {data ? <><p>{data.programs.length} programs represented · {data.programs.filter(r=>r.windows[span]).length} with complete selected-window coverage.</p>
       <label>Window <select aria-label="Historical results window" value={span} onChange={e=>setSpan(e.target.value)}><option value="3">3 years</option><option value="5">5 years</option><option value="10">10 years (2020 excluded)</option></select></label>
