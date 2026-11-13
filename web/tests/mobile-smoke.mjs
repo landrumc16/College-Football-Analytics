@@ -295,6 +295,12 @@ try {
       if (section === 'profile') {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
+        if (width <= 390) {
+          await page.evaluate(() => window.scrollTo(0, 0));
+          const metric = page.locator('.team-profile-tile').filter({ has: page.getByText('Current Model Rank', { exact: true }) });
+          const bounds = await metric.boundingBox();
+          if (!bounds || bounds.y + bounds.height > 844) throw new Error('Profile metrics require an initial phone scroll');
+        }
         await profileTab(page, 'Program Report Card');
         await assertReportCard(page, firstTeam);
         await profileTab(page, 'Historical Intelligence');

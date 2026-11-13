@@ -90,7 +90,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const ap = poll?.ap_top25.find(r => r.team === team)?.rank
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
-  return <section className="notice">
+  return <section className="notice team-profile">
     <h2>Team Profile</h2><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button>
     <label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}

@@ -45,8 +45,10 @@ Game cards still open filtered prediction lists, with the original autocomplete
 and sharing behavior. The small Home playoff snapshot displays existing projected
 seeds and opens the full projection; it introduces no new forecast calculation.
 
-Primary controls fit across phone widths. Secondary tabs wrap, have 44px minimum
-height, expose selected/panel relationships, and support Left/Right/Home/End keys.
+Primary controls fit across phone widths. Secondary tabs wrap on wider screens and swipe horizontally on phones, have 44px
+minimum height, expose selected/panel relationships, and support Left/Right/Home/End
+keys. Compact About/privacy and Install controls keep help accessible without
+pushing the first Profile metric below the initial phone viewport.
 The existing collegiate colors, typography, logo and PWA behavior are retained.
 
 Verification reuses the release browser suite at 375, 390, 768 and 1536px. It covers

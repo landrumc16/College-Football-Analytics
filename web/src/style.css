@@ -264,3 +264,16 @@ a:hover{color:#fff1dd}
 }
 
 .favorite-add:not([open]){min-height:72px}
+
+/* Keep help available without consuming the first screen on a phone. */
+.app-utilities{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.app-utilities .install-guide{flex:1 1 150px;margin:0;min-width:0}
+.app-utilities .install-guide>summary{min-height:44px;padding:11px 14px;font-size:14px}
+.app-utilities .install-guide[open]{flex-basis:100%}
+@media(max-width:650px){
+ .section-tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding-bottom:6px;gap:6px}
+ .section-tabs button{flex:0 0 auto;white-space:nowrap;min-height:44px;font-size:13px;padding:9px 12px}
+ .team-profile{padding:16px}
+ .team-profile>h2{margin-top:0}
+ .team-profile>h3{margin:12px 0}
+}
