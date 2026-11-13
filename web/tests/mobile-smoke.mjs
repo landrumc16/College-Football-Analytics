@@ -104,6 +104,14 @@ try {
     if (await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('End-key navigation failed');
     await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
     if (await modelTab.getAttribute('aria-selected') !== 'true') throw new Error('Home-key navigation failed');
+    if (width <= 390) {
+      await navigate(page, 'validation');
+      await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Teams', exact: true }).click();
+      const selectedTab = page.getByRole('tab', { name: 'Team Profiles', exact: true });
+      const selectedBounds = await selectedTab.boundingBox();
+      if (!selectedBounds || selectedBounds.x < 0 || selectedBounds.x + selectedBounds.width > width) throw new Error('Primary navigation retained a previous destination tab scroll');
+      await navigate(page, 'rankings');
+    }
     await page.getByLabel('Search teams').fill('Georgia');
     const rankingNames = await page.locator('table tbody tr td:first-child').allTextContents();
     if (!rankingNames.length || rankingNames.some(name => !name.includes('Georgia'))) throw new Error('Model ranking search failed');

@@ -245,7 +245,7 @@ function App() {
         aria-current={activeDestination.id === destination.id ? 'page' : undefined}
         onClick={() => { if (activeDestination.id !== destination.id) { setSearch(''); setTab(destination.views[0].id) } }}>{destination.label}</button>)}
     </nav>
-    <SectionTabs label={`${activeDestination.label} sections`} items={activeDestination.views} value={tab}
+    <SectionTabs key={activeDestination.id} label={`${activeDestination.label} sections`} items={activeDestination.views} value={tab}
       panelId="dashboard-panel" onChange={value => { setSearch(''); setTab(value as View) }} />
     <div id="dashboard-panel" role="tabpanel" aria-labelledby={`dashboard-panel-${tab}`}>
     {tab === 'rankings' && <h2>Model Rankings</h2>}
