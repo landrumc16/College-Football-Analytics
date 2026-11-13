@@ -40,10 +40,13 @@ def test_committed_week10_fbs_scorecard_reproduces_from_frozen_ledger():
         })
     assert excluded_fcs == [401858290]
     result = evaluate_archived_forecasts(rows)
-    assert result["total_forecasts"] == archived["games_evaluated"] == 57
+    week10 = next(row for row in archived["weekly_scorecard"] if row["week"] == 10)
+    assert result["total_forecasts"] == week10["games_evaluated"] == 57
     stats = result["models"]["workbook_2026_baseline"]
-    assert round(stats["accuracy"], 3) == archived["winner_accuracy"]
-    assert round(stats["accuracy"] * stats["games"]) == archived["correct_winners"] == 35
-    assert math.isclose(stats["brier"], archived["brier_score"], abs_tol=0.00005)
-    assert math.isclose(stats["logloss"], archived["log_loss"], abs_tol=0.00005)
+    assert round(stats["accuracy"], 3) == week10["winner_accuracy"]
+    assert round(stats["accuracy"] * stats["games"]) == week10["correct_winners"] == 35
+    assert math.isclose(stats["brier"], week10["brier_score"], abs_tol=0.00005)
+    # Overall log loss may change as new weeks settle; Week 10 log loss is
+    # independently fixed by the frozen forecast and result records.
+    assert math.isclose(stats["logloss"], 0.638543186422127, abs_tol=1e-10)
     assert sum(x["games"] for x in stats["calibration"]) == 57
