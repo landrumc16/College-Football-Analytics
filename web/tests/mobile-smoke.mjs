@@ -214,8 +214,10 @@ try {
           throw new Error('Historical comparison is missing its unreviewed source provenance');
         }
         if (historicalResponse.programs.length < 120) throw new Error('Historical source is not national in coverage');
+        const historicalAliases = { 'Miami (FL)': 'Miami', 'Appalachian State': 'App State', ULM: 'UL Monroe', 'Sam Houston State': 'Sam Houston' };
+        const historicalName = name => historicalAliases[name] || name;
         for (const name of [firstTeam, secondTeam]) {
-          const record = historicalResponse.programs.find(p => p.team === name);
+          const record = historicalResponse.programs.find(p => p.team === historicalName(name));
           if (!record) {
             await historicalComparison.getByText('No independently documented historical results for ' + name, { exact: false }).waitFor();
           } else if (!record.windows['3']) {
@@ -223,9 +225,9 @@ try {
           }
         }
         const historicalRows = historicalComparison.locator('tbody tr');
-        if (await historicalRows.count() !== [firstTeam, secondTeam].filter(name => historicalResponse.programs.some(p => p.team === name)).length) throw new Error('Historical Compare rows do not match documented source coverage');
+        if (await historicalRows.count() !== [firstTeam, secondTeam].filter(name => historicalResponse.programs.some(p => p.team === historicalName(name))).length) throw new Error('Historical Compare rows do not match documented source coverage');
         for (const teamName of [firstTeam, secondTeam]) {
-          if (historicalResponse.programs.some(p => p.team === teamName) && !await historicalRows.filter({ hasText: teamName }).count()) throw new Error('Historical Compare missing ' + teamName);
+          if (historicalResponse.programs.some(p => p.team === historicalName(teamName)) && !await historicalRows.filter({ hasText: historicalName(teamName) }).count()) throw new Error('Historical Compare missing ' + teamName);
         }
         if (!await historicalComparison.getByText('unadjusted win percentages', { exact: false }).count()) {
           throw new Error('Historical comparison is missing its research-only limitations');
