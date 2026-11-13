@@ -106,7 +106,7 @@ jobs:
               "seasons": list(range(2016, 2026)),
               "program_count": 86,
               "observations": rows,
-          }, indent=2) + "\\n")
+          }, indent=2) + chr(10))
           print(f"Validated {len(rows)} national poll observations across 86 programs; publication gated")
           PY
       - name: Upload raw polls, snapshot extracts and checksums
