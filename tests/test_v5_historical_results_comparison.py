@@ -39,3 +39,27 @@ def test_invalid_source_archive_fails_closed(rows):
     with pytest.raises(ValueError):
         compare_historical_results(archive(rows), archive([record("Alpha")]),
                                    primary_source=A, independent_source=B)
+
+
+@pytest.mark.parametrize("mirror", [
+    "https://api.collegefootballdata.com/games",
+    "https://www.espn.com/college-football/",
+    "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+])
+def test_espn_redistributors_cannot_claim_independent_corroboration(mirror):
+    rows = archive([record("Alpha")])
+    with pytest.raises(ValueError, match="same upstream provider"):
+        compare_historical_results(
+            rows, rows,
+            primary_source="https://github.com/sportsdataverse/sportsdataverse-data",
+            independent_source=mirror)
+
+
+def test_ncaa_and_espn_remain_comparable_but_not_automatically_attested():
+    rows = archive([record("Alpha")])
+    result = compare_historical_results(
+        rows, rows,
+        primary_source="https://github.com/sportsdataverse/sportsdataverse-data",
+        independent_source="https://stats.ncaa.org/")
+    assert result["matching_count"] == 1
+    assert result["source_independence_attested"] is False
