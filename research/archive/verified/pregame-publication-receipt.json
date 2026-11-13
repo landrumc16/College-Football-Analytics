@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "commit": "42aa772a4d8f3d0095865e2a0946ae7e4813a790",
+  "workflow_run_id": 42076089302,
+  "workflow_url": "https://github.com/landrumc16/College-Football-Analytics/actions/runs/42076089302",
+  "workflow_head_sha": "42aa772a4d8f3d0095865e2a0946ae7e4813a790",
+  "server_created_at": "2026-11-05T17:35:19Z",
+  "conclusion": "success",
+  "ledger_sha256": "bbfcf8d589462de83d7cc8ac026a16437e50228e390a1ca89ae0f582c3765a1a",
+  "verification": "GitHub Actions API run matched to immutable historical commit; ledger contents match current first-observation entries",
+  "ledger_git_blob_sha": "fbaf1d36a81199a278b85a433e5ddbe3a32f9869"
+}

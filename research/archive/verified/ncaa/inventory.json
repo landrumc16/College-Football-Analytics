@@ -1,0 +1,630 @@
+{
+  "producer": "https://github.com/sportsdataverse/ncaa-mfb-football-data",
+  "seasons": [
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2017",
+        "attendance": "11061",
+        "contest_id": "197108",
+        "date": "09/03/2016",
+        "opponent": "VMI",
+        "opponent_id": "66816",
+        "opponent_score": "24",
+        "outcome": "W",
+        "result": "W 47-24",
+        "season": "2016",
+        "team_id": "66579",
+        "team_name": "Akron Zips (5-7) *One win vacated by NCAA COI (8/2021)",
+        "team_score": "47"
+      },
+      "path": "ncaa_mfb_schedule_2016.csv.gz",
+      "row_count": 3043,
+      "season": 2016,
+      "sha256": "0687ca58cbd5a964c2d37966a9e0e1229af4d36cee80383447d4420e5a740bb4",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2016.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2017",
+        "division": "11",
+        "season": "2016",
+        "team_id": "66692",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2016.csv.gz",
+      "row_count": 253,
+      "season": 2016,
+      "sha256": "562b6282043cdc1eb877212cdf3be4677c31aedca8eb4c63176c8342488bdf78",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2016.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2018",
+        "attendance": "101684",
+        "contest_id": "60397",
+        "date": "09/02/2017",
+        "opponent": "@ Penn St.",
+        "opponent_id": "113609",
+        "opponent_score": "52",
+        "outcome": "L",
+        "result": "L 0-52",
+        "season": "2017",
+        "team_id": "113525",
+        "team_name": "Akron Zips",
+        "team_score": "0"
+      },
+      "path": "ncaa_mfb_schedule_2017.csv.gz",
+      "row_count": 3055,
+      "season": 2017,
+      "sha256": "834ab88fc7b2567896885378b63e72ae17e607193de37443423f0ae4ac57871d",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2017.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2018",
+        "division": "11",
+        "season": "2017",
+        "team_id": "113638",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2017.csv.gz",
+      "row_count": 254,
+      "season": 2017,
+      "sha256": "1d24265cc3e35ba8fc28ca4237c1b35c1fb82380afc841d78ca68b5391a6c004",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2017.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2019",
+        "attendance": "27124",
+        "contest_id": "1519868",
+        "date": "08/30/2018",
+        "opponent": "Savannah St.",
+        "opponent_id": "449999",
+        "opponent_score": "0",
+        "outcome": "W",
+        "result": "W 52-0",
+        "season": "2018",
+        "team_id": "449782",
+        "team_name": "UAB Blazers",
+        "team_score": "52"
+      },
+      "path": "ncaa_mfb_schedule_2018.csv.gz",
+      "row_count": 3052,
+      "season": 2018,
+      "sha256": "0e13dc8bc525867dd833472624c26b8ba784a00d5b30a3db27508f7685304040",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2018.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2019",
+        "division": "11",
+        "season": "2018",
+        "team_id": "449896",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2018.csv.gz",
+      "row_count": 255,
+      "season": 2018,
+      "sha256": "fea836eba3ff2c716ac69ea76ce56d5328a1322161041444b5c03522fac7ddc6",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2018.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2020",
+        "attendance": "39165",
+        "contest_id": "1735125",
+        "date": "08/29/2019",
+        "opponent": "Alabama St.",
+        "opponent_id": "478122",
+        "opponent_score": "19",
+        "outcome": "W",
+        "result": "W 24-19",
+        "season": "2019",
+        "team_id": "477989",
+        "team_name": "UAB Blazers",
+        "team_score": "24"
+      },
+      "path": "ncaa_mfb_schedule_2019.csv.gz",
+      "row_count": 3176,
+      "season": 2019,
+      "sha256": "7034aab2156109236a9c311789c355f1039dabc107c69a7675723a62ac20ef15",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2019.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2020",
+        "division": "11",
+        "season": "2019",
+        "team_id": "478102",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2019.csv.gz",
+      "row_count": 256,
+      "season": 2019,
+      "sha256": "c947e7dc272b728fd75dbeca9eb9c60678dc98e111b13fe3024c8e8c4d45785f",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2019.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2021",
+        "attendance": "12716",
+        "contest_id": "1974070",
+        "date": "09/03/2020",
+        "opponent": "Central Ark.",
+        "opponent_id": "499756",
+        "opponent_score": "35",
+        "outcome": "W",
+        "result": "W 45-35",
+        "season": "2020",
+        "team_id": "499510",
+        "team_name": "UAB Blazers",
+        "team_score": "45"
+      },
+      "path": "ncaa_mfb_schedule_2020.csv.gz",
+      "row_count": 1995,
+      "season": 2020,
+      "sha256": "3300eb886b2f8b0f9f66a501bdc824beeb7c8917ecc60070c920ce0f0bfa3374",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2020.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2021",
+        "division": "11",
+        "season": "2020",
+        "team_id": "499623",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2020.csv.gz",
+      "row_count": 257,
+      "season": 2020,
+      "sha256": "567f860173baa5a187a3c6ea4cb62008f3977fa51b618aafab0b377009dc8403",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2020.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2022",
+        "attendance": "16204",
+        "contest_id": "2081762",
+        "date": "08/28/2021",
+        "opponent": "Southern Utah",
+        "opponent_id": "523405",
+        "opponent_score": "14",
+        "outcome": "W",
+        "result": "W 45-14",
+        "season": "2021",
+        "team_id": "522751",
+        "team_name": "San Jose St. Spartans",
+        "team_score": "45"
+      },
+      "path": "ncaa_mfb_schedule_2021.csv.gz",
+      "row_count": 3109,
+      "season": 2021,
+      "sha256": "56a6252be4c1b0fa7dde94f957494c62d64aa0fa61c30bd4bf00b01678fcf823",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2021.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2022",
+        "division": "11",
+        "season": "2021",
+        "team_id": "522808",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2021.csv.gz",
+      "row_count": 258,
+      "season": 2021,
+      "sha256": "417d9170fc1033e70cb67f8b6c860a3517b407730aaf0541dd5689a0ce9aebe9",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2021.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2023",
+        "attendance": "16291",
+        "contest_id": "2276550",
+        "date": "09/01/2022",
+        "opponent": "Portland St.",
+        "opponent_id": "544793",
+        "opponent_score": "17",
+        "outcome": "W",
+        "result": "W 21-17",
+        "season": "2022",
+        "team_id": "544586",
+        "team_name": "San Jose St. Spartans",
+        "team_score": "21"
+      },
+      "path": "ncaa_mfb_schedule_2022.csv.gz",
+      "row_count": 3145,
+      "season": 2022,
+      "sha256": "34aa319cea3910a60778e99f2e99dc131f70c96467c11445eb1ed3ac88569105",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2022.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2023",
+        "division": "11",
+        "season": "2022",
+        "team_id": "544609",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2022.csv.gz",
+      "row_count": 261,
+      "season": 2022,
+      "sha256": "a66ace4e55df51d48af7dcdff9b8df290c6892e184cf0cc97f1dafd0fd693936",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2022.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2024",
+        "attendance": "63411",
+        "contest_id": "3150892",
+        "date": "08/26/2023",
+        "opponent": "@ Southern California",
+        "opponent_id": "557111",
+        "opponent_score": "56",
+        "outcome": "L",
+        "result": "L 28-56",
+        "season": "2023",
+        "team_id": "557107",
+        "team_name": "San Jose St. Spartans",
+        "team_score": "28"
+      },
+      "path": "ncaa_mfb_schedule_2023.csv.gz",
+      "row_count": 3148,
+      "season": 2023,
+      "sha256": "5700b4eae60f71cf5c0ccdd1886b2f62948fb28001d246b84da4b418d3f06509",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2023.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2024",
+        "division": "11",
+        "season": "2023",
+        "team_id": "557151",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2023.csv.gz",
+      "row_count": 261,
+      "season": 2023,
+      "sha256": "cf6684ff72e083b8c0104eed56dee36d0511734f10e0804701c6ac842af1ce64",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2023.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2025",
+        "attendance": "35421",
+        "contest_id": "5361965",
+        "date": "08/31/2024",
+        "opponent": "UConn",
+        "opponent_id": "589045",
+        "opponent_score": "7",
+        "outcome": "W",
+        "result": "W 50-7",
+        "season": "2024",
+        "team_id": "588938",
+        "team_name": "Maryland Terrapins, Terps",
+        "team_score": "50"
+      },
+      "path": "ncaa_mfb_schedule_2024.csv.gz",
+      "row_count": 3282,
+      "season": 2024,
+      "sha256": "57d2ece9976d1e4df86ba5ea432a8dc0ec06e9fdd8083a5e04bdf3ea34147bf9",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2024.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2025",
+        "division": "11",
+        "season": "2024",
+        "team_id": "589002",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2024.csv.gz",
+      "row_count": 263,
+      "season": 2024,
+      "sha256": "d51e1e41f97abef04cafb87d58034ae609ea50ccfc903620860196ce71eb6872",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2024.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "date",
+        "opponent_id",
+        "opponent",
+        "result",
+        "outcome",
+        "team_score",
+        "opponent_score",
+        "contest_id",
+        "attendance",
+        "academic_year",
+        "espn_game_id",
+        "season"
+      ],
+      "dataset": "schedule",
+      "first_row": {
+        "academic_year": "2026",
+        "attendance": "30789",
+        "contest_id": "6405615",
+        "date": "08/29/2025",
+        "espn_game_id": "401754374",
+        "opponent": "@ Wake Forest",
+        "opponent_id": "606059",
+        "opponent_score": "10",
+        "outcome": "L",
+        "result": "L 9-10",
+        "season": "2025",
+        "team_id": "605986",
+        "team_name": "Kennesaw St. Owls (10-4) *Myrtle Beach Bowl",
+        "team_score": "9"
+      },
+      "path": "ncaa_mfb_schedule_2025.csv.gz",
+      "row_count": 3314,
+      "season": 2025,
+      "sha256": "d5a498419c1e335387cb89b28f50d1367bfce34dadc931f7dfa50c525d68b223",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2025.csv.gz"
+    },
+    {
+      "columns": [
+        "team_id",
+        "team_name",
+        "academic_year",
+        "division",
+        "season"
+      ],
+      "dataset": "teams",
+      "first_row": {
+        "academic_year": "2026",
+        "division": "11",
+        "season": "2025",
+        "team_id": "606051",
+        "team_name": "Air Force"
+      },
+      "path": "ncaa_mfb_teams_2025.csv.gz",
+      "row_count": 265,
+      "season": 2025,
+      "sha256": "bc385d600f9b127b6a9bc316dad4927795b0cf9f25df46e112d2a449ac9cda92",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2025.csv.gz"
+    },
+    {
+      "dataset": "teams",
+      "path": "ncaa_mfb_teams_2026.csv.gz",
+      "season": 2026,
+      "sha256": "f592bac1d2a6878551fad33761e52deb70cefffee0dc1767231c08092a5a0f61",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_teams/ncaa_mfb_teams_2026.csv.gz"
+    },
+    {
+      "dataset": "schedule",
+      "path": "ncaa_mfb_schedule_2026.csv.gz",
+      "season": 2026,
+      "sha256": "6f0d3e1179208bf271346fc51595786d253b38d9d16216f27b60e22e03802ba5",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_schedule/ncaa_mfb_schedule_2026.csv.gz"
+    },
+    {
+      "dataset": "linescore",
+      "path": "ncaa_mfb_linescore_2026.csv.gz",
+      "season": 2026,
+      "sha256": "518c5ac704d00cf849b42b76e3795bc27b96cf0a7481ee64e413188cfc8568b1",
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/ncaa_mfb_linescore/ncaa_mfb_linescore_2026.csv.gz"
+    }
+  ],
+  "status": "raw_ncaa_origin_not_yet_reconciled",
+  "upstream": "https://stats.ncaa.org/"
+}

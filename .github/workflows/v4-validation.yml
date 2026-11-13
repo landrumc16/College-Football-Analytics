@@ -70,6 +70,7 @@ jobs:
         run: |
           test -s data/season-2026-report.json
           cp data/season-2026-report.json web/dist/season-report.json
+          cp data/poll-2026-snapshot.json web/dist/poll-snapshot.json
           python scripts/verify_v4_product_release.py --report web/dist/season-report.json
       - name: Verify mobile, PWA, and historical comparison journeys in Chromium
         run: |

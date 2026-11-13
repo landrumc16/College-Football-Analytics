@@ -5,6 +5,21 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'ignore', detached: true });
 let browser;
+async function assertReportCard(page, team) {
+  const published = await page.evaluate(async () => (await fetch('./v5-program-report-cards.json')).json());
+  const record = published.programs.find(p => p.team === team);
+  if (!record) throw new Error('Missing eligible report card: ' + team);
+  const card = page.getByRole('region', { name: `CFA Program Report Card for ${team}`, exact: true }).first();
+  await card.getByRole('heading', { name: `${team} · CFA Program Report Card` }).waitFor();
+  for (const key of ['hype', 'trajectory', 'strength']) {
+    const c = record.categories[key];
+    const label = key === 'hype' ? 'Hype Index' : key === 'trajectory' ? 'Program Trajectory' : 'Program Strength';
+    const tile = card.locator('.team-profile-tile').filter({ has: page.getByText(label, { exact: true }) });
+    await tile.getByText(c.score === null ? 'N/A' : `${c.grade} (${c.score.toFixed(1)})`, { exact: true }).waitFor();
+  }
+  if (record.overall_score !== null) await card.getByText(`${record.overall_grade} (${record.overall_score.toFixed(1)}/100)`, { exact: true }).waitFor();
+}
+
 try {
   let ready = false;
   for (let attempt = 0; attempt < 40; attempt++) {
@@ -120,6 +135,14 @@ try {
         await page.getByLabel('Choose dashboard section').selectOption('predictions');
       }
       if (section === 'hype') await page.getByRole('heading', { name: 'Historical Hype Index', exact: true }).waitFor();
+      if (section === 'hype' || section === 'trajectory') {
+        await page.getByRole('region', { name: 'Verified national historical intelligence' }).waitFor();
+        await page.getByLabel('Choose historical program').selectOption(firstTeam);
+        await assertReportCard(page, firstTeam);
+        await page.getByLabel('Search historical programs').fill(firstTeam);
+        const historical = page.getByRole('region', { name: 'Verified national historical intelligence' });
+        if (await historical.locator('tbody tr').count() !== 1) throw new Error('Verified historical search failed');
+      }
       if (section === 'trajectory') await page.getByRole('heading', { name: 'Program Trajectory & Momentum', exact: true }).waitFor();
       if (['programs', 'stock', 'contenders'].includes(section)) {
         await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
@@ -153,6 +176,7 @@ try {
         await page.getByLabel('Sort program intelligence').selectOption('rank');
         await page.getByLabel('Filter programs by conference').selectOption('all');
         await page.getByLabel('Find a program').fill(firstTeam);
+        await assertReportCard(page, firstTeam);
         const row = page.getByRole('row').filter({ hasText: firstTeam }).first();
         const overviewTrend = (await row.locator('td').nth(7).textContent() || '').trim();
         await row.getByRole('button', { name: `Compare ${firstTeam} with another school` }).click();
@@ -176,6 +200,7 @@ try {
       if (section === 'profile') {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
+        await assertReportCard(page, firstTeam);
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
@@ -201,23 +226,25 @@ try {
         if (!secondTeam) throw new Error('Need two distinct teams for comparison');
         await page.getByLabel('First school').selectOption(firstTeam);
         await page.getByLabel('Second school').selectOption(secondTeam);
+        await assertReportCard(page, firstTeam);
+        await assertReportCard(page, secondTeam);
         const comparison = page.getByRole('region', { name: 'Side-by-side team comparison' });
         await comparison.getByRole('heading', { name: 'Side-by-side team comparison' }).waitFor();
         const historicalComparison = comparison.getByRole('region', { name: 'Historical FBS results' });
         await historicalComparison.getByRole('heading', { name: 'Historical FBS results comparison' }).waitFor();
         await historicalComparison.getByLabel('Historical results window').selectOption('3');
         const historicalResponse = await page.evaluate(async () => {
-          const r = await fetch('./v5-historical-results-preview.json');
+          const r = await fetch('./v5-historical-results.json');
           return r.ok ? r.json() : null;
         });
-        if (!historicalResponse || historicalResponse.status !== 'research_preview_not_independently_source_attested' || historicalResponse.source_review_attested !== false) {
-          throw new Error('Historical comparison is missing its unreviewed source provenance');
+        if (!historicalResponse || historicalResponse.status !== 'independently_corroborated_results' || historicalResponse.source_review_attested !== true) {
+          throw new Error('Historical comparison is missing its reviewed source provenance');
         }
         if (historicalResponse.programs.length < 120) throw new Error('Historical source is not national in coverage');
         const historicalAliases = { 'Miami (FL)': 'Miami', 'Appalachian State': 'App State', ULM: 'UL Monroe', 'Sam Houston State': 'Sam Houston' };
         const historicalName = name => historicalAliases[name] || name;
         for (const name of [firstTeam, secondTeam]) {
-          const record = historicalResponse.programs.find(p => p.team === historicalName(name));
+          const record = historicalResponse.programs.find(p => historicalName(p.team) === historicalName(name));
           if (!record) {
             await historicalComparison.getByText('No independently documented historical results for ' + name, { exact: false }).waitFor();
           } else if (!record.windows['3']) {
@@ -225,12 +252,12 @@ try {
           }
         }
         const historicalRows = historicalComparison.locator('tbody tr');
-        if (await historicalRows.count() !== [firstTeam, secondTeam].filter(name => historicalResponse.programs.some(p => p.team === historicalName(name))).length) throw new Error('Historical Compare rows do not match documented source coverage');
+        if (await historicalRows.count() !== [firstTeam, secondTeam].filter(name => historicalResponse.programs.some(p => historicalName(p.team) === historicalName(name))).length) throw new Error('Historical Compare rows do not match documented source coverage');
         for (const teamName of [firstTeam, secondTeam]) {
           if (historicalResponse.programs.some(p => p.team === historicalName(teamName)) && !await historicalRows.filter({ hasText: historicalName(teamName) }).count()) throw new Error('Historical Compare missing ' + teamName);
         }
         if (!await historicalComparison.getByText('unadjusted win percentages', { exact: false }).count()) {
-          throw new Error('Historical comparison is missing its research-only limitations');
+          throw new Error('Historical comparison is missing its metric limitations');
         }
         await comparison.getByRole('columnheader', { name: firstTeam }).waitFor();
         await comparison.getByRole('columnheader', { name: secondTeam }).waitFor();
@@ -280,6 +307,12 @@ try {
         await official.getByRole('row').filter({ hasText: topTeam }).locator('td').nth(2).getByText('#1').waitFor();
       } finally { await pollPage.close(); }
     }
+    await page.getByLabel('Choose dashboard section').selectOption('research');
+    await page.getByText('Prediction Tracking & Calibration', { exact: true }).click();
+    const archive = page.getByRole('region', { name: 'Independent pregame forecast verification' });
+    await archive.getByRole('heading', { name: 'Independently verified forecast archive' }).waitFor();
+    await archive.getByText('57 predictions', { exact: false }).waitFor();
+    await page.screenshot({ path: `web/mobile-evidence/forecast-evidence-${width}.png`, fullPage: true });
     console.log(`Browser navigation smoke passed at ${width}px`);
     await page.close();
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
@@ -293,6 +326,38 @@ try {
     if (await failedPage.getByText('Waiting for live data').count()) throw new Error('Refresh retry did not clear the failure');
     await failedPage.close();
   }
+  const android = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true,
+    userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36' });
+  const app = await android.newPage();
+  await app.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
+  await app.evaluate(() => navigator.serviceWorker.ready);
+  await app.reload({ waitUntil: 'networkidle' });
+  await app.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  const cdp = await android.newCDPSession(app);
+  const installability = await cdp.send('Page.getInstallabilityErrors');
+  if (installability.installabilityErrors.length) throw new Error('Android PWA installability: ' + JSON.stringify(installability.installabilityErrors));
+  await app.getByRole('heading', { name: 'My Teams' }).waitFor();
+  await app.screenshot({ path: 'web/mobile-evidence/android-pwa-online.png', fullPage: true });
+  await app.evaluate(async () => {
+    await navigator.serviceWorker.register('./sw.js?acceptance-update', { scope: './' });
+  });
+  await app.getByText('App update available', { exact: true }).waitFor();
+  await app.getByRole('button', { name: 'Reload app', exact: true }).click();
+  await app.getByRole('heading', { name: 'My Teams' }).waitFor();
+  await android.setOffline(true);
+  await app.reload({ waitUntil: 'load' });
+  await app.getByRole('heading', { name: 'You are offline' }).waitFor();
+  await app.screenshot({ path: 'web/mobile-evidence/android-pwa-offline.png', fullPage: true });
+  const cached = await app.evaluate(async () => {
+    const keys = await caches.keys();
+    return (await Promise.all(keys.map(async key => (await (await caches.open(key)).keys()).map(r => r.url)))).flat();
+  });
+  if (cached.some(url => /\.json(?:$|\?)/.test(url))) throw new Error('PWA cached live JSON as current data');
+  await android.setOffline(false);
+  await app.getByRole('link', { name: 'Try again' }).click();
+  await app.getByRole('heading', { name: 'My Teams' }).waitFor();
+  await android.close();
+  console.log('Android Chrome emulation: installability, update, offline and recovery passed');
 } finally {
   await browser?.close();
   // npm launches Vite as a child; terminate the entire process group so

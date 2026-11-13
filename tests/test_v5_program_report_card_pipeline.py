@@ -11,8 +11,8 @@ def inputs():
            for team in peers for year in range(2016,2026)
            for poll in ("AP","Coaches")]
     records={"seasons":[{"season":year,"teams":[
-        {"team":"Alpha","fbs_wins":8,"fbs_losses":2},
-        {"team":"Beta","fbs_wins":2,"fbs_losses":8}]} for year in range(2016,2026)]}
+        {"team":"Alpha","fbs_wins":year-2015,"fbs_losses":2026-year},
+        {"team":"Beta","fbs_wins":2026-year,"fbs_losses":year-2015}]} for year in range(2016,2026)]}
     ratings=[{"team":"Alpha","rating":15},{"team":"Beta","rating":-5}]
     return dict(poll_rows=polls,season_records=records,current_rankings=ratings,
                 eligible_fbs=peers,as_of="2026-11-10",latest_completed_season=2025,

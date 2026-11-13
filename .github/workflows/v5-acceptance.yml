@@ -38,7 +38,9 @@ jobs:
         working-directory: web
         run: npm install --no-package-lock
       - name: Stage actual season report for browser acceptance
-        run: cp data/season-2026-report.json web/public/season-report.json
+        run: |
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
@@ -80,3 +82,29 @@ jobs:
             web/mobile-evidence/
           retention-days: 14
           if-no-files-found: warn
+
+  refresh-evidence:
+    if: github.ref == 'refs/heads/v5-development' && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-refresh]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - name: Exercise live provider and incumbent report without publishing
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          python -m cfb_analytics.refresh --season 2026
+          python -m cfb_analytics.report --season 2026
+          python scripts/verify_v4_product_release.py --report data/season-2026-report.json
+          python -m pytest -q tests/test_forecast_ledger.py tests/test_v5_fast_updates.py tests/test_v5_fast_updates_cli.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v5-live-refresh-evidence
+          path: |
+            data/cfbd-2026-games.json
+            data/season-2026-report.json
+            data/pregame-2026-history.json
+          retention-days: 14
