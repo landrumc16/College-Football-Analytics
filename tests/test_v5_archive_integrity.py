@@ -14,6 +14,9 @@ def archive(tmp_path, tamper=False):
         "source_sha256": hashlib.sha256(source).hexdigest(),
         "extracted_sha256": hashlib.sha256(games).hexdigest(),
         "extracted_games": 0,
+        "source_bytes": len(source),
+        "completed_fbs_vs_fbs": 0,
+        "completed_fbs_vs_other": 0,
     }}}
     with ZipFile(path, "w") as z:
         z.writestr("coverage.json", json.dumps(manifest))
