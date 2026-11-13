@@ -52,3 +52,11 @@ def test_2025_preseason_is_separately_sourced_and_not_week_two():
                 [row["rank"] for row in rows],
                 [row["team_id"] for row in rows],
             )
+
+def test_2020_ap_turnover_is_derived_from_ranked_team_ids():
+    """Do not override observed membership with a contradictory summary table."""
+    data = json.loads((ROOT / "poll-snapshots-2020.json").read_text())
+    preseason = {row["team_id"] for row in data["snapshots"]["ap_preseason"]}
+    final = {row["team_id"] for row in data["snapshots"]["ap_final"]}
+    assert len(preseason) == len(final) == 25
+    assert len(preseason - final) == 10
