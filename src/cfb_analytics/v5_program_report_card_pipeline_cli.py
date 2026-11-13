@@ -55,6 +55,7 @@ def main():
         v["national_grades_available"] for v in result["coverage"].values())
         else "partial_verified_categories_only")
     result["eligible_fbs_source"]=review["eligible_fbs_source"]
+    result["sources"] = sorted({review[key] for key in ("strength_source", "results_source", "eligible_fbs_source") if isinstance(review[key], str) and review[key].startswith("https://")})
     result["source_review"]=dict(result["source_review"])
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
