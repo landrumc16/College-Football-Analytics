@@ -30,3 +30,26 @@ def test_duplicate_and_invalid_poll_rejected():
     rows[0]["final_rank"]=27
     with pytest.raises(ValueError,match="Invalid poll"):
         hype_measurements(rows)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("team", ""), ("team", None), ("season", True),
+    ("source_sha256", "z"*64), ("source_sha256", "a"*63),
+])
+def test_invalid_historical_provenance_and_identity_rejected(field, value):
+    rows=observations()
+    rows[0][field]=value
+    with pytest.raises(ValueError):
+        hype_measurements(rows)
+
+
+def test_equal_final_poll_ranks_are_preserved_not_renumbered():
+    rows=observations()
+    for row in rows:
+        if row["season"] == 2018 and row["poll"] == "AP":
+            row["final_rank"] = 7
+    florida=[dict(row,team="Florida") for row in rows]
+    georgia=[dict(row,team="Georgia") for row in rows]
+    result=hype_measurements(florida+georgia)
+    assert result["Florida"]["value"] == result["Georgia"]["value"]
+    assert result["Florida"]["verified"] is False
