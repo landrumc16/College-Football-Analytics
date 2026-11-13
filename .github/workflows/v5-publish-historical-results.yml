@@ -5,6 +5,7 @@ on:
     branches: [v5-development]
     paths:
       - 'web/src/HistoricalResults.tsx'
+      - 'research/archive/results/README.md'
       - '.github/workflows/v5-publish-historical-results.yml'
 permissions:
   contents: write
@@ -26,6 +27,28 @@ jobs:
           mkdir -p /tmp/v5-source
           unzip -q /tmp/v5-source.zip -d /tmp/v5-source
           test -f /tmp/v5-source/team_season_records.json
+      - name: Preserve reusable source records with integrity metadata
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          source=Path('/tmp/v5-source/team_season_records.json')
+          raw=source.read_bytes()
+          data=json.loads(raw)
+          assert all(y in {s['season'] for s in data['seasons']} for y in range(2016,2026))
+          target=Path('research/archive/results')
+          target.mkdir(parents=True,exist_ok=True)
+          (target/'team-season-records-2016-2025.json').write_bytes(raw)
+          metadata={'schema_version':1,'status':'research_only_requires_independent_game_result_review',
+                    'publishable':False,'source_review_attested':False,
+                    'seasons':list(range(2016,2026)),
+                    'source_artifact_id':13723239129,
+                    'source_workflow':'v5 historical schedule research',
+                    'sha256':hashlib.sha256(raw).hexdigest(),
+                    'canonical_path':'team-season-records-2016-2025.json'}
+          (target/'manifest.json').write_text(json.dumps(metadata,indent=2)+'\\n')
+          print('Saved permanent source records; independently unverified')
+          PY
       - name: Generate descriptive win-loss windows, fail closed
         run: |
           python - <<'PY'
@@ -56,7 +79,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/public/v5-historical-results-preview.json
+          git add web/public/v5-historical-results-preview.json research/archive/results
           if ! git diff --cached --quiet; then
             git commit -m "data(v5): publish historical FBS results research preview"
             git push origin HEAD:v5-development
