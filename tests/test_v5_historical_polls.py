@@ -78,17 +78,15 @@ def test_invalid_duplicate_rank_without_competition_gap_is_rejected():
         extract_snapshots(encode(rows), 2024)
 
 
-def test_2025_week_two_unranked_prior_week_candidate_is_research_only():
+def test_2025_week_two_cannot_replace_genuine_preseason():
     rows = source_rows(2025)
     for row in rows:
         row["prev_rank"] = ""
         row["weeks_ranked"] = "1"
         if row["season_type"] == 2:
             row["week"] = 2
-    result = extract_snapshots(encode(rows), 2025)
-    assert result["source_weeks"]["ap_preseason"] == 2
-    assert result["source_weeks"]["coaches_preseason"] == 2
-    assert result["source_weeks"]["ap_final"] == 1
+    with pytest.raises(ValueError, match="2025 ap preseason"):
+        extract_snapshots(encode(rows), 2025)
 
 
 def test_2025_week_two_with_prior_rank_is_not_misclassified_as_preseason():
