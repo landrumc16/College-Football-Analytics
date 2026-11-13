@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "research_only_requires_independent_game_result_review",
+  "publishable": false,
+  "source_review_attested": false,
+  "seasons": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "source_artifact_id": 13723239129,
+  "source_workflow": "v5 historical schedule research",
+  "sha256": "a48189a9e635ab74bc13bbc07629c9e9fb8b189747ed762ca8f3c947a86bb385",
+  "canonical_path": "team-season-records-2016-2025.json"
+}\n
