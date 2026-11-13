@@ -6,6 +6,7 @@ on:
     paths:
       - 'web/src/HistoricalResults.tsx'
       - 'research/archive/results/README.md'
+      - 'tests/test_v5_permanent_results_archive.py'
       - '.github/workflows/v5-publish-historical-results.yml'
 permissions:
   contents: write
@@ -49,6 +50,10 @@ jobs:
           (target/'manifest.json').write_text(json.dumps(metadata,indent=2)+'\\n')
           print('Saved permanent source records; independently unverified')
           PY
+      - name: Validate retained historical source offline
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_v5_permanent_results_archive.py
       - name: Generate descriptive win-loss windows, fail closed
         run: |
           python - <<'PY'
