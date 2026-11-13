@@ -1,8 +1,8 @@
 import pytest
 from cfb_analytics.v5_fast_updates import reconcile
 
-A="https://scores.example.org/game/1"
-B="https://conference.example.org/game/1"
+A="https://scores.provider-a.example/game/1"
+B="https://conference.provider-b.example/game/1"
 DATE="2025-11-10T21:00:00-06:00"
 
 def final(source=A, score=28):
@@ -50,12 +50,12 @@ def test_mixed_kinds_rejected():
         reconcile([final(),poll()])
 
 def test_confirmed_majority_with_disagreement_is_disputed():
-    result=reconcile([final(),final(B),final("https://third.example.org/game/1",score=27)])
+    result=reconcile([final(),final(B),final("https://third.provider-c.example/game/1",score=27)])
     assert result["status"]=="disputed"
     assert result["data"] is None
 
 def test_two_urls_same_host_not_independent():
-    second=final("https://scores.example.org/game/alternate")
+    second=final("https://scores.provider-a.example/game/alternate")
     assert reconcile([final(),second])["status"]=="provisional"
 
 def test_different_games_rejected():
@@ -72,7 +72,7 @@ def test_different_poll_editions_rejected():
 
 
 def test_same_provider_conflicting_urls_cannot_attest_to_confirmation():
-    conflicting=final('https://scores.example.org/game/alternate',score=27)
+    conflicting=final('https://scores.provider-a.example/game/alternate',score=27)
     result=reconcile([final(),final(B),conflicting])
     assert result['status']=='disputed'
     assert result['data'] is None
@@ -95,3 +95,12 @@ def test_espn_subdomains_conflicting_scores_are_disputed():
 def test_distinct_upstream_publishers_can_confirm():
     assert reconcile([final("https://www.espn.com/game/1"),
                       final("https://stats.ncaa.org/game/1")])["status"] == "confirmed"
+
+
+@pytest.mark.parametrize("mirror", [
+    "https://api.collegefootballdata.com/games",
+    "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_schedules/cfb_schedules_2025.parquet",
+])
+def test_known_espn_mirrors_are_not_independent(mirror):
+    assert reconcile([final("https://www.espn.com/game/1"), final(mirror)])["status"] == "provisional"
+    assert reconcile([final("https://www.espn.com/game/1"), final(mirror, score=27)])["status"] == "disputed"

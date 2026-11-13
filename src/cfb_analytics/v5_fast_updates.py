@@ -5,6 +5,7 @@ observations become confirmed and eligible for downstream model ingestion.
 """
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
+from .v5_historical_results_comparison import _provider_family
 
 KINDS = {"game_final", "ap_top25", "coaches_top25", "cfp_top25"}
 
@@ -53,12 +54,15 @@ def _payload(record):
 def _provider(source):
     """Group URLs by upstream publisher, not merely by API hostname."""
     host = (urlsplit(source).hostname or "").lower().rstrip(".")
+    known = _provider_family(source)
+    if known is not None:
+        return known
     if host == "espn.com" or host.endswith(".espn.com"):
         return "espn"
     if host == "ncaa.org" or host.endswith(".ncaa.org"):
         return "ncaa"
     if host == "collegefootballdata.com" or host.endswith(".collegefootballdata.com"):
-        return "collegefootballdata"
+        return "espn"
     # Unknown domains are conservative: subdomains do not count separately.
     parts = host.split(".")
     return ".".join(parts[-2:]) if len(parts) >= 2 else host

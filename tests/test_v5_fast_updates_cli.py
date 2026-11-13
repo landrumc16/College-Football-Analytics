@@ -59,7 +59,14 @@ def test_same_confirmed_poll_different_row_order_is_idempotent():
 
 def test_disputed_majority_does_not_replace_prior_confirmed():
     previous={"confirmed":final(A,28)}
-    out=publish([final(A,29),final(B,29),final("https://third.example.org/game/1",30)],previous)
+    out=publish([final(A,29),final(B,29),final("https://third.provider-c.example/game/1",30)],previous)
     assert out["status"]=="disputed"
     assert out["confirmed"]["home_score"]==28
+    assert out["model_ingestion_allowed"] is False
+
+
+def test_same_upstream_evidence_never_allows_model_ingestion():
+    out = publish([final("https://www.espn.com/game/1"),
+                   final("https://api.collegefootballdata.com/games")])
+    assert out["status"] == "provisional"
     assert out["model_ingestion_allowed"] is False
