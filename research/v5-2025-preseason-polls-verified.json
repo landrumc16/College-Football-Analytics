@@ -1,0 +1,226 @@
+{
+  "status": "independently_cross_checked_preseason_rankings_research_only",
+  "season": 2025,
+  "polls": {
+    "ap": {
+      "date": "2025-08-11",
+      "source_urls": [
+        "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1251&seasonid=2025",
+        "https://fbschedules.com/college-football-rankings-2025-preseason-ap-poll-released/"
+      ],
+      "teams": [
+        {
+          "team": "Texas",
+          "rank": 1
+        },
+        {
+          "team": "Penn State",
+          "rank": 2
+        },
+        {
+          "team": "Ohio State",
+          "rank": 3
+        },
+        {
+          "team": "Clemson",
+          "rank": 4
+        },
+        {
+          "team": "Georgia",
+          "rank": 5
+        },
+        {
+          "team": "Notre Dame",
+          "rank": 6
+        },
+        {
+          "team": "Oregon",
+          "rank": 7
+        },
+        {
+          "team": "Alabama",
+          "rank": 8
+        },
+        {
+          "team": "LSU",
+          "rank": 9
+        },
+        {
+          "team": "Miami",
+          "rank": 10
+        },
+        {
+          "team": "Arizona State",
+          "rank": 11
+        },
+        {
+          "team": "Illinois",
+          "rank": 12
+        },
+        {
+          "team": "South Carolina",
+          "rank": 13
+        },
+        {
+          "team": "Michigan",
+          "rank": 14
+        },
+        {
+          "team": "Florida",
+          "rank": 15
+        },
+        {
+          "team": "SMU",
+          "rank": 16
+        },
+        {
+          "team": "Kansas State",
+          "rank": 17
+        },
+        {
+          "team": "Oklahoma",
+          "rank": 18
+        },
+        {
+          "team": "Texas A&M",
+          "rank": 19
+        },
+        {
+          "team": "Indiana",
+          "rank": 20
+        },
+        {
+          "team": "Ole Miss",
+          "rank": 21
+        },
+        {
+          "team": "Iowa State",
+          "rank": 22
+        },
+        {
+          "team": "Texas Tech",
+          "rank": 23
+        },
+        {
+          "team": "Tennessee",
+          "rank": 24
+        },
+        {
+          "team": "Boise State",
+          "rank": 25
+        }
+      ]
+    },
+    "coaches": {
+      "date": "2025-08-04",
+      "source_urls": [
+        "https://fbschedules.com/college-football-rankings-2025-preseason-coaches-poll-released/",
+        "https://fieldlevelmedia.com/ncaaf/texas-and-arch-manning-top-preseason-coaches-poll/"
+      ],
+      "teams": [
+        {
+          "team": "Texas",
+          "rank": 1
+        },
+        {
+          "team": "Ohio State",
+          "rank": 2
+        },
+        {
+          "team": "Penn State",
+          "rank": 3
+        },
+        {
+          "team": "Georgia",
+          "rank": 4
+        },
+        {
+          "team": "Notre Dame",
+          "rank": 5
+        },
+        {
+          "team": "Clemson",
+          "rank": 6
+        },
+        {
+          "team": "Oregon",
+          "rank": 7
+        },
+        {
+          "team": "Alabama",
+          "rank": 8
+        },
+        {
+          "team": "LSU",
+          "rank": 9
+        },
+        {
+          "team": "Miami",
+          "rank": 10
+        },
+        {
+          "team": "Arizona State",
+          "rank": 11
+        },
+        {
+          "team": "Illinois",
+          "rank": 12
+        },
+        {
+          "team": "South Carolina",
+          "rank": 13
+        },
+        {
+          "team": "Michigan",
+          "rank": 14
+        },
+        {
+          "team": "Ole Miss",
+          "rank": 15
+        },
+        {
+          "team": "SMU",
+          "rank": 16
+        },
+        {
+          "team": "Florida",
+          "rank": 17
+        },
+        {
+          "team": "Tennessee",
+          "rank": 18
+        },
+        {
+          "team": "Indiana",
+          "rank": 19
+        },
+        {
+          "team": "Kansas State",
+          "rank": 20
+        },
+        {
+          "team": "Texas A&M",
+          "rank": 21
+        },
+        {
+          "team": "Iowa State",
+          "rank": 21
+        },
+        {
+          "team": "BYU",
+          "rank": 23
+        },
+        {
+          "team": "Texas Tech",
+          "rank": 24
+        },
+        {
+          "team": "Boise State",
+          "rank": 25
+        }
+      ]
+    }
+  },
+  "publication_attested": false,
+  "notes": "Coaches has a tie at 21; next rank is 23. Use canonical names and independently sourced preseason data; do not treat week-2 SportsDataverse poll as preseason."
+}
