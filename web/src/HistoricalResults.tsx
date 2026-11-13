@@ -41,6 +41,6 @@ export default function HistoricalResults({ onTeam, team, compareTeam }: { onTea
       {!team && <label>Search <input aria-label="Search historical results" value={query} onChange={e=>setQuery(e.target.value)} /></label>}
       <div className="table-wrap"><table><thead><tr><th>Program</th><th>FBS wins</th><th>FBS losses</th><th>Win %</th><th>Seasons</th></tr></thead><tbody>{rows.map(r=>{const w=r.windows[span];return <tr key={r.team}><td><button type="button" onClick={()=>onTeam(r.team)}>{r.team}</button></td><td>{w?.wins ?? '—'}</td><td>{w?.losses ?? '—'}</td><td>{w ? (100*w.win_pct).toFixed(1)+'%' : 'N/A'}</td><td>{w?.seasons.join(', ') ?? 'Insufficient coverage'}</td></tr>})}</tbody></table></div>
     </> : <p role="status">{message || 'Loading national historical results…'}</p>}
-    <small>Research preview only. Poll identity, historical Hype Index, source attestations, and national peer-relative grades require separate verification.</small>
+    <small>Research preview only. Poll identity, historical Hype Index, source attestations, and national peer-relative grades require separate verification. Historical win-loss percentages are not opponent-adjusted strength.</small>
   </section>
 }
