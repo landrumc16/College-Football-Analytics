@@ -39,12 +39,25 @@ def verify_archive(archive: Path) -> dict:
                     actual = hashlib.sha256(z.read(name)).hexdigest()
                     if actual != expected:
                         failures.append(f"{season}: checksum mismatch {name}")
+            source_path = f"cfb_schedules_{season}.parquet"
+            if source_path in members and len(z.read(source_path)) != metadata.get("source_bytes"):
+                failures.append(f"{season}: source byte count mismatch")
             game_path = f"games_{season}.json"
             if game_path in members:
                 games = json.loads(z.read(game_path))
                 if not isinstance(games, list) or len(games) != metadata.get("extracted_games"):
                     failures.append(f"{season}: extracted game count mismatch")
                 else:
+                    identifiers = [row.get("game_id") for row in games if isinstance(row, dict)]
+                    if len(identifiers) != len(games) or any(not str(game_id).strip() or game_id is None for game_id in identifiers) or len(set(identifiers)) != len(identifiers):
+                        failures.append(f"{season}: missing or duplicate game identifiers")
+                    if any(row.get("season") != int(season) for row in games):
+                        failures.append(f"{season}: conflicting season labels")
+                    fbs = sum(row.get("fbs_game") is True for row in games)
+                    if fbs != metadata.get("completed_fbs_vs_fbs"):
+                        failures.append(f"{season}: FBS game count mismatch")
+                    if len(games) - fbs != metadata.get("completed_fbs_vs_other"):
+                        failures.append(f"{season}: FBS-vs-other count mismatch")
                     checked.append({"season": int(season), "games": len(games)})
     return {"status": "pass" if not failures else "fail", "seasons_checked": len(checked),
             "games_checked": sum(item["games"] for item in checked),
