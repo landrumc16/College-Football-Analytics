@@ -112,7 +112,7 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
       })
     const visible = showAll ? current : current.slice(0, 10)
     return <section className="notice">
-      <h2>Program Intelligence</h2>{query.trim() && currentRankings.some(r => r.team === query.trim()) ? <ProgramReportCard team={query.trim()} /> : null}
+      <h2>{view === 'stock' ? 'Team Stock Watch' : view === 'contenders' ? 'Contenders & Pretenders' : 'Program Intelligence'}</h2>{query.trim() && currentRankings.some(r => r.team === query.trim()) ? <ProgramReportCard team={query.trim()} /> : null}
       <p>Three useful questions: how strong is a program now, is it improving, and is it meeting expectations? The published incumbent model provides current team strength. Multiweek momentum and historical expectations are shown only when verified records exist.</p>
       <details className="accuracy-summary"><summary>How to read these comparisons</summary>
         <p><strong>Strength:</strong> current published model ranking and rating, not a historical program ranking or a guarantee of future wins.</p>

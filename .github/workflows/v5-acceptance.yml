@@ -2,7 +2,7 @@ name: V5 development acceptance checks
 
 on:
   push:
-    branches: [v5-development]
+    branches: [v5-development, ux-navigation-consolidation]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -39,6 +39,9 @@ jobs:
         run: npm install --no-package-lock
       - name: Stage actual season report for browser acceptance
         run: |
+          python -m pip install -e .
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
           cp data/season-2026-report.json web/public/season-report.json
           cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
       - name: Record exact candidate revision
