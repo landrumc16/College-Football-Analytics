@@ -17,6 +17,11 @@ Week homepage, school search, favorites and PWA remain the product foundation.
 - Prediction evidence verifies 65 original Weeks 10–11 forecasts before kickoff and
   independently matches all final scores. Research & Data shows coverage,
   calibration, confidence segments, and an identical-game neutral reference.
+- Official poll refresh preserves the last independently dated CFP publication
+  when newer provider rows lack an attested publication date. Official CFP week
+  is displayed separately from the AP/Coaches week.
+- PWA navigation explicitly bypasses the HTTP cache before offline fallback,
+  preserving consistent behavior in current and older supported Chromium.
 - The reusable archive retains source inputs/checksums, independent comparisons,
   accepted records and scoped exceptions, with deterministic offline replay.
 

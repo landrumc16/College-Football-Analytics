@@ -208,6 +208,9 @@ try {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
         await assertReportCard(page, firstTeam);
+        const verifiedProfile = await page.evaluate(async team => (await (await fetch('./v5-program-report-cards.json')).json()).programs.find(p => p.team === team), firstTeam);
+        if (verifiedProfile.trajectory) await page.getByText(`Long-term trajectory: ${verifiedProfile.trajectory.direction}`, { exact: false }).waitFor();
+        if (await page.getByText('Not published with verified multi-season coverage', { exact: false }).count() || await page.getByText('Historical research has not passed the publication gate', { exact: false }).count()) throw new Error('Legacy missing-history message contradicts verified publication');
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
@@ -221,6 +224,8 @@ try {
         const poll = await page.evaluate(async () => { try { const response = await fetch('./poll-snapshot.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; } catch { return null; } });
         if (!poll?.cfp_published_at || !poll?.cfp_top25?.length) {
           await page.getByText('A verified, publication-dated official CFP Top 25 is not available', { exact: false }).waitFor();
+        } else if (poll.cfp_week != null) {
+          await page.getByText(`CFP poll week ${poll.cfp_week}`, { exact: false }).waitFor();
         }
       }
       if (section === 'schedule') {
@@ -351,6 +356,10 @@ try {
   await app.getByText('App update available', { exact: true }).waitFor();
   await app.getByRole('button', { name: 'Reload app', exact: true }).click();
   await app.getByRole('heading', { name: 'My Teams' }).waitFor();
+  await app.waitForFunction(async () => {
+    const registration = await navigator.serviceWorker.getRegistration();
+    return registration?.active?.state === 'activated' && !registration.installing && !registration.waiting && registration.active.scriptURL.endsWith('/sw.js') && navigator.serviceWorker.controller?.scriptURL === registration.active.scriptURL;
+  });
   await android.setOffline(true);
   await app.reload({ waitUntil: 'load' });
   await app.getByRole('heading', { name: 'You are offline' }).waitFor();

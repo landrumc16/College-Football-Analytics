@@ -3,7 +3,7 @@
 **Repository:** `landrumc16/College-Football-Analytics`
 **Development:** `v5-development`
 **Production:** `main` (V4 baseline `26672c4ae5e7a965706cffce246aff27075fcc47`)
-**Status:** Approved planning baseline; implementation and acceptance not yet complete.
+**Status:** V5 release candidate prepared; exact final acceptance and owner merge decision are recorded in PR #15. Production release remains unapproved.
 **Release:** One V5 release after explicit owner approval. Do not alter production before approval.
 
 ## Product objective
@@ -219,3 +219,47 @@ V5 is a college football prediction and analysis application, not a high-stakes 
 - Minor, immaterial differences may be documented without holding the release. Never invent missing ranks, results, or pregame forecasts. Archive source URLs, retrieval provenance, comparison results, exceptions, and a versioned accepted snapshot for future reuse.
 - **Historical pass is complete** when the accepted cohort passes automated checks, material exceptions are resolved or scoped out, and Hype Index, Program Trajectory, and Report Cards publish reproducible results consistent with their source coverage. Do not demand perfect certainty or repeat completed verification.
 - This amendment relaxes the *historical research corroboration burden only*. It does not waive truthful presentation, source integrity, the distinct requirement for genuinely pre-kickoff prediction-performance evidence, functional acceptance testing, or explicit owner approval before merging PR #15 into `main`.
+
+
+## V5 release-candidate completion checkpoint — November 13, 2026
+
+This checkpoint supersedes earlier missing-evidence status notes; the approved
+milestone scope and owner approval requirement are unchanged.
+
+- **M1:** Public onboarding/privacy, isolated persistent favorites, freshness,
+  failure/retry and PWA journeys are implemented. Real Chromium acceptance passed
+  at 375/390/768/1536 pixels; Android Chrome emulation passed installability,
+  worker update, offline fallback, uncached live JSON and reconnection.
+- **M2:** Forty AP/Coaches snapshots and 1,000 ranked placements are corroborated;
+  1,308 team-seasons and 7,557 exact FBS game scores are accepted. Three disputed
+  point totals and two 2020 season records are scoped out and documented. Inputs,
+  checksums, source URLs, comparison results and canonical records are permanently
+  retained in `research/archive/verified/` and replay without network access.
+- **M3:** One shared publication covers 127 historical Hype/Trajectory grades and
+  138 incumbent Strength grades in the independently reviewed 138-program FBS
+  universe. Overall grades require all three categories; unsupported coverage is
+  N/A. Trajectory measures direction separately from win-rate level.
+- **M4:** Sixty-five genuinely published pre-kickoff forecasts from partial Weeks
+  10–11 match independent NCAA finals: 42 correct, 64.6%, Brier 0.2113917032,
+  log loss 0.6108603105. The original publication receipt and immutable records,
+  fixed outcome cohort, calibration, confidence segments and paired baseline are
+  retained. This is 65/570 eligible completed games at the frozen outcome cutoff,
+  not a full-season performance claim. The incumbent engine is unchanged.
+- **M5:** Programs, Hype, Trajectory, Team Profiles and Compare share the reviewed
+  contract. Browser assertions check grade parity against the actual publication.
+  Screenshot review exposed and corrected stale legacy missing-history text;
+  verified views no longer show the superseded research-only placeholder.
+- **M6 pre-merge evidence:** Code revision
+  `e38c78420575d883b111aa62efb8035a4bf79f9e` passed 520 Python tests, production
+  build, publication safeguards, all four browser widths and Android PWA emulation
+  in [V5 acceptance run 43513613290](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43513613290).
+  Its 50 real screenshots were retrieved and inspected. The isolated live CFBD
+  and poll refresh succeeded without a production write. The final reconciliation
+  carries the latest production ancestry into development, preserves earliest
+  first-observation forecasts, and receives its own final CI evidence in PR #15.
+
+The final tested SHA, post-reconciliation workflows and screenshot artifact are
+recorded on [PR #15](https://github.com/landrumc16/College-Football-Analytics/pull/15).
+No new version or roadmap is needed. Remaining release actions are **owner merge
+approval, the approved merge, deployment and production smoke verification**;
+these are not performed before explicit authorization.

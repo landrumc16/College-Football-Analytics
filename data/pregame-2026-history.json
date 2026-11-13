@@ -13549,8 +13549,8 @@
     "home_margin": 0.0,
     "home_win_probability": 0.5,
     "confidence": "Toss-up",
-    "forecast_recorded_at": "2026-11-13T21:31:51.771495+00:00",
-    "source_retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+    "forecast_recorded_at": "2026-11-13T18:34:58.110726+00:00",
+    "source_retrieved_at": "2026-11-13T18:34:56.204855+00:00",
     "scheduled_kickoff_at": "2026-11-13T23:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
@@ -13565,8 +13565,8 @@
     "home_margin": 0.0,
     "home_win_probability": 0.5,
     "confidence": "Toss-up",
-    "forecast_recorded_at": "2026-11-13T21:31:51.771495+00:00",
-    "source_retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+    "forecast_recorded_at": "2026-11-13T18:34:58.110726+00:00",
+    "source_retrieved_at": "2026-11-13T18:34:56.204855+00:00",
     "scheduled_kickoff_at": "2026-11-14T20:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
@@ -13581,8 +13581,8 @@
     "home_margin": 3.0,
     "home_win_probability": 0.5947806561416223,
     "confidence": "Lean",
-    "forecast_recorded_at": "2026-11-13T21:31:51.771495+00:00",
-    "source_retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+    "forecast_recorded_at": "2026-11-13T18:34:58.110726+00:00",
+    "source_retrieved_at": "2026-11-13T18:34:56.204855+00:00",
     "scheduled_kickoff_at": "2026-11-14T18:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
@@ -13597,8 +13597,8 @@
     "home_margin": 3.0,
     "home_win_probability": 0.5947806561416223,
     "confidence": "Lean",
-    "forecast_recorded_at": "2026-11-13T21:31:51.771495+00:00",
-    "source_retrieved_at": "2026-11-13T21:31:49.610923+00:00",
+    "forecast_recorded_at": "2026-11-13T18:34:58.110726+00:00",
+    "source_retrieved_at": "2026-11-13T18:34:56.204855+00:00",
     "scheduled_kickoff_at": "2026-11-14T18:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"

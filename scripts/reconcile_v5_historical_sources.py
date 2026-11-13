@@ -213,7 +213,8 @@ def main():
     write(ROOT / 'web/public/v5-program-report-cards.json', cards)
     by_year = {s['season']: {r['team']: r for r in s['teams']} for s in records['seasons']}
     results = []
-    for team in sorted({r['team'] for s in records['seasons'] for r in s['teams']}):
+    eligible = {p['team'] for p in cards['programs']}
+    for team in sorted({r['team'] for s in records['seasons'] for r in s['teams']} & eligible):
         windows = {}
         for span in [3, 5, 10]:
             years = [y for y in range(2026-span, 2026) if y != 2020]

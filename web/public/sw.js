@@ -9,7 +9,7 @@ self.addEventListener('fetch', event => {
   // Navigation and all data requests must reach the network. A missing connection
   // yields a clear failure rather than silently showing obsolete football results.
   if (req.mode === 'navigate') {
-    event.respondWith(fetch(req).catch(async () => (await caches.open(SHELL_CACHE)).match(new URL('offline.html', self.registration.scope).href)));
+    event.respondWith(fetch(req, { cache: 'no-store' }).catch(async () => (await caches.open(SHELL_CACHE)).match(new URL('offline.html', self.registration.scope).href)));
     return;
   }
   if (!url.pathname.includes('/assets/') || !/\.[a-f0-9]{8,}\.(js|css)$/.test(url.pathname)) return;

@@ -30,6 +30,9 @@ def test_real_historical_publication_replays_offline(monkeypatch):
     assert cards['coverage']['trajectory']['verified'] == 127
     assert cards['coverage']['strength']['verified'] == 138
     assert sum(p['overall_score'] is not None for p in cards['programs']) == 127
+    public_history = historical.read(historical.ROOT / 'web/public/v5-historical-results.json')
+    assert {p['team'] for p in public_history['programs']} <= {p['team'] for p in cards['programs']}
+    assert 'Idaho' not in {p['team'] for p in public_history['programs']}
     assert next(p for p in cards['programs'] if p['team'] == 'North Dakota State')['overall_score'] is None
 
 

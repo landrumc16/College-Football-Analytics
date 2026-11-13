@@ -1,4 +1,4 @@
-import ProgramReportCard from './ProgramReportCard'
+import ProgramReportCard, { useReportCards } from './ProgramReportCard'
 import HistoricalResults from './HistoricalResults'
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
@@ -48,6 +48,8 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
   onChoose: (team: string) => void; onCompare: (team: string) => void;
 }) {
+  const reportCards = useReportCards()
+  const verified = reportCards?.programs.find(p => p.team === team)
   const [history, setHistory] = useState<HistoryPayload | null>(null)
   const [historyStatus, setHistoryStatus] = useState<'loading' | 'published' | 'unavailable'>('loading')
   useEffect(() => {
@@ -114,17 +116,17 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     <div className="accuracy-summary"><h3>Program development and expectations</h3>
       <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form trend: {seasonTrend ?? 'not enough scored games'} (two non-overlapping four-game windows, requiring a two-win difference to classify a change). This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
-      <p><strong>Long-term trajectory:</strong> {historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
-      <p>AP/Coaches historical expectations: {historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
+      <p><strong>Long-term trajectory:</strong> {verified?.trajectory ? `${verified.trajectory.direction} (${(100 * verified.trajectory.value).toFixed(2)} percentage points/year across 3/5/10-year windows; 2020 excluded)` : reportCards ? 'Insufficient verified historical coverage' : historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
+      <p>AP/Coaches historical expectations: {verified?.hype?.AP && verified?.hype?.Coaches ? 'Published for 10 independently reviewed completed seasons; see separate AP and Coaches records above' : reportCards ? 'Insufficient verified historical coverage' : historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
     </div>
-    <details><summary>Historical program ranking coverage and sources</summary>
+    {!reportCards && <details><summary>Historical program ranking coverage and sources</summary>
       <p role="status">{historyStatus === 'published' ? 'Independently reviewed historical research is published.' : historyStatus === 'loading' ? 'Checking historical publication status…' : 'Historical research has not passed the publication gate; rankings, trajectory, and hype remain unavailable.'}</p>
       <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
       <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th><th>Source evidence</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
         const score = historical?.program_rankings?.[window]
         return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td><td>{score?.sources?.length ? <details><summary>{score.sources.length} sourced seasons</summary><ul>{score.sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : 'No reviewed source records published'}</td></tr>
       })}</tbody></table></div>
-    </details>
+    </details>}
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
