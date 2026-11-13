@@ -13,7 +13,7 @@ from scripts.fetch_v5_historical_polls import valid_top25
 
 
 def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
-                       start: int = 2016, end: int = 2025) -> list[dict]:
+                       start: int = 2016, end: int = 2025, *,\n                       require_ranked_ids_mapped: bool = False) -> list[dict]:
     years = set(range(start, end + 1))
     if {item["season"] for item in snapshots} != years or len(snapshots) != len(years):
         raise ValueError("Poll snapshots must cover every requested season exactly once")
@@ -35,7 +35,7 @@ def build_poll_history(snapshots: list[dict], team_ids: dict[str, str],
                 if not valid_top25(ranks, ids):
                     raise ValueError(f"{year} {poll} {phase}: invalid top 25")
                 pairs[phase] = {team_id: rank for team_id, rank in zip(ids, ranks)}
-            # Source rankings outside the reviewed cohort are not errors.
+            # Research cohorts may be subsets. National publication must resolve\n            # every ranked identity, including entries that appear only in final polls.\n            if require_ranked_ids_mapped:\n                unknown = (set(pairs['preseason']) | set(pairs['final'])) - set(team_ids)\n                if unknown:\n                    raise ValueError(f'{year} {label}: unmapped ranked team IDs: {sorted(unknown, key=int)}')\n            # Source rankings outside the reviewed cohort are not errors.
             for team_id in sorted(team_ids):
                 output.append({
                     "team": team_ids[team_id], "season": year, "poll": label,
@@ -52,7 +52,7 @@ def main() -> None:
     parser.add_argument("--team-ids", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--start-season", type=int, default=2016)
-    parser.add_argument("--end-season", type=int, default=2025)
+    parser.add_argument("--end-season", type=int, default=2025)\n    parser.add_argument("--require-ranked-ids-mapped", action="store_true",\n                        help="Fail if any ranked team ID is missing from the reviewed national mapping")
     args = parser.parse_args()
     if args.start_season > args.end_season:
         parser.error("Invalid season range")
@@ -63,7 +63,7 @@ def main() -> None:
     mapping = json.loads(args.team_ids.read_text(encoding="utf-8"))
     if not isinstance(mapping, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in mapping.items()):
         parser.error("Team mapping must be a JSON object of ID to canonical name")
-    rows = build_poll_history(snapshots, mapping, args.start_season, args.end_season)
+    rows = build_poll_history(snapshots, mapping, args.start_season, args.end_season,\n                              require_ranked_ids_mapped=args.require_ranked_ids_mapped)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(rows, indent=2) + "\n", encoding="utf-8")
 
