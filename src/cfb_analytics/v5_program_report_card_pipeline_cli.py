@@ -32,8 +32,8 @@ def main():
         p.error("Source review flags must be booleans")
     if not review["eligible_fbs_reviewed"] or not str(review["eligible_fbs_source"]).startswith("https://"):
         p.error("Verified national FBS peer roster required")
-    if not all(review[k] for k in ("poll_reviewed","results_reviewed","strength_reviewed")):
-        p.error("Independent review of all three category sources required")
+    if not any(review[k] for k in ("poll_reviewed","results_reviewed","strength_reviewed")):
+        p.error("At least one category requires independent source review")
     eligible=read(args.eligible_fbs)
     if not isinstance(eligible,list) or len(eligible)<120:
         p.error("Refusing cohort-only publication; expected national FBS roster")
@@ -45,13 +45,17 @@ def main():
         season_records=read(args.team_season_records),
         current_rankings=current,eligible_fbs=eligible,
         as_of=args.as_of,latest_completed_season=args.latest_completed_season,
-        poll_reviewed=True,results_reviewed=True,strength_reviewed=True,
+        poll_reviewed=review["poll_reviewed"],
+        results_reviewed=review["results_reviewed"],
+        strength_reviewed=review["strength_reviewed"],
         strength_source=review["strength_source"],results_source=review["results_source"])
-    if not all(v["national_grades_available"] for v in result["coverage"].values()):
-        p.error("Verified national coverage below threshold; refusing publication")
-    if not any(row["overall_grade"] for row in result["programs"]):
-        p.error("No verified complete grades")
+    if not any(v["national_grades_available"] for v in result["coverage"].values()):
+        p.error("No reviewed category has sufficient national coverage")
+    result["publication_status"] = ("complete" if all(
+        v["national_grades_available"] for v in result["coverage"].values())
+        else "partial_verified_categories_only")
     result["eligible_fbs_source"]=review["eligible_fbs_source"]
+    result["source_review"]=dict(result["source_review"])
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 
