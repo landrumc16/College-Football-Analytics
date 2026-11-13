@@ -69,3 +69,30 @@ def test_unranked_both_endpoints_remains_in_full_cohort():
     absent = [r for r in rows if r["team"] == "Team 27"]
     assert len(absent) == 4
     assert all(r["preseason_rank"] is None and r["final_rank"] is None for r in absent)
+
+
+def test_national_conversion_rejects_unmapped_ranked_teams():
+    snapshots, mapping = fixture()
+    with pytest.raises(ValueError, match="unmapped ranked team IDs"):
+        build_poll_history(snapshots, {"1": "Team 1"}, 2024, 2025,
+                           require_ranked_ids_mapped=True)
+
+
+def test_national_conversion_accepts_complete_ranked_mapping():
+    snapshots, mapping = fixture()
+    rows = build_poll_history(snapshots, mapping, 2024, 2025,
+                              require_ranked_ids_mapped=True)
+    assert len(rows) == 104
+
+
+def test_tied_competition_rankings_are_valid_in_national_conversion():
+    snapshots, mapping = fixture()
+    final = snapshots[0]["snapshots"]["ap_final"]
+    final[7]["rank"] = 7
+    final[6]["rank"] = 7
+    final[8]["rank"] = 9
+    rows = build_poll_history(snapshots, mapping, 2024, 2025,
+                              require_ranked_ids_mapped=True)
+    ranks = {r["team"]: r["final_rank"] for r in rows if r["season"] == 2024 and r["poll"] == "AP"}
+    assert ranks["Team 8"] == 7
+    assert ranks["Team 9"] == 7
