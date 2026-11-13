@@ -8,9 +8,11 @@ The final Associated Press football poll placed **Florida and Georgia jointly at
 
 Evidence:
 - College Poll Archive, 2018 final AP poll: https://collegepollarchive.com/football/ap/seasons.cfm?appollid=1151
-- College Football News, contemporaneous January 8, 2019 final poll: https://collegefootballnews.com/news/ap-top-25-poll-rankings-2018-final
-- Yahoo Sports, January 8, 2019 coverage: https://sports.yahoo.com/clemson-alabama-ohio-state-top-final-2018-ap-top-25-135449051.html
-- University of South Carolina 2019 football media guide, 2018 final AP points: https://s3.amazonaws.com/gamecocksonline.com/documents/2019/7/15/Introduction.pdf
+- University of Florida athletics, retrospective acknowledgment of the tie: https://floridagators.com/news/2020/1/14/football-gators-finish-sixth-in-ap-top-25
+- College Poll Archive, Georgia team-level final poll history: https://www.collegepollarchive.com/football/ap/appearances-final-team.cfm?teamid=73
+- Stassen's final AP poll archive, explicitly denoting both as 7t: https://www.stassen.com/preseason/final-ap-poll/2018.html
+
+**Source caveat:** Some university media-guide tables render the two 1,103-point entries as sequential 7 and 8 even though the historical poll archive and Florida's athletics department explicitly recognize a tie. Do not derive official rank from table row order.
 
 ## Publication and implementation rules
 
