@@ -2,6 +2,11 @@ name: V5 durable historical poll archive
 
 on:
   workflow_dispatch:
+  push:
+    branches: [v5-development]
+    paths:
+      - 'scripts/archive_v5_historical_polls.py'
+      - '.github/workflows/v5-archive-historical-polls.yml'
 
 permissions:
   contents: write
