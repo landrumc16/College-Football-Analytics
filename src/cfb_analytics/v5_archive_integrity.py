@@ -53,7 +53,9 @@ def verify_archive(archive: Path) -> dict:
                         failures.append(f"{season}: missing or duplicate game identifiers")
                     if any(not isinstance(row, dict) or row.get("season") != int(season) for row in games):
                         failures.append(f"{season}: conflicting season labels")
-                    fbs = sum(row.get("fbs_game") is True for row in games)
+                    # Malformed records are reported as failures, never allowed to
+                    # crash the integrity check or masquerade as valid coverage.
+                    fbs = sum(isinstance(row, dict) and row.get("fbs_game") is True for row in games)
                     if fbs != metadata.get("completed_fbs_vs_fbs"):
                         failures.append(f"{season}: FBS game count mismatch")
                     if len(games) - fbs != metadata.get("completed_fbs_vs_other"):
