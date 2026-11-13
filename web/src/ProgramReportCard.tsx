@@ -34,15 +34,17 @@ export default function ProgramReportCard({ team }: { team: string }) {
   }, [])
   const record = report?.programs.find(p => p.team === team)
   const available = !!record && ['hype', 'trajectory', 'strength'].every(k => report?.coverage[k].national_grades_available)
+  const publishedCategories = (['hype', 'trajectory', 'strength'] as const).filter(k => report?.coverage[k]?.national_grades_available)
+  const partial = !!report && publishedCategories.length > 0 && publishedCategories.length < 3
   return <section className="accuracy-summary" aria-label={`CFA Program Report Card for ${team}`}>
     <h3>CFA Program Report Card</h3>
-    <p>Three independent peer-relative grades, equally weighted. Overall: <strong>{available && record.overall_grade != null && record.overall_score != null ? `${record.overall_grade} (${record.overall_score.toFixed(1)}/100)` : 'N/A — awaiting verified national coverage'}</strong></p>
+    <p>Three independent peer-relative grades, equally weighted. Overall: <strong>{available && record.overall_grade != null && record.overall_score != null ? `${record.overall_grade} (${record.overall_score.toFixed(1)}/100)` : 'N/A — awaiting all three reviewed categories'}</strong></p>
     <div className="team-profile-grid">
       {(['hype', 'trajectory', 'strength'] as const).map(k => <div className="team-profile-tile" key={k}>
         <small>{k === 'hype' ? 'Hype Index' : k === 'trajectory' ? 'Program Trajectory' : 'Program Strength'}</small>
         <strong>{report?.coverage[k]?.national_grades_available ? display(record?.categories?.[k]) : 'N/A'}</strong>
       </div>)}
     </div>
-    <p>{report ? `As of ${report.as_of}; eligible FBS peer universe: ${report.eligible_fbs_count} programs.` : 'Verified national report cards have not been published.'} These grades describe expectations, multi-season direction, and current quality—not win probabilities.</p>
+    <p>{report ? `As of ${report.as_of}; eligible FBS peer universe: ${report.eligible_fbs_count} programs.` : 'Reviewed national report cards have not been published.'} {partial ? `${publishedCategories.length} of 3 categories have sufficient reviewed national coverage; available grades are shown independently.` : ''} These grades describe expectations, multi-season direction, and current quality—not win probabilities.</p>
   </section>
 }
