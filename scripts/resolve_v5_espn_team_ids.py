@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from urllib.request import urlopen
 
-DIRECTORY_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?limit=500"
+DIRECTORY_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?limit=1000"
 
 
 def directory_id_names(payload: dict) -> dict[str, str]:
