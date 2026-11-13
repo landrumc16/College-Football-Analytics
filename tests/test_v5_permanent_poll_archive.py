@@ -14,7 +14,7 @@ def test_archived_seasons_are_complete_and_reusable_without_network():
     assert [item["season"] for item in manifest["seasons"]] == list(range(2016, 2025))
     assert manifest["excluded_seasons"] == [2025]
     assert {p.name for p in ROOT.glob("poll-snapshots-*.json")} == {
-        f"poll-snapshots-{year}.json" for year in range(2016, 2025)
+        f"poll-snapshots-{year}.json" for year in range(2016, 2026)
     }
     for entry in manifest["seasons"]:
         data = json.loads((ROOT / entry["path"]).read_text())
@@ -38,3 +38,17 @@ def test_archive_never_confuses_source_integrity_with_independent_review():
         entry["status"] == "source_extracted_requires_independent_review"
         for entry in manifest["seasons"]
     )
+
+def test_2025_preseason_is_separately_sourced_and_not_week_two():
+    data = json.loads((ROOT / "poll-snapshots-2025.json").read_text())
+    assert data["publishable"] is False
+    assert data["source_review_attested"] is False
+    for poll in ("ap", "coaches"):
+        assert data["source_weeks"][f"{poll}_preseason"] is None
+        assert len(data["preseason_provenance"][poll]["source_urls"]) >= 2
+        for phase in ("preseason", "final"):
+            rows = data["snapshots"][f"{poll}_{phase}"]
+            assert valid_top25(
+                [row["rank"] for row in rows],
+                [row["team_id"] for row in rows],
+            )
