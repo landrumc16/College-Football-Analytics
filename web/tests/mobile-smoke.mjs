@@ -203,6 +203,17 @@ try {
         await page.getByLabel('Second school').selectOption(secondTeam);
         const comparison = page.getByRole('region', { name: 'Side-by-side team comparison' });
         await comparison.getByRole('heading', { name: 'Side-by-side team comparison' }).waitFor();
+        const historicalComparison = comparison.getByRole('region', { name: 'Historical FBS results' });
+        await historicalComparison.getByRole('heading', { name: 'Historical FBS results comparison' }).waitFor();
+        await historicalComparison.getByLabel('Historical results window').selectOption('3');
+        const historicalRows = historicalComparison.locator('tbody tr');
+        if (await historicalRows.count() !== 2) throw new Error('Historical Compare must show exactly the two selected programs');
+        for (const teamName of [firstTeam, secondTeam]) {
+          if (!await historicalRows.filter({ hasText: teamName }).count()) throw new Error('Historical Compare missing ' + teamName);
+        }
+        if (!await historicalComparison.getByText('unadjusted win percentages', { exact: false }).count()) {
+          throw new Error('Historical comparison is missing its research-only limitations');
+        }
         await comparison.getByRole('columnheader', { name: firstTeam }).waitFor();
         await comparison.getByRole('columnheader', { name: secondTeam }).waitFor();
         await comparison.getByRole('button', { name: `View ${firstTeam} profile` }).click();
