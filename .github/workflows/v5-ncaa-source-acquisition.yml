@@ -1,0 +1,32 @@
+name: V5 NCAA historical source acquisition
+on:
+  push:
+    branches: [v5-development]
+    paths:
+      - 'src/cfb_analytics/v5_ncaa_schedule_acquire.py'
+      - '.github/workflows/v5-ncaa-source-acquisition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download NCAA-origin 2016-2025 schedules and record provenance
+        run: |
+          PYTHONPATH=src python -m cfb_analytics.v5_ncaa_schedule_acquire --output-dir /tmp/v5-ncaa-schedules
+      - name: Upload independent source evidence for reconciliation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-ncaa-2016-2025-source-evidence
+          path: /tmp/v5-ncaa-schedules/
+          retention-days: 14
+          if-no-files-found: warn
