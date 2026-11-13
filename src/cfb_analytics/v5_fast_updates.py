@@ -50,6 +50,20 @@ def _payload(record):
             tuple(sorted((row["rank"], row["team"]) for row in rows)))
 
 
+def _provider(source):
+    """Group URLs by upstream publisher, not merely by API hostname."""
+    host = (urlsplit(source).hostname or "").lower().rstrip(".")
+    if host == "espn.com" or host.endswith(".espn.com"):
+        return "espn"
+    if host == "ncaa.org" or host.endswith(".ncaa.org"):
+        return "ncaa"
+    if host == "collegefootballdata.com" or host.endswith(".collegefootballdata.com"):
+        return "collegefootballdata"
+    # Unknown domains are conservative: subdomains do not count separately.
+    parts = host.split(".")
+    return ".".join(parts[-2:]) if len(parts) >= 2 else host
+
+
 def reconcile(observations):
     """Return safe public snapshot; confirmed payload only after two independent sources.
 
@@ -78,7 +92,7 @@ def reconcile(observations):
     host_payloads = {}
     for (_, payload), rows in candidates.items():
         for row in rows:
-            host = urlsplit(row["source"]).hostname.lower()
+            host = _provider(row["source"])
             if host in host_payloads and host_payloads[host] != payload:
                 return {"status": "disputed", "kind": observations[0]["kind"],
                         "data": None, "sources": sorted({r["source"] for r in observations})}
@@ -86,7 +100,7 @@ def reconcile(observations):
     confirmed = []
     for (kind, payload), rows in candidates.items():
         sources = {r["source"] for r in rows}
-        independent_hosts = {urlsplit(source).hostname for source in sources}
+        independent_hosts = {_provider(source) for source in sources}
         if len(independent_hosts) >= 2:
             confirmed.append((max(_timestamp(r["published_at"]) for r in rows), kind, payload, rows))
     if len(confirmed) > 1:
