@@ -41,3 +41,18 @@ def test_candidate_flags_duplicate_names_for_manual_resolution():
     ]}}]
     result = candidate_mapping(snapshots, directory, {})
     assert result["duplicate_canonical_names"] == {"Same": ["2", "3"]}
+
+
+def test_canonical_reconciliation_uses_school_location_not_mascot():
+    directory = {"sports": [{"leagues": [{"teams": [
+        {"team": {"id": "61", "displayName": "Georgia Bulldogs", "location": "Georgia"}},
+        {"team": {"id": "2", "displayName": "Auburn Tigers", "location": "Auburn"}},
+    ]}]}]}
+    snapshots = [{"snapshots": {"ap_preseason": [
+        {"team_id": "61", "rank": 1},
+        {"team_id": "2", "rank": 2},
+    ]}}]
+    result = candidate_mapping(snapshots, directory, {},
+                               canonical_teams={"Georgia", "Auburn"})
+    assert result["mapping"] == {"2": "Auburn", "61": "Georgia"}
+    assert result["unresolved_ids"] == []
