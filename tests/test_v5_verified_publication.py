@@ -13,7 +13,11 @@ def test_real_historical_publication_replays_offline(monkeypatch):
     records, polls, cards, comparison = historical.reconcile()
     assert records == historical.read(historical.ARCHIVE / 'accepted-team-seasons.json')
     assert polls == historical.read(historical.ARCHIVE / 'accepted-poll-history.json.gz')
-    assert cards == historical.read(historical.ROOT / 'web/public/v5-program-report-cards.json')
+    published = historical.read(historical.ROOT / 'web/public/v5-program-report-cards.json')
+    assert {k: v for k, v in cards.items() if k != 'programs'} == {k: v for k, v in published.items() if k != 'programs'}
+    assert len(cards['programs']) == len(published['programs'])
+    for replayed, committed in zip(cards['programs'], published['programs']):
+        assert replayed == committed, replayed['team']
     assert comparison == historical.read(historical.ARCHIVE / 'comparison.json')
     assert comparison['accepted_team_seasons'] == 1308
     assert comparison['poll_snapshots_compared'] == 40

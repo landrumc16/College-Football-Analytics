@@ -101,6 +101,7 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           python -m cfb_analytics.refresh --season 2026
+          PYTHONPATH=src python -m cfb_analytics.poll_refresh
           python -m cfb_analytics.report --season 2026
           python scripts/verify_v4_product_release.py --report data/season-2026-report.json
           python -m pytest -q tests/test_forecast_ledger.py tests/test_v5_fast_updates.py tests/test_v5_fast_updates_cli.py
@@ -111,4 +112,5 @@ jobs:
             data/cfbd-2026-games.json
             data/season-2026-report.json
             data/pregame-2026-history.json
+            data/poll-2026-snapshot.json
           retention-days: 14

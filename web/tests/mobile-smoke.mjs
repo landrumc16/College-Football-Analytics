@@ -141,7 +141,14 @@ try {
         await assertReportCard(page, firstTeam);
         await page.getByLabel('Search historical programs').fill(firstTeam);
         const historical = page.getByRole('region', { name: 'Verified national historical intelligence' });
-        if (await historical.locator('tbody tr').count() !== 1) throw new Error('Verified historical search failed');
+        const expectedNames = await page.evaluate(async ({ query, category }) => {
+          const published = await (await fetch('./v5-program-report-cards.json')).json();
+          return published.programs.filter(p => p.team.toLowerCase().includes(query.toLowerCase()))
+            .sort((a, b) => (b.categories[category].score ?? -1) - (a.categories[category].score ?? -1) || a.team.localeCompare(b.team)).slice(0, 25).map(p => p.team);
+        }, { query: firstTeam, category: section === 'hype' ? 'hype' : 'trajectory' });
+        await page.waitForFunction(count => document.querySelector('[aria-label="Verified national historical intelligence"] tbody')?.children.length === count, expectedNames.length);
+        const actualNames = await historical.locator('tbody tr td:first-child button').allTextContents();
+        if (JSON.stringify(actualNames) !== JSON.stringify(expectedNames)) throw new Error('Verified historical search differs from source-backed results');
       }
       if (section === 'trajectory') await page.getByRole('heading', { name: 'Program Trajectory & Momentum', exact: true }).waitFor();
       if (['programs', 'stock', 'contenders'].includes(section)) {

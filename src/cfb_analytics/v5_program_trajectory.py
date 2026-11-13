@@ -58,7 +58,7 @@ def trajectory_measurements(records: dict, *, latest_completed_season: int, sour
             mean_year=sum(years)/len(years)
             rates=[by_year[y][team][0]/sum(by_year[y][team]) for y in years]
             mean_rate=fsum(rates)/len(rates)
-            slopes[span]=fsum((y-mean_year)*(rate-mean_rate) for y,rate in zip(years,rates))/sum((y-mean_year)**2 for y in years)
+            slopes[span]=fsum((y-mean_year)*(rate-mean_rate) for y,rate in zip(years,rates))/fsum((y-mean_year)**2 for y in years)
         if len(windows)==3:
             value=fsum(slopes.values())/3
             if not isfinite(value):
