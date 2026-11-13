@@ -206,10 +206,26 @@ try {
         const historicalComparison = comparison.getByRole('region', { name: 'Historical FBS results' });
         await historicalComparison.getByRole('heading', { name: 'Historical FBS results comparison' }).waitFor();
         await historicalComparison.getByLabel('Historical results window').selectOption('3');
+        const historicalResponse = await page.evaluate(async () => {
+          const r = await fetch('./v5-historical-results-preview.json');
+          return r.ok ? r.json() : null;
+        });
+        if (!historicalResponse || historicalResponse.status !== 'research_preview_not_independently_source_attested' || historicalResponse.source_review_attested !== false) {
+          throw new Error('Historical comparison is missing its unreviewed source provenance');
+        }
+        if (historicalResponse.programs.length < 120) throw new Error('Historical source is not national in coverage');
+        for (const name of [firstTeam, secondTeam]) {
+          const record = historicalResponse.programs.find(p => p.team === name);
+          if (!record) {
+            await historicalComparison.getByText('No independently documented historical results for ' + name, { exact: false }).waitFor();
+          } else if (!record.windows['3']) {
+            await historicalComparison.getByText(name + ' has insufficient verified season coverage', { exact: false }).waitFor();
+          }
+        }
         const historicalRows = historicalComparison.locator('tbody tr');
-        if (await historicalRows.count() !== 2) throw new Error('Historical Compare must show exactly the two selected programs');
+        if (await historicalRows.count() !== [firstTeam, secondTeam].filter(name => historicalResponse.programs.some(p => p.team === name)).length) throw new Error('Historical Compare rows do not match documented source coverage');
         for (const teamName of [firstTeam, secondTeam]) {
-          if (!await historicalRows.filter({ hasText: teamName }).count()) throw new Error('Historical Compare missing ' + teamName);
+          if (historicalResponse.programs.some(p => p.team === teamName) && !await historicalRows.filter({ hasText: teamName }).count()) throw new Error('Historical Compare missing ' + teamName);
         }
         if (!await historicalComparison.getByText('unadjusted win percentages', { exact: false }).count()) {
           throw new Error('Historical comparison is missing its research-only limitations');
