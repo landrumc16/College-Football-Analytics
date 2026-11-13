@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-13T06:07:19.170776+00:00",
+  "retrieved_at": "2026-11-13T18:34:56.204855+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3683,
+    "scheduled": 3687,
     "completed": 3167,
-    "pending": 516
+    "pending": 520
   },
   "games": [
     {
@@ -41817,6 +41817,54 @@
       "start_date": "2026-11-14T21:05:00.000Z"
     },
     {
+      "game_id": 401934184,
+      "season": 2026,
+      "week": 11,
+      "home": "Fayetteville State",
+      "away": "Virginia State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": true,
+      "start_date": "2026-11-13T23:00:00.000Z"
+    },
+    {
+      "game_id": 401934185,
+      "season": 2026,
+      "week": 11,
+      "home": "Virginia Union",
+      "away": "Johnson C. Smith",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": true,
+      "start_date": "2026-11-14T20:00:00.000Z"
+    },
+    {
+      "game_id": 401934218,
+      "season": 2026,
+      "week": 11,
+      "home": "Chowan",
+      "away": "Edward Waters",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T18:00:00.000Z"
+    },
+    {
+      "game_id": 401934219,
+      "season": 2026,
+      "week": 11,
+      "home": "Shorter",
+      "away": "Albany State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-14T18:00:00.000Z"
+    },
+    {
       "game_id": 401856746,
       "season": 2026,
       "week": 12,
@@ -44205,5 +44253,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-13T06:07:19.170776+00:00"
+  "data_changed_at": "2026-11-13T18:34:56.204855+00:00"
 }
