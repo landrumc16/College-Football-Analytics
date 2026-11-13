@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-13T18:34:56.204855+00:00",
+  "retrieved_at": "2026-11-13T21:31:49.610923+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3687,
@@ -44253,5 +44253,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-13T18:34:56.204855+00:00"
+  "data_changed_at": "2026-11-13T21:31:49.610923+00:00"
 }

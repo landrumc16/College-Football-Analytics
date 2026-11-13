@@ -36,3 +36,26 @@ def test_performance_excludes_unverifiable_history():
             history("2026-11-01T17:00:00Z"))
         assert result["Alabama"]["games_with_forecasts"] == expected
         assert result["Auburn"]["games_with_forecasts"] == expected
+
+
+def test_neutral_baseline_uses_identical_verified_games():
+    first = game("2026-11-01T18:00:00Z")
+    second = {**first, "game_id": 8, "home_score": 14, "away_score": 21}
+    forecasts = history("2026-11-01T17:00:00Z")
+    forecasts["8"] = {**forecasts["7"], "home_win_probability": 0.2}
+    result = build_prediction_accuracy({"games": [first, second]}, forecasts,
+                                       eligible_teams={"Alabama", "Auburn"})
+    assert result["games_evaluated"] == 2
+    assert result["neutral_baseline"]["games"] == 2
+    assert result["neutral_baseline"]["winner_accuracy"] == 0.5
+    assert result["neutral_baseline"]["brier_score"] == 0.25
+    assert result["neutral_baseline"]["log_loss"] == 0.6931
+
+
+def test_neutral_baseline_does_not_claim_accuracy_without_archive():
+    result = build_prediction_accuracy({"games": [game("2026-11-01T18:00:00Z")]}, {},
+                                       eligible_teams={"Alabama", "Auburn"})
+    assert result["neutral_baseline"]["games"] == 0
+    assert result["neutral_baseline"]["winner_accuracy"] is None
+    assert result["neutral_baseline"]["brier_score"] is None
+    assert result["neutral_baseline"]["log_loss"] is None

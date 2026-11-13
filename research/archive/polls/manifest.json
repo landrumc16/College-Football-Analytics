@@ -1,0 +1,128 @@
+{
+  "status": "research_only_not_independently_verified",
+  "publishable": false,
+  "source_review_attested": false,
+  "seasons": [
+    {
+      "season": 2016,
+      "path": "poll-snapshots-2016.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2016.csv",
+      "source_sha256": "630c72a4bd5c9d0b34ece578747048ce32c59ff00d06a01adf8101d59f30bc39",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2017,
+      "path": "poll-snapshots-2017.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2017.csv",
+      "source_sha256": "1d81f9cc66b6db666965e34c5c0b478f11bb55fbb2a2706c912b4e296fcda43f",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2018,
+      "path": "poll-snapshots-2018.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2018.csv",
+      "source_sha256": "0de8ba6005c18847e9027c2e7d51657a0ff4399ac3bbb595fba587a82c9ce5d2",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2019,
+      "path": "poll-snapshots-2019.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2019.csv",
+      "source_sha256": "435f7a7914d4eb02c4a14bc3b01ab25d4ad23e97be4aafefe99f0df7b5bea820",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2020,
+      "path": "poll-snapshots-2020.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2020.csv",
+      "source_sha256": "35132baac2883a83f6ebaa2f0c1766f64d912bfbfa366e8f3efc218761914381",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2021,
+      "path": "poll-snapshots-2021.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2021.csv",
+      "source_sha256": "df61866c1c3df378b70cc04650f241057a5709d02aca532642abbcd8e328a85c",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2022,
+      "path": "poll-snapshots-2022.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2022.csv",
+      "source_sha256": "c987be285fe4e2f211b6c473592d924895adb5e7bdbcab7964da653b8928a135",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2023,
+      "path": "poll-snapshots-2023.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2023.csv",
+      "source_sha256": "63ef8aa1772d6db8fe8c9530c73b352138b02294c55f20a0f1be26230204ee3d",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    },
+    {
+      "season": 2024,
+      "path": "poll-snapshots-2024.json",
+      "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2024.csv",
+      "source_sha256": "b443ade848b25d31c9f5aeb76468697847591c521487fff94ac2ae6dabe3b833",
+      "source_weeks": {
+        "ap_preseason": 1,
+        "ap_final": 1,
+        "coaches_preseason": 1,
+        "coaches_final": 1
+      },
+      "status": "source_extracted_requires_independent_review"
+    }
+  ],
+  "excluded_seasons": [
+    2025
+  ],
+  "exclusion_reason": "2025 source week-2 rankings were incorrectly labeled preseason; authentic August polls require separate ingestion"
+}

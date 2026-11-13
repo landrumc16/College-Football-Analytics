@@ -1,0 +1,155 @@
+{
+  "accepted_team_seasons": 1308,
+  "coverage": {
+    "hype": {
+      "eligible": 138,
+      "national_grades_available": true,
+      "verified": 127
+    },
+    "strength": {
+      "eligible": 138,
+      "national_grades_available": true,
+      "verified": 138
+    },
+    "trajectory": {
+      "eligible": 138,
+      "national_grades_available": true,
+      "verified": 127
+    }
+  },
+  "excluded_from_trajectory": [
+    2020
+  ],
+  "game_coverage": [
+    {
+      "eligible_fbs_games": 760,
+      "matching_fbs_game_scores": 760,
+      "season": 2016
+    },
+    {
+      "eligible_fbs_games": 776,
+      "matching_fbs_game_scores": 776,
+      "season": 2017
+    },
+    {
+      "eligible_fbs_games": 772,
+      "matching_fbs_game_scores": 770,
+      "season": 2018
+    },
+    {
+      "eligible_fbs_games": 774,
+      "matching_fbs_game_scores": 774,
+      "season": 2019
+    },
+    {
+      "eligible_fbs_games": 534,
+      "matching_fbs_game_scores": 534,
+      "season": 2020
+    },
+    {
+      "eligible_fbs_games": 770,
+      "matching_fbs_game_scores": 769,
+      "season": 2021
+    },
+    {
+      "eligible_fbs_games": 776,
+      "matching_fbs_game_scores": 776,
+      "season": 2022
+    },
+    {
+      "eligible_fbs_games": 792,
+      "matching_fbs_game_scores": 792,
+      "season": 2023
+    },
+    {
+      "eligible_fbs_games": 798,
+      "matching_fbs_game_scores": 798,
+      "season": 2024
+    },
+    {
+      "eligible_fbs_games": 808,
+      "matching_fbs_game_scores": 808,
+      "season": 2025
+    }
+  ],
+  "identity_mapping_version": 1,
+  "policy": "two independent sources; exception review only",
+  "poll_snapshots_compared": 40,
+  "ranked_placements_compared": 1000,
+  "schema_version": 1,
+  "score_exceptions": [
+    {
+      "disposition": "exact score excluded from verified cohort; season win/loss totals independently corroborated",
+      "espn": {
+        "Air Force": 26,
+        "Florida Atlantic": 33
+      },
+      "game_id": "401014983",
+      "ncaa": [
+        {
+          "Air Force": 27,
+          "Florida Atlantic": 33
+        }
+      ],
+      "season": 2018
+    },
+    {
+      "disposition": "exact score excluded from verified cohort; season win/loss totals independently corroborated",
+      "espn": {
+        "Georgia State": 30,
+        "Texas State": 40
+      },
+      "game_id": "401021686",
+      "ncaa": [
+        {
+          "Georgia State": 31,
+          "Texas State": 40
+        }
+      ],
+      "season": 2018
+    },
+    {
+      "disposition": "exact score excluded from verified cohort; season win/loss totals independently corroborated",
+      "espn": {
+        "BYU": 34,
+        "Georgia Southern": 17
+      },
+      "game_id": "401309645",
+      "ncaa": [
+        {
+          "BYU": 34,
+          "Georgia Southern": 16
+        }
+      ],
+      "season": 2021
+    }
+  ],
+  "season_exceptions": [
+    {
+      "disposition": "exclude disputed team-season; 2020 excluded from trajectories",
+      "espn": [
+        2,
+        6
+      ],
+      "ncaa": [
+        2,
+        7
+      ],
+      "season": 2020,
+      "team": "Florida State"
+    },
+    {
+      "disposition": "exclude disputed team-season; 2020 excluded from trajectories",
+      "espn": [
+        3,
+        7
+      ],
+      "ncaa": [
+        4,
+        7
+      ],
+      "season": 2020,
+      "team": "Georgia Tech"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "identity_mapping_version": 1,
+  "inputs": [
+    {
+      "path": "espn-coverage.json",
+      "sha256": "2957c7326c2c8ae16295c92fcde48fe9ad7907e5408fc672c7e1662ae79a05d7"
+    },
+    {
+      "path": "espn-games.json.gz",
+      "sha256": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
+    },
+    {
+      "path": "independent-polls.json",
+      "sha256": "c65284e51ef9efd7edc273dc271a94883604f35eb20a2ce5e60df1554de80b8f"
+    },
+    {
+      "path": "ncaa/inventory.json",
+      "sha256": "9a4f2e8b64f7689ab4830790d9eb85c8eddfcc7054123aa713037a032989853e"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_linescore_2026.csv.gz",
+      "sha256": "518c5ac704d00cf849b42b76e3795bc27b96cf0a7481ee64e413188cfc8568b1"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2016.csv.gz",
+      "sha256": "0687ca58cbd5a964c2d37966a9e0e1229af4d36cee80383447d4420e5a740bb4"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2017.csv.gz",
+      "sha256": "834ab88fc7b2567896885378b63e72ae17e607193de37443423f0ae4ac57871d"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2018.csv.gz",
+      "sha256": "0e13dc8bc525867dd833472624c26b8ba784a00d5b30a3db27508f7685304040"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2019.csv.gz",
+      "sha256": "7034aab2156109236a9c311789c355f1039dabc107c69a7675723a62ac20ef15"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2020.csv.gz",
+      "sha256": "3300eb886b2f8b0f9f66a501bdc824beeb7c8917ecc60070c920ce0f0bfa3374"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2021.csv.gz",
+      "sha256": "56a6252be4c1b0fa7dde94f957494c62d64aa0fa61c30bd4bf00b01678fcf823"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2022.csv.gz",
+      "sha256": "34aa319cea3910a60778e99f2e99dc131f70c96467c11445eb1ed3ac88569105"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2023.csv.gz",
+      "sha256": "5700b4eae60f71cf5c0ccdd1886b2f62948fb28001d246b84da4b418d3f06509"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2024.csv.gz",
+      "sha256": "57d2ece9976d1e4df86ba5ea432a8dc0ec06e9fdd8083a5e04bdf3ea34147bf9"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2025.csv.gz",
+      "sha256": "d5a498419c1e335387cb89b28f50d1367bfce34dadc931f7dfa50c525d68b223"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_schedule_2026.csv.gz",
+      "sha256": "6f0d3e1179208bf271346fc51595786d253b38d9d16216f27b60e22e03802ba5"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2016.csv.gz",
+      "sha256": "562b6282043cdc1eb877212cdf3be4677c31aedca8eb4c63176c8342488bdf78"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2017.csv.gz",
+      "sha256": "1d24265cc3e35ba8fc28ca4237c1b35c1fb82380afc841d78ca68b5391a6c004"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2018.csv.gz",
+      "sha256": "fea836eba3ff2c716ac69ea76ce56d5328a1322161041444b5c03522fac7ddc6"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2019.csv.gz",
+      "sha256": "c947e7dc272b728fd75dbeca9eb9c60678dc98e111b13fe3024c8e8c4d45785f"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2020.csv.gz",
+      "sha256": "567f860173baa5a187a3c6ea4cb62008f3977fa51b618aafab0b377009dc8403"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2021.csv.gz",
+      "sha256": "417d9170fc1033e70cb67f8b6c860a3517b407730aaf0541dd5689a0ce9aebe9"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2022.csv.gz",
+      "sha256": "a66ace4e55df51d48af7dcdff9b8df290c6892e184cf0cc97f1dafd0fd693936"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2023.csv.gz",
+      "sha256": "cf6684ff72e083b8c0104eed56dee36d0511734f10e0804701c6ac842af1ce64"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2024.csv.gz",
+      "sha256": "d51e1e41f97abef04cafb87d58034ae609ea50ccfc903620860196ce71eb6872"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2025.csv.gz",
+      "sha256": "bc385d600f9b127b6a9bc316dad4927795b0cf9f25df46e112d2a449ac9cda92"
+    },
+    {
+      "path": "ncaa/ncaa_mfb_teams_2026.csv.gz",
+      "sha256": "f592bac1d2a6878551fad33761e52deb70cefffee0dc1767231c08092a5a0f61"
+    },
+    {
+      "path": "pregame-publication-receipt.json",
+      "sha256": "4119dcc5db8270fb3c30a6bed0f8f7aa3be79f3770deb55ab984530a7a936707"
+    },
+    {
+      "path": "published-pregame-2026-11-05.json.gz",
+      "sha256": "1453b03993276fc9d51c3a00c5968ce0a6399a3f746dc79e363ca24923d1554f"
+    },
+    {
+      "path": "live-refresh-receipt.json",
+      "sha256": "b4f20cc578542dbaccbc892f65d636b8d9408f0deacc0bc3e9daaec2f66d8788"
+    },
+    {
+      "path": "pregame-evaluation-outcomes.json",
+      "sha256": "861aa128799968200750b919468eadb5a6cd9322b1342864e5f16afe9f2ccf9e"
+    }
+  ],
+  "retrieved_on": "2026-11-13",
+  "schema_version": 1,
+  "scope": "2016\u20132025 historical inputs and authentic 2026 Weeks 10–11 pregame evidence"
+}

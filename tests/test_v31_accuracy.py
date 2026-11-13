@@ -10,7 +10,10 @@ def game(i, home, away, hs, ass):
 
 def forecast(home, away, probability, margin):
     return {"home": home, "away": away, "home_win_probability": probability,
-            "home_margin": margin, "forecast_recorded_at": "2026-11-06T18:00:00Z"}
+            "home_margin": margin, "forecast_recorded_at": "2026-11-06T18:00:00Z",
+            "source_retrieved_at": "2026-11-06T17:59:00Z",
+            "scheduled_kickoff_at": "2026-11-07T18:00:00Z",
+            "source": "generated_before_kickoff", "model_id": "workbook_2026_baseline"}
 
 
 def test_margin_logloss_and_calibration_are_archived_only():

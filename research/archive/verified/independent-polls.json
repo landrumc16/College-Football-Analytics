@@ -1,0 +1,4462 @@
+{
+  "resolved_exceptions": [
+    {
+      "accepted": {
+        "rank": 25,
+        "source_sha256": "afb17cbd17c529690a03b32cc98fecc81322480e6b514356a93661e396079cae",
+        "source_url": "https://hailstate.com/news/2019/1/8/football-finishes-2018-season-ranked-in-final-amway-coaches-poll",
+        "team": "Mississippi State"
+      },
+      "phase": "final",
+      "poll": "coaches",
+      "previous_independent_cells": [
+        {
+          "rank": 25,
+          "team": "Iowa"
+        }
+      ],
+      "removed_incorrect_cell_for": "Iowa",
+      "season": 2018
+    },
+    {
+      "accepted": {
+        "rank": 24,
+        "source_sha256": "450da3db2f0ed0139638ff55cbc53ef4cceba849db53575a856135806355cfff",
+        "source_url": "https://lsusports.net/news/2020/08/06/football-2020-coaches-preseason-poll",
+        "team": "Virginia Tech"
+      },
+      "phase": "preseason",
+      "poll": "coaches",
+      "previous_independent_cells": [
+        {
+          "rank": 25,
+          "team": "Virginia Tech"
+        }
+      ],
+      "removed_incorrect_cell_for": null,
+      "season": 2020
+    },
+    {
+      "accepted": {
+        "rank": 25,
+        "source_sha256": "4b9342858a38129c18226f871ebd487e74ae5745808261b6c5b3d1b15e28cab6",
+        "source_url": "https://broncosports.com/news/2025/8/4/football-boise-state-ranked-25th-in-preseason-coaches-poll",
+        "team": "Boise State"
+      },
+      "phase": "preseason",
+      "poll": "coaches",
+      "previous_independent_cells": [],
+      "removed_incorrect_cell_for": null,
+      "season": 2025
+    }
+  ],
+  "schema_version": 1,
+  "snapshots": [
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.456494+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "USC"
+        },
+        {
+          "rank": 4,
+          "team": "Washington"
+        },
+        {
+          "rank": 5,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 6,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida State"
+        },
+        {
+          "rank": 9,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 10,
+          "team": "Michigan"
+        },
+        {
+          "rank": 11,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 12,
+          "team": "Stanford"
+        },
+        {
+          "rank": 13,
+          "team": "LSU"
+        },
+        {
+          "rank": 14,
+          "team": "Florida"
+        },
+        {
+          "rank": 15,
+          "team": "Western Michigan"
+        },
+        {
+          "rank": 16,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 17,
+          "team": "Colorado"
+        },
+        {
+          "rank": 18,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 19,
+          "team": "South Florida"
+        },
+        {
+          "rank": 20,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 21,
+          "team": "Louisville"
+        },
+        {
+          "rank": 22,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 23,
+          "team": "Utah"
+        },
+        {
+          "rank": 24,
+          "team": "Auburn"
+        },
+        {
+          "rank": 25,
+          "team": "San Diego State"
+        }
+      ],
+      "season": 2016,
+      "source_sha256": "59fae722d04195c2879d74d8418f077e0115c6e3a5536f8ffba8fbf92dd8cbab",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2016"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.456494+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 5,
+          "team": "USC"
+        },
+        {
+          "rank": 4,
+          "team": "Washington"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 6,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida State"
+        },
+        {
+          "rank": 9,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 10,
+          "team": "Michigan"
+        },
+        {
+          "rank": 11,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 12,
+          "team": "Stanford"
+        },
+        {
+          "rank": 14,
+          "team": "LSU"
+        },
+        {
+          "rank": 13,
+          "team": "Florida"
+        },
+        {
+          "rank": 18,
+          "team": "Western Michigan"
+        },
+        {
+          "rank": 16,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 15,
+          "team": "Colorado"
+        },
+        {
+          "rank": 17,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 19,
+          "team": "South Florida"
+        },
+        {
+          "rank": 23,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 20,
+          "team": "Louisville"
+        },
+        {
+          "rank": 24,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 21,
+          "team": "Utah"
+        },
+        {
+          "rank": 22,
+          "team": "Auburn"
+        },
+        {
+          "rank": 25,
+          "team": "San Diego State"
+        }
+      ],
+      "season": 2016,
+      "source_sha256": "59fae722d04195c2879d74d8418f077e0115c6e3a5536f8ffba8fbf92dd8cbab",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2016"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.553986+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 4,
+          "team": "Florida State"
+        },
+        {
+          "rank": 5,
+          "team": "LSU"
+        },
+        {
+          "rank": 6,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "Michigan"
+        },
+        {
+          "rank": 8,
+          "team": "Stanford"
+        },
+        {
+          "rank": 9,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 10,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 11,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 12,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 13,
+          "team": "TCU"
+        },
+        {
+          "rank": 14,
+          "team": "Washington"
+        },
+        {
+          "rank": 15,
+          "team": "Houston"
+        },
+        {
+          "rank": 16,
+          "team": "UCLA"
+        },
+        {
+          "rank": 17,
+          "team": "Iowa"
+        },
+        {
+          "rank": 18,
+          "team": "Georgia"
+        },
+        {
+          "rank": 19,
+          "team": "Louisville"
+        },
+        {
+          "rank": 20,
+          "team": "USC"
+        },
+        {
+          "rank": 21,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 22,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 23,
+          "team": "Baylor"
+        },
+        {
+          "rank": 24,
+          "team": "Oregon"
+        },
+        {
+          "rank": 25,
+          "team": "Florida"
+        }
+      ],
+      "season": 2016,
+      "source_sha256": "200a3a9f5dbdb2b3255689382d933ba4adfdc8fe727ad676e8c9cc8d4e6c4bc7",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1104"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.553986+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 4,
+          "team": "Florida State"
+        },
+        {
+          "rank": 6,
+          "team": "LSU"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 8,
+          "team": "Michigan"
+        },
+        {
+          "rank": 7,
+          "team": "Stanford"
+        },
+        {
+          "rank": 10,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 9,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 12,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 11,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 14,
+          "team": "TCU"
+        },
+        {
+          "rank": 18,
+          "team": "Washington"
+        },
+        {
+          "rank": 13,
+          "team": "Houston"
+        },
+        {
+          "rank": 24,
+          "team": "UCLA"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa"
+        },
+        {
+          "rank": 16,
+          "team": "Georgia"
+        },
+        {
+          "rank": 23,
+          "team": "Louisville"
+        },
+        {
+          "rank": 17,
+          "team": "USC"
+        },
+        {
+          "rank": 19,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 20,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 21,
+          "team": "Baylor"
+        },
+        {
+          "rank": 22,
+          "team": "Oregon"
+        },
+        {
+          "rank": 25,
+          "team": "Florida"
+        }
+      ],
+      "season": 2016,
+      "source_sha256": "200a3a9f5dbdb2b3255689382d933ba4adfdc8fe727ad676e8c9cc8d4e6c4bc7",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1104"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.354044+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Georgia"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 4,
+          "team": "Clemson"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "UCF"
+        },
+        {
+          "rank": 7,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 8,
+          "team": "Penn State"
+        },
+        {
+          "rank": 9,
+          "team": "TCU"
+        },
+        {
+          "rank": 10,
+          "team": "Auburn"
+        },
+        {
+          "rank": 11,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 12,
+          "team": "USC"
+        },
+        {
+          "rank": 13,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 14,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 15,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 16,
+          "team": "Washington"
+        },
+        {
+          "rank": 17,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 18,
+          "team": "LSU"
+        },
+        {
+          "rank": 19,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 20,
+          "team": "Stanford"
+        },
+        {
+          "rank": 21,
+          "team": "South Florida"
+        },
+        {
+          "rank": 22,
+          "team": "Boise State"
+        },
+        {
+          "rank": 23,
+          "team": "NC State"
+        },
+        {
+          "rank": 24,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 25,
+          "team": "Memphis"
+        }
+      ],
+      "season": 2017,
+      "source_sha256": "04b1ddcbca7a1acc0a2d648f7ffadf8100a055b74182d260a7b6ceb965bc911e",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2017"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.354044+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Georgia"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 4,
+          "team": "Clemson"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "UCF"
+        },
+        {
+          "rank": 6,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 8,
+          "team": "Penn State"
+        },
+        {
+          "rank": 9,
+          "team": "TCU"
+        },
+        {
+          "rank": 12,
+          "team": "Auburn"
+        },
+        {
+          "rank": 11,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 10,
+          "team": "USC"
+        },
+        {
+          "rank": 13,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 14,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 16,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 15,
+          "team": "Washington"
+        },
+        {
+          "rank": 17,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 18,
+          "team": "LSU"
+        },
+        {
+          "rank": 20,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 19,
+          "team": "Stanford"
+        },
+        {
+          "rank": 21,
+          "team": "South Florida"
+        },
+        {
+          "rank": 22,
+          "team": "Boise State"
+        },
+        {
+          "rank": 23,
+          "team": "NC State"
+        },
+        {
+          "rank": 25,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 24,
+          "team": "Memphis"
+        }
+      ],
+      "season": 2017,
+      "source_sha256": "04b1ddcbca7a1acc0a2d648f7ffadf8100a055b74182d260a7b6ceb965bc911e",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2017"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.506765+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Florida State"
+        },
+        {
+          "rank": 4,
+          "team": "USC"
+        },
+        {
+          "rank": 5,
+          "team": "Clemson"
+        },
+        {
+          "rank": 6,
+          "team": "Penn State"
+        },
+        {
+          "rank": 7,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 8,
+          "team": "Washington"
+        },
+        {
+          "rank": 9,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 10,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 11,
+          "team": "Michigan"
+        },
+        {
+          "rank": 12,
+          "team": "Auburn"
+        },
+        {
+          "rank": 13,
+          "team": "LSU"
+        },
+        {
+          "rank": 14,
+          "team": "Stanford"
+        },
+        {
+          "rank": 15,
+          "team": "Georgia"
+        },
+        {
+          "rank": 16,
+          "team": "Louisville"
+        },
+        {
+          "rank": 17,
+          "team": "Florida"
+        },
+        {
+          "rank": 18,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 19,
+          "team": "South Florida"
+        },
+        {
+          "rank": 20,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 21,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 22,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 23,
+          "team": "Texas"
+        },
+        {
+          "rank": 24,
+          "team": "Washington State"
+        },
+        {
+          "rank": 25,
+          "team": "Tennessee"
+        }
+      ],
+      "season": 2017,
+      "source_sha256": "e1a682d8f55a83a4ee5afd97cf53a7a7ef2e874ff5eb2a87b6ac3ab9393678bf",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1120"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.506765+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Florida State"
+        },
+        {
+          "rank": 4,
+          "team": "USC"
+        },
+        {
+          "rank": 5,
+          "team": "Clemson"
+        },
+        {
+          "rank": 6,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 7,
+          "team": "Washington"
+        },
+        {
+          "rank": 10,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 11,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 9,
+          "team": "Michigan"
+        },
+        {
+          "rank": 13,
+          "team": "Auburn"
+        },
+        {
+          "rank": 12,
+          "team": "LSU"
+        },
+        {
+          "rank": 14,
+          "team": "Stanford"
+        },
+        {
+          "rank": 15,
+          "team": "Georgia"
+        },
+        {
+          "rank": 17,
+          "team": "Louisville"
+        },
+        {
+          "rank": 16,
+          "team": "Florida"
+        },
+        {
+          "rank": 18,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 21,
+          "team": "South Florida"
+        },
+        {
+          "rank": 19,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 22,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 20,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 23,
+          "team": "Texas"
+        },
+        {
+          "rank": 24,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 25,
+          "team": "Utah"
+        }
+      ],
+      "season": 2017,
+      "source_sha256": "e1a682d8f55a83a4ee5afd97cf53a7a7ef2e874ff5eb2a87b6ac3ab9393678bf",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1120"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.359167+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 6,
+          "team": "LSU"
+        },
+        {
+          "rank": 7,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Texas"
+        },
+        {
+          "rank": 10,
+          "team": "Washington State"
+        },
+        {
+          "rank": 11,
+          "team": "UCF"
+        },
+        {
+          "rank": 12,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 13,
+          "team": "Washington"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 15,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 16,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 17,
+          "team": "Penn State"
+        },
+        {
+          "rank": 18,
+          "team": "Fresno State"
+        },
+        {
+          "rank": 19,
+          "team": "Army"
+        },
+        {
+          "rank": 20,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 21,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 22,
+          "team": "Utah State"
+        },
+        {
+          "rank": 23,
+          "team": "Boise State"
+        },
+        {
+          "rank": 24,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 25,
+          "team": "Iowa"
+        }
+      ],
+      "season": 2018,
+      "source_sha256": "19794e8141e242c1d98abcff98a5f54a149dcec7c8678364511f5b79f3a09781",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2018"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.359167+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 7,
+          "team": "LSU"
+        },
+        {
+          "rank": 8,
+          "team": "Georgia"
+        },
+        {
+          "rank": 6,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Texas"
+        },
+        {
+          "rank": 10,
+          "team": "Washington State"
+        },
+        {
+          "rank": 12,
+          "team": "UCF"
+        },
+        {
+          "rank": 11,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 13,
+          "team": "Washington"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 15,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 16,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 17,
+          "team": "Penn State"
+        },
+        {
+          "rank": 18,
+          "team": "Fresno State"
+        },
+        {
+          "rank": 20,
+          "team": "Army"
+        },
+        {
+          "rank": 22,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 19,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 21,
+          "team": "Utah State"
+        },
+        {
+          "rank": 24,
+          "team": "Boise State"
+        },
+        {
+          "rank": 23,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 25,
+          "source_sha256": "afb17cbd17c529690a03b32cc98fecc81322480e6b514356a93661e396079cae",
+          "source_url": "https://hailstate.com/news/2019/1/8/football-finishes-2018-season-ranked-in-final-amway-coaches-poll",
+          "team": "Mississippi State"
+        }
+      ],
+      "season": 2018,
+      "source_sha256": "19794e8141e242c1d98abcff98a5f54a149dcec7c8678364511f5b79f3a09781",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2018"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.444857+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "Washington"
+        },
+        {
+          "rank": 7,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 8,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 9,
+          "team": "Auburn"
+        },
+        {
+          "rank": 10,
+          "team": "Penn State"
+        },
+        {
+          "rank": 11,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 12,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 13,
+          "team": "Stanford"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 15,
+          "team": "USC"
+        },
+        {
+          "rank": 16,
+          "team": "TCU"
+        },
+        {
+          "rank": 17,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 18,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 19,
+          "team": "Florida State"
+        },
+        {
+          "rank": 20,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 21,
+          "team": "UCF"
+        },
+        {
+          "rank": 22,
+          "team": "Boise State"
+        },
+        {
+          "rank": 23,
+          "team": "Texas"
+        },
+        {
+          "rank": 24,
+          "team": "Oregon"
+        },
+        {
+          "rank": 25,
+          "team": "LSU"
+        }
+      ],
+      "season": 2018,
+      "source_sha256": "24ccc1e428975231b4ce2cb6aaeeabef27ee26c72d7a0c2ba3b396bdb087e9cb",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1136"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.444857+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "Washington"
+        },
+        {
+          "rank": 5,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 8,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 10,
+          "team": "Auburn"
+        },
+        {
+          "rank": 9,
+          "team": "Penn State"
+        },
+        {
+          "rank": 12,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 11,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 13,
+          "team": "Stanford"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 15,
+          "team": "USC"
+        },
+        {
+          "rank": 16,
+          "team": "TCU"
+        },
+        {
+          "rank": 20,
+          "team": "West Virginia"
+        },
+        {
+          "rank": 18,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 19,
+          "team": "Florida State"
+        },
+        {
+          "rank": 17,
+          "team": "Virginia Tech"
+        },
+        {
+          "rank": 23,
+          "team": "UCF"
+        },
+        {
+          "rank": 22,
+          "team": "Boise State"
+        },
+        {
+          "rank": 21,
+          "team": "Texas"
+        },
+        {
+          "rank": 24,
+          "team": "LSU"
+        },
+        {
+          "rank": 25,
+          "team": "Oklahoma State"
+        }
+      ],
+      "season": 2018,
+      "source_sha256": "24ccc1e428975231b4ce2cb6aaeeabef27ee26c72d7a0c2ba3b396bdb087e9cb",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1136"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.498180+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "LSU"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 5,
+          "team": "Oregon"
+        },
+        {
+          "rank": 6,
+          "team": "Florida"
+        },
+        {
+          "rank": 7,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 8,
+          "team": "Alabama"
+        },
+        {
+          "rank": 9,
+          "team": "Penn State"
+        },
+        {
+          "rank": 10,
+          "team": "Minnesota"
+        },
+        {
+          "rank": 11,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 12,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 13,
+          "team": "Baylor"
+        },
+        {
+          "rank": 14,
+          "team": "Auburn"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa"
+        },
+        {
+          "rank": 16,
+          "team": "Utah"
+        },
+        {
+          "rank": 17,
+          "team": "Memphis"
+        },
+        {
+          "rank": 18,
+          "team": "Michigan"
+        },
+        {
+          "rank": 19,
+          "team": "Appalachian State"
+        },
+        {
+          "rank": 20,
+          "team": "Navy"
+        },
+        {
+          "rank": 21,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 22,
+          "team": "Air Force"
+        },
+        {
+          "rank": 23,
+          "team": "Boise State"
+        },
+        {
+          "rank": 24,
+          "team": "UCF"
+        },
+        {
+          "rank": 25,
+          "team": "Texas"
+        }
+      ],
+      "season": 2019,
+      "source_sha256": "c0270680fe9341624b1035aa8e87a6aa824a03f8052c464f033f17e8d28c2c87",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2019"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.498180+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "LSU"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 5,
+          "team": "Oregon"
+        },
+        {
+          "rank": 7,
+          "team": "Florida"
+        },
+        {
+          "rank": 6,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 8,
+          "team": "Alabama"
+        },
+        {
+          "rank": 9,
+          "team": "Penn State"
+        },
+        {
+          "rank": 10,
+          "team": "Minnesota"
+        },
+        {
+          "rank": 13,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 11,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 12,
+          "team": "Baylor"
+        },
+        {
+          "rank": 14,
+          "team": "Auburn"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa"
+        },
+        {
+          "rank": 16,
+          "team": "Utah"
+        },
+        {
+          "rank": 17,
+          "team": "Memphis"
+        },
+        {
+          "rank": 19,
+          "team": "Michigan"
+        },
+        {
+          "rank": 18,
+          "team": "Appalachian State"
+        },
+        {
+          "rank": 20,
+          "team": "Navy"
+        },
+        {
+          "rank": 21,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 23,
+          "team": "Air Force"
+        },
+        {
+          "rank": 22,
+          "team": "Boise State"
+        },
+        {
+          "rank": 24,
+          "team": "UCF"
+        },
+        {
+          "rank": 25,
+          "team": "Virginia"
+        }
+      ],
+      "season": 2019,
+      "source_sha256": "c0270680fe9341624b1035aa8e87a6aa824a03f8052c464f033f17e8d28c2c87",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2019"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.561163+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "LSU"
+        },
+        {
+          "rank": 7,
+          "team": "Michigan"
+        },
+        {
+          "rank": 8,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 10,
+          "team": "Texas"
+        },
+        {
+          "rank": 11,
+          "team": "Oregon"
+        },
+        {
+          "rank": 12,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 13,
+          "team": "Washington"
+        },
+        {
+          "rank": 14,
+          "team": "Utah"
+        },
+        {
+          "rank": 15,
+          "team": "Penn State"
+        },
+        {
+          "rank": 16,
+          "team": "Auburn"
+        },
+        {
+          "rank": 17,
+          "team": "UCF"
+        },
+        {
+          "rank": 18,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 19,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 20,
+          "team": "Iowa"
+        },
+        {
+          "rank": 21,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 22,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 23,
+          "team": "Washington State"
+        },
+        {
+          "rank": 24,
+          "team": "Nebraska"
+        },
+        {
+          "rank": 25,
+          "team": "Stanford"
+        }
+      ],
+      "season": 2019,
+      "source_sha256": "ac29d7dc7626ef16b9950a426aae84aa81e28c2e7644f29c758c927e63c84895",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1152"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.561163+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "LSU"
+        },
+        {
+          "rank": 7,
+          "team": "Michigan"
+        },
+        {
+          "rank": 8,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 10,
+          "team": "Texas"
+        },
+        {
+          "rank": 13,
+          "team": "Oregon"
+        },
+        {
+          "rank": 11,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 12,
+          "team": "Washington"
+        },
+        {
+          "rank": 15,
+          "team": "Utah"
+        },
+        {
+          "rank": 14,
+          "team": "Penn State"
+        },
+        {
+          "rank": 16,
+          "team": "Auburn"
+        },
+        {
+          "rank": 17,
+          "team": "UCF"
+        },
+        {
+          "rank": 20,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 17,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 19,
+          "team": "Iowa"
+        },
+        {
+          "rank": 24,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 22,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 21,
+          "team": "Washington State"
+        },
+        {
+          "rank": 23,
+          "team": "Stanford"
+        },
+        {
+          "rank": 25,
+          "team": "Northwestern"
+        }
+      ],
+      "season": 2019,
+      "source_sha256": "ac29d7dc7626ef16b9950a426aae84aa81e28c2e7644f29c758c927e63c84895",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1152"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.593205+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 6,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 7,
+          "team": "Georgia"
+        },
+        {
+          "rank": 8,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 9,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 10,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 11,
+          "team": "BYU"
+        },
+        {
+          "rank": 12,
+          "team": "Indiana"
+        },
+        {
+          "rank": 13,
+          "team": "Florida"
+        },
+        {
+          "rank": 14,
+          "team": "Coastal Carolina"
+        },
+        {
+          "rank": 15,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 16,
+          "team": "Iowa"
+        },
+        {
+          "rank": 17,
+          "team": "Liberty"
+        },
+        {
+          "rank": 18,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 19,
+          "team": "Texas"
+        },
+        {
+          "rank": 20,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 21,
+          "team": "USC"
+        },
+        {
+          "rank": 22,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 23,
+          "team": "Ball State"
+        },
+        {
+          "rank": 24,
+          "team": "San Jos\u00e9 State"
+        },
+        {
+          "rank": 25,
+          "team": "Buffalo"
+        }
+      ],
+      "season": 2020,
+      "source_sha256": "32ca890f9faa44d8badb1be74d379caf63535e6534de6a44a435640b8ceef83c",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2020"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.593205+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 6,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 7,
+          "team": "Georgia"
+        },
+        {
+          "rank": 8,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 9,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 10,
+          "team": "Northwestern"
+        },
+        {
+          "rank": 11,
+          "team": "BYU"
+        },
+        {
+          "rank": 13,
+          "team": "Indiana"
+        },
+        {
+          "rank": 12,
+          "team": "Florida"
+        },
+        {
+          "rank": 14,
+          "team": "Coastal Carolina"
+        },
+        {
+          "rank": 16,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa"
+        },
+        {
+          "rank": 18,
+          "team": "Liberty"
+        },
+        {
+          "rank": 17,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 20,
+          "team": "Texas"
+        },
+        {
+          "rank": 19,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 21,
+          "team": "USC"
+        },
+        {
+          "rank": 22,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 23,
+          "team": "Ball State"
+        },
+        {
+          "rank": 24,
+          "team": "San Jos\u00e9 State"
+        },
+        {
+          "rank": 25,
+          "team": "Buffalo"
+        }
+      ],
+      "season": 2020,
+      "source_sha256": "32ca890f9faa44d8badb1be74d379caf63535e6534de6a44a435640b8ceef83c",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2020"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.668081+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Alabama"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 5,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 6,
+          "team": "LSU"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Oregon"
+        },
+        {
+          "rank": 10,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 11,
+          "team": "Auburn"
+        },
+        {
+          "rank": 12,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 13,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 14,
+          "team": "Texas"
+        },
+        {
+          "rank": 15,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 16,
+          "team": "Michigan"
+        },
+        {
+          "rank": 17,
+          "team": "USC"
+        },
+        {
+          "rank": 18,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 19,
+          "team": "Minnesota"
+        },
+        {
+          "rank": 20,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 21,
+          "team": "UCF"
+        },
+        {
+          "rank": 22,
+          "team": "Utah"
+        },
+        {
+          "rank": 23,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 24,
+          "team": "Iowa"
+        },
+        {
+          "rank": 25,
+          "team": "Tennessee"
+        }
+      ],
+      "season": 2020,
+      "source_sha256": "acb6fcbc3d3899a16d2d207b2c27f7f582e936a996c87538d9f0c8832624fc7e",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1169"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.668081+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Clemson"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Alabama"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 6,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 5,
+          "team": "LSU"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida"
+        },
+        {
+          "rank": 9,
+          "team": "Oregon"
+        },
+        {
+          "rank": 10,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 11,
+          "team": "Auburn"
+        },
+        {
+          "rank": 12,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 13,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 14,
+          "team": "Texas"
+        },
+        {
+          "rank": 16,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 15,
+          "team": "Michigan"
+        },
+        {
+          "rank": 17,
+          "team": "USC"
+        },
+        {
+          "rank": 19,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 18,
+          "team": "Minnesota"
+        },
+        {
+          "rank": 22,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 21,
+          "team": "UCF"
+        },
+        {
+          "rank": 20,
+          "team": "Utah"
+        },
+        {
+          "rank": 25,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 23,
+          "team": "Iowa"
+        },
+        {
+          "rank": 24,
+          "source_sha256": "450da3db2f0ed0139638ff55cbc53ef4cceba849db53575a856135806355cfff",
+          "source_url": "https://lsusports.net/news/2020/08/06/football-2020-coaches-preseason-poll",
+          "team": "Virginia Tech"
+        }
+      ],
+      "season": 2020,
+      "source_sha256": "acb6fcbc3d3899a16d2d207b2c27f7f582e936a996c87538d9f0c8832624fc7e",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1169"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.668945+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Michigan"
+        },
+        {
+          "rank": 4,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 5,
+          "team": "Baylor"
+        },
+        {
+          "rank": 6,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 8,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 9,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 10,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 11,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 12,
+          "team": "Utah"
+        },
+        {
+          "rank": 13,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 14,
+          "team": "Clemson"
+        },
+        {
+          "rank": 15,
+          "team": "Wake Forest"
+        },
+        {
+          "rank": 16,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 17,
+          "team": "Houston"
+        },
+        {
+          "rank": 18,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 19,
+          "team": "BYU"
+        },
+        {
+          "rank": 20,
+          "team": "NC State"
+        },
+        {
+          "rank": 21,
+          "team": "Arkansas"
+        },
+        {
+          "rank": 22,
+          "team": "Oregon"
+        },
+        {
+          "rank": 23,
+          "team": "Iowa"
+        },
+        {
+          "rank": 24,
+          "team": "Utah State"
+        },
+        {
+          "rank": 25,
+          "team": "San Diego State"
+        }
+      ],
+      "season": 2021,
+      "source_sha256": "a3a3357a5d3b81217dbd316e7ba20895dd6998e76dc0563af2e7a345d12b91bc",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2021"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.668945+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Michigan"
+        },
+        {
+          "rank": 4,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 6,
+          "team": "Baylor"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 7,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 9,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 8,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 10,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 11,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 12,
+          "team": "Utah"
+        },
+        {
+          "rank": 13,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 16,
+          "team": "Clemson"
+        },
+        {
+          "rank": 14,
+          "team": "Wake Forest"
+        },
+        {
+          "rank": 18,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 17,
+          "team": "Houston"
+        },
+        {
+          "rank": 15,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 22,
+          "team": "BYU"
+        },
+        {
+          "rank": 19,
+          "team": "NC State"
+        },
+        {
+          "rank": 20,
+          "team": "Arkansas"
+        },
+        {
+          "rank": 21,
+          "team": "Oregon"
+        },
+        {
+          "rank": 23,
+          "team": "Iowa"
+        },
+        {
+          "rank": 24,
+          "team": "Utah State"
+        },
+        {
+          "rank": 25,
+          "team": "Texas A&M"
+        }
+      ],
+      "season": 2021,
+      "source_sha256": "a3a3357a5d3b81217dbd316e7ba20895dd6998e76dc0563af2e7a345d12b91bc",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2021"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:04.697964+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 3,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 5,
+          "team": "Georgia"
+        },
+        {
+          "rank": 6,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 7,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 8,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 9,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 10,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 11,
+          "team": "Oregon"
+        },
+        {
+          "rank": 12,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 13,
+          "team": "Florida"
+        },
+        {
+          "rank": 14,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 15,
+          "team": "USC"
+        },
+        {
+          "rank": 16,
+          "team": "LSU"
+        },
+        {
+          "rank": 17,
+          "team": "Indiana"
+        },
+        {
+          "rank": 18,
+          "team": "Iowa"
+        },
+        {
+          "rank": 19,
+          "team": "Penn State"
+        },
+        {
+          "rank": 20,
+          "team": "Washington"
+        },
+        {
+          "rank": 21,
+          "team": "Texas"
+        },
+        {
+          "rank": 22,
+          "team": "Coastal Carolina"
+        },
+        {
+          "rank": 23,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 24,
+          "team": "Utah"
+        },
+        {
+          "rank": 25,
+          "team": "Arizona State"
+        }
+      ],
+      "season": 2021,
+      "source_sha256": "a8cdaa00adef1559b7d7ca79e543d13990918ef93a8940f35417527358bbc644",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1186"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:04.697964+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 3,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 2,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 5,
+          "team": "Georgia"
+        },
+        {
+          "rank": 6,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 8,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 10,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 7,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 9,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 12,
+          "team": "Oregon"
+        },
+        {
+          "rank": 15,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 11,
+          "team": "Florida"
+        },
+        {
+          "rank": 16,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 14,
+          "team": "USC"
+        },
+        {
+          "rank": 13,
+          "team": "LSU"
+        },
+        {
+          "rank": 17,
+          "team": "Indiana"
+        },
+        {
+          "rank": 18,
+          "team": "Iowa"
+        },
+        {
+          "rank": 20,
+          "team": "Penn State"
+        },
+        {
+          "rank": 21,
+          "team": "Washington"
+        },
+        {
+          "rank": 19,
+          "team": "Texas"
+        },
+        {
+          "rank": 24,
+          "team": "Coastal Carolina"
+        },
+        {
+          "rank": 23,
+          "team": "Louisiana"
+        },
+        {
+          "rank": 22,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 25,
+          "team": "Ole Miss"
+        }
+      ],
+      "season": 2021,
+      "source_sha256": "a8cdaa00adef1559b7d7ca79e543d13990918ef93a8940f35417527358bbc644",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1186"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.511387+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "TCU"
+        },
+        {
+          "rank": 3,
+          "team": "Michigan"
+        },
+        {
+          "rank": 4,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Washington"
+        },
+        {
+          "rank": 9,
+          "team": "Tulane"
+        },
+        {
+          "rank": 10,
+          "team": "Utah"
+        },
+        {
+          "rank": 11,
+          "team": "Florida State"
+        },
+        {
+          "rank": 12,
+          "team": "USC"
+        },
+        {
+          "rank": 13,
+          "team": "Clemson"
+        },
+        {
+          "rank": 14,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 15,
+          "team": "Oregon"
+        },
+        {
+          "rank": 16,
+          "team": "LSU"
+        },
+        {
+          "rank": 17,
+          "team": "Oregon State"
+        },
+        {
+          "rank": 18,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 19,
+          "team": "Troy"
+        },
+        {
+          "rank": 20,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 21,
+          "team": "UCLA"
+        },
+        {
+          "rank": 22,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 23,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 24,
+          "team": "Fresno State"
+        },
+        {
+          "rank": 25,
+          "team": "Texas"
+        }
+      ],
+      "season": 2022,
+      "source_sha256": "ef237e8fb58298007beb72e0f876ed9c4ce4c73f24da611dbda44f8aa658e28f",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2022"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.511387+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "TCU"
+        },
+        {
+          "rank": 3,
+          "team": "Michigan"
+        },
+        {
+          "rank": 4,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Washington"
+        },
+        {
+          "rank": 9,
+          "team": "Tulane"
+        },
+        {
+          "rank": 11,
+          "team": "Utah"
+        },
+        {
+          "rank": 10,
+          "team": "Florida State"
+        },
+        {
+          "rank": 13,
+          "team": "USC"
+        },
+        {
+          "rank": 12,
+          "team": "Clemson"
+        },
+        {
+          "rank": 14,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 16,
+          "team": "Oregon"
+        },
+        {
+          "rank": 15,
+          "team": "LSU"
+        },
+        {
+          "rank": 17,
+          "team": "Oregon State"
+        },
+        {
+          "rank": 18,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 20,
+          "team": "Troy"
+        },
+        {
+          "rank": 19,
+          "team": "Mississippi State"
+        },
+        {
+          "rank": 21,
+          "team": "UCLA"
+        },
+        {
+          "rank": 22,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 23,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 24,
+          "team": "Fresno State"
+        },
+        {
+          "rank": 25,
+          "team": "Texas"
+        }
+      ],
+      "season": 2022,
+      "source_sha256": "ef237e8fb58298007beb72e0f876ed9c4ce4c73f24da611dbda44f8aa658e28f",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2022"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.531791+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Clemson"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 6,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 7,
+          "team": "Utah"
+        },
+        {
+          "rank": 8,
+          "team": "Michigan"
+        },
+        {
+          "rank": 9,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 10,
+          "team": "Baylor"
+        },
+        {
+          "rank": 11,
+          "team": "Oregon"
+        },
+        {
+          "rank": 12,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 13,
+          "team": "NC State"
+        },
+        {
+          "rank": 14,
+          "team": "USC"
+        },
+        {
+          "rank": 15,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 16,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 17,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 18,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 19,
+          "team": "Arkansas"
+        },
+        {
+          "rank": 20,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 21,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 22,
+          "team": "Wake Forest"
+        },
+        {
+          "rank": 23,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 24,
+          "team": "Houston"
+        },
+        {
+          "rank": 25,
+          "team": "BYU"
+        }
+      ],
+      "season": 2022,
+      "source_sha256": "6363a71a0a2298dac4709b95d322a99520eb245666b84254254486a14b88dc21",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1202"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.531791+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Alabama"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Clemson"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 7,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 8,
+          "team": "Utah"
+        },
+        {
+          "rank": 6,
+          "team": "Michigan"
+        },
+        {
+          "rank": 9,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 10,
+          "team": "Baylor"
+        },
+        {
+          "rank": 12,
+          "team": "Oregon"
+        },
+        {
+          "rank": 11,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 13,
+          "team": "NC State"
+        },
+        {
+          "rank": 15,
+          "team": "USC"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan State"
+        },
+        {
+          "rank": 17,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 16,
+          "team": "Pittsburgh"
+        },
+        {
+          "rank": 20,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 23,
+          "team": "Arkansas"
+        },
+        {
+          "rank": 21,
+          "team": "Kentucky"
+        },
+        {
+          "rank": 24,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 19,
+          "team": "Wake Forest"
+        },
+        {
+          "rank": 22,
+          "team": "Cincinnati"
+        },
+        {
+          "rank": 25,
+          "team": "Houston"
+        },
+        {
+          "rank": 18,
+          "team": "Texas"
+        }
+      ],
+      "season": 2022,
+      "source_sha256": "6363a71a0a2298dac4709b95d322a99520eb245666b84254254486a14b88dc21",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1202"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.394106+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Michigan"
+        },
+        {
+          "rank": 2,
+          "team": "Washington"
+        },
+        {
+          "rank": 3,
+          "team": "Texas"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Florida State"
+        },
+        {
+          "rank": 6,
+          "team": "Oregon"
+        },
+        {
+          "rank": 8,
+          "team": "Missouri"
+        },
+        {
+          "rank": 9,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 10,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 11,
+          "team": "Arizona"
+        },
+        {
+          "rank": 12,
+          "team": "LSU"
+        },
+        {
+          "rank": 13,
+          "team": "Penn State"
+        },
+        {
+          "rank": 14,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 15,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 16,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 17,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 18,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 19,
+          "team": "Louisville"
+        },
+        {
+          "rank": 20,
+          "team": "Clemson"
+        },
+        {
+          "rank": 21,
+          "team": "NC State"
+        },
+        {
+          "rank": 22,
+          "team": "SMU"
+        },
+        {
+          "rank": 23,
+          "team": "Kansas"
+        },
+        {
+          "rank": 24,
+          "team": "Iowa"
+        },
+        {
+          "rank": 25,
+          "team": "Liberty"
+        }
+      ],
+      "season": 2023,
+      "source_sha256": "ce0a836ee968193402645a34054a2521fdc516aa80e1de6326ae6019f10847b6",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2023"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.394106+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Michigan"
+        },
+        {
+          "rank": 2,
+          "team": "Washington"
+        },
+        {
+          "rank": 3,
+          "team": "Georgia"
+        },
+        {
+          "rank": 4,
+          "team": "Texas"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Florida State"
+        },
+        {
+          "rank": 7,
+          "team": "Oregon"
+        },
+        {
+          "rank": 8,
+          "team": "Missouri"
+        },
+        {
+          "rank": 9,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 10,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 11,
+          "team": "Arizona"
+        },
+        {
+          "rank": 12,
+          "team": "LSU"
+        },
+        {
+          "rank": 13,
+          "team": "Penn State"
+        },
+        {
+          "rank": 14,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 15,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 16,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 17,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 18,
+          "team": "Louisville"
+        },
+        {
+          "rank": 19,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 20,
+          "team": "Clemson"
+        },
+        {
+          "rank": 21,
+          "team": "NC State"
+        },
+        {
+          "rank": 22,
+          "team": "Iowa"
+        },
+        {
+          "rank": 23,
+          "team": "Kansas"
+        },
+        {
+          "rank": 24,
+          "team": "SMU"
+        },
+        {
+          "rank": 25,
+          "team": "West Virginia"
+        }
+      ],
+      "season": 2023,
+      "source_sha256": "791e1a6c1eb926ee095f6179802240d37de53d71cb41741593cd19535592a206",
+      "source_url": "https://www.afca.com/michigan-wins-cfp-national-title/"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.419116+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Michigan"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Alabama"
+        },
+        {
+          "rank": 5,
+          "team": "LSU"
+        },
+        {
+          "rank": 6,
+          "team": "USC"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida State"
+        },
+        {
+          "rank": 9,
+          "team": "Clemson"
+        },
+        {
+          "rank": 10,
+          "team": "Washington"
+        },
+        {
+          "rank": 11,
+          "team": "Texas"
+        },
+        {
+          "rank": 12,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 13,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 14,
+          "team": "Utah"
+        },
+        {
+          "rank": 15,
+          "team": "Oregon"
+        },
+        {
+          "rank": 16,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 17,
+          "team": "TCU"
+        },
+        {
+          "rank": 18,
+          "team": "Oregon State"
+        },
+        {
+          "rank": 19,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 20,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 21,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 22,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 23,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 24,
+          "team": "Tulane"
+        },
+        {
+          "rank": 25,
+          "team": "Iowa"
+        }
+      ],
+      "season": 2023,
+      "source_sha256": "f34552c313bd8efe7369a93aa8b722b7cb6108507559d0387e9f7d20757ff995",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1218"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.419116+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Michigan"
+        },
+        {
+          "rank": 4,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Alabama"
+        },
+        {
+          "rank": 5,
+          "team": "LSU"
+        },
+        {
+          "rank": 6,
+          "team": "USC"
+        },
+        {
+          "rank": 7,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Florida State"
+        },
+        {
+          "rank": 9,
+          "team": "Clemson"
+        },
+        {
+          "rank": 11,
+          "team": "Washington"
+        },
+        {
+          "rank": 12,
+          "team": "Texas"
+        },
+        {
+          "rank": 10,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 13,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 14,
+          "team": "Utah"
+        },
+        {
+          "rank": 15,
+          "team": "Oregon"
+        },
+        {
+          "rank": 17,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 16,
+          "team": "TCU"
+        },
+        {
+          "rank": 18,
+          "team": "Oregon State"
+        },
+        {
+          "rank": 21,
+          "team": "Wisconsin"
+        },
+        {
+          "rank": 19,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 20,
+          "team": "North Carolina"
+        },
+        {
+          "rank": 22,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 25,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 23,
+          "team": "Tulane"
+        },
+        {
+          "rank": 24,
+          "team": "Texas Tech"
+        }
+      ],
+      "season": 2023,
+      "source_sha256": "f34552c313bd8efe7369a93aa8b722b7cb6108507559d0387e9f7d20757ff995",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1218"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.434922+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 2,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 3,
+          "team": "Oregon"
+        },
+        {
+          "rank": 4,
+          "team": "Texas"
+        },
+        {
+          "rank": 5,
+          "team": "Penn State"
+        },
+        {
+          "rank": 6,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Arizona State"
+        },
+        {
+          "rank": 8,
+          "team": "Boise State"
+        },
+        {
+          "rank": 9,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 10,
+          "team": "Indiana"
+        },
+        {
+          "rank": 11,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 12,
+          "team": "SMU"
+        },
+        {
+          "rank": 13,
+          "team": "BYU"
+        },
+        {
+          "rank": 14,
+          "team": "Clemson"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 16,
+          "team": "Illinois"
+        },
+        {
+          "rank": 17,
+          "team": "Alabama"
+        },
+        {
+          "rank": 18,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 19,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 20,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 21,
+          "team": "Army"
+        },
+        {
+          "rank": 22,
+          "team": "Missouri"
+        },
+        {
+          "rank": 23,
+          "team": "UNLV"
+        },
+        {
+          "rank": 24,
+          "team": "Memphis"
+        },
+        {
+          "rank": 25,
+          "team": "Colorado"
+        }
+      ],
+      "season": 2024,
+      "source_sha256": "bd8588803765a605a9099619e40521c3e6bd3f719f9184511f7135ef29386105",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2024"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.434922+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 2,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 4,
+          "team": "Oregon"
+        },
+        {
+          "rank": 3,
+          "team": "Texas"
+        },
+        {
+          "rank": 5,
+          "team": "Penn State"
+        },
+        {
+          "rank": 6,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Arizona State"
+        },
+        {
+          "rank": 9,
+          "team": "Boise State"
+        },
+        {
+          "rank": 8,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 10,
+          "team": "Indiana"
+        },
+        {
+          "rank": 13,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 11,
+          "team": "SMU"
+        },
+        {
+          "rank": 14,
+          "team": "BYU"
+        },
+        {
+          "rank": 11,
+          "team": "Clemson"
+        },
+        {
+          "rank": 15,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 16,
+          "team": "Illinois"
+        },
+        {
+          "rank": 17,
+          "team": "Alabama"
+        },
+        {
+          "rank": 18,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 19,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 22,
+          "team": "Syracuse"
+        },
+        {
+          "rank": 21,
+          "team": "Army"
+        },
+        {
+          "rank": 20,
+          "team": "Missouri"
+        },
+        {
+          "rank": 24,
+          "team": "UNLV"
+        },
+        {
+          "rank": 23,
+          "team": "Memphis"
+        },
+        {
+          "rank": 25,
+          "team": "Colorado"
+        }
+      ],
+      "season": 2024,
+      "source_sha256": "bd8588803765a605a9099619e40521c3e6bd3f719f9184511f7135ef29386105",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2024"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.468879+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Oregon"
+        },
+        {
+          "rank": 4,
+          "team": "Texas"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 7,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 8,
+          "team": "Penn State"
+        },
+        {
+          "rank": 9,
+          "team": "Michigan"
+        },
+        {
+          "rank": 10,
+          "team": "Florida State"
+        },
+        {
+          "rank": 11,
+          "team": "Missouri"
+        },
+        {
+          "rank": 12,
+          "team": "Utah"
+        },
+        {
+          "rank": 13,
+          "team": "LSU"
+        },
+        {
+          "rank": 14,
+          "team": "Clemson"
+        },
+        {
+          "rank": 15,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 16,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 17,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 18,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 19,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 20,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 21,
+          "team": "Arizona"
+        },
+        {
+          "rank": 22,
+          "team": "Kansas"
+        },
+        {
+          "rank": 23,
+          "team": "USC"
+        },
+        {
+          "rank": 24,
+          "team": "NC State"
+        },
+        {
+          "rank": 25,
+          "team": "Iowa"
+        }
+      ],
+      "season": 2024,
+      "source_sha256": "2ab3584d9ecfa0b3491fbf46984d3dd3d977fbdc9bf5f5283aef782f00e259f7",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1234"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.468879+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Georgia"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 3,
+          "team": "Oregon"
+        },
+        {
+          "rank": 4,
+          "team": "Texas"
+        },
+        {
+          "rank": 5,
+          "team": "Alabama"
+        },
+        {
+          "rank": 6,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 7,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 9,
+          "team": "Penn State"
+        },
+        {
+          "rank": 8,
+          "team": "Michigan"
+        },
+        {
+          "rank": 10,
+          "team": "Florida State"
+        },
+        {
+          "rank": 11,
+          "team": "Missouri"
+        },
+        {
+          "rank": 13,
+          "team": "Utah"
+        },
+        {
+          "rank": 12,
+          "team": "LSU"
+        },
+        {
+          "rank": 14,
+          "team": "Clemson"
+        },
+        {
+          "rank": 15,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 16,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 18,
+          "team": "Oklahoma State"
+        },
+        {
+          "rank": 17,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 19,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 20,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 21,
+          "team": "Arizona"
+        },
+        {
+          "rank": 24,
+          "team": "Kansas"
+        },
+        {
+          "rank": 23,
+          "team": "USC"
+        },
+        {
+          "rank": 22,
+          "team": "NC State"
+        },
+        {
+          "rank": 25,
+          "team": "Iowa"
+        }
+      ],
+      "season": 2024,
+      "source_sha256": "2ab3584d9ecfa0b3491fbf46984d3dd3d977fbdc9bf5f5283aef782f00e259f7",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1234"
+    },
+    {
+      "phase": "final",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.474047+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Indiana"
+        },
+        {
+          "rank": 2,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 3,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 4,
+          "team": "Oregon"
+        },
+        {
+          "rank": 5,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Texas Tech"
+        },
+        {
+          "rank": 8,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 9,
+          "team": "Alabama"
+        },
+        {
+          "rank": 10,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 11,
+          "team": "BYU"
+        },
+        {
+          "rank": 12,
+          "team": "Texas"
+        },
+        {
+          "rank": 13,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 14,
+          "team": "Utah"
+        },
+        {
+          "rank": 15,
+          "team": "Vanderbilt"
+        },
+        {
+          "rank": 16,
+          "team": "Virginia"
+        },
+        {
+          "rank": 17,
+          "team": "Iowa"
+        },
+        {
+          "rank": 18,
+          "team": "Tulane"
+        },
+        {
+          "rank": 19,
+          "team": "James Madison"
+        },
+        {
+          "rank": 20,
+          "team": "USC"
+        },
+        {
+          "rank": 21,
+          "team": "Michigan"
+        },
+        {
+          "rank": 22,
+          "team": "Houston"
+        },
+        {
+          "rank": 23,
+          "team": "Navy"
+        },
+        {
+          "rank": 24,
+          "team": "North Texas"
+        },
+        {
+          "rank": 25,
+          "team": "TCU"
+        }
+      ],
+      "season": 2025,
+      "source_sha256": "85f6c63e7b7739a3b0e21dc3832ff375635df513151686ed31ae0572735a96b1",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2025"
+    },
+    {
+      "phase": "final",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.474047+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Indiana"
+        },
+        {
+          "rank": 2,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 3,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 4,
+          "team": "Oregon"
+        },
+        {
+          "rank": 6,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 5,
+          "team": "Georgia"
+        },
+        {
+          "rank": 7,
+          "team": "Texas Tech"
+        },
+        {
+          "rank": 8,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 9,
+          "team": "Alabama"
+        },
+        {
+          "rank": 11,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 12,
+          "team": "BYU"
+        },
+        {
+          "rank": 13,
+          "team": "Texas"
+        },
+        {
+          "rank": 10,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 14,
+          "team": "Utah"
+        },
+        {
+          "rank": 15,
+          "team": "Vanderbilt"
+        },
+        {
+          "rank": 16,
+          "team": "Virginia"
+        },
+        {
+          "rank": 17,
+          "team": "Iowa"
+        },
+        {
+          "rank": 18,
+          "team": "Tulane"
+        },
+        {
+          "rank": 20,
+          "team": "James Madison"
+        },
+        {
+          "rank": 21,
+          "team": "USC"
+        },
+        {
+          "rank": 22,
+          "team": "Michigan"
+        },
+        {
+          "rank": 19,
+          "team": "Houston"
+        },
+        {
+          "rank": 23,
+          "team": "Navy"
+        },
+        {
+          "rank": 25,
+          "team": "Illinois"
+        },
+        {
+          "rank": 24,
+          "team": "Georgia Tech"
+        }
+      ],
+      "season": 2025,
+      "source_sha256": "85f6c63e7b7739a3b0e21dc3832ff375635df513151686ed31ae0572735a96b1",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?seasonid=2025"
+    },
+    {
+      "phase": "preseason",
+      "poll": "ap",
+      "retrieved_at": "2026-11-13T21:11:12.492306+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Texas"
+        },
+        {
+          "rank": 2,
+          "team": "Penn State"
+        },
+        {
+          "rank": 3,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 4,
+          "team": "Clemson"
+        },
+        {
+          "rank": 5,
+          "team": "Georgia"
+        },
+        {
+          "rank": 6,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 7,
+          "team": "Oregon"
+        },
+        {
+          "rank": 8,
+          "team": "Alabama"
+        },
+        {
+          "rank": 9,
+          "team": "LSU"
+        },
+        {
+          "rank": 10,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 11,
+          "team": "Arizona State"
+        },
+        {
+          "rank": 12,
+          "team": "Illinois"
+        },
+        {
+          "rank": 13,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 15,
+          "team": "Florida"
+        },
+        {
+          "rank": 16,
+          "team": "SMU"
+        },
+        {
+          "rank": 17,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 18,
+          "team": "Oklahoma"
+        },
+        {
+          "rank": 19,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 20,
+          "team": "Indiana"
+        },
+        {
+          "rank": 21,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 22,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 23,
+          "team": "Texas Tech"
+        },
+        {
+          "rank": 24,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 25,
+          "team": "Boise State"
+        }
+      ],
+      "season": 2025,
+      "source_sha256": "a375683ec5860ee82542ea39aa6e7a6d432e3b80537419b495393f117b5a59a3",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1251"
+    },
+    {
+      "phase": "preseason",
+      "poll": "coaches",
+      "retrieved_at": "2026-11-13T21:11:12.492306+00:00",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Texas"
+        },
+        {
+          "rank": 3,
+          "team": "Penn State"
+        },
+        {
+          "rank": 2,
+          "team": "Ohio State"
+        },
+        {
+          "rank": 6,
+          "team": "Clemson"
+        },
+        {
+          "rank": 4,
+          "team": "Georgia"
+        },
+        {
+          "rank": 5,
+          "team": "Notre Dame"
+        },
+        {
+          "rank": 7,
+          "team": "Oregon"
+        },
+        {
+          "rank": 8,
+          "team": "Alabama"
+        },
+        {
+          "rank": 9,
+          "team": "LSU"
+        },
+        {
+          "rank": 10,
+          "team": "Miami (FL)"
+        },
+        {
+          "rank": 11,
+          "team": "Arizona State"
+        },
+        {
+          "rank": 12,
+          "team": "Illinois"
+        },
+        {
+          "rank": 13,
+          "team": "South Carolina"
+        },
+        {
+          "rank": 14,
+          "team": "Michigan"
+        },
+        {
+          "rank": 17,
+          "team": "Florida"
+        },
+        {
+          "rank": 16,
+          "team": "SMU"
+        },
+        {
+          "rank": 20,
+          "team": "Kansas State"
+        },
+        {
+          "rank": 21,
+          "team": "Texas A&M"
+        },
+        {
+          "rank": 19,
+          "team": "Indiana"
+        },
+        {
+          "rank": 15,
+          "team": "Ole Miss"
+        },
+        {
+          "rank": 21,
+          "team": "Iowa State"
+        },
+        {
+          "rank": 24,
+          "team": "Texas Tech"
+        },
+        {
+          "rank": 18,
+          "team": "Tennessee"
+        },
+        {
+          "rank": 23,
+          "team": "BYU"
+        },
+        {
+          "rank": 25,
+          "source_sha256": "4b9342858a38129c18226f871ebd487e74ae5745808261b6c5b3d1b15e28cab6",
+          "source_url": "https://broncosports.com/news/2025/8/4/football-boise-state-ranked-25th-in-preseason-coaches-poll",
+          "team": "Boise State"
+        }
+      ],
+      "season": 2025,
+      "source_sha256": "a375683ec5860ee82542ea39aa6e7a6d432e3b80537419b495393f117b5a59a3",
+      "source_url": "https://www.collegepollarchive.com/football/ap/seasons.cfm?appollid=1251"
+    }
+  ]
+}

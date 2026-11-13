@@ -1,7 +1,7 @@
 """Poll release polling: publish only complete, newly released verified rankings."""
 import json
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
@@ -50,6 +50,25 @@ def choose_polls(weeks):
                 candidates[key] = (week, cleaned)
     return candidates
 
+
+def retained_verified_cfp(existing):
+    """Retain a dated, sourced prior CFP publication; never date a new feed."""
+    rows = existing.get("cfp_top25")
+    try:
+        published = date.fromisoformat(existing.get("cfp_published_at", ""))
+    except (ValueError, TypeError):
+        return {}
+    if (published.year != 2026 or published > datetime.now(timezone.utc).date()
+            or not str(existing.get("cfp_source", "")).startswith("https://")
+            or not isinstance(rows, list) or len(rows) != 25
+            or any(not isinstance(r, dict) or type(r.get("rank")) is not int
+                   or not isinstance(r.get("team"), str) or not r["team"].strip() for r in rows)
+            or {r["rank"] for r in rows} != set(range(1, 26))
+            or len({r["team"] for r in rows}) != 25):
+        return {}
+    return {k: existing[k] for k in ("cfp_top25", "cfp_published_at", "cfp_source", "cfp_week") if k in existing}
+
+
 def main():
     if os.getenv("GITHUB_EVENT_NAME") == "schedule" and not release_window(datetime.now(timezone.utc)):
         print("Outside verified announcement window")
@@ -82,11 +101,12 @@ def main():
         print("AP and Coaches poll weeks not aligned; waiting for both")
         return
     output["week"] = ap_week
-    if output["poll_weeks"].get("cfp_top25") is not None:
-        # Publication date is independently required for official CFP comparison.
-        # The CFBD weekly endpoint does not supply a verified publication date.
-        output.pop("cfp_top25", None)
-        output["poll_weeks"].pop("cfp_top25", None)
+    # The CFBD weekly endpoint does not supply a verified CFP publication date.
+    output.pop("cfp_top25", None)
+    output["poll_weeks"].pop("cfp_top25", None)
+    # CFBD's undated new CFP rows cannot replace an independently dated
+    # publication. Keep its original date/week/source visibly intact.
+    output.update(retained_verified_cfp(existing))
     if output != existing:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(output, indent=2) + "\n")

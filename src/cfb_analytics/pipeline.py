@@ -305,7 +305,7 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
     """Evaluate verified archived pregame forecasts, never retrospective estimates."""
     import math
     from .forecast_ledger import aware_utc, ALIASES
-    games = correct = eligible_completed = 0
+    games = correct = eligible_completed = home_wins = 0
     brier_total = log_total = margin_abs_total = 0.0
     margin_games = 0
     bins = [{"count": 0, "predicted_total": 0.0, "actual_total": 0.0}
@@ -353,6 +353,7 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
             continue
         outcome = int(game["home_score"] > game["away_score"])
         games += 1
+        home_wins += outcome
         correct += int((probability >= 0.5) == bool(outcome))
         brier_total += (probability - outcome) ** 2
         clipped = min(max(probability, 1e-15), 1 - 1e-15)
@@ -408,7 +409,15 @@ def build_prediction_accuracy(snapshot: dict, history: dict, eligible_teams: set
          "brier_score": round(row["brier_sum"] / row["games_evaluated"], 4)}
         for _, row in sorted(weekly.items())
     ]
+    # Same-game neutral baseline: always predicts a 50% home-win chance.
+    # A 0.5 tie selects the home team, matching the incumbent accuracy cutoff.
+    neutral_baseline = {"games": games,
+                        "winner_accuracy": round(home_wins / games, 4) if games else None,
+                        "brier_score": 0.25 if games else None,
+                        "log_loss": round(math.log(2), 4) if games else None,
+                        "description": "50/50 probability on the identical archived games"}
     return {"weekly_scorecard": weekly_scorecard,
+            "neutral_baseline": neutral_baseline,
             "games_evaluated": games, "eligible_completed_games": eligible_completed,
             "forecast_coverage": round(games / eligible_completed, 4) if eligible_completed else None,
             "correct_winners": correct,

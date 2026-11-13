@@ -1,0 +1,116 @@
+name: V5 development acceptance checks
+
+on:
+  push:
+    branches: [v5-development]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install project and tests
+        run: python -m pip install -e '.[dev]'
+      - name: Run full Python regression suite
+        run: python -m pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: web
+        run: npm install --no-package-lock
+      - name: Stage actual season report for browser acceptance
+        run: |
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+      - name: Record exact candidate revision
+        run: |
+          mkdir -p web/mobile-evidence
+          git rev-parse HEAD > web/mobile-evidence/tested-sha.txt
+      - name: Compile and build V5 app
+        working-directory: web
+        run: npm run build
+      - name: Check historical publication safeguards
+        run: node web/tests/historical-publication.mjs
+      - name: Install browser acceptance dependencies
+        working-directory: web
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Run real Chromium mobile and desktop journeys
+        run: node web/tests/mobile-smoke.mjs
+      - name: Check PWA assets and poll snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('web/dist')
+          assert (d/'index.html').exists()
+          assert (d/'manifest.webmanifest').exists()
+          assert (d/'sw.js').exists()
+          manifest=json.loads((d/'manifest.webmanifest').read_text())
+          assert manifest['display']=='standalone'
+          snapshot=json.loads(Path('data/poll-2026-snapshot.json').read_text())
+          assert snapshot.get('season') == 2026
+          for key in ('ap_top25','coaches_top25','cfp_top25'):
+              assert key in snapshot, f'Missing required poll: {key}'
+              rows=snapshot[key]
+              assert len(rows)==25, key
+              assert {r['rank'] for r in rows}==set(range(1,26)), key
+              assert len({r['team'] for r in rows})==25, key
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v5-browser-and-build-evidence
+          path: |
+            web/dist/
+            web/mobile-evidence/
+          retention-days: 14
+          if-no-files-found: warn
+
+  refresh-evidence:
+    if: github.ref == 'refs/heads/v5-development' && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-refresh]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - name: Exercise live provider and incumbent report without publishing
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          python -m cfb_analytics.refresh --season 2026
+          PYTHONPATH=src python -m cfb_analytics.poll_refresh
+          python -m cfb_analytics.report --season 2026
+          python scripts/verify_v4_product_release.py --report data/season-2026-report.json
+          python -m pytest -q tests/test_forecast_ledger.py tests/test_v5_fast_updates.py tests/test_v5_fast_updates_cli.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v5-live-refresh-evidence
+          path: |
+            data/cfbd-2026-games.json
+            data/season-2026-report.json
+            data/pregame-2026-history.json
+            data/poll-2026-snapshot.json
+          retention-days: 14

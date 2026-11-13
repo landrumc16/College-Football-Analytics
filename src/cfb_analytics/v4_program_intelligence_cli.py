@@ -37,6 +37,18 @@ def main() -> None:
         parser.error("Both verified strength and poll history are required for publication")
     if coverage["strength_programs_full_window"] == 0 or coverage["poll_programs_full_window"] == 0:
         parser.error("No ten-season historical coverage for strength or polls; refusing publication")
+    # A complete strength cohort and a separate complete poll cohort do not
+    # establish a single publishable program. Require a shared ten-season team.
+    years = set(range(args.latest_completed_season - 9, args.latest_completed_season + 1))
+    strength_by_team = {}
+    poll_by_team = {}
+    for row in strength:
+        strength_by_team.setdefault(row["team"], set()).add(row["season"])
+    for row in polls:
+        poll_by_team.setdefault((row["team"], row["poll"]), set()).add(row["season"])
+    eligible = {team for team, observed in strength_by_team.items() if years <= observed}
+    if not any(team in eligible and all(years <= poll_by_team.get((team, poll), set()) for poll in ("AP", "Coaches")) for team in eligible):
+        parser.error("No program has matching ten-season strength, AP, and Coaches coverage; refusing publication")
     if not args.reviewed_sources:
         parser.error("Source authenticity and comparable opponent-adjusted strength require independent review; use --reviewed-sources only after verification")
     report = build_program_intelligence(strength, polls, args.latest_completed_season)

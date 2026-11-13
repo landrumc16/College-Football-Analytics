@@ -209,5 +209,110 @@
       "rank": 25
     }
   ],
-  "week": 11
+  "week": 11,
+  "cfp_top25": [
+    {
+      "team": "Miami",
+      "rank": 1
+    },
+    {
+      "team": "Georgia",
+      "rank": 2
+    },
+    {
+      "team": "Utah",
+      "rank": 3
+    },
+    {
+      "team": "Indiana",
+      "rank": 4
+    },
+    {
+      "team": "Alabama",
+      "rank": 5
+    },
+    {
+      "team": "Kentucky",
+      "rank": 6
+    },
+    {
+      "team": "Texas",
+      "rank": 7
+    },
+    {
+      "team": "UCLA",
+      "rank": 8
+    },
+    {
+      "team": "BYU",
+      "rank": 9
+    },
+    {
+      "team": "Ole Miss",
+      "rank": 10
+    },
+    {
+      "team": "Notre Dame",
+      "rank": 11
+    },
+    {
+      "team": "Ohio State",
+      "rank": 12
+    },
+    {
+      "team": "Tennessee",
+      "rank": 13
+    },
+    {
+      "team": "LSU",
+      "rank": 14
+    },
+    {
+      "team": "Texas Tech",
+      "rank": 15
+    },
+    {
+      "team": "Wake Forest",
+      "rank": 16
+    },
+    {
+      "team": "Houston",
+      "rank": 17
+    },
+    {
+      "team": "Missouri",
+      "rank": 18
+    },
+    {
+      "team": "Iowa",
+      "rank": 19
+    },
+    {
+      "team": "Southern California",
+      "rank": 20
+    },
+    {
+      "team": "South Carolina",
+      "rank": 21
+    },
+    {
+      "team": "Arizona",
+      "rank": 22
+    },
+    {
+      "team": "Oregon",
+      "rank": 23
+    },
+    {
+      "team": "Florida",
+      "rank": 24
+    },
+    {
+      "team": "Boise State",
+      "rank": 25
+    }
+  ],
+  "cfp_published_at": "2026-11-03",
+  "cfp_week": 10,
+  "cfp_source": "https://collegefootballplayoff.com/news/2026/11/3/rankings"
 }

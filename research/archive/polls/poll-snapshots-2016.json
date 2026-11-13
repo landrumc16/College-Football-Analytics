@@ -1,0 +1,421 @@
+{
+  "season": 2016,
+  "source_url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_poll_analytics/cfb_poll_analytics_2016.csv",
+  "source_sha256": "630c72a4bd5c9d0b34ece578747048ce32c59ff00d06a01adf8101d59f30bc39",
+  "source_weeks": {
+    "ap_preseason": 1,
+    "ap_final": 1,
+    "coaches_preseason": 1,
+    "coaches_final": 1
+  },
+  "snapshots": {
+    "ap_preseason": [
+      {
+        "team_id": "333",
+        "rank": 1
+      },
+      {
+        "team_id": "228",
+        "rank": 2
+      },
+      {
+        "team_id": "201",
+        "rank": 3
+      },
+      {
+        "team_id": "52",
+        "rank": 4
+      },
+      {
+        "team_id": "99",
+        "rank": 5
+      },
+      {
+        "team_id": "194",
+        "rank": 6
+      },
+      {
+        "team_id": "130",
+        "rank": 7
+      },
+      {
+        "team_id": "24",
+        "rank": 8
+      },
+      {
+        "team_id": "2633",
+        "rank": 9
+      },
+      {
+        "team_id": "87",
+        "rank": 10
+      },
+      {
+        "team_id": "145",
+        "rank": 11
+      },
+      {
+        "team_id": "127",
+        "rank": 12
+      },
+      {
+        "team_id": "2628",
+        "rank": 13
+      },
+      {
+        "team_id": "264",
+        "rank": 14
+      },
+      {
+        "team_id": "248",
+        "rank": 15
+      },
+      {
+        "team_id": "26",
+        "rank": 16
+      },
+      {
+        "team_id": "2294",
+        "rank": 17
+      },
+      {
+        "team_id": "61",
+        "rank": 18
+      },
+      {
+        "team_id": "97",
+        "rank": 19
+      },
+      {
+        "team_id": "30",
+        "rank": 20
+      },
+      {
+        "team_id": "197",
+        "rank": 21
+      },
+      {
+        "team_id": "153",
+        "rank": 22
+      },
+      {
+        "team_id": "239",
+        "rank": 23
+      },
+      {
+        "team_id": "2483",
+        "rank": 24
+      },
+      {
+        "team_id": "57",
+        "rank": 25
+      }
+    ],
+    "ap_final": [
+      {
+        "team_id": "228",
+        "rank": 1
+      },
+      {
+        "team_id": "333",
+        "rank": 2
+      },
+      {
+        "team_id": "30",
+        "rank": 3
+      },
+      {
+        "team_id": "264",
+        "rank": 4
+      },
+      {
+        "team_id": "201",
+        "rank": 5
+      },
+      {
+        "team_id": "194",
+        "rank": 6
+      },
+      {
+        "team_id": "213",
+        "rank": 7
+      },
+      {
+        "team_id": "52",
+        "rank": 8
+      },
+      {
+        "team_id": "275",
+        "rank": 9
+      },
+      {
+        "team_id": "130",
+        "rank": 10
+      },
+      {
+        "team_id": "197",
+        "rank": 11
+      },
+      {
+        "team_id": "24",
+        "rank": 12
+      },
+      {
+        "team_id": "99",
+        "rank": 13
+      },
+      {
+        "team_id": "57",
+        "rank": 14
+      },
+      {
+        "team_id": "2711",
+        "rank": 15
+      },
+      {
+        "team_id": "259",
+        "rank": 16
+      },
+      {
+        "team_id": "38",
+        "rank": 17
+      },
+      {
+        "team_id": "277",
+        "rank": 18
+      },
+      {
+        "team_id": "58",
+        "rank": 19
+      },
+      {
+        "team_id": "2390",
+        "rank": 20
+      },
+      {
+        "team_id": "97",
+        "rank": 21
+      },
+      {
+        "team_id": "2633",
+        "rank": 22
+      },
+      {
+        "team_id": "254",
+        "rank": 23
+      },
+      {
+        "team_id": "2",
+        "rank": 24
+      },
+      {
+        "team_id": "21",
+        "rank": 25
+      }
+    ],
+    "coaches_preseason": [
+      {
+        "team_id": "333",
+        "rank": 1
+      },
+      {
+        "team_id": "228",
+        "rank": 2
+      },
+      {
+        "team_id": "201",
+        "rank": 3
+      },
+      {
+        "team_id": "52",
+        "rank": 4
+      },
+      {
+        "team_id": "194",
+        "rank": 5
+      },
+      {
+        "team_id": "99",
+        "rank": 6
+      },
+      {
+        "team_id": "24",
+        "rank": 7
+      },
+      {
+        "team_id": "130",
+        "rank": 8
+      },
+      {
+        "team_id": "87",
+        "rank": 9
+      },
+      {
+        "team_id": "2633",
+        "rank": 10
+      },
+      {
+        "team_id": "127",
+        "rank": 11
+      },
+      {
+        "team_id": "145",
+        "rank": 12
+      },
+      {
+        "team_id": "248",
+        "rank": 13
+      },
+      {
+        "team_id": "2628",
+        "rank": 14
+      },
+      {
+        "team_id": "2294",
+        "rank": 15
+      },
+      {
+        "team_id": "61",
+        "rank": 16
+      },
+      {
+        "team_id": "30",
+        "rank": 17
+      },
+      {
+        "team_id": "264",
+        "rank": 18
+      },
+      {
+        "team_id": "197",
+        "rank": 19
+      },
+      {
+        "team_id": "153",
+        "rank": 20
+      },
+      {
+        "team_id": "239",
+        "rank": 21
+      },
+      {
+        "team_id": "2483",
+        "rank": 22
+      },
+      {
+        "team_id": "97",
+        "rank": 23
+      },
+      {
+        "team_id": "26",
+        "rank": 24
+      },
+      {
+        "team_id": "57",
+        "rank": 25
+      }
+    ],
+    "coaches_final": [
+      {
+        "team_id": "228",
+        "rank": 1
+      },
+      {
+        "team_id": "333",
+        "rank": 2
+      },
+      {
+        "team_id": "201",
+        "rank": 3
+      },
+      {
+        "team_id": "264",
+        "rank": 4
+      },
+      {
+        "team_id": "30",
+        "rank": 5
+      },
+      {
+        "team_id": "194",
+        "rank": 6
+      },
+      {
+        "team_id": "213",
+        "rank": 7
+      },
+      {
+        "team_id": "52",
+        "rank": 8
+      },
+      {
+        "team_id": "275",
+        "rank": 9
+      },
+      {
+        "team_id": "130",
+        "rank": 10
+      },
+      {
+        "team_id": "197",
+        "rank": 11
+      },
+      {
+        "team_id": "24",
+        "rank": 12
+      },
+      {
+        "team_id": "57",
+        "rank": 13
+      },
+      {
+        "team_id": "99",
+        "rank": 14
+      },
+      {
+        "team_id": "38",
+        "rank": 15
+      },
+      {
+        "team_id": "259",
+        "rank": 16
+      },
+      {
+        "team_id": "277",
+        "rank": 17
+      },
+      {
+        "team_id": "2711",
+        "rank": 18
+      },
+      {
+        "team_id": "58",
+        "rank": 19
+      },
+      {
+        "team_id": "97",
+        "rank": 20
+      },
+      {
+        "team_id": "254",
+        "rank": 21
+      },
+      {
+        "team_id": "2",
+        "rank": 22
+      },
+      {
+        "team_id": "2390",
+        "rank": 23
+      },
+      {
+        "team_id": "2633",
+        "rank": 24
+      },
+      {
+        "team_id": "21",
+        "rank": 25
+      }
+    ]
+  }
+}
