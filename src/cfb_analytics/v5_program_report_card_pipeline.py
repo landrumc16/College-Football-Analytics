@@ -24,7 +24,7 @@ def assemble_report_cards(*, poll_rows, season_records, current_rankings,
         season_records, latest_completed_season=latest_completed_season,
         source=results_source, source_reviewed=True) if results_reviewed else {})
     strength={}
-    for row in current_rankings:
+    for row in (current_rankings if strength_reviewed else []):
         team=row["team"]
         if team in strength:
             raise ValueError("Duplicate incumbent strength")
