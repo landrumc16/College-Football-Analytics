@@ -1,6 +1,11 @@
 name: V5 publish descriptive historical results
 on:
   workflow_dispatch:
+  push:
+    branches: [v5-development]
+    paths:
+      - 'web/src/HistoricalResults.tsx'
+      - '.github/workflows/v5-publish-historical-results.yml'
 permissions:
   contents: write
 jobs:
