@@ -57,6 +57,21 @@ jobs:
           print("Unresolved IDs:", result["unresolved_ids"])
           print("Publication remains gated on independent review.")
           PY
+      - name: Check national candidate mapping against ranked poll IDs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("historical-polls")
+          candidates = json.loads((root / "national-identity-candidates.json").read_text())
+          assert candidates["status"] == "candidate_only_requires_independent_identity_review"
+          assert candidates["publishable"] is False
+          assert candidates["ranked_ids"] >= 25
+          assert candidates["resolved_candidates"] <= candidates["ranked_ids"]
+          assert len(candidates["mapping"]) == candidates["resolved_candidates"]
+          assert len(candidates["unresolved_ids"]) + candidates["resolved_candidates"] == candidates["ranked_ids"]
+          print(f"Candidate IDs: {candidates['resolved_candidates']}/{candidates['ranked_ids']}")
+          PY
       - name: Upload raw polls, snapshot extracts and checksums
         if: always()
         uses: actions/upload-artifact@v4
