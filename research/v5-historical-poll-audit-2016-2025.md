@@ -21,7 +21,7 @@
 | 2022 | Alabama | Georgia | 15 | 15 | Anchor checks agree; full rows pending |
 | 2023 | Georgia | Michigan | 8 | 8 | Anchor checks agree; full rows pending |
 | 2024 | Georgia | Ohio State | 13 | 13 | Anchor checks agree; full rows pending |
-| 2025 | Texas (authentic August AP) | Indiana | Pending recomputation from corrected archive | 12 | Corrected preseason retained separately; final and full rows still require independent review |
+| 2025 | Texas (authentic August AP) | Indiana | 12 | 12 | Corrected preseason archive matches turnover anchor; full rows still require independent review |
 
 ## Publication blockers
 
