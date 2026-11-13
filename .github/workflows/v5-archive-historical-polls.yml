@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install archive test dependencies
+        run: python -m pip install pytest
       - name: Verify committed historical archive without network
         run: python -m pytest -q tests/test_v5_permanent_poll_archive.py
       - name: Archive 2016–2024 poll snapshots and provenance
