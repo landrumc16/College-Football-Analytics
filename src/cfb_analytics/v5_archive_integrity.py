@@ -51,7 +51,7 @@ def verify_archive(archive: Path) -> dict:
                     identifiers = [row.get("game_id") for row in games if isinstance(row, dict)]
                     if len(identifiers) != len(games) or any(not str(game_id).strip() or game_id is None for game_id in identifiers) or len(set(identifiers)) != len(identifiers):
                         failures.append(f"{season}: missing or duplicate game identifiers")
-                    if any(row.get("season") != int(season) for row in games):
+                    if any(not isinstance(row, dict) or row.get("season") != int(season) for row in games):
                         failures.append(f"{season}: conflicting season labels")
                     fbs = sum(row.get("fbs_game") is True for row in games)
                     if fbs != metadata.get("completed_fbs_vs_fbs"):
