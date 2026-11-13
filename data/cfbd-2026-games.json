@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-12T18:58:50.647264+00:00",
+  "retrieved_at": "2026-11-13T02:38:00.142350+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3683,
-    "completed": 3164,
-    "pending": 519
+    "completed": 3165,
+    "pending": 518
   },
   "games": [
     {
@@ -39830,9 +39830,9 @@
       "week": 11,
       "home": "Fort Valley State",
       "away": "Clark Atlanta",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 13,
+      "away_score": 24,
       "neutral_site": false,
       "start_date": "2026-11-12T23:00:00.000Z"
     },
@@ -44205,5 +44205,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-12T18:58:50.647264+00:00"
+  "data_changed_at": "2026-11-13T02:38:00.142350+00:00"
 }
