@@ -27,3 +27,10 @@ The scorecard is a **historical snapshot** as of November 9, not a fresh Novembe
 4. Verify current-season coverage and display the sample size, scope, retrieval date and limitations in the application. Preserve incumbent V4 forecasts and do not promote a challenger.
 
 This is evidence for finishing V5, **not** a declaration that M4 or the full release acceptance gate has passed.
+
+
+## 2026-11-13 first independent in-repository reconciliation
+
+Compared the retained `data/pregame-2026-history.json` forecast ledger against completed, scored fixtures in the committed `data/season-2026-report.json` schedule by exact game ID, home/away names, chronological `source_retrieved_at <= forecast_recorded_at < scheduled_kickoff_at`, and `source=generated_before_kickoff`. This **preliminary broad match** finds **58** Week 10 games, **36** correct, winner accuracy **0.6206897**, Brier **0.2188375**, log loss **0.6275879**. The committed scorecard has **57** games, **35** correct, accuracy **0.614**, Brier **0.2227**, log loss **0.6385**.
+
+**Do not replace the published scorecard with the 58-game numbers.** The broad reconciliation has **not** yet applied the production `eligible_teams` FBS universe, provider alias rules, duplicate/conflicting completed-result exclusion, or all `_has_verified_pregame_provenance` checks. A one-game difference may therefore be an intended FBS exclusion; the precise cause is **not yet established**. Next run the existing `build_prediction_accuracy` against the original game snapshot and eligible FBS roster, identify the excluded game ID, and require an exact 57-game reconciliation before treating the archived scorecard as independently reproduced. This is a bounded discrepancy, not evidence of fabricated results.
