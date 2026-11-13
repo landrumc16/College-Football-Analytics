@@ -82,6 +82,7 @@ def main() -> None:
     p.add_argument("--reviewed-cohort", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--team-season-records", type=Path, required=True)
+    p.add_argument("--directory-json", type=Path, help="Previously acquired ESPN directory JSON (offline/reproducible)")
     p.add_argument("--start-season", type=int, default=2016)
     p.add_argument("--end-season", type=int, default=2025)
     args = p.parse_args()
@@ -92,8 +93,11 @@ def main() -> None:
         load(args.poll_snapshots / f"poll_snapshots_{year}.json")
         for year in range(args.start_season, args.end_season + 1)
     ]
-    with urlopen(DIRECTORY_URL, timeout=30) as response:
-        directory = json.load(response)
+    if args.directory_json:
+        directory = load(args.directory_json)
+    else:
+        with urlopen(DIRECTORY_URL, timeout=30) as response:
+            directory = json.load(response)
     records = load(args.team_season_records)
     canonical = {row["team"] for season in records["seasons"] for row in season["teams"]}
     result = candidate_mapping(snapshots, directory, load(args.reviewed_cohort),
