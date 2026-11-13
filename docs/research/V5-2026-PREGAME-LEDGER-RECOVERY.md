@@ -18,3 +18,15 @@
 5. Complete V5 acceptance and request owner approval before merging PR #15.
 
 **Release status:** A real candidate pregame archive has been located, substantially narrowing the M4 blocker. **Authentic verified accuracy is not yet established.**
+
+
+## November 13 cutoff — concrete scoring cohort
+
+At `2026-11-13T00:00:00Z`, of the 830 internally timestamp-consistent `generated_before_kickoff` candidates:
+- **323** had a scheduled kickoff earlier than the cutoff: **316** recorded as week 10 and **7** as week 11.
+- **507** had a scheduled kickoff on or after the cutoff: **308** week 11, **130** week 12, **68** week 13, **1** week 15. Exclude all from the cutoff's scored denominator.
+- The **20** `previously_published_forecast` legacy records remain excluded for incomplete pregame provenance.
+
+**Important:** kickoff having passed does not establish a completed game or a correct outcome. The 323 are a *maximum candidate pool*, not a verified scored denominator. Final-score joins, game eligibility and source/commit-history corroboration must reduce or confirm this pool before metrics are released.
+
+**Data access limitation during this pass:** `data/cfbd-2026-games.json` is ~1.06 MB and the available GitHub connector refused its full contents as oversized; a short line-range read also yielded no usable game rows. Therefore no game-score join or accuracy computation was performed in this pass. The shortest recovery is to run the existing repo pipeline/CI against the full file in a checkout or retrieve a suitably sized verified results artifact. Do not substitute fabricated outcomes.
