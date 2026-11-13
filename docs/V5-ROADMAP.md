@@ -2,9 +2,9 @@
 
 **Repository:** `landrumc16/College-Football-Analytics`
 **Development:** `v5-development`
-**Production:** `main` (V4 baseline `26672c4ae5e7a965706cffce246aff27075fcc47`)
-**Status:** V5 release candidate prepared; exact final acceptance and owner merge decision are recorded in PR #15. Production release remains unapproved.
-**Release:** One V5 release after explicit owner approval. Do not alter production before approval.
+**Production:** `main` — Version 5.0
+**Status:** Version 5.0 released and formally closed on November 13, 2026. M1–M6 and the Definitive Definition of Finished are complete. See the production closeout below.
+**Release:** Owner explicitly approved PR #15; merged, deployed and verified. No subsequent version is authorized.
 
 ## Product objective
 Deliver a dependable, accessible public college football intelligence product answering: How good is a team now? Is its program improving over 3/5/10 years? Is it outperforming documented expectations? How does it compare with other programs? What is likely to happen next and how reliable are the forecasts?
@@ -263,3 +263,19 @@ recorded on [PR #15](https://github.com/landrumc16/College-Football-Analytics/pu
 No new version or roadmap is needed. Remaining release actions are **owner merge
 approval, the approved merge, deployment and production smoke verification**;
 these are not performed before explicit authorization.
+
+
+## Version 5.0 production closeout — November 13, 2026
+
+This final closeout supersedes earlier candidate, missing-evidence and pending-approval status notes. All six approved milestones and all eleven items in the Definitive Definition of Finished are complete.
+
+- Andy explicitly approved merging the verified candidate `f7f69c0517669feb4be2931ff494f28303795dfe`. [PR #15](https://github.com/landrumc16/College-Football-Analytics/pull/15) merged it as `b73a2fb3eb1c6afb006771c2ad9283ec7ec1d3f6`.
+- The normal production refresh passed and retained its data as `6b93833976f0d79d34220a042bd2d00e1c95f3f3`. The first deployment encountered an unsupported Ubuntu 26.04 / Playwright 1.56.1 combination. [PR #16](https://github.com/landrumc16/College-Football-Analytics/pull/16) pinned supported Ubuntu 24.04 and reused the existing acceptance journeys against the live URL. Application code, historical calculations and the incumbent engine are unchanged from the approved candidate.
+- **Exact deployed and live-tested production revision:** `7a1dab85f1c733ecde5ac225efd0f5023051ba73`. [Build, deployment and live verification run 43521578096](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43521578096) passed. Its build passed 526 Python tests, strict workbook parity, validated report publication and browser/PWA acceptance.
+- The actual public application passed historical Hype/Trajectory/Report Card and Compare parity, prediction cards and independently verified forecast reporting, rankings/CFP/schedules, search, isolated persistent favorites, failure/retry and navigation at **375/390/768/1536 pixels**. Android Chrome emulation passed installability, service-worker update, genuinely disconnected offline fallback, uncached live JSON and recovery. This is emulated Android testing, not a physical-device installation claim.
+- [Live production evidence](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43521578096/artifacts/14082054993) contains 50 screenshots and `production-sha.txt`, retrieved and checked against the deployed revision. ZIP SHA-256: `72fd6151aa125db7c9f6bec035052071206ba202808e58675e4dbf1fa8c4c909`. Key mobile views and the offline screen were visually inspected; the live Texas Report Card, prediction card, archived forecast evidence and existing-browser update/reload were also checked directly.
+- Published historical results, Report Cards, forecast evaluation, manifest and service-worker bytes match the production revision. The deployment checks the published season-report hash against its validated build artifact. Accepted historical exclusions, N/A coverage and the partial 65-game forecast cohort remain disclosed in the product and evidence documents.
+
+**Live application:** https://landrumc16.github.io/College-Football-Analytics/
+
+**Remaining Version 5.0 release blockers: none. Version 5.0 is complete, deployed and closed.** Routine scheduled data refreshes continue under the existing system. No Version 5.1 or Version 6 work is started or authorized by this closeout.
