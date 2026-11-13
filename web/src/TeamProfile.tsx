@@ -23,7 +23,7 @@ type ConferenceTeam = { team: string; conference_title_odds: number; conference_
 
 const label = (value: string | undefined) => value?.replaceAll('_', ' ') || 'Unavailable'
 /** Only use a forecast when its game ID and both opponents match the schedule. */
-const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Prediction | null => {
+export const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Prediction | null => {
   if (game.completed) return null
   const matches = predictions.filter(p => p.game_id === game.game_id)
   if (matches.length !== 1) return null

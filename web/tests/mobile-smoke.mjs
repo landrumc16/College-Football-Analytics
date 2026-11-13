@@ -401,6 +401,31 @@ try {
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
     }
+    // Sharing the richer schedule must preserve the Profile's original fail-closed
+    // behavior for missing finals and forecasts whose opponent identity conflicts.
+    if (width === 390) {
+      const fixture = structuredClone(report);
+      const completed = fixture.schedule.find(game => game.completed && [game.home, game.away].includes(firstTeam));
+      const pending = fixture.schedule.find(game => !game.completed && [game.home, game.away].includes(firstTeam));
+      if (!completed || !pending) throw new Error('Need real completed/upcoming games for schedule guard regression');
+      completed.home_score = null;
+      const forecast = fixture.predictions.find(prediction => prediction.game_id === pending.game_id);
+      if (!forecast) throw new Error('Need real upcoming forecast for schedule guard regression');
+      forecast.home = 'Browser-only mismatched opponent fixture';
+      const guardPage = await browser.newPage({ viewport: { width, height: 844 } });
+      await guardPage.route('**/season-report.json', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixture) }));
+      try {
+        await guardPage.goto(baseUrl, { waitUntil: 'networkidle' });
+        await navigate(guardPage, 'profile');
+        await guardPage.getByLabel('Choose school').selectOption(firstTeam);
+        await profileTab(guardPage, 'Schedule & Predictions');
+        const scheduleRows = guardPage.locator('.matchup-panel tbody tr');
+        const completedOpponent = completed.home === firstTeam ? completed.away : completed.home;
+        const pendingOpponent = pending.home === firstTeam ? pending.away : pending.home;
+        await scheduleRows.filter({ has: guardPage.getByRole('cell', { name: completedOpponent, exact: true }) }).getByText('Final score unavailable', { exact: true }).waitFor();
+        await scheduleRows.filter({ has: guardPage.getByRole('cell', { name: pendingOpponent, exact: true }) }).getByText('Prediction unavailable', { exact: true }).waitFor();
+      } finally { await guardPage.close(); }
+    }
     // A correctly dated official CFP snapshot must render, rather than being
     // discarded by the poll-date format gate. This fixture is browser-test-only.
     if (width === 390) {

@@ -33,6 +33,8 @@ Its four sections contain:
 - **Schedule & Predictions:** the complete existing school schedule (location,
   scores, win probability and margin), tracked performance against expectations,
   the over/underachievement leaderboard, opponent strength and pick explanations.
+  Missing final scores and identity-conflicting forecasts remain unavailable using
+  the original Profile forecast guard.
 - **Historical Intelligence:** verified FBS results and 3/5/10-year windows,
   long-term direction, historical expectations and coverage/source disclosures.
 - **Program Report Card:** the existing shared category scores, overall grade,
