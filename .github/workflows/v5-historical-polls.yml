@@ -8,6 +8,8 @@ on:
       - 'scripts/fetch_v5_historical_polls.py'
       - 'tests/test_v5_historical_polls.py'
       - 'scripts/build_v5_poll_history.py'
+      - 'scripts/resolve_v5_espn_team_ids.py'
+      - 'tests/test_v5_espn_identity_resolution.py'
       - 'tests/test_v5_poll_history.py'
       - 'research/v5-cohort-espn-team-ids.json'
       - '.github/workflows/v5-historical-polls.yml'
@@ -27,7 +29,7 @@ jobs:
       - name: Install project and validate poll parsing
         run: |
           python -m pip install -e '.[dev]'
-          python -m pytest -q tests/test_v5_historical_polls.py tests/test_v5_poll_history.py
+          python -m pytest -q tests/test_v5_historical_polls.py tests/test_v5_poll_history.py tests/test_v5_espn_identity_resolution.py
       - name: Fetch genuine AP and Coaches snapshots for 2016-2025
         run: python scripts/fetch_v5_historical_polls.py --output historical-polls
       - name: Convert validated snapshots into research-only cohort history
@@ -36,6 +38,25 @@ jobs:
             --snapshots historical-polls \
             --team-ids research/v5-cohort-espn-team-ids.json \
             --output historical-polls/cohort-poll-history.json
+      - name: Retrieve ESPN directory and generate national ID candidate evidence
+        run: |
+          python - <<'PY'
+          import json
+          from urllib.request import urlopen
+          from pathlib import Path
+          from scripts.resolve_v5_espn_team_ids import DIRECTORY_URL, candidate_mapping
+          root = Path("historical-polls")
+          snapshots = [json.loads((root / f"poll_snapshots_{year}.json").read_text()) for year in range(2016, 2026)]
+          cohort = json.loads(Path("research/v5-cohort-espn-team-ids.json").read_text())
+          with urlopen(DIRECTORY_URL, timeout=30) as response:
+              directory = json.load(response)
+          (root / "espn-directory-source.json").write_text(json.dumps(directory, indent=2) + chr(10))
+          result = candidate_mapping(snapshots, directory, cohort)
+          (root / "national-identity-candidates.json").write_text(json.dumps(result, indent=2) + chr(10))
+          print("Ranked IDs:", result["ranked_ids"], "Candidates:", result["resolved_candidates"])
+          print("Unresolved IDs:", result["unresolved_ids"])
+          print("Publication remains gated on independent review.")
+          PY
       - name: Upload raw polls, snapshot extracts and checksums
         if: always()
         uses: actions/upload-artifact@v4
