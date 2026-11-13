@@ -19,7 +19,7 @@ def build_report_cards(measurements, *, eligible_fbs, as_of, minimum_coverage=0.
         raise ValueError("Missing as-of date")
     if isinstance(minimum_coverage,bool) or not isinstance(minimum_coverage,(int,float)) or not 0 < minimum_coverage <= 1:
         raise ValueError("Invalid coverage")
-    if not eligible_fbs or len(set(eligible_fbs)) != len(eligible_fbs) or any(not isinstance(t,str) or not t.strip() for t in eligible_fbs):
+    if not isinstance(eligible_fbs,list) or not eligible_fbs or any(not isinstance(t,str) or not t.strip() for t in eligible_fbs) or len(set(eligible_fbs)) != len(eligible_fbs):
         raise ValueError("Invalid FBS universe")
     if set(measurements)-set(eligible_fbs):
         raise ValueError("Measurements outside FBS universe")
@@ -34,6 +34,8 @@ def build_report_cards(measurements, *, eligible_fbs, as_of, minimum_coverage=0.
                 continue
             if not isinstance(record,dict) or not {"value","source","verified"} <= record.keys():
                 raise ValueError("Malformed category measurement")
+            if type(record["verified"]) is not bool:
+                raise ValueError("Verification flag must be boolean")
             if not record["verified"]:
                 continue
             value=record["value"]
