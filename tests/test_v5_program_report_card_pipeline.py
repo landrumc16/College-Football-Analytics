@@ -43,3 +43,14 @@ def test_duplicate_v4_strength_is_rejected():
     data["current_rankings"].append(data["current_rankings"][0])
     with pytest.raises(ValueError,match="Duplicate"):
         assemble_report_cards(**data)
+
+
+def test_unreviewed_malformed_history_does_not_block_reviewed_strength():
+    data=inputs()
+    data["poll_rows"]=[{"unreviewed":"incomplete"}]
+    data["season_records"]={"unreviewed":"incomplete"}
+    result=assemble_report_cards(**data,strength_reviewed=True)
+    assert result["coverage"]["strength"]["national_grades_available"]
+    assert not result["coverage"]["hype"]["national_grades_available"]
+    assert not result["coverage"]["trajectory"]["national_grades_available"]
+    assert all(row["overall_grade"] is None for row in result["programs"])
