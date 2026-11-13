@@ -2,7 +2,7 @@
 
 Research-only output. Publication requires independent source and identity review.
 SportsDataverse generally labels regular week 1 as preseason and postseason
-week 1 as final. The 2025 week-2 candidate requires separate source review;
+week 1 as final. The 2025 week-2 candidate is not the genuine preseason poll;
 no extracted snapshot is automatically approved for publication.
 """
 from __future__ import annotations
@@ -42,17 +42,9 @@ def extract_snapshots(data: bytes, year: int) -> dict:
                         and int(r["week"]) == 1 and r["poll"].lower() == poll
                         and r["rank"] not in ("", "null", "NA")]
             source_week = 1
-            if not selected and year == 2025 and phase == "preseason":
-                candidate = [r for r in rows if int(r["season"]) == year
-                             and int(r["season_type"]) == 2
-                             and int(r["week"]) == 2 and r["poll"].lower() == poll
-                             and r["rank"] not in ("", "null", "NA")]
-                if len(candidate) == 25 and all(
-                    r.get("prev_rank", "") == "" and r.get("weeks_ranked") == "1"
-                    for r in candidate
-                ):
-                    selected = candidate
-                    source_week = 2
+            # Never substitute a regular-season poll for preseason. The 2025
+            # week-2 feed has 25 entries but disagrees with the published
+            # August 2025 AP/Coaches preseason rankings.
             if len(selected) != 25:
                 raise ValueError(f"{year} {poll} {phase}: expected 25 ranks, got {len(selected)}")
             ranks = [int(r["rank"]) for r in selected]
