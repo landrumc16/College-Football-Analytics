@@ -4,6 +4,23 @@ The comparison is fail-closed: disagreement, missing teams, and missing seasons
 are exceptions, never silently treated as corroborated records.
 """
 from __future__ import annotations
+from urllib.parse import urlparse
+
+
+def _provider_family(source: str) -> str | None:
+    """Known upstream families; two redistributors of ESPN are not independent."""
+    host = (urlparse(source).hostname or "").lower()
+    if host == "espn.com" or host.endswith(".espn.com"):
+        return "espn"
+    if host in {"collegefootballdata.com", "api.collegefootballdata.com"} or host.endswith(".collegefootballdata.com"):
+        return "espn"
+    if host in {"sportsdataverse.org", "github.com"}:
+        if host == "sportsdataverse.org" or "sportsdataverse/" in source.lower() or "cfbfastr" in source.lower():
+            return "espn"
+    if host == "stats.ncaa.org" or host.endswith(".ncaa.org"):
+        return "ncaa"
+    return None
+
 
 
 def _index(archive: dict) -> dict[tuple[int, str], tuple[int, int]]:
@@ -42,6 +59,10 @@ def compare_historical_results(primary: dict, independent: dict, *,
         raise ValueError("Two source URLs required")
     if primary_source == independent_source:
         raise ValueError("Two distinct sources required")
+    primary_family = _provider_family(primary_source)
+    independent_family = _provider_family(independent_source)
+    if primary_family is not None and primary_family == independent_family:
+        raise ValueError("Sources share the same upstream provider; independent corroboration required")
     a, b = _index(primary), _index(independent)
     accepted, exceptions = [], []
     for year, team in sorted(a.keys() | b.keys()):
