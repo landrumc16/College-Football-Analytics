@@ -33,6 +33,7 @@ def test_reviewed_strength_can_publish_without_unreviewed_history(tmp_path, monk
     main()
     result = json.loads(output.read_text())
     assert result["publication_status"] == "partial_verified_categories_only"
+    assert result["sources"] == [source]
     assert result["coverage"]["strength"]["national_grades_available"]
     assert not result["coverage"]["hype"]["national_grades_available"]
     assert not result["coverage"]["trajectory"]["national_grades_available"]
