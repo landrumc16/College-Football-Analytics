@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 
 from scripts.build_v5_poll_history import build_poll_history
-from src.cfb_analytics.v5_program_trajectory import trajectory_measurements
+from cfb_analytics.v5_program_trajectory import trajectory_measurements
 
 
 def prepare(records: dict, snapshots: list[dict], mapping: dict[str, str],
