@@ -3,8 +3,21 @@ import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: 'web', stdio: 'ignore', detached: true });
+const startServer = () => spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
+let server = startServer();
 let browser;
+async function waitForPreview() {
+  let ready = false;
+  for (let attempt = 0; attempt < 40; attempt++) {
+    try {
+      const response = await fetch('http://127.0.0.1:4178/');
+      if (response.ok) { ready = true; break; }
+    } catch {}
+    await delay(500);
+  }
+  if (!ready) throw new Error('Dashboard development server did not start');
+}
+
 async function assertReportCard(page, team) {
   const published = await page.evaluate(async () => (await fetch('./v5-program-report-cards.json')).json());
   const record = published.programs.find(p => p.team === team);
@@ -21,15 +34,7 @@ async function assertReportCard(page, team) {
 }
 
 try {
-  let ready = false;
-  for (let attempt = 0; attempt < 40; attempt++) {
-    try {
-      const response = await fetch('http://127.0.0.1:4178/');
-      if (response.ok) { ready = true; break; }
-    } catch {}
-    await delay(500);
-  }
-  if (!ready) throw new Error('Dashboard development server did not start');
+  await waitForPreview();
   browser = await chromium.launch({ headless: true });
   await mkdir('web/mobile-evidence', { recursive: true });
   for (const width of [375, 390, 768, 1536]) {
@@ -361,6 +366,11 @@ try {
     return registration?.active?.state === 'activated' && !registration.installing && !registration.waiting && registration.active.scriptURL.endsWith('/sw.js') && navigator.serviceWorker.controller?.scriptURL === registration.active.scriptURL;
   });
   await android.setOffline(true);
+  // A real unavailable server also covers Chromium builds whose emulated
+  // offline flag does not consistently reach service-worker fetches.
+  const stopped = new Promise(resolve => server.once('exit', resolve));
+  process.kill(-server.pid, 'SIGTERM');
+  await stopped;
   await app.reload({ waitUntil: 'load' });
   await app.getByRole('heading', { name: 'You are offline' }).waitFor();
   await app.screenshot({ path: 'web/mobile-evidence/android-pwa-offline.png', fullPage: true });
@@ -369,6 +379,8 @@ try {
     return (await Promise.all(keys.map(async key => (await (await caches.open(key)).keys()).map(r => r.url)))).flat();
   });
   if (cached.some(url => /\.json(?:$|\?)/.test(url))) throw new Error('PWA cached live JSON as current data');
+  server = startServer();
+  await waitForPreview();
   await android.setOffline(false);
   await app.getByRole('link', { name: 'Try again' }).click();
   await app.getByRole('heading', { name: 'My Teams' }).waitFor();
