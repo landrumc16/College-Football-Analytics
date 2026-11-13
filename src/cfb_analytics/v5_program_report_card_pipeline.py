@@ -19,10 +19,10 @@ def assemble_report_cards(*, poll_rows, season_records, current_rankings,
         raise ValueError("Verified eligible FBS roster required")
     if not isinstance(current_rankings,list):
         raise ValueError("Current V4 rankings must be a list")
-    hype=hype_measurements(poll_rows, reviewed=poll_reviewed)
-    trajectory=trajectory_measurements(
+    hype=(hype_measurements(poll_rows, reviewed=True) if poll_reviewed else {})
+    trajectory=(trajectory_measurements(
         season_records, latest_completed_season=latest_completed_season,
-        source=results_source, source_reviewed=results_reviewed)
+        source=results_source, source_reviewed=True) if results_reviewed else {})
     strength={}
     for row in current_rankings:
         team=row["team"]
