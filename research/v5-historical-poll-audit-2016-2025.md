@@ -32,3 +32,8 @@
 5. Only then attest source review and allow Hype Index/Report Cards to publish. Do not promote the research-only artifact or fabricate passing status.
 
 **Result:** Structural audit passed; historical-source audit **not complete**. This log records real discrepancies to resolve, not a release approval.
+
+
+## 2026-11-13 focused 2020 AP reconciliation
+
+Compared all 25 **2020 AP preseason** placements from the permanent archive with College Poll Archive's independently displayed [2020 preseason poll](https://collegepollarchive.com/football/ap/seasons.cfm?appollid=1169). **All 25 team/rank pairs agree**. The archived [2020 final AP poll](https://collegepollarchive.com/football/ap/seasons.cfm?appollid=1185) also lists the same 25 team/rank pairs (including 2020 postseason newcomers). The ten preseason programs missing from the final top 25 are **LSU, Penn State, Oregon, Auburn, Wisconsin, Michigan, Minnesota, UCF, Utah and Tennessee**. Thus the actual 25-to-25 set comparison is **10**, while College Poll Archive's [summary table](https://collegepollarchive.com/football/ap/research/preseason-final-poll-turnover.cfm?filter=Top25) reports **9**. This is a **discrepancy in the external summary statistic**, not evidence that we should alter any individual ranked team or substitute data. The underlying 2020 top-25 snapshots are retained unchanged; do not overwrite the observed count with 9. The special 2020 season should still be flagged when interpreting program trajectories. This reconciliation is limited to AP 2020 and does not certify the other snapshots, Coaches polls, or season results.
