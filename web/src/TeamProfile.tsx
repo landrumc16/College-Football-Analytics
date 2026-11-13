@@ -1,4 +1,5 @@
 import ProgramReportCard from './ProgramReportCard'
+import HistoricalResults from './HistoricalResults'
 import { useEffect, useState } from 'react'
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
 import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
@@ -88,7 +89,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     <label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
     </select></label>
-    {team && <><h3>{team}</h3><ProgramReportCard team={team} /><div className="team-profile-grid">
+    {team && <><h3>{team}</h3><ProgramReportCard team={team} /><HistoricalResults team={team} onTeam={onChoose} /><div className="team-profile-grid">
       {tile('Current Model Rank', current ? '#' + current.rank : 'Unavailable')}
       {tile('Current Strength', current ? current.rating.toFixed(1) : 'Unavailable')}
       {tile('Record', current ? current.wins + '–' + current.losses : 'Unavailable')}
