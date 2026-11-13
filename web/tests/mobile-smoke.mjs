@@ -303,8 +303,16 @@ try {
         if (await page.getByText('Not published with verified multi-season coverage', { exact: false }).count() || await page.getByText('Historical research has not passed the publication gate', { exact: false }).count()) throw new Error('Legacy missing-history message contradicts verified publication');
         await profileTab(page, 'Schedule & Predictions');
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
-        await page.getByText('Upcoming prediction explanations', { exact: true }).click();
-        await page.getByRole('columnheader').filter({ hasText: 'Team win probability' }).waitFor();
+        const explanations = page.locator('details').filter({ has: page.locator('summary').getByText('Upcoming prediction explanations', { exact: true }) });
+        if (!(await explanations.evaluate(element => element.open))) await explanations.locator('summary').click();
+        try {
+          await explanations.getByRole('columnheader').filter({ hasText: 'Team win probability' }).waitFor();
+        } catch (error) {
+          console.log('Schedule disclosure diagnostic:', await explanations.evaluate(element => ({ open: element.open, headers: [...element.querySelectorAll('th')].map(th => ({ text: th.textContent, display: getComputedStyle(th).display, visibility: getComputedStyle(th).visibility })) })));
+          console.log('Exposed header roles:', await explanations.getByRole('columnheader').allTextContents());
+          await page.screenshot({ path: `web/mobile-evidence/schedule-failure-${width}.png`, fullPage: true });
+          throw error;
+        }
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Profile-to-Compare lost selected school');

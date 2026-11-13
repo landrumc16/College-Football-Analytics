@@ -1,6 +1,10 @@
 # Navigation consolidation
 
-This refinement reorganizes the released Version 5 interface. It does not change
+The owner explicitly authorized this Navigation & UX Consolidation after the
+Version 5 release: “consolidate related pages into a cleaner, more intuitive
+application and complete the implementation.” This scoped refinement supersedes
+the prior release-only restriction on navigation work; it reorganizes the released
+Version 5 interface. It does not change
 prediction formulas, historical inputs, peer scoring, forecast verification or
 research methodology. Production remains unchanged until owner approval of the
 focused `ux-navigation-consolidation` pull request.
