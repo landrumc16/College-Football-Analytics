@@ -44,7 +44,7 @@ try {
   assert.deepEqual(await program().locator('.team-profile-tile strong').allTextContents(),metrics)
   await nav.getByRole('button',{name:'Research',exact:true}).click()
   const research=page.getByRole('region',{name:'Experimental prediction research',exact:true})
-  await research.getByRole('heading',{name:'Challenger research · incumbent retained'}).waitFor()
+  await research.getByRole('heading',{name:'Why we kept the current model'}).waitFor()
   assert.ok((await research.innerText()).includes('3,059'))
   await page.screenshot({path:`web/v6-evidence/research-${width}.png`})
   await nav.getByRole('button',{name:'Playoffs',exact:true}).click()
@@ -59,10 +59,10 @@ try {
   await page.getByRole('combobox',{name:'Scenario matchup',exact:true}).selectOption(String(g.game_id))
   await page.getByRole('combobox',{name:'Scenario winner',exact:true}).selectOption(g.away)
   await page.waitForFunction(()=>{const s=document.querySelector('select[aria-label="Scenario winner"]');return s&&!s.disabled})
-  assert.ok((await scenario.getByRole('status').innerText()).includes('1 selected outcomes'))
+  assert.ok((await scenario.getByRole('status').innerText()).includes('1 pick applied'))
   await scenario.scrollIntoViewIfNeeded();await page.screenshot({path:`web/v6-evidence/scenario-${width}.png`})
   await scenario.getByRole('button',{name:'Reset to baseline',exact:true}).click()
-  await page.waitForFunction(()=>{const s=document.querySelector('select[aria-label="Scenario matchup"]');return s&&!s.disabled})
+  await page.waitForFunction(baseline=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&s.querySelector('tbody').innerText===baseline},baseline)
   assert.equal(await scenario.locator('tbody').innerText(),baseline,'Reset must exactly restore seeded baseline')
   let benchmark=null
   if(width===390){
