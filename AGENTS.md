@@ -29,21 +29,18 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current priority — owner-authorized navigation consolidation (2026-11-13)
+## Navigation consolidation — completed and closed (2026-11-13)
 
-Version 5.0 is released and closed. The owner's subsequent Navigation & UX
-Consolidation directive explicitly authorizes implementation of five primary
-destinations and tabbed Team Profiles while preserving all Version 5 features.
-This is the approved exception to the historical finish-first restriction on
-navigation/polish work below, not a new version or roadmap.
+The owner approved PR #18 at `e7ea35d439bc51d97d63ba6f74d16de3ffe41a97`.
+It merged and deployed as `34d12e3a6819caf17f1dc58bf60b0dc8ba35b5f1`.
+The five primary destinations, four Profile sections and preserved Version 5
+features passed production browser and Android Chrome PWA emulation checks.
+See `docs/UX-NAVIGATION.md` for exact deployment and live acceptance evidence.
 
-- Work on `ux-navigation-consolidation` with a focused pull request.
-- Do not modify production `main` or merge without fresh explicit owner approval.
-- Reuse components; preserve the prediction engine, verified archive, calculations,
-  methodology, favorites, autocomplete and PWA behavior.
-- Complete builds, regression, real Chromium mobile/tablet/desktop checks and
-  applicable visual/PWA acceptance. Record exact tested SHA and evidence in the PR.
-- Do not begin Version 6 or add unrelated features.
+This refinement and Version 5.0 are closed. No implementation work remains
+under these directives. Do not begin another version, add unrelated features,
+or change production without a new explicit owner instruction. Preserve the
+incumbent engine, calculations, methodology, verified archive and working app.
 
 ## Historical V5 finish-first execution rules (2026-11-10)
 The authoritative scope and release gate are in `docs/V5-ROADMAP.md`, including the

@@ -6,8 +6,8 @@ application and complete the implementation.” This scoped refinement supersede
 the prior release-only restriction on navigation work; it reorganizes the released
 Version 5 interface. It does not change
 prediction formulas, historical inputs, peer scoring, forecast verification or
-research methodology. Production remains unchanged until owner approval of the
-focused `ux-navigation-consolidation` pull request.
+research methodology. The owner approved PR #18; the exact candidate was merged,
+deployed and verified. This UX refinement is complete and closed.
 
 | Primary destination | Secondary views |
 | --- | --- |
@@ -59,3 +59,47 @@ emulation (installability/update/offline/recovery). Both existing Chromium versi
 are exercised by V4 and V5 acceptance. Exact tested SHA, final workflow results and
 inspected screenshots are recorded in the pull request. The verified historical
 archive and incumbent engine remain unchanged.
+
+
+## Production closeout — November 13, 2026
+
+Andy explicitly approved [PR #18](https://github.com/landrumc16/College-Football-Analytics/pull/18)
+at candidate `e7ea35d439bc51d97d63ba6f74d16de3ffe41a97`. It merged with an expected-head
+SHA check. The deployed application tree matches that approved candidate exactly.
+
+**Deployed and live-tested production commit:**
+`34d12e3a6819caf17f1dc58bf60b0dc8ba35b5f1`.
+
+[GitHub Pages build, deployment and live acceptance run 43547278678](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43547278678)
+completed successfully. Its build passed 526 Python tests, strict workbook parity
+(2,070 metrics; zero differences above 0.001), the production build and browser/PWA
+acceptance before deployment. Post-deployment checks matched the published report
+against its validated build artifact and ran the browser journeys against the
+public URL.
+
+Live verification passed at **375, 390, 768 and 1536px**, covering exactly five
+primary destinations, every secondary view, all four Profile sections, rankings
+and polls, prediction autocomplete, verified historical intelligence and grade
+parity, comparison/What If, persistent isolated favorites, favorite schedule
+shortcuts, first-screen phone metrics, tab scrolling, research and failure/retry.
+Schedule regression checks retain unavailable states for missing final scores and
+identity-conflicting forecasts.
+
+Android Chrome emulation passed PWA installability, service-worker update,
+genuinely disconnected offline fallback, uncached live JSON and recovery. This is
+emulated Android testing, not a physical-device installation claim. Published
+Report Cards, historical results, forecast evaluation, manifest and service-worker
+bytes independently matched this production revision.
+
+[Production browser screenshots and recorded production SHA](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43547278678/artifacts/14094795845)
+are retained in the workflow artifact. ZIP SHA-256:
+`9d7687723df69d0a000436754505ef3f9e03fd81ddb42caf825620387b94e22c`.
+The artifact and recorded SHA were retrieved and checked; key phone, desktop,
+historical/comparison and offline captures were visually inspected.
+
+**Live URL:** https://landrumc16.github.io/College-Football-Analytics/
+
+**Status: complete, deployed and formally closed. Remaining blockers: none.**
+The incumbent engine, calculations, methodology and verified archive remain
+unchanged. No subsequent version or unrelated feature work is started or
+authorized by this closeout. Existing scheduled data updates continue normally.
