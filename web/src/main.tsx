@@ -64,6 +64,7 @@ export function App() {
   const [offline, setOffline] = useState(!navigator.onLine)
   const [pollSort, setPollSort] = useState<'model' | 'ap' | 'coaches' | 'cfp'>('model')
   const [tab, setCurrentView] = useState<View>('home')
+  const [sectionDropdown, setSectionDropdown] = useState(false)
   const [profileSection, setProfileSection] = useState<ProfileSection>('overview')
   const setTab = (view: View) => {
     if (view === 'profile') setProfileSection('overview')
@@ -271,8 +272,8 @@ export function App() {
       setSearch(''); setTab(destination.views[0].id); window.scrollTo(0, 0)
     }} />
     {tab !== 'home' && <SectionTabs key={activeDestination.id} label={`${activeDestination.label} sections`} items={activeDestination.views} value={tab}
-      panelId="dashboard-panel" onChange={value => { setSearch(''); setTab(value as View) }} />}
-    <div id="dashboard-panel" role={tab === 'home' ? 'region' : 'tabpanel'} aria-label={tab === 'home' ? 'Weekly homepage' : undefined} aria-labelledby={tab === 'home' ? undefined : `dashboard-panel-${tab}`}>
+      panelId="dashboard-panel" onDropdownChange={setSectionDropdown} onChange={value => { setSearch(''); setTab(value as View) }} />}
+    <div id="dashboard-panel" role={tab === 'home' || sectionDropdown ? 'region' : 'tabpanel'} aria-label={tab === 'home' ? 'Weekly homepage' : undefined} aria-labelledby={tab === 'home' ? undefined : sectionDropdown ? 'dashboard-panel-selection' : `dashboard-panel-${tab}`}>
     {tab === 'rankings' && <h2>Model Rankings</h2>}
     {tab === 'conferences' && <h2>Conference Championship Races</h2>}
     <div className="toolbar">{tab === 'rankings' && <input aria-label="Search teams" placeholder="Search teams…" value={search} onChange={e => setSearch(e.target.value)}/>}

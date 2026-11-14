@@ -29,18 +29,18 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — approved homepage redesign (2026-11-14)
+## Current task — secondary navigation refinement (2026-11-14)
 
-The owner's Homepage & Mobile UX Redesign directive supersedes the unmerged
-mobile dropdown proposal. Work on `homepage-editorial-preview` from production.
+The owner requests only secondary dropdowns on phones and where horizontal tabs
+would overflow, including all four Team Profile sections. Preserve the existing
+five-destination bottom navigation exactly. Keep desktop tabs where they fit.
+Work on `secondary-navigation-selects` in a focused PR; do not merge without
+explicit approval. Preserve pages, data, shortcuts, favorites and PWA behavior.
+Verify 375/390/430px plus tablet/desktop, accessibility, screenshots and regression.
 
-- The owner approved the actual 390px/1536px visual previews at
-  `9a42e4cdfb14dc985500c7ddfb93a33ddfd9712d`. Complete the approved design,
-  responsive acceptance at 375/390/430/768/1536, regression tests and PWA checks.
-- Work in PR #21 on `homepage-editorial-preview`. Keep production unchanged.
-  A separate explicit approval remains required to merge main.
-- Preserve the engine, archive, calculations, methodology, full analytics views,
-  favorites and PWA. Do not start another version, roadmap or unrelated features.
+The preceding homepage redesign and deployment correction (PRs #21/#22) are
+merged, deployed and production-verified at `d3043315b409b8c0ae8cdb008f5365db7c184968`.
+That work is closed; do not reopen it or start another version.
 
 ## Navigation consolidation — completed and closed (2026-11-13)
 
