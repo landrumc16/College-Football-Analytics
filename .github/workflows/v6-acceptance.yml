@@ -26,6 +26,10 @@ jobs:
         run: python -m pip install -e '.[dev,research]'
       - name: Reproduce foundation from immutable publisher inputs
         run: python -m scripts.build_v6_foundation --cache /tmp/private-v6-inputs --check
+      - name: Evaluate frozen chronological challenger research
+        run: |
+          mkdir -p /tmp/v6-evidence
+          python -m scripts.evaluate_v6_prediction --output /tmp/v6-evidence --prospective-output /tmp/v6-evidence/experimental-pregame.json
       - name: Run complete model and data regressions
         run: python -m pytest -q
       - name: Verify retained V5 historical publication

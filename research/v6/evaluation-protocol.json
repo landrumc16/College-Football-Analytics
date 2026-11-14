@@ -1,13 +1,14 @@
 {
   "authentic_baseline": "retained 65-game published 2026 incumbent cohort, reported separately",
-  "challenger": "L2 logistic regression with prior-results, recruiting composition, roster membership retention, dominant head-coach continuity and home-location inputs",
+  "challenger": "L2 logistic regression over lagged completed non-2020 FBS results; no recruiting, roster or coaching features admitted without historical cutoff evidence",
   "cohort": "independently corroborated FBS-FBS exact-score games with complete paired features; exclude the three retained score disputes and 2020",
   "evaluation_kind": "exploratory_chronological_replay_not_authentic_historical_live_forecasts",
+  "feature_window": "Most recent three completed non-2020 seasons before target season; at least two observed seasons; no zero-imputed missing history",
   "features": [
     "prior_fbs_win_rate_difference",
-    "mean_recruiting_stars_difference",
-    "roster_returning_share_difference",
-    "dominant_coach_continuity_difference",
+    "three_completed_season_win_rate_difference",
+    "three_completed_season_win_rate_slope_difference",
+    "prior_completed_fbs_games_difference",
     "home_location_indicator"
   ],
   "fitting": {
@@ -50,6 +51,8 @@
     0,
     4
   ],
+  "revision": 2,
+  "revision_reason": "Availability review before any challenger fit: exclude context families with unverified historical cutoffs; use lagged completed non-2020 results only",
   "schema_version": 1,
   "status": "predeclared_before_challenger_testing",
   "training": "expanding seasons 2017..year-1; exclude 2020; no held-out tuning"
