@@ -1,0 +1,47 @@
+name: Homepage editorial visual preview
+on:
+  push:
+    branches: [homepage-editorial-preview]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Stage retained real application data
+        run: |
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          mkdir -p web/editorial-evidence
+          git rev-parse HEAD > web/editorial-evidence/tested-sha.txt
+          sha256sum data/season-2026-report.json data/poll-2026-snapshot.json web/public/v5-program-report-cards.json > web/editorial-evidence/data-sha256.txt
+      - name: Build isolated visual preview
+        working-directory: web
+        run: |
+          npm install --no-package-lock
+          npm run build -- --config vite.editorial.config.ts
+      - name: Install browser
+        working-directory: web
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture real mobile and desktop previews
+        run: node web/tests/editorial-preview.mjs
+      - name: Preserve visual approval evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-editorial-visual-preview
+          path: |
+            web/editorial-evidence/
+            web/editorial-dist/
+          if-no-files-found: warn
+          retention-days: 30
