@@ -1,0 +1,123 @@
+{
+  "kind": "official_current_cfp_publication",
+  "season": 2026,
+  "week": 11,
+  "published_at": "2026-11-10",
+  "games_through": "2026-11-07",
+  "source_url": "https://collegefootballplayoff.com/news/2026/11/10/rankings",
+  "source_title": "CFP Selection Committee Releases Second Rankings of 2026",
+  "verification": "All 25 current rank/team pairs reviewed against the official release, independently retrieved via search and direct page open on 2026-11-14. This is a current poll publication, not a model input or prediction.",
+  "identity_note": "Official Miami (rank 7, 8-1) is normalized to existing app identity Miami (FL), matching the already-retained verified alias. All other official names match current report identities directly.",
+  "canonical_rank_team_sha256": "f8c6daa2b6526db43490b3ca051ae92ad1d2428ab16d0e3194a0c19e735fe487",
+  "rankings": [
+    {
+      "team": "Georgia",
+      "rank": 1
+    },
+    {
+      "team": "Utah",
+      "rank": 2
+    },
+    {
+      "team": "Alabama",
+      "rank": 3
+    },
+    {
+      "team": "UCLA",
+      "rank": 4
+    },
+    {
+      "team": "Notre Dame",
+      "rank": 5
+    },
+    {
+      "team": "Texas",
+      "rank": 6
+    },
+    {
+      "team": "Miami (FL)",
+      "rank": 7
+    },
+    {
+      "team": "Tennessee",
+      "rank": 8
+    },
+    {
+      "team": "Indiana",
+      "rank": 9
+    },
+    {
+      "team": "BYU",
+      "rank": 10
+    },
+    {
+      "team": "Kentucky",
+      "rank": 11
+    },
+    {
+      "team": "Texas Tech",
+      "rank": 12
+    },
+    {
+      "team": "Wake Forest",
+      "rank": 13
+    },
+    {
+      "team": "Houston",
+      "rank": 14
+    },
+    {
+      "team": "Iowa",
+      "rank": 15
+    },
+    {
+      "team": "Oregon",
+      "rank": 16
+    },
+    {
+      "team": "South Carolina",
+      "rank": 17
+    },
+    {
+      "team": "USC",
+      "rank": 18
+    },
+    {
+      "team": "Ole Miss",
+      "rank": 19
+    },
+    {
+      "team": "Ohio State",
+      "rank": 20
+    },
+    {
+      "team": "LSU",
+      "rank": 21
+    },
+    {
+      "team": "Missouri",
+      "rank": 22
+    },
+    {
+      "team": "Arizona",
+      "rank": 23
+    },
+    {
+      "team": "Boise State",
+      "rank": 24
+    },
+    {
+      "team": "Oklahoma State",
+      "rank": 25
+    }
+  ],
+  "unchanged": [
+    "AP poll",
+    "Coaches poll",
+    "model rankings",
+    "predictions",
+    "simulations",
+    "verified historical archive",
+    "UI/PWA"
+  ]
+}
