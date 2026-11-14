@@ -443,10 +443,9 @@ jobs:
           assert sum(row["games"] for row in backtest["weekly_coverage"]) == backtest["games"]
           assert backtest["evaluation_scope"].startswith("2026 frozen")
           assert Path("web/dist/index.html").is_file()
-          bundles = list(Path("web/dist/assets").glob("*.js"))
-          assert bundles and any(b"SEASON INTELLIGENCE" in p.read_bytes() for p in bundles), "Dashboard bundle identity missing"
-          print("Validated published dashboard and report")
+          print("Validated published season report")
           PY
+          python scripts/verify_dashboard_bundle.py
       - name: Preserve V2 research summary for deployment verification
         uses: actions/upload-artifact@v4
         with:

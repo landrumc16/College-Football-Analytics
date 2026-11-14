@@ -53,6 +53,8 @@ jobs:
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
+      - name: Verify production dashboard bundle identity
+        run: python scripts/verify_dashboard_bundle.py
       - name: Check historical publication safeguards
         run: node web/tests/historical-publication.mjs
       - name: Install browser acceptance dependencies
