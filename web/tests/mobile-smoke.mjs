@@ -362,6 +362,7 @@ try {
         if (!secondTeam) throw new Error('Need two distinct teams for comparison');
         await page.getByLabel('First school').selectOption(firstTeam);
         await page.getByLabel('Second school').selectOption(secondTeam);
+        await page.getByText('Program histories and report cards', { exact: true }).click();
         await assertReportCard(page, firstTeam);
         await assertReportCard(page, secondTeam);
         const comparison = page.getByRole('region', { name: 'Side-by-side team comparison' });
@@ -477,7 +478,7 @@ try {
     }
     await navigate(page, 'research');
     const archive = page.getByRole('region', { name: 'Independent pregame forecast verification' });
-    await archive.getByRole('heading', { name: 'Independently verified forecast archive' }).waitFor();
+    await archive.getByRole('heading', { name: 'Verified pregame picks' }).waitFor();
     await archive.getByText('65 predictions', { exact: false }).waitFor();
     await page.screenshot({ path: `web/mobile-evidence/forecast-evidence-${width}.png`, fullPage: true });
     console.log(`Browser navigation smoke passed at ${width}px`);

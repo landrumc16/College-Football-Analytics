@@ -1,0 +1,129 @@
+/* Editorial refinement of the existing collegiate identity. Navigation is unchanged. */
+.editorial-app{--editorial-rule:#3e4c5e;--editorial-gold:#d4ad79;--editorial-ink:#f5f0e6}
+.editorial-app p{line-height:1.55}
+.editorial-app p.section-kicker{font-family:"Trebuchet MS",Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.1px;line-height:1.3;color:var(--editorial-gold);margin:0 0 8px}
+.editorial-app .page-deck,.editorial-app .section-deck{color:#bdc8d6;max-width:64ch;margin:7px 0 20px;font-size:15px}
+.editorial-app p.metric-note{font-size:12px;line-height:1.55;color:#acbbcf;max-width:76ch;margin:12px 0}
+.editorial-app :is(td,.team-profile-tile strong,.editorial-pick b,.research-scoreline strong){font-variant-numeric:tabular-nums lining-nums}
+.editorial-app #dashboard-panel>h2,.editorial-app .research-page>h2{font-size:30px;letter-spacing:-.5px;margin:24px 0 8px;line-height:1.15}
+.editorial-app .research-page>p{max-width:64ch;margin-bottom:26px}
+
+/* A lead story and two supporting fixtures, rather than three identical boxes. */
+.editorial-app .editorial-lede{border-bottom:1px solid var(--editorial-rule);padding-bottom:18px;margin-bottom:20px}
+.editorial-app .editorial-game{border-radius:2px;border:0;border-top:1px solid var(--editorial-rule);background:transparent;padding:16px 12px;gap:12px}
+.editorial-app .editorial-game:first-child{background:#142238;border-top:3px solid var(--editorial-gold);padding-top:14px}
+.editorial-app .editorial-game:first-child>strong{font-size:27px}
+.editorial-app .editorial-game:hover{background:#1b2b40}
+.editorial-app .editorial-game-kicker{font-size:9px;letter-spacing:.6px;color:#aabbd0}
+.editorial-app .editorial-pick{border-top:1px solid #34445a;padding-top:10px}
+.editorial-app .editorial-pick b{font-family:Georgia,"Times New Roman",serif;font-size:24px;font-weight:700}
+.editorial-app .editorial-game-note{font-size:11px;line-height:1.4}
+.editorial-app .editorial-news-grid{column-gap:44px;row-gap:26px}
+.editorial-app .editorial-section-heading h2{font-size:23px}
+.editorial-app .editorial-news-grid>section{border-top-color:var(--editorial-rule)}
+.editorial-app .editorial-rankings li:first-child .editorial-rank{font-size:24px}
+.editorial-app .editorial-story-link>strong{font-size:23px;letter-spacing:-.3px;max-width:32ch}
+.editorial-app .editorial-spotlight .editorial-story-link{border-left:2px solid var(--editorial-gold);padding-left:16px}
+
+/* Page furniture uses rules and typography; cards are reserved for grouped data. */
+.editorial-app .team-profile,.editorial-app .matchup-panel,.editorial-app .playoff-scenarios{background:transparent;border:0;border-top:2px solid var(--editorial-gold);border-radius:0;padding:20px 0;margin-top:20px}
+.editorial-app .team-profile>h2,.editorial-app .matchup-panel>h2,.editorial-app .playoff-scenarios>h2{font-size:28px;letter-spacing:-.4px;line-height:1.15;margin:0 0 12px}
+.editorial-app .team-profile>h3{font-size:34px;letter-spacing:-.6px;margin:22px 0 12px}
+.profile-tools{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.profile-tools>label{display:flex;flex-direction:column;gap:7px;flex:1 1 180px;max-width:400px;font-size:12px;color:#b7c4d6}
+.profile-tools select{width:100%;min-width:0}
+.profile-tools>button{font-size:12px;min-height:44px;color:var(--editorial-gold);padding:8px 0;border-bottom:1px solid #596273;border-radius:0}
+.editorial-app .team-profile #profile-panel>.team-profile-grid{gap:0;border-top:1px solid var(--editorial-rule);margin:20px 0}
+.editorial-app .team-profile #profile-panel>.team-profile-grid>.team-profile-tile{background:transparent;border:0;border-bottom:1px solid var(--editorial-rule);border-radius:0;padding:16px 12px 16px 0;gap:7px}
+.editorial-app .team-profile #profile-panel>.team-profile-grid strong{font-family:Georgia,"Times New Roman",serif;font-size:30px;line-height:1.1;text-transform:none}
+.editorial-app .recent-form{border:0;border-left:2px solid var(--editorial-gold);border-radius:0;padding:2px 0 2px 16px;margin:22px 0}
+.editorial-app .recent-form>h3{font-size:22px;margin:0 0 8px}
+.editorial-app details>summary{line-height:1.45;min-height:44px;padding-top:10px;padding-bottom:10px;cursor:pointer}
+.editorial-app .editorial-menu>summary,.editorial-app .editorial-favorite-editor>summary{padding-top:6px;padding-bottom:6px}
+
+/* Shared program file: four short observations with their full source notes nearby. */
+.editorial-app .program-context{background:transparent;border:0;border-top:1px solid var(--editorial-rule);border-radius:0;padding:22px 0;margin:20px 0}
+.editorial-app .program-context>h3{font-size:26px;line-height:1.2;letter-spacing:-.3px;margin:0 0 10px}
+.editorial-app .program-context .team-profile-grid{gap:0;grid-template-columns:repeat(2,minmax(0,1fr));margin:18px 0 10px}
+.editorial-app .program-context .team-profile-tile{background:transparent;border:0;border-bottom:1px solid var(--editorial-rule);border-radius:0;padding:13px 14px 13px 0;gap:8px}
+.editorial-app .program-context .team-profile-tile strong{font-family:Georgia,"Times New Roman",serif;font-size:28px;text-transform:none;font-weight:700;line-height:1.15}
+.editorial-app .program-context .team-profile-tile small{font-size:12px;color:#b5c3d5}
+.editorial-app .program-context details p{max-width:76ch}
+
+/* Research leads with the football result; audit detail stays in native disclosures. */
+.editorial-app .verified-picks,.editorial-app .prediction-research{background:transparent;border:0;border-top:1px solid var(--editorial-rule);border-radius:0;padding:22px 0;margin-bottom:12px}
+.editorial-app .verified-picks{border-top:2px solid var(--editorial-gold)}
+.editorial-app .verified-picks>h3,.editorial-app .prediction-research>h3{font-size:26px;line-height:1.2;margin:0 0 15px;letter-spacing:-.3px}
+.research-scoreline{display:grid;grid-template-columns:minmax(110px,.7fr) minmax(0,1.5fr);gap:24px;align-items:center;max-width:680px}
+.research-scoreline>div{display:flex;flex-direction:column;gap:3px}
+.research-scoreline strong{font-family:Georgia,"Times New Roman",serif;font-size:54px;line-height:1;color:var(--editorial-ink);letter-spacing:-1.5px}
+.research-scoreline span{font-size:12px;color:#c9b08d}
+.editorial-app .research-scoreline p{font-size:15px;line-height:1.5;margin:0}
+.editorial-app .prediction-research>p:not(.section-kicker){max-width:72ch}
+.editorial-app .tracked-forecasts{background:transparent;border:0;border-top:1px solid var(--editorial-rule);border-radius:0;padding:0;margin-top:18px}
+.editorial-app .tracked-forecasts .accuracy-summary{border:0;padding:12px 0}
+
+/* Compact standings and comparison tables; preserve the existing scroll containers. */
+.editorial-app .table-wrap{border-radius:3px}
+.editorial-app table caption{text-align:left;font-family:Georgia,"Times New Roman",serif;font-size:19px;color:var(--editorial-ink);padding:15px 14px;border-bottom:1px solid var(--editorial-rule)}
+.editorial-app th{font-size:10px;letter-spacing:.4px}
+.editorial-app tbody th{font-family:inherit;text-transform:none;letter-spacing:0;font-size:13px;background:transparent;color:var(--editorial-ink)}
+.editorial-app .rankings-table td,.editorial-app .rankings-table th{padding:12px 14px}
+.editorial-app .rankings-table .team-number{font-family:Georgia,"Times New Roman",serif;font-size:18px;color:var(--editorial-gold);min-width:2em;margin-right:6px}
+.editorial-app .rankings-table tbody tr:nth-child(-n+5) .team-number{font-size:22px}
+.editorial-app .rankings-table tbody tr:nth-child(5) td{border-bottom-color:#8290a1}
+.editorial-app .matchup-result{border:0;border-top:2px solid var(--editorial-gold);border-bottom:1px solid var(--editorial-rule);background:#101e31;border-radius:0;padding:20px;margin:22px 0}
+.editorial-app .matchup-result h3{font-size:32px}
+.editorial-app .matchup-odds>div{background:transparent;border-left:1px solid #596273;border-radius:0;padding:0 0 0 12px}
+.editorial-app .matchup-odds strong{font-family:Georgia,"Times New Roman",serif;font-size:32px}
+.editorial-app .matchup-panel>section.notice{background:transparent;border:0;border-radius:0;padding:18px 0}
+.editorial-app .comparison-history{margin:10px 0 18px;border-top:1px solid var(--editorial-rule);border-bottom:1px solid var(--editorial-rule)}
+.editorial-app .comparison-history>summary{color:var(--editorial-gold);font-weight:700;font-size:14px}
+.editorial-app .playoff-scenarios>p{max-width:64ch}
+.editorial-app .playoff-scenarios>button{border:1px solid #7b684f;border-radius:3px;color:#f0d7ad;min-height:44px}
+.editorial-app .scenario-controls{padding:16px 0;border-top:1px solid var(--editorial-rule);border-bottom:1px solid var(--editorial-rule);margin-top:20px}
+.editorial-app .scenario-controls label{font-size:12px;color:#b5c3d5}
+.editorial-app .playoff-scenarios p[role="status"]{color:#d9bb90;font-size:13px;margin:14px 0}
+.editorial-app .scenario-picks{font-size:13px;line-height:1.5;padding-left:20px}
+.editorial-app .scenario-picks button{padding:6px 12px;min-height:44px;font-size:12px}
+
+@media(max-width:767px){
+ .editorial-app .editorial-lede{padding-bottom:14px;margin-bottom:16px}
+ .editorial-app .editorial-game{padding:12px 8px;gap:9px}
+ .editorial-app .editorial-game:first-child{padding:10px 10px 12px}
+ .editorial-app .editorial-game:first-child>strong{font-size:21px}
+ .editorial-app .editorial-game>strong{font-size:18px;line-height:1.15}
+ .editorial-app .editorial-pick b{font-size:21px}
+ .editorial-app .editorial-pick{padding-top:8px}
+ .editorial-app .editorial-game-note{font-size:10px}
+ .editorial-app .editorial-news-grid{gap:20px}
+ .editorial-app .editorial-section-heading h2{font-size:20px}
+ .editorial-app .editorial-story-link>strong{font-size:21px}
+ .editorial-app #dashboard-panel>h2,.editorial-app .research-page>h2{font-size:27px}
+ .editorial-app .team-profile,.editorial-app .matchup-panel,.editorial-app .playoff-scenarios{padding:18px 0}
+ .editorial-app .team-profile>h3{font-size:30px}
+ .editorial-app .team-profile #profile-panel>.team-profile-grid strong{font-size:28px}
+ .editorial-app .program-context>h3,.editorial-app .verified-picks>h3,.editorial-app .prediction-research>h3{font-size:24px}
+ .editorial-app .program-context .team-profile-tile strong{font-size:25px}
+ .editorial-app .program-context .team-profile-tile{padding:12px 9px 12px 0}
+ .editorial-app .research-scoreline{gap:16px}
+ .editorial-app .research-scoreline strong{font-size:44px}
+ .editorial-app .research-scoreline p{font-size:13px}
+ .editorial-app .rankings-table td,.editorial-app .rankings-table th{padding:10px}
+ .editorial-app .rankings-table td:first-child{min-width:148px}
+ .editorial-app .matchup-inputs{gap:10px}
+ .editorial-app .matchup-result{padding:16px}
+ .editorial-app .matchup-odds strong{font-size:28px}
+}
+
+/* Detailed game and program lists read as fixtures and records, not widget walls. */
+.editorial-app .prediction-card{border-radius:2px;border:0;border-top:2px solid var(--editorial-gold);padding:18px;background:#101e31}
+.editorial-app .prediction-matchup{font-family:Georgia,"Times New Roman",serif;font-size:21px;line-height:1.3}
+.editorial-app .prediction-pick{background:transparent;border-left:2px solid #775e40;border-radius:0;padding:4px 12px}
+@media(max-width:700px){
+ .editorial-app .program-intelligence-table tbody{gap:22px}
+ .editorial-app .program-intelligence-table tbody tr{background:transparent;border:0;border-top:2px solid var(--editorial-rule);border-radius:0;padding:12px 0}
+ .editorial-app .program-intelligence-table td{padding:4px 0}
+ .editorial-app .program-intelligence-table td:first-child{font-family:Georgia,"Times New Roman",serif;font-size:20px;padding-bottom:12px}
+}
+@media(min-width:1000px){.editorial-app .program-context .team-profile-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}

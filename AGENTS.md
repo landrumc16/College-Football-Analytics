@@ -29,6 +29,18 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
+## Current task — Version 6 visual and editorial polish
+
+The owner authorized a focused refinement on `v6-editorial-polish` from main
+`70191e42df15f932733843df801a54de04847319`. Improve hierarchy, typography,
+spacing and fan-facing wording within the existing pages. Preserve the approved
+logo/palette/serifs, navigation and mobile bottom bar, all functionality, source
+limits and accessibility. Do not change engine/data/calculations/simulation,
+favorites/PWA contracts or dependencies. No new version or unrelated feature.
+Capture comparable real-build before/after screenshots using the same real data,
+verify all five viewports and existing Python/browser/PWA regressions, and deliver
+a finished PR plus concise visual comparison. Do not merge without owner approval.
+
 ## Version 6.0 — released and closed (2026-11-14)
 
 The owner approved PR #25 at `6bcaa3a649ff781d81906e7f11e468cf3abb23a9`

@@ -93,10 +93,9 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice team-profile">
-    <h2>Team Profile</h2><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button>
-    <label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
+    <h2>Team Profile</h2><div className="profile-tools"><label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
-    </select></label>
+    </select></label><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button></div>
     {team && <><h3>{team}</h3>
     <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" onDropdownChange={setSectionDropdown} />
     <div id="profile-panel" role={sectionDropdown ? "region" : "tabpanel"} aria-labelledby={sectionDropdown ? "profile-panel-selection" : `profile-panel-${section}`}>
@@ -124,10 +123,11 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div></details>
-    <div className="accuracy-summary"><h3>Program development and expectations</h3>
-      <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form trend: {seasonTrend ?? 'not enough scored games'} (two non-overlapping four-game windows, requiring a two-win difference to classify a change). This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
+    <section className="accuracy-summary recent-form"><h3>Recent form</h3>
+      <p className="section-deck">Last five: <strong>{lastFive.count ? `${lastFive.wins}–${lastFive.losses}` : 'No scored games'}</strong> · Season trend: <strong>{seasonTrend ?? 'Not enough games'}</strong>.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
-    </div>
+      <details><summary>How to read form and forecasts</summary><p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form compares two non-overlapping four-game windows and requires a two-win difference to classify a change. This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p></details>
+    </section>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Derived dominant head-coach continuity, recruiting classes and roster membership context are available in Historical Intelligence. Exact staff effective dates, coordinators, transfer-only histories, returning playing production and offense-versus-defense matchup factors remain unavailable. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch and results versus forecast</summary><p>The approved Team Stock Watch requires a verified 0–100 time-aware index and a four-week change. Neither is inferred from season-total wins above expectation. Results versus Forecast separately compares actual wins with the published model’s expected wins for games with forecasts; at least three forecasted games are required. It is descriptive, not a validated trajectory signal.</p></details>
