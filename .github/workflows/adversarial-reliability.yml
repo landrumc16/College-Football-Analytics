@@ -50,7 +50,9 @@ jobs:
         run: python scripts/adversarial_monte_carlo.py
       - name: Rerun all existing Python regressions
         if: always()
-        run: python -m pytest -q | tee web/adversarial-evidence/python-regressions.txt
+        run: |
+          set -o pipefail
+          python -m pytest -q | tee web/adversarial-evidence/python-regressions.txt
       - name: Rerun existing browser and PWA journeys against isolated deployed build
         if: always()
         run: node web/tests/mobile-smoke.mjs

@@ -1,6 +1,6 @@
 // Isolated adversarial verification. This server never binds a public interface.
 import assert from 'node:assert/strict'
-import {createServer} from 'node:http'
+import {createServer,get} from 'node:http'
 import {readFile,mkdir,writeFile} from 'node:fs/promises'
 import {resolve,extname} from 'node:path'
 import {performance} from 'node:perf_hooks'
@@ -26,7 +26,7 @@ const server=createServer(async(req,res)=>{const start=performance.now();try{
 await new Promise(r=>server.listen(4190,'127.0.0.1',r))
 const browser=await chromium.launch({headless:true})
 let activePage,caseName
-async function run(name,fn){caseName=name;const start=performance.now();try{const details=await fn();records.push({name,status:'PASS',ms:performance.now()-start,details})}catch(e){records.push({name,status:'FAIL',ms:performance.now()-start,error:e.message,stack:e.stack});if(activePage&&!activePage.isClosed())await activePage.screenshot({path:`${out}/${name}.png`,fullPage:true}).catch(()=>{})}finally{activePage=null;await writeFile(out+'/results.json',JSON.stringify(records,null,2))}}
+async function run(name,fn){caseName=name;const start=performance.now();try{const details=await fn();records.push({name,status:'PASS',ms:performance.now()-start,details})}catch(e){records.push({name,status:'FAIL',ms:performance.now()-start,error:e.message,cause:String(e.cause||''),browserErrors:activePage?.errors,stack:e.stack});if(activePage&&!activePage.isClosed())await activePage.screenshot({path:`${out}/${name}.png`,fullPage:true}).catch(()=>{})}finally{console.log(name+': '+records.at(-1).status);activePage=null;await writeFile(out+'/results.json',JSON.stringify(records,null,2))}}
 async function context(options={}){const c=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block',...options});await c.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost'].includes(u.hostname)?route.continue():route.abort()});return c}
 async function pageIn(c){const p=await c.newPage();activePage=p;p.setDefaultTimeout(7000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));return p}
 async function home(p){await p.goto(url,{waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()}
@@ -42,8 +42,8 @@ try{
   for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search teams',{exact:true}).fill(text);await healthy(p)}
   await p.getByLabel('Search teams',{exact:true}).fill('')
   await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles')
-  for(let i=0;i<30;i++)await p.getByLabel('Choose school',{exact:true}).selectOption(['Texas Tech','Georgia','Texas A&M',''][i%4])
-  await p.getByLabel('Choose school',{exact:true}).selectOption('Texas Tech')
+  for(let i=0;i<30;i++)await p.getByLabel('Choose school').selectOption(['Texas Tech','Georgia','Texas A&M',''][i%4])
+  await p.getByLabel('Choose school').selectOption('Texas Tech')
   for(let i=0;i<16;i++)await chooseSection(p,'Team Profile sections',['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card'][i%4])
   await healthy(p);return {destinationChanges:100,schoolChanges:31,profileChanges:16,searchInputs:9}
  }))
@@ -96,9 +96,10 @@ try{
  for(const f of faults)await run('fixture-'+f.name,()=>withPage(async p=>{
   let intercept=true;await p.route('**/'+f.path,route=>intercept?route.fulfill({status:f.status||200,contentType:'application/json',body:f.body}):route.continue())
   await p.goto(url,{waitUntil:'networkidle'});await delay(100)
-  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school',{exact:true}).selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
-  if(f.research)await nav(p,'Research')
-  if(f.poll)await nav(p,'Rankings')
+  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
+  if(f.research){await nav(p,'Research');await p.waitForLoadState('networkidle')}
+  if(f.poll){await nav(p,'Rankings');await p.waitForLoadState('networkidle')}
+  await p.waitForLoadState('networkidle')
   if(f.scenario){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
   if(f.core&&!f.stale){await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor({timeout:2500})}
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
@@ -125,13 +126,13 @@ try{
  for(const count of [1,10,25,50])await run('concurrent-visitors-'+count,async()=>{
   const start=performance.now(),begin=requests.length;const sessions=[]
   try{await Promise.all(Array.from({length:count},async(_,i)=>{
-   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school',{exact:true}).selectOption('Texas Tech');await healthy(p)
+   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await healthy(p)
    if(i%10===0){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false,{},{timeout:60000});await healthy(p)}
   }));return {visitors:count,elapsedMs:performance.now()-start,servedRequests:requests.length-begin,conditions:'one Chromium process, independent browser contexts, 10% run 2000-draw scenarios; isolated static server, no public traffic'}}finally{await Promise.all(sessions.map(c=>c.close()))}
  })
  await run('repeated-local-requests',async()=>{
   const timings=[],errors=[],start=performance.now();let issued=0
-  await Promise.all(Array.from({length:25},async()=>{while(issued<1000){const i=issued++,t=performance.now();const r=await fetch(url+['','season-report.json','poll-snapshot.json','v6-scenario-input.json'][i%4]);if(r.status!==200)errors.push(r.status);await r.arrayBuffer();timings.push(performance.now()-t)}}));timings.sort((a,b)=>a-b);assert.deepEqual(errors,[]);return {requests:1000,concurrency:25,elapsedMs:performance.now()-start,p50Ms:timings[Math.floor(timings.length*.5)],p95Ms:timings[Math.floor(timings.length*.95)],p99Ms:timings[Math.floor(timings.length*.99)],errors,publicRequests:0}
+  await Promise.all(Array.from({length:25},async()=>{while(issued<1000){const i=issued++,t=performance.now();const status=await new Promise((resolve,reject)=>{const req=get(url+['','season-report.json','poll-snapshot.json','v6-scenario-input.json'][i%4],{agent:false},res=>{res.resume();res.on('end',()=>resolve(res.statusCode));res.on('error',reject)});req.setTimeout(10000,()=>req.destroy(Error('Local request timed out')));req.on('error',reject)});if(status!==200)errors.push(status);timings.push(performance.now()-t)}}));timings.sort((a,b)=>a-b);assert.deepEqual(errors,[]);return {requests:1000,concurrency:25,elapsedMs:performance.now()-start,p50Ms:timings[Math.floor(timings.length*.5)],p95Ms:timings[Math.floor(timings.length*.95)],p99Ms:timings[Math.floor(timings.length*.99)],errors,publicRequests:0}
  })
 }finally{await browser.close();await new Promise(r=>server.close(r));await writeFile(out+'/results.json',JSON.stringify({productionCommit:'2c47bec5935fd32844ef20c307e3aab4c201d052',artifactRun:43649840894,conditions:{origin:url,network:'loopback only; external browser requests aborted',fixtures:'isolated interception, never live data',heapGrowthLimitMiB:32,lateHeapLimitMiB:12},records,summary:{pass:records.filter(r=>r.status==='PASS').length,fail:records.filter(r=>r.status==='FAIL').length}},null,2)+'\n')}
 console.log(JSON.stringify(records.map(r=>({name:r.name,status:r.status,error:r.error})),null,2));if(records.some(r=>r.status==='FAIL'))process.exitCode=1
