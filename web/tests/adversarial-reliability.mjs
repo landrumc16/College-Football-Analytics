@@ -59,6 +59,13 @@ try{
   }
   await p.getByLabel('Add favorite team').fill('Texas Tech');await p.getByRole('button',{name:'Save Team',exact:true}).click();await p.reload({waitUntil:'networkidle'});assert.equal(await p.locator('.editorial-team-row').count(),1);await healthy(p)
  }))
+ await run('favorites-independent-profiles',async()=>{
+  const sessions=[]
+  try{for(const team of ['Texas Tech','Georgia']){const c=await context();sessions.push(c);const p=await pageIn(c);await home(p);await p.locator('.editorial-favorite-editor > summary').click();await p.locator('.favorite-add > summary').click();await p.getByLabel('Add favorite team').fill(team);await p.getByRole('button',{name:'Save Team',exact:true}).click()}
+   for(let i=0;i<sessions.length;i++){const p=sessions[i].pages()[0];await p.reload({waitUntil:'networkidle'});const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem('cfba-favorites-v1')).filter(Boolean));assert.deepEqual(saved,[['Texas Tech','Georgia'][i]]);await healthy(p)}
+   return {profiles:2,distinctFavorites:['Texas Tech','Georgia'],reload:'independent'}
+  }finally{await Promise.all(sessions.map(c=>c.close()))}
+ })
  await run('comparison-empty-same-and-repeated',()=>withPage(async p=>{
   await home(p);await nav(p,'Teams');await chooseSection(p,'Teams sections','Compare & What If')
   for(let i=0;i<30;i++){await p.getByLabel('First school',{exact:true}).selectOption(['','Texas Tech','Georgia'][i%3]);await p.getByLabel('Second school',{exact:true}).selectOption(['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
@@ -91,25 +98,29 @@ try{
   {name:'poll-wrong-shape',path:'poll-snapshot.json',body:JSON.stringify({season:2026,week:11,source:'Isolated test',ap_top25:[null],coaches_top25:[null]}),poll:true},
   {name:'scenario-wrong-hash',path:'v6-scenario-input.json',body:JSON.stringify({...realPacket,report_sha256:'bad'}),scenario:true},
   {name:'scenario-malformed-scale',path:'v6-scenario-input.json',body:JSON.stringify({...realPacket,scale:'bad'}),scenario:true},
+  {name:'scenario-malformed-edge',path:'v6-scenario-input.json',body:JSON.stringify({...realPacket,home_edge:null}),scenario:true},
+  {name:'scenario-malformed-seed',path:'v6-scenario-input.json',body:JSON.stringify({...realPacket,seed:-1}),scenario:true},
   {name:'scenario-malformed-teams',path:'v6-scenario-input.json',body:JSON.stringify({...realPacket,teams:null}),scenario:true},
  ]
  for(const f of faults)await run('fixture-'+f.name,()=>withPage(async p=>{
+  const response=p.waitForResponse(r=>r.url().endsWith('/'+f.path),{timeout:10000})
   let intercept=true;await p.route('**/'+f.path,route=>intercept?route.fulfill({status:f.status||200,contentType:'application/json',body:f.body}):route.continue())
   await p.goto(url,{waitUntil:'networkidle'});await delay(100)
   if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
   if(f.research){await nav(p,'Research');await p.waitForLoadState('networkidle')}
   if(f.poll){await nav(p,'Rankings');await p.waitForLoadState('networkidle')}
-  await p.waitForLoadState('networkidle')
+  await response;await delay(150)
   if(f.scenario){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
   if(f.core&&!f.stale){await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor({timeout:2500})}
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
   const errors=[...p.errors];assert.deepEqual(errors,[],'Malformed input crashed the page')
-  intercept=false;await p.reload({waitUntil:'networkidle'});p.errors=[];await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await healthy(p)
+  if(f.name.includes('wrong-shape')||f.name.includes('malformed-scale'))await p.screenshot({path:`${out}/fixture-${f.name}-contained.png`,fullPage:true})
+  intercept=false;const retry=p.getByRole('button',{name:'Retry loading data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await healthy(p)
   return {injectedPath:f.path,payload:f.body.length<400?f.body:'See named mutation in test source',recovery:'healthy after restoring original bytes'}
  }))
  await run('pwa-disconnect-poisoned-cache-recovery',()=>withPage(async(p,c)=>{
   await home(p);await p.evaluate(()=>navigator.serviceWorker.ready);await p.reload({waitUntil:'networkidle'});await p.waitForFunction(()=>!!navigator.serviceWorker.controller)
-  await p.evaluate(async()=>{const cache=await caches.open('adversarial-stale-cache');await cache.put('./season-report.json',new Response(JSON.stringify({season:1999,rankings:[],predictions:[]})));await cache.put('./index.html',new Response('<h1>STALE CACHE SENTINEL</h1>'))})
+  await p.evaluate(async()=>{const cache=await caches.open('cfb-shell-v341');await cache.put('./season-report.json',new Response(JSON.stringify({season:1999,rankings:[],predictions:[]})));await cache.put('./index.html',new Response('<h1>STALE CACHE SENTINEL</h1>'))})
   await p.reload({waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();assert.ok(!(await p.locator('body').innerText()).includes('STALE CACHE SENTINEL'))
   failJson=true;await p.reload({waitUntil:'networkidle'});await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor();failJson=false;await p.getByRole('button',{name:'Retry loading data',exact:true}).click();await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()
   disconnect=true;await p.reload({waitUntil:'load'});await p.getByRole('heading',{name:'You are offline',exact:true}).waitFor();disconnect=false;await p.getByRole('link',{name:'Try again',exact:true}).click();await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await healthy(p)
@@ -134,5 +145,5 @@ try{
   const timings=[],errors=[],start=performance.now();let issued=0
   await Promise.all(Array.from({length:25},async()=>{while(issued<1000){const i=issued++,t=performance.now();const status=await new Promise((resolve,reject)=>{const req=get(url+['','season-report.json','poll-snapshot.json','v6-scenario-input.json'][i%4],{agent:false},res=>{res.resume();res.on('end',()=>resolve(res.statusCode));res.on('error',reject)});req.setTimeout(10000,()=>req.destroy(Error('Local request timed out')));req.on('error',reject)});if(status!==200)errors.push(status);timings.push(performance.now()-t)}}));timings.sort((a,b)=>a-b);assert.deepEqual(errors,[]);return {requests:1000,concurrency:25,elapsedMs:performance.now()-start,p50Ms:timings[Math.floor(timings.length*.5)],p95Ms:timings[Math.floor(timings.length*.95)],p99Ms:timings[Math.floor(timings.length*.99)],errors,publicRequests:0}
  })
-}finally{await browser.close();await new Promise(r=>server.close(r));await writeFile(out+'/results.json',JSON.stringify({productionCommit:'2c47bec5935fd32844ef20c307e3aab4c201d052',artifactRun:43649840894,conditions:{origin:url,network:'loopback only; external browser requests aborted',fixtures:'isolated interception, never live data',heapGrowthLimitMiB:32,lateHeapLimitMiB:12},records,summary:{pass:records.filter(r=>r.status==='PASS').length,fail:records.filter(r=>r.status==='FAIL').length}},null,2)+'\n')}
+}finally{await browser.close();await new Promise(r=>server.close(r));await writeFile(out+'/results.json',JSON.stringify({productionCommit:'2c47bec5935fd32844ef20c307e3aab4c201d052',candidateCommit:process.env.CANDIDATE_SHA||null,artifactRun:43649840894,conditions:{origin:url,network:'loopback only; external browser requests aborted',fixtures:'isolated interception, never live data',heapGrowthLimitMiB:32,lateHeapLimitMiB:12},records,summary:{pass:records.filter(r=>r.status==='PASS').length,fail:records.filter(r=>r.status==='FAIL').length}},null,2)+'\n')}
 console.log(JSON.stringify(records.map(r=>({name:r.name,status:r.status,error:r.error})),null,2));if(records.some(r=>r.status==='FAIL'))process.exitCode=1

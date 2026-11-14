@@ -1,7 +1,7 @@
 name: Isolated production adversarial reliability
 on:
   push:
-    branches: [v6-adversarial-verification]
+    branches: [v6-adversarial-verification, v6-adversarial-fixes]
 permissions:
   contents: read
   actions: read
@@ -15,7 +15,13 @@ jobs:
           fetch-depth: 0
       - name: Guard production application and engine identity
         run: |
-          git diff --exit-code 2c47bec5935fd32844ef20c307e3aab4c201d052 -- src web/src web/public web/package.json web/vite.config.ts data research
+          git diff --exit-code 2c47bec5935fd32844ef20c307e3aab4c201d052 -- src web/public web/package.json web/vite.config.ts data research web/src/scenarios.ts web/src/scenario.worker.ts
+          python - <<'PY'
+          import subprocess
+          allowed={'web/src/main.tsx','web/src/PlayoffScenarios.tsx','web/src/ProgramContext.tsx','web/src/DataBoundary.tsx'}
+          changed=set(subprocess.check_output(['git','diff','--name-only','2c47bec5935fd32844ef20c307e3aab4c201d052','--','web/src'],text=True).splitlines())
+          assert changed<=allowed,changed-allowed
+          PY
           mkdir -p web/adversarial-evidence
           echo 2c47bec5935fd32844ef20c307e3aab4c201d052 > web/adversarial-evidence/production-sha.txt
           git rev-parse HEAD > web/adversarial-evidence/harness-sha.txt
@@ -43,6 +49,28 @@ jobs:
           npm --prefix web install --no-save --package-lock=false playwright@1.56.1
           cd web
           npx playwright install --with-deps chromium
+      - name: Confirm adversarial failures in unchanged deployed artifact
+        if: github.ref_name == 'v6-adversarial-fixes'
+        continue-on-error: true
+        run: |
+          set +e
+          node web/tests/adversarial-reliability.mjs
+          status=$?
+          cp -a web/adversarial-evidence web/adversarial-baseline-evidence
+          exit "$status"
+      - name: Build narrow candidate against identical production data
+        if: github.ref_name == 'v6-adversarial-fixes'
+        run: |
+          find web/adversarial-evidence -maxdepth 1 -name '*.png' -delete
+          cp -a web/dist /tmp/deployed-dist
+          npm --prefix web run build
+          find /tmp/deployed-dist -maxdepth 1 -name '*.json' -exec cp {} web/dist/ \;
+          echo "CANDIDATE_SHA=${GITHUB_SHA}" >> "$GITHUB_ENV"
+          python - <<'PY'
+          from pathlib import Path
+          for old in Path('/tmp/deployed-dist').glob('*.json'):
+              assert old.read_bytes()==(Path('web/dist')/old.name).read_bytes(),old.name
+          PY
       - name: Adversarial UI, fixtures, offline, memory and isolated visitor/request load
         run: node web/tests/adversarial-reliability.mjs
       - name: Exercise released Monte Carlo engines across seeds and scenarios
@@ -63,5 +91,6 @@ jobs:
           path: |
             web/adversarial-evidence/
             web/mobile-evidence/
+            web/adversarial-baseline-evidence/
           retention-days: 90
           if-no-files-found: error
