@@ -2,7 +2,7 @@ name: V5 development acceptance checks
 
 on:
   push:
-    branches: [v5-development, ux-navigation-consolidation]
+    branches: [v5-development, ux-navigation-consolidation, homepage-editorial-preview]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -46,8 +46,10 @@ jobs:
           cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
       - name: Record exact candidate revision
         run: |
-          mkdir -p web/mobile-evidence
+          mkdir -p web/mobile-evidence web/editorial-evidence
           git rev-parse HEAD > web/mobile-evidence/tested-sha.txt
+          git rev-parse HEAD > web/editorial-evidence/tested-sha.txt
+          sha256sum data/season-2026-report.json data/poll-2026-snapshot.json web/public/v5-program-report-cards.json > web/editorial-evidence/data-sha256.txt
       - name: Compile and build V5 app
         working-directory: web
         run: npm run build
@@ -60,6 +62,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Run real Chromium mobile and desktop journeys
         run: node web/tests/mobile-smoke.mjs
+      - name: Verify approved editorial homepage and capture all five viewports
+        run: node web/tests/editorial-home.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'
@@ -87,6 +91,7 @@ jobs:
           path: |
             web/dist/
             web/mobile-evidence/
+            web/editorial-evidence/
           retention-days: 14
           if-no-files-found: warn
 

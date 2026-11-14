@@ -1,8 +1,10 @@
 # Homepage visual approval preview
 
-Status: visual design approval pending. This is an isolated, opt-in browser
-preview of the owner's sports-publication direction, not a completed rollout.
-The default application and production `main` remain unchanged.
+Status: the owner approved this visual direction on November 14, 2026.
+The isolated preview at `9a42e4cdfb14dc985500c7ddfb93a33ddfd9712d` is retained
+in PR #21 history. The approved design is now integrated into the normal app
+on the development branch; production remains unchanged until merge approval.
+See `docs/HOMEPAGE-UX.md` for implementation and acceptance details.
 
 The preview uses the checked-in 2026 season report and poll snapshot, and the
 existing source-gated national Report Card publication. No outcome, probability,

@@ -29,19 +29,16 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — homepage editorial visual preview (2026-11-13)
+## Current task — approved homepage redesign (2026-11-14)
 
 The owner's Homepage & Mobile UX Redesign directive supersedes the unmerged
 mobile dropdown proposal. Work on `homepage-editorial-preview` from production.
 
-- First deliver actual browser previews at 390px and 1536px using existing
-  branding and retained real data. A compact sports-publication homepage and
-  mobile bottom navigation are explicitly authorized for this preview.
-- **Visual approval is required before completing the redesign.** Keep this
-  preview opt-in and isolated; do not replace the default application homepage,
-  run a production rollout, or claim final five-width/PWA acceptance yet.
-- After visual approval, finish integration and all requested acceptance without
-  routine approvals. A separate explicit approval remains required to merge main.
+- The owner approved the actual 390px/1536px visual previews at
+  `9a42e4cdfb14dc985500c7ddfb93a33ddfd9712d`. Complete the approved design,
+  responsive acceptance at 375/390/430/768/1536, regression tests and PWA checks.
+- Work in PR #21 on `homepage-editorial-preview`. Keep production unchanged.
+  A separate explicit approval remains required to merge main.
 - Preserve the engine, archive, calculations, methodology, full analytics views,
   favorites and PWA. Do not start another version, roadmap or unrelated features.
 

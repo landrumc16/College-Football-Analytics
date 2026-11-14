@@ -1,4 +1,4 @@
-.editorial-preview{max-width:1200px;padding-top:20px}
+.editorial-app{max-width:1200px;padding-top:20px}
 .editorial-masthead{display:flex;align-items:center;gap:12px;padding:0 0 16px;border-bottom:1px solid #485365}
 .editorial-masthead img{width:50px;height:50px}
 .editorial-masthead h1{font-family:Georgia,'Times New Roman',serif;font-size:29px;letter-spacing:-.6px;line-height:1.05;margin:0;color:#f6f0e4}
@@ -55,10 +55,10 @@
 .editorial-verified{white-space:nowrap}
 .editorial-empty{font-size:13px;color:#9fb1c8}
 .editorial-caveat{font-size:11px;color:#8fa3bd;border-top:1px solid #34445a;padding-top:14px;margin:24px 0 0;line-height:1.5}
-.editorial-preview>footer{font-size:10px;line-height:1.5;color:#8095b0}
-.editorial-preview button:focus-visible,.editorial-preview summary:focus-visible{outline:3px solid #d4ad79;outline-offset:3px}
+.editorial-app>footer{font-size:10px;line-height:1.5;color:#8095b0}
+.editorial-app button:focus-visible,.editorial-app summary:focus-visible{outline:3px solid #d4ad79;outline-offset:3px}
 @media(max-width:767px){
- .editorial-preview{padding:12px 18px calc(92px + env(safe-area-inset-bottom))}
+ .editorial-app{padding:12px 18px calc(92px + env(safe-area-inset-bottom))}
  .editorial-masthead{gap:9px;padding-bottom:12px}
  .editorial-masthead img{width:38px;height:38px}
  .editorial-masthead h1{font-size:21px;letter-spacing:-.5px}
@@ -97,4 +97,13 @@
  .editorial-story-link>strong{font-size:19px}
  .editorial-story-link>span{font-size:12px}
  .editorial-caveat{margin-top:20px}
+}
+
+/* Leave focused controls clear of persistent phone navigation. */
+@media(max-width:767px){
+ html{scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+ .editorial-app :is(button,input,select,summary,a){scroll-margin-block:12px calc(88px + env(safe-area-inset-bottom))}
+ .editorial-app .section-tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain}
+ .editorial-app .section-tabs button{flex:0 0 auto;white-space:nowrap}
+ .editorial-favorite-editor>div{max-height:60vh;overflow:auto}
 }

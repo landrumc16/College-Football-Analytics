@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { destinations } from './Navigation'
 import { useReportCards } from './ProgramReportCard'
-import './editorial-preview.css'
+import './editorial-home.css'
 
 type Team = { team: string; rank: number; wins: number; losses: number }
 type Game = { game_id: number; week: number; home: string; away: string; predicted_winner: string; home_win_probability: number; home_margin: number }

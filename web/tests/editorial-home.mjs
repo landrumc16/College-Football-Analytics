@@ -4,8 +4,8 @@ import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const server = spawn('npm', ['run', 'preview', '--', '--config', 'vite.editorial.config.ts', '--host', '127.0.0.1', '--port', '4179', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
-const url = 'http://127.0.0.1:4179/editorial-preview.html';
+const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4179', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
+const url = 'http://127.0.0.1:4179/';
 let browser;
 let activePage;
 try {
@@ -13,7 +13,7 @@ try {
   browser = await chromium.launch({ headless: true });
   await mkdir('web/editorial-evidence', { recursive: true });
   const results = [];
-  for (const width of [390,1536]) {
+  for (const width of [375,390,430,768,1536]) {
     const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 }, deviceScaleFactor: 1 });
     const page = await context.newPage();
     activePage = page;
@@ -38,7 +38,7 @@ try {
     assert.deepEqual(await nav.getByRole('button').allTextContents(), ['Home','Rankings','Teams','Playoffs','Research']);
     assert.equal(await page.getByRole('tab', { name: 'This Week', exact: true }).count(), 0);
     assert.equal(await page.getByRole('tab', { name: 'Game Predictions', exact: true }).count(), 0);
-    assert.equal(await page.locator('.editorial-game:visible').count(), width === 390 ? 2 : 3);
+    assert.equal(await page.locator('.editorial-game:visible').count(), width < 768 ? 2 : 3);
     assert.equal(await page.locator('.editorial-team-row').count(), 3);
     assert.equal(await page.locator('.editorial-rankings li').count(), 5);
     const data = await page.evaluate(async () => ({ season: await (await fetch('./season-report.json')).json(), cards: await (await fetch('./v5-program-report-cards.json')).json() }));
@@ -47,14 +47,42 @@ try {
     for (const window of ['3','10']) assert.ok(spotlight.includes((100*tech.trajectory.windows[window]).toFixed(1)+'%'));
     const dimensions = await page.evaluate(() => ({ width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight, homeHeight: document.querySelector('.editorial-home').getBoundingClientRect().height }));
     assert.ok(dimensions.scrollWidth <= width+1, JSON.stringify(dimensions));
-    if (width === 390) {
+    if (width < 768) {
       const position = await nav.evaluate(element => ({ position: getComputedStyle(element).position, bottom: element.getBoundingClientRect().bottom }));
       assert.equal(position.position, 'fixed'); assert.ok(Math.abs(position.bottom-844)<=1);
       assert.ok(dimensions.scrollHeight <= 2*844, 'Homepage exceeds two phone screens: '+JSON.stringify(dimensions));
     }
+    await page.mouse.move(0,0);
     await page.screenshot({ path: `web/editorial-evidence/home-${width}.png`, fullPage: false });
     await page.screenshot({ path: `web/editorial-evidence/home-${width}-full.png`, fullPage: true });
-    // Preview links open the existing, actual detailed application views.
+    if (width < 768) {
+      await page.evaluate(() => window.scrollTo(0,document.documentElement.scrollHeight));
+      await page.screenshot({ path: `web/editorial-evidence/home-bottom-${width}.png` });
+      await page.evaluate(() => window.scrollTo(0,0));
+    }
+    // Keyboard operation of primary destinations and scrollable secondary tabs.
+    const rankingsButton = nav.getByRole('button', { name: 'Rankings', exact: true });
+    await rankingsButton.focus(); await page.keyboard.press('Enter');
+    await page.getByRole('tab', { name: 'Model Rankings', selected: true }).waitFor();
+    await nav.getByRole('button', { name: 'Teams', exact: true }).click();
+    for (const label of ['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card']) {
+      const tab = page.getByRole('tab', { name: label, exact: true });
+      await tab.click();
+      await page.screenshot({ path: `web/editorial-evidence/profile-${label.split(' ')[0].toLowerCase()}-${width}.png`, fullPage: true });
+    }
+    for (const destination of ['Rankings','Teams','Playoffs','Research']) {
+      await nav.getByRole('button', { name: destination, exact: true }).click();
+      const tabs = page.getByRole('tablist', { name: `${destination} sections`, exact: true });
+      if (width < 768) {
+        const layout = await tabs.evaluate(element => ({ wrap: getComputedStyle(element).flexWrap, labels: [...element.children].map(child => ({y: child.getBoundingClientRect().y, height: child.getBoundingClientRect().height, scroll: child.scrollWidth, width: child.clientWidth})) }));
+        assert.equal(layout.wrap,'nowrap');
+        assert.ok(layout.labels.every(label => Math.abs(label.y-layout.labels[0].y)<1 && label.scroll<=label.width+1), JSON.stringify(layout));
+      }
+      const last = tabs.getByRole('tab').last(); await last.click();
+      const box = await last.boundingBox(); assert.ok(box.x>=0 && box.x+box.width<=width+1);
+    }
+    await nav.getByRole('button', { name: 'Home', exact: true }).click();
+    // Links open the existing, actual detailed application views.
     const featured = page.locator('.editorial-game:visible').first();
     const matchupText = await featured.innerText();
     await featured.click();
@@ -81,7 +109,7 @@ try {
     await about.getByText('Favorites are stored only in this browser', { exact: false }).waitFor();
     assert.deepEqual(errors, []);
     results.push({ width, dimensions, featured: matchupText, spotlight, favoriteTeams: ['Texas Tech','Texas A&M','Georgia'], detailedLinks: 'passed', browserErrors: errors });
-    console.log(`Editorial browser preview passed at ${width}px: ${dimensions.scrollHeight}px document`);
+    console.log(`Editorial homepage acceptance passed at ${width}px: ${dimensions.scrollHeight}px document`);
     await context.close();
   }
   await writeFile('web/editorial-evidence/preview-checks.json', JSON.stringify(results,null,2));
