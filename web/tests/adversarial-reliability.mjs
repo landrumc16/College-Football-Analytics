@@ -109,8 +109,9 @@ try{
   if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
   if(f.research){await nav(p,'Research');await p.waitForLoadState('networkidle')}
   if(f.poll){await nav(p,'Rankings');await p.waitForLoadState('networkidle')}
+  if(f.scenario)await nav(p,'Playoffs')
   await response;await delay(150)
-  if(f.scenario){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
+  if(f.scenario){await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
   if(f.core&&!f.stale){await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor({timeout:2500})}
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
   const errors=[...p.errors];assert.deepEqual(errors,[],'Malformed input crashed the page')
