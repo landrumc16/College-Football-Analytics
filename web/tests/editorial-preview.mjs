@@ -7,6 +7,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 const server = spawn('npm', ['run', 'preview', '--', '--config', 'vite.editorial.config.ts', '--host', '127.0.0.1', '--port', '4179', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
 const url = 'http://127.0.0.1:4179/editorial-preview.html';
 let browser;
+let activePage;
 try {
   for (let i = 0; i < 40; i++) { try { if ((await fetch(url)).ok) break; } catch {} await delay(500); }
   browser = await chromium.launch({ headless: true });
@@ -15,13 +16,14 @@ try {
   for (const width of [390,1536]) {
     const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 }, deviceScaleFactor: 1 });
     const page = await context.newPage();
+    activePage = page;
     page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(url, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: 'Featured Matchups', exact: true }).waitFor();
     const editor = page.locator('.editorial-favorite-editor');
-    await editor.locator('summary').click();
+    await editor.locator(':scope > summary').click();
     for (const team of ['Texas Tech','Texas A&M','Georgia']) {
       const add = editor.locator('.favorite-add');
       if (!(await add.evaluate(element => element.open))) await add.locator('summary').click();
@@ -83,6 +85,9 @@ try {
     await context.close();
   }
   await writeFile('web/editorial-evidence/preview-checks.json', JSON.stringify(results,null,2));
+} catch (error) {
+  if (activePage && !activePage.isClosed()) await activePage.screenshot({ path: 'web/editorial-evidence/preview-failure.png', fullPage: true });
+  throw error;
 } finally {
   await browser?.close();
   try { process.kill(-server.pid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
