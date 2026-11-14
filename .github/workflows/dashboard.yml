@@ -265,6 +265,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Publish current V6 scenario and retained research packets
+        run: python -m scripts.build_v6_product
       - name: Install and build
         working-directory: web
         run: |

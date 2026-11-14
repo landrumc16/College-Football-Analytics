@@ -1,5 +1,5 @@
 # College Football Analytics — Version 6.0 Authoritative Roadmap
-**Status:** Owner-approved product direction; planning PR, not yet implementation or release.
+**Status:** Planning PR #24 owner-approved and merged as `dd8609bf3d13710305e7ab9425693116e3ee4ebf`; implementation on `v6-development` / PR #25. Not released; implementation merge requires owner approval.
 **Repository:** landrumc16/College-Football-Analytics
 **Baseline:** planning review at main `a8fff1f2c03b6d4577895617ac36da1b9840650b`, including PR #23's deployed secondary navigation at `56abff306eb3f5f60f3356e01dcdacff68f1b4e9` plus the subsequent data refresh. Preserve V5 functionality and UX; use latest main when development is authorized.
 **Development:** create v6-development from latest main after planning approval. Never merge without owner approval.

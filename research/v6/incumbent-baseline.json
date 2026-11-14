@@ -1,0 +1,17 @@
+{
+  "authentic_forecasts": 65,
+  "files": {
+    "data/cfbd-2026-games.json": "7ea91cb4264da664c017a0493cc621be26672a7b9ed91263db478dbc0272e628",
+    "data/season-2026-report.json": "e3081c8eb516d471ffaef8a1e3deae789e858b1de07e5c2d478984c9a0780a8c",
+    "research/archive/verified/verified-pregame-rows.json": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
+    "src/cfb_analytics/cfp.py": "015ae64c5fec63bf34fe503dbf894bef1df6dc6b7effdf96fed1350cd8c713c4",
+    "src/cfb_analytics/model.py": "2b09c584e722a4f34cb7afe0436a5c7c717fecaff0f8db8ef807e54310bb6266",
+    "src/cfb_analytics/pipeline.py": "3c1f0fa576420212b06319c80b3a8e2f4dd3e8f02b529b1517ca82b1ce8c027e",
+    "src/cfb_analytics/predictions.py": "9d349fd0c0606899b31fe206582fe8e23ab648c85230097c2aace558696d4474"
+  },
+  "historical_incumbent_replay": "unavailable without season-specific priors; no 2026 priors backfilled into older seasons",
+  "policy": "incumbent remains authoritative; scenario adapters do not change default CFP calculations",
+  "production_baseline_commit": "dd8609bf3d13710305e7ab9425693116e3ee4ebf",
+  "production_engine": "workbook_2026_baseline",
+  "schema_version": 1
+}

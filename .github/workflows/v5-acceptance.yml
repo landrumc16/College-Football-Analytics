@@ -2,7 +2,7 @@ name: V5 development acceptance checks
 
 on:
   push:
-    branches: [v5-development, ux-navigation-consolidation, homepage-editorial-preview, secondary-navigation-selects]
+    branches: [v5-development, ux-navigation-consolidation, homepage-editorial-preview, secondary-navigation-selects, v6-development]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -40,6 +40,7 @@ jobs:
       - name: Stage actual season report for browser acceptance
         run: |
           python -m pip install -e .
+          python -m scripts.build_v6_product
           python -m cfb_analytics.backtest --output web/public/historical-backtest.json
           cp data/v2-research-summary.json web/public/v2-research-summary.json
           cp data/season-2026-report.json web/public/season-report.json
@@ -56,7 +57,9 @@ jobs:
       - name: Verify production dashboard bundle identity
         run: python scripts/verify_dashboard_bundle.py
       - name: Check historical publication safeguards
-        run: node web/tests/historical-publication.mjs
+        run: |
+          node web/tests/historical-publication.mjs
+          node web/tests/v6-scenarios.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -66,6 +69,8 @@ jobs:
         run: node web/tests/mobile-smoke.mjs
       - name: Verify approved editorial homepage and capture all five viewports
         run: node web/tests/editorial-home.mjs
+      - name: Verify V6 research, program parity and bounded mobile scenarios
+        run: node web/tests/v6-browser.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'
@@ -94,6 +99,7 @@ jobs:
             web/dist/
             web/mobile-evidence/
             web/editorial-evidence/
+            web/v6-evidence/
           retention-days: 14
           if-no-files-found: warn
 
