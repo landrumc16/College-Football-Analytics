@@ -6,7 +6,7 @@ biography experience is deliberately not treated as season-specific experience.
 from __future__ import annotations
 
 from collections import Counter
-from math import isfinite
+from math import isfinite, fsum
 from .historical import utc_instant
 
 
@@ -16,7 +16,7 @@ def finite_mean(values):
         return None
     if any(type(value) not in (int, float) or not isfinite(value) for value in values):
         raise ValueError("Non-finite source value")
-    return sum(values) / len(values)
+    return fsum(values) / len(values)
 
 
 def recruiting_summary(rows):
@@ -140,7 +140,10 @@ def load_foundation(root):
             raise ValueError('Retained research checksum mismatch: ' + name)
     registry = json.loads((root / 'research/v6/sources.json').read_text())
     ids = validate_registry(registry)
-    payload = json.loads(gzip.decompress((root / 'research/v6/foundation.json.gz').read_bytes()))
+    canonical = gzip.decompress((root / 'research/v6/foundation.json.gz').read_bytes())
+    if __import__('hashlib').sha256(canonical).hexdigest() != manifest['canonical_foundation_sha256']:
+        raise ValueError('Canonical foundation checksum mismatch')
+    payload = json.loads(canonical)
     validate_foundation(payload)
     if any(source not in ids for row in payload['team_seasons'] for source in row['source_ids']):
         raise ValueError('Unresolved source lineage')

@@ -182,7 +182,8 @@ def main():
     output = gzip.compress(packed(payload),mtime=0)
     target = DEST / 'foundation.json.gz'
     if args.check:
-        if target.read_bytes() != output:raise ValueError('Foundation regeneration differs from retained output')
+        if gzip.decompress(target.read_bytes()) != packed(payload):
+            raise ValueError('Canonical foundation regeneration differs from retained output')
     else:target.write_bytes(output)
     print(json.dumps(validate_foundation(payload)))
     print(json.dumps(payload['coverage']))

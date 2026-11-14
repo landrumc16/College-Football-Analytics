@@ -1,4 +1,5 @@
 {
+  "canonical_foundation_sha256": "5bbd0cedb8df9142197f14979f1ea1a00014234094c65989ebba6f3bbe5703d3",
   "description": "Frozen V6 derived observations and inherited independent classification/results; raw publisher cache stays private",
   "files": {
     "research/archive/verified/accepted-team-seasons.json": "54c7ed5eecb90c0d82f0651a96183980dd5f6761b22bbb4cf5a2793bb23c8c2b",

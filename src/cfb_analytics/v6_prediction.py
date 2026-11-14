@@ -4,7 +4,7 @@ No production module imports this code. New recruiting/roster/coaching domains
 are excluded from historical fitting because their cutoff availability is unproven.
 """
 from __future__ import annotations
-from math import exp, isfinite, log, sqrt
+from math import exp, isfinite, log, sqrt, fsum
 from .historical import utc_instant
 
 
@@ -24,15 +24,15 @@ def fit_logistic(xs, ys, config):
         raise ValueError('Invalid training feature matrix')
     if any(y not in (0,1) for y in ys):
         raise ValueError('Training labels must be binary')
-    means = [sum(row[i] for row in xs)/count for i in range(width)]
-    scales = [sqrt(sum((row[i]-means[i])**2 for row in xs)/count) or 1.0 for i in range(width)]
+    means = [fsum(row[i] for row in xs)/count for i in range(width)]
+    scales = [sqrt(fsum((row[i]-means[i])**2 for row in xs)/count) or 1.0 for i in range(width)]
     values = [[(x-means[i])/scales[i] for i,x in enumerate(row)] for row in xs]
     prior = (sum(ys)+1)/(count+2)
     intercept, weights = log(prior/(1-prior)), [0.0]*width
     for _ in range(config['epochs']):
         gradients, bias = [0.0]*width, 0.0
         for row,y in zip(values,ys):
-            error = probability(intercept + sum(w*x for w,x in zip(weights,row))) - y
+            error = probability(intercept + fsum(w*x for w,x in zip(weights,row))) - y
             bias += error
             for i,x in enumerate(row):gradients[i] += error*x
         intercept -= config['learning_rate'] * bias/count
@@ -44,7 +44,7 @@ def fit_logistic(xs, ys, config):
 def predict(model, row):
     if len(row) != len(model['weights']) or any(not isfinite(x) for x in row):
         raise ValueError('Invalid prediction features')
-    value = model['intercept'] + sum(w*(x-m)/s for w,x,m,s in zip(model['weights'],row,model['means'],model['scales']))
+    value = model['intercept'] + fsum(w*(x-m)/s for w,x,m,s in zip(model['weights'],row,model['means'],model['scales']))
     clip = model['config']['probability_clip']
     return min(1-clip,max(clip,probability(value)))
 
@@ -57,8 +57,8 @@ def program_features(records, team, season):
     n = sum(r['fbs_wins']+r['fbs_losses'] for r in prior)
     years = [r['season'] for r in prior]
     rates = [r['fbs_wins']/(r['fbs_wins']+r['fbs_losses']) for r in prior]
-    ym, rm = sum(years)/len(years), sum(rates)/len(rates)
-    slope = sum((y-ym)*(p-rm) for y,p in zip(years,rates))/sum((y-ym)**2 for y in years)
+    ym, rm = sum(years)/len(years), fsum(rates)/len(rates)
+    slope = fsum((y-ym)*(p-rm) for y,p in zip(years,rates))/sum((y-ym)**2 for y in years)
     return [rates[0],sum(r['fbs_wins'] for r in prior)/n,slope,prior[0]['fbs_wins']+prior[0]['fbs_losses']]
 
 
