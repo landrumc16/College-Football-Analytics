@@ -14,7 +14,7 @@ try {
   await mkdir('web/editorial-evidence', { recursive: true });
   const results = [];
   for (const width of [375,390,430,768,1536]) {
-    const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 }, deviceScaleFactor: 1 });
+    const context = await browser.newContext({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     const page = await context.newPage();
     activePage = page;
     page.setDefaultTimeout(10000);
@@ -49,7 +49,7 @@ try {
     assert.ok(dimensions.scrollWidth <= width+1, JSON.stringify(dimensions));
     if (width < 768) {
       const position = await nav.evaluate(element => ({ position: getComputedStyle(element).position, bottom: element.getBoundingClientRect().bottom }));
-      assert.equal(position.position, 'fixed'); assert.ok(Math.abs(position.bottom-844)<=1);
+      assert.equal(position.position, 'fixed'); assert.ok(Math.abs(position.bottom-dimensions.height)<=1);
       assert.ok(dimensions.scrollHeight <= 2*844, 'Homepage exceeds two phone screens: '+JSON.stringify(dimensions));
     }
     await page.mouse.move(0,0);
