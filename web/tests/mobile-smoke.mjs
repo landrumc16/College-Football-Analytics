@@ -1,3 +1,4 @@
+import { chooseSection, assertSection } from './section-navigation.mjs';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -59,10 +60,10 @@ async function navigate(page, view) {
   await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: destination, exact: true }).click();
   if (view === 'home') return;
   if (view === 'predictions') { await page.getByRole('button', { name: 'All games', exact: false }).click(); return; }
-  await page.getByRole('tablist', { name: `${destination} sections`, exact: true }).getByRole('tab', { name: label, exact: true }).click();
+  await chooseSection(page, `${destination} sections`, label);
 }
 async function profileTab(page, label) {
-  await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).getByRole('tab', { name: label, exact: true }).click();
+  await chooseSection(page, 'Team Profile sections', label);
 }
 
 async function assertReportCard(page, team) {
@@ -99,19 +100,24 @@ try {
     await page.getByRole('heading', { name: 'Playoff Watch', exact: true }).waitFor();
     // Tabs must be operable by keyboard as well as touch.
     await navigate(page, 'rankings');
-    const modelTab = page.getByRole('tab', { name: 'Model Rankings', exact: true });
-    await modelTab.press('ArrowRight');
-    if (await page.getByRole('tab', { name: 'AP Poll', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('Arrow-key navigation failed');
-    await page.getByRole('tab', { name: 'AP Poll', exact: true }).press('End');
-    if (await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('End-key navigation failed');
-    await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
-    if (await modelTab.getAttribute('aria-selected') !== 'true') throw new Error('Home-key navigation failed');
-    if (width <= 390) {
+    const picker = page.getByRole('combobox', { name: 'Rankings sections', exact: true });
+    if (await picker.isVisible()) {
+      await picker.focus(); await picker.press('ArrowDown');
+      await assertSection(page, 'Rankings sections', 'AP Poll');
+      await picker.press('End'); await assertSection(page, 'Rankings sections', 'Team Stock Watch');
+      await picker.press('Home'); await assertSection(page, 'Rankings sections', 'Model Rankings');
+    } else {
+      const modelTab = page.getByRole('tab', { name: 'Model Rankings', exact: true });
+      await modelTab.press('ArrowRight'); await assertSection(page, 'Rankings sections', 'AP Poll');
+      await page.getByRole('tab', { name: 'AP Poll', exact: true }).press('End');
+      await assertSection(page, 'Rankings sections', 'Team Stock Watch');
+      await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
+      await assertSection(page, 'Rankings sections', 'Model Rankings');
+    }
+    if (width < 768) {
       await navigate(page, 'validation');
       await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Teams', exact: true }).click();
-      const selectedTab = page.getByRole('tab', { name: 'Team Profiles', exact: true });
-      const selectedBounds = await selectedTab.boundingBox();
-      if (!selectedBounds || selectedBounds.x < 0 || selectedBounds.x + selectedBounds.width > width) throw new Error('Primary navigation retained a previous destination tab scroll');
+      await assertSection(page, 'Teams sections', 'Team Profiles');
       await navigate(page, 'rankings');
     }
     await page.getByLabel('Search teams').fill('Georgia');
@@ -170,7 +176,7 @@ try {
     await profileTab(page, 'Schedule & Predictions');
     await page.getByRole('heading', { name: 'Full Season Schedule and Model Outlook', exact: true }).waitFor();
     if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite schedule shortcut lost its school');
-    if (await page.getByRole('tab', { name: 'Schedule & Predictions', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('Favorite schedule did not open the Profile schedule tab');
+    await assertSection(page, 'Team Profile sections', 'Schedule & Predictions');
     await profileTab(page, 'Historical Intelligence');
     await page.getByRole('region', { name: 'Historical FBS results', exact: true }).waitFor();
     await navigate(page, 'home');

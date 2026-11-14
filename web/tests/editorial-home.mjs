@@ -1,3 +1,4 @@
+import { chooseSection, assertSection, assertNavigationFits } from './section-navigation.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -52,6 +53,7 @@ try {
       assert.equal(position.position, 'fixed'); assert.ok(Math.abs(position.bottom-dimensions.height)<=1);
       assert.ok(dimensions.scrollHeight <= 2*844, 'Homepage exceeds two phone screens: '+JSON.stringify(dimensions));
     }
+    await page.evaluate(() => window.scrollTo(0,0));
     await page.mouse.move(0,0);
     await page.screenshot({ path: `web/editorial-evidence/home-${width}.png`, fullPage: false });
     await page.screenshot({ path: `web/editorial-evidence/home-${width}-full.png`, fullPage: true });
@@ -63,23 +65,23 @@ try {
     // Keyboard operation of primary destinations and scrollable secondary tabs.
     const rankingsButton = nav.getByRole('button', { name: 'Rankings', exact: true });
     await rankingsButton.focus(); await page.keyboard.press('Enter');
-    await page.getByRole('tab', { name: 'Model Rankings', selected: true }).waitFor();
+    await assertSection(page, 'Rankings sections', 'Model Rankings');
     await nav.getByRole('button', { name: 'Teams', exact: true }).click();
     for (const label of ['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card']) {
-      const tab = page.getByRole('tab', { name: label, exact: true });
-      await tab.click();
+      await chooseSection(page, 'Team Profile sections', label);
+      await assertNavigationFits(page, 'Team Profile sections', width);
       await page.screenshot({ path: `web/editorial-evidence/profile-${label.split(' ')[0].toLowerCase()}-${width}.png`, fullPage: true });
     }
     for (const destination of ['Rankings','Teams','Playoffs','Research']) {
       await nav.getByRole('button', { name: destination, exact: true }).click();
-      const tabs = page.getByRole('tablist', { name: `${destination} sections`, exact: true });
-      if (width < 768) {
-        const layout = await tabs.evaluate(element => ({ wrap: getComputedStyle(element).flexWrap, labels: [...element.children].map(child => ({y: child.getBoundingClientRect().y, height: child.getBoundingClientRect().height, scroll: child.scrollWidth, width: child.clientWidth})) }));
-        assert.equal(layout.wrap,'nowrap');
-        assert.ok(layout.labels.every(label => Math.abs(label.y-layout.labels[0].y)<1 && label.scroll<=label.width+1), JSON.stringify(layout));
-      }
-      const last = tabs.getByRole('tab').last(); await last.click();
-      const box = await last.boundingBox(); assert.ok(box.x>=0 && box.x+box.width<=width+1);
+      const group = `${destination} sections`;
+      const dropdown = await assertNavigationFits(page, group, width);
+      if (width === 1536) assert.equal(dropdown, false, 'Desktop tabs should fit');
+      const lastLabel = dropdown ? await page.getByRole('combobox', { name: group, exact: true }).locator('option').last().textContent()
+        : await page.getByRole('tablist', { name: group, exact: true }).getByRole('tab').last().textContent();
+      await chooseSection(page, group, lastLabel);
+      await page.evaluate(() => window.scrollTo(0,0));
+      await page.screenshot({ path: `web/editorial-evidence/secondary-${destination.toLowerCase()}-${width}.png` });
     }
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     // Links open the existing, actual detailed application views.
@@ -100,7 +102,15 @@ try {
     await page.getByRole('heading', { name: 'Projected 12-Team CFP Field', exact: true }).waitFor();
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.locator('.editorial-spotlight button').click();
-    await page.getByRole('tab', { name: 'Historical Intelligence', exact: true, selected: true }).waitFor();
+    await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+    if (width === 390) {
+      await page.setViewportSize({ width: 1536, height: 900 });
+      await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.getByRole('combobox', { name: 'Team Profile sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+    }
     assert.equal(await page.getByLabel('Choose school').inputValue(), 'Texas Tech');
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.locator('summary[aria-label="App menu"]').click();
