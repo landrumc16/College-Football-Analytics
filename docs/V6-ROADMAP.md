@@ -1,7 +1,7 @@
 # College Football Analytics — Version 6.0 Authoritative Roadmap
 **Status:** Owner-approved product direction; planning PR, not yet implementation or release.
 **Repository:** landrumc16/College-Football-Analytics
-**Baseline:** current released main; preserve V5 functionality and UX.
+**Baseline:** planning review at main `a8fff1f2c03b6d4577895617ac36da1b9840650b`, including PR #23's deployed secondary navigation at `56abff306eb3f5f60f3356e01dcdacff68f1b4e9` plus the subsequent data refresh. Preserve V5 functionality and UX; use latest main when development is authorized.
 **Development:** create v6-development from latest main after planning approval. Never merge without owner approval.
 
 ## North star
@@ -16,7 +16,7 @@ Inventory existing 2016–2025 verified archive, data contracts and gaps. Add pr
 **Done:** reproducible versioned datasets; source URLs/checksums and as-of dates; team-season coverage and missingness reports; duplicate/identity/leakage tests; documented exclusions; data contract used by M2/M3.
 
 ### M2 — Prediction intelligence (highest priority)
-Establish incumbent frozen out-of-time baseline from genuine timestamped pregame forecasts; develop a minimal challenger only after eligible features are available. Evaluate accuracy, Brier, log loss, calibration, confidence intervals and segment/season stability using chronological folds, pregame-only features and common game samples. Explain matchups only with actual model inputs.
+Reproduce authentic archived incumbent performance separately from frozen multi-season out-of-time incumbent/challenger replays, as defined in V6-MODEL-EVALUATION.md; develop a minimal challenger only after eligible features are available. Evaluate accuracy, Brier, log loss, calibration, confidence intervals and segment/season stability using chronological folds, pregame-only features and common game samples. Explain matchups only with actual model inputs.
 **Done:** reproducible frozen comparison; no leakage; challenger meets every gate in V6-MODEL-EVALUATION.md or remains experimental; incumbent stays authoritative until separate owner promotion approval; UI reports honest uncertainty and sample sizes.
 
 ### M3 — Program intelligence
@@ -24,11 +24,11 @@ Use verified recruiting, coaching, roster and performance history to describe de
 **Done:** shared tested calculations across Programs, Team Profile and Compare; transparent drivers, provenance, uncertainty and missing-data indicators; national coverage report; cross-page parity and browser tests.
 
 ### M4 — Playoff and conference what-if scenarios
-Build scenario overrides atop existing season simulator: user picks plausible future winners, recomputes conference and CFP probabilities with clear assumptions. Avoid implying deterministic playoff committee decisions or exact certainty.
-**Done:** coherent scenario constraints, reproducible seeded runs, baseline-vs-scenario comparison, invalid-input handling, simulation performance budget measured on mobile, integration and probability-sanity tests.
+Reuse `src/cfb_analytics/cfp.py` and incumbent probability inputs in a static-GitHub-Pages-compatible scenario implementation (bounded browser computation or precomputed conditional artifacts; no assumed live Python API). Build scenario overrides atop that foundation: user picks plausible future winners, recomputes conference and CFP probabilities with clear assumptions. Avoid implying deterministic playoff committee decisions or exact certainty.
+**Done:** coherent scenario constraints (existing unplayed games/participants only; reject conflicting choices and completed-game overrides), reproducible seeded runs, reset-to-baseline parity, baseline-vs-scenario comparison, invalid-input handling, a predeclared numeric mobile runtime/draw-count/error budget with measured results, integration and probability-sanity tests. Retain and disclose the existing simulator's conference-tiebreak and committee approximations; conditional scenario outcomes are not new authoritative forecasts.
 
 ### M5 — Personalized game-day experience
-Improve favorite-team relevance, game previews, forecast movement and explanatory summaries without clutter. Preserve local favorites privacy and independent per-device storage. Do not require accounts.
+Improve favorite-team relevance, game previews, forecast movement and explanatory summaries without clutter. Forecast movement requires comparable, genuinely pregame timestamped snapshots from the same model and game; otherwise show unavailable, not a change inferred from today's recomputation. Preserve local favorites privacy and independent per-device storage. Do not require accounts.
 **Done:** compact summary-first homepage with deep links, five-destination bottom navigation, accessible secondary dropdowns, favorites persistence, stale-data behavior and verified PWA journeys.
 
 ### M6 — Integration, acceptance and release

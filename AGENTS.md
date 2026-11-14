@@ -29,18 +29,22 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — secondary navigation refinement (2026-11-14)
+## Current task — Version 6 planning approval (2026-11-14)
 
-The owner requests only secondary dropdowns on phones and where horizontal tabs
-would overflow, including all four Team Profile sections. Preserve the existing
-five-destination bottom navigation exactly. Keep desktop tabs where they fit.
-Work on `secondary-navigation-selects` in a focused PR; do not merge without
-explicit approval. Preserve pages, data, shortcuts, favorites and PWA behavior.
-Verify 375/390/430px plus tablet/desktop, accessibility, screenshots and regression.
+The owner's V6 Master Execution Directive supersedes archived V5-only branch and
+scope restrictions below. Review the six existing V6 documents in PR #24 on
+`v6-planning`; make necessary documentation corrections only, then present the
+planning PR for explicit approval. Do not merge it or start implementation yet.
+After approval, merge the planning documents and create `v6-development` from
+latest `main`; execute the existing M1–M6 roadmap in substantial verified passes.
+Development merge and challenger promotion each require separate explicit owner
+approval. Do not create another roadmap or expand scope.
 
-The preceding homepage redesign and deployment correction (PRs #21/#22) are
-merged, deployed and production-verified at `d3043315b409b8c0ae8cdb008f5365db7c184968`.
-That work is closed; do not reopen it or start another version.
+Preserve the released V5 homepage, branding, bottom navigation, secondary/Profile
+dropdowns, all analytics, local favorites, network-only live data and offline
+fallback. PR #23 deployed and passed live five-width/PWA verification at
+`56abff306eb3f5f60f3356e01dcdacff68f1b4e9`; subsequent main data refreshes are
+retained. Follow `docs/V6-WORK-HANDOFF.md` and its five companion V6 documents.
 
 ## Navigation consolidation — completed and closed (2026-11-13)
 
