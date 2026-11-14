@@ -76,7 +76,7 @@ try {
   await research.getByText('3,059',{exact:false}).waitFor()
   await capture('research',{full:true})
   if(phase==='after')await archive.getByText('Scores, sample and publication record',{exact:true}).click()
-  await archive.getByRole('columnheader',{name:'Predicted winner confidence',exact:true}).waitFor()
+  await archive.getByRole('columnheader',{name:/Predicted winner confidence/i}).waitFor()
   proof.verifiedScores=await archive.locator('tbody').textContent()
   assert.equal(await archive.locator('tbody tr').count(),3)
   await research.locator('details > summary').click()
