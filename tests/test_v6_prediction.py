@@ -69,3 +69,12 @@ def test_independent_prospective_publication_receipt_and_model_hash():
         assert 0<=row['incumbent_probability']<=1 and 0<=row['challenger_probability']<=1
     # Exact model bytes from the independently published run remain separately retained.
     assert hashlib.sha256((root/'research/v6/experimental-model-2026-11-14.json').read_bytes()).hexdigest()==frozen['predictions'][0]['model_input_hash']
+
+
+def test_production_prediction_engine_matches_the_frozen_incumbent():
+    import hashlib,json
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    baseline=json.loads((root/'research/v6/incumbent-baseline.json').read_text())
+    for path in ['src/cfb_analytics/model.py','src/cfb_analytics/pipeline.py','src/cfb_analytics/predictions.py']:
+        assert hashlib.sha256((root/path).read_bytes()).hexdigest()==baseline['files'][path]

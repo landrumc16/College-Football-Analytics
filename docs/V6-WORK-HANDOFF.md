@@ -1,5 +1,7 @@
 # V6 Work Execution Handoff
 
+Implementation update: PR #24 was explicitly approved and merged; `v6-development` and implementation PR #25 now exist. The first-pass checklist below records the original authorization sequence. Current delivered evidence and acceptance state are in `docs/V6-IMPLEMENTATION-EVIDENCE.md`, `docs/V6-RELEASE-NOTES.md` and PR #25. Production merge and challenger promotion remain separate owner gates.
+
 ## Scope and authority
 Owner approved the six-milestone V6 product direction on 2026-11-14. This branch contains the proposed formal plan; it does not authorize an unreviewed production merge or a challenger promotion. Read AGENTS.md, docs/V6-ROADMAP.md, docs/V6-DATA-RESEARCH-PLAN.md, docs/V6-MODEL-EVALUATION.md, docs/V6-PRODUCT-UX-CONTRACT.md and docs/V6-RELEASE-ACCEPTANCE.md.
 
