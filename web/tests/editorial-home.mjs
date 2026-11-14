@@ -112,6 +112,17 @@ try {
       await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
     }
     assert.equal(await page.getByLabel('Choose school').inputValue(), 'Texas Tech');
+    if (width === 1536) {
+      // Constrained desktop containers must also use a picker, regardless of viewport.
+      const constrained = await page.addStyleTag({ content: '.team-profile{max-width:420px}' });
+      await page.getByRole('combobox', { name: 'Team Profile sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+      await assertNavigationFits(page, 'Team Profile sections', width);
+      await page.screenshot({ path: 'web/editorial-evidence/secondary-narrow-container-1536.png' });
+      await constrained.evaluate(element => element.remove());
+      await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+    }
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.locator('summary[aria-label="App menu"]').click();
     const about = page.getByLabel('About, privacy and getting started');
