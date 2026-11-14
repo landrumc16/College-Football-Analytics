@@ -2,7 +2,7 @@ name: V5 development acceptance checks
 
 on:
   push:
-    branches: [v5-development, ux-navigation-consolidation, homepage-editorial-preview]
+    branches: [v5-development, ux-navigation-consolidation, homepage-editorial-preview, secondary-navigation-selects]
   pull_request:
     branches: [main]
   workflow_dispatch:

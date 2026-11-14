@@ -55,6 +55,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
 }) {
   const reportCards = useReportCards()
   const verified = reportCards?.programs.find(p => p.team === team)
+  const [sectionDropdown, setSectionDropdown] = useState(false)
   const [history, setHistory] = useState<HistoryPayload | null>(null)
   const [historyStatus, setHistoryStatus] = useState<'loading' | 'published' | 'unavailable'>('loading')
   useEffect(() => {
@@ -96,8 +97,8 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
     </select></label>
     {team && <><h3>{team}</h3>
-    <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" />
-    <div id="profile-panel" role="tabpanel" aria-labelledby={`profile-panel-${section}`}>
+    <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" onDropdownChange={setSectionDropdown} />
+    <div id="profile-panel" role={sectionDropdown ? "region" : "tabpanel"} aria-labelledby={sectionDropdown ? "profile-panel-selection" : `profile-panel-${section}`}>
     {section === 'card' && <ProgramReportCard team={team} />}
     {section === 'overview' && <><div className="team-profile-grid">
       {tile('Current Model Rank', current ? '#' + current.rank : 'Unavailable')}

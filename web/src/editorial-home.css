@@ -103,7 +103,5 @@
 @media(max-width:767px){
  html{scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom))}
  .editorial-app :is(button,input,select,summary,a){scroll-margin-block:12px calc(88px + env(safe-area-inset-bottom))}
- .editorial-app .section-tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain}
- .editorial-app .section-tabs button{flex:0 0 auto;white-space:nowrap}
  .editorial-favorite-editor>div{max-height:60vh;overflow:auto}
 }
