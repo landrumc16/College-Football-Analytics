@@ -7,7 +7,7 @@ import ProgramReportCard from './ProgramReportCard'
 import ForecastEvidence from './ForecastEvidence'
 import HistoricalResults from './HistoricalResults'
 import HistoricalGameCoverage from './HistoricalGameCoverage'
-import { destinations, SectionTabs, type View } from './Navigation'
+import { destinations, PrimaryNavigation, SectionTabs, type View } from './Navigation'
 import type { ProfileSection } from './TeamProfile'
 
 type RecruitingResearch = { historical_asof_verified: false; joined_team_seasons: number; scorecard: { evaluated_team_seasons: number; heldout_seasons: number; win_mae: number }; program_recruiting_residuals: { programs: { team: string; heldout_seasons: number; average_wins_above_recruiting_baseline: number }[] } }
@@ -240,11 +240,10 @@ function App() {
       <p className="data-timestamp" role="status">{isDemo ? 'Historical Demo Data' : report.retrieved_at && Number.isFinite(retrievedTime) ? `Data Updated: ${new Date(retrievedTime).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}` : 'Data Update Time Unavailable'} · Source: {isDemo ? 'Frozen Historical Fixture' : 'CollegeFootballData'}</p>
 
 
-    <nav className="primary-navigation" aria-label="Main navigation">
-      {destinations.map(destination => <button type="button" key={destination.id}
-        aria-current={activeDestination.id === destination.id ? 'page' : undefined}
-        onClick={() => { if (activeDestination.id !== destination.id) { setSearch(''); setTab(destination.views[0].id) } }}>{destination.label}</button>)}
-    </nav>
+    <PrimaryNavigation value={activeDestination.id} onChange={id => {
+      const destination = destinations.find(destination => destination.id === id)!
+      if (activeDestination.id !== id) { setSearch(''); setTab(destination.views[0].id) }
+    }} />
     <SectionTabs key={activeDestination.id} label={`${activeDestination.label} sections`} items={activeDestination.views} value={tab}
       panelId="dashboard-panel" onChange={value => { setSearch(''); setTab(value as View) }} />
     <div id="dashboard-panel" role="tabpanel" aria-labelledby={`dashboard-panel-${tab}`}>
@@ -267,7 +266,7 @@ function App() {
               <p>{team ? `#${team.rank} · ${team.wins}–${team.losses}` : 'Ranking and record unavailable'}</p>
               <p>{game ? `Week ${game.week}: ${game.home === name ? 'vs' : 'at'} ${game.home === name ? game.away : game.home}` : 'No upcoming game listed'}</p>
               {probability !== null && <strong>{pct(probability)} win chance</strong>}
-              <div className="matchup-actions"><button type="button" onClick={() => {setScheduleTeam(name);setTab('profile')}}>Team profile</button><button type="button" onClick={() => openComparison(name)}>Compare</button><button type="button" onClick={() => {setScheduleTeam(name);setTab('profile');setProfileSection('schedule')}}>View schedule</button></div>
+              <div className="favorite-card-actions"><button type="button" aria-label="Team profile" onClick={() => {setScheduleTeam(name);setTab('profile')}}>Profile</button><button type="button" onClick={() => openComparison(name)}>Compare</button><button type="button" onClick={() => {setScheduleTeam(name);setTab('profile');setProfileSection('schedule')}} aria-label="View schedule">Schedule</button></div>
             </article>
           })}
           {favorites.some(x => !x) && <details className="favorite-add">

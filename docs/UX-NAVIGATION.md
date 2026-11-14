@@ -103,3 +103,31 @@ historical/comparison and offline captures were visually inspected.
 The incumbent engine, calculations, methodology and verified archive remain
 unchanged. No subsequent version or unrelated feature work is started or
 authorized by this closeout. Existing scheduled data updates continue normally.
+
+
+## Mobile layout correction — pending owner approval
+
+The owner reported cramped primary navigation and vertically stacked actions in
+narrow My Teams cards. This focused correction is on `mobile-navigation-fix`;
+production is unchanged until its pull request is approved.
+
+- Below 768px, the existing five destinations use one native, labelled selector.
+  Its selected value shares the same application state as contextual navigation.
+  At 768px and above, the five horizontal buttons remain. Hidden alternate
+  controls are removed from the accessibility tree by CSS, not disabled controls.
+- Phone secondary tabs keep intrinsic label widths on a single horizontally
+  scrollable row, with 44px touch targets and existing keyboard behavior.
+- Favorite cards use a responsive grid with one full-width card per phone row.
+  Profile, Compare and Schedule actions share one three-column row with 44px
+  minimum targets. The full accessible action names and behavior remain intact.
+  Long school names wrap without colliding with their remove control.
+- Acceptance checks 375/390/430/768/1536px, actual three-team layouts (including
+  the reported Texas Tech / Texas A&M combination and a long school name), action
+  geometry and routing, persistence, selector state after contextual navigation,
+  phone/tablet resizing, all Profile sections, secondary-tab geometry, research,
+  predictions, historical intelligence and PWA install/update/offline/recovery.
+  Populated Home and four Profile-section screenshots are retained for inspection.
+
+No model, calculation, historical archive, published data, dependencies or PWA
+asset changes are included. Exact tested SHA, workflows and inspected screenshot
+artifacts are recorded in the pull request.

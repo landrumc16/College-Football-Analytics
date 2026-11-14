@@ -29,6 +29,22 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
+## Current task — owner-authorized mobile layout repair (2026-11-13)
+
+The owner explicitly requested a mobile navigation dropdown and repaired My Teams
+card actions after the navigation consolidation release. This is a focused layout
+correction, not another version or a reopening of historical research.
+
+- Work on `mobile-navigation-fix` and a focused pull request. Do not modify or merge
+  production `main` without fresh explicit owner approval.
+- Phones use one accessible primary destination selector; tablets/desktops retain
+  five horizontal buttons. Mobile secondary tabs stay on one scrollable row.
+- Verify populated favorite cards and their action targets, including three teams
+  and long names, not only the empty My Teams state.
+- Capture and inspect Home and Profile layouts at 375, 390, 430, 768 and 1536px.
+  Run the existing regression/build/browser/PWA acceptance and preserve all data,
+  calculation, archive, branding, favorites and prediction behavior.
+
 ## Navigation consolidation — completed and closed (2026-11-13)
 
 The owner approved PR #18 at `e7ea35d439bc51d97d63ba6f74d16de3ffe41a97`.

@@ -7,6 +7,22 @@ export const destinations = [
 ] as const
 
 export type View = typeof destinations[number]['views'][number]['id']
+export type Destination = typeof destinations[number]['id']
+
+export function PrimaryNavigation({ value, onChange }: { value: Destination; onChange: (destination: Destination) => void }) {
+  return <nav className="primary-navigation" aria-label="Main navigation">
+    <label className="mobile-primary-navigation"><span>Destination</span>
+      <select aria-label="Choose main destination" value={value} onChange={event => onChange(event.target.value as Destination)}>
+        {destinations.map(destination => <option key={destination.id} value={destination.id}>{destination.label}</option>)}
+      </select>
+    </label>
+    <div className="primary-destinations">
+      {destinations.map(destination => <button type="button" key={destination.id}
+        aria-current={value === destination.id ? 'page' : undefined}
+        onClick={() => onChange(destination.id)}>{destination.label}</button>)}
+    </div>
+  </nav>
+}
 
 /** Native buttons plus the standard arrow/Home/End tab keyboard interaction. */
 export function SectionTabs({ label, items, value, onChange, panelId }: {

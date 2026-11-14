@@ -54,9 +54,49 @@ const sections = {
   cfp: ['Playoffs', 'CFP Projections'], conferences: ['Playoffs', 'Conference Races'], contenders: ['Playoffs', 'Contenders & Pretenders'],
   research: ['Research', 'Prediction Accuracy'], history: ['Research', 'Historical Research'], methods: ['Research', 'Methodology'], sources: ['Research', 'Data Sources'], validation: ['Research', 'Model Validation'],
 };
+async function chooseDestination(page, destination) {
+  const nav = page.getByRole('navigation', { name: 'Main navigation', exact: true });
+  const picker = nav.getByRole('combobox', { name: 'Choose main destination', exact: true });
+  if (await picker.isVisible()) await picker.selectOption({ label: destination });
+  else await nav.getByRole('button', { name: destination, exact: true }).click();
+}
+async function assertDestination(page, destination) {
+  const nav = page.getByRole('navigation', { name: 'Main navigation', exact: true });
+  const picker = nav.getByRole('combobox', { name: 'Choose main destination', exact: true });
+  if (await picker.isVisible()) {
+    if (await picker.inputValue() !== destination.toLowerCase()) throw new Error('Dropdown lost the current destination');
+  } else if (await nav.getByRole('button', { name: destination, exact: true }).getAttribute('aria-current') !== 'page') throw new Error('Horizontal navigation lost the current destination');
+}
+async function assertMobileTabRows(page, width) {
+  if (width >= 768) return;
+  for (const bar of await page.getByRole('tablist').all()) {
+    const layout = await bar.evaluate(element => {
+      const buttons = [...element.querySelectorAll('[role="tab"]')];
+      return { wrap: getComputedStyle(element).flexWrap, overflow: getComputedStyle(element).overflowX,
+        buttons: buttons.map(button => { const rect = button.getBoundingClientRect(); return { x: rect.x, y: rect.y, right: rect.right, height: rect.height, clipped: button.scrollWidth > button.clientWidth + 1 }; }) };
+    });
+    if (layout.wrap !== 'nowrap' || !['auto', 'scroll'].includes(layout.overflow)) throw new Error('Mobile tabs are not a single scrollable row');
+    if (layout.buttons.some((button, index) => button.height < 44 || button.clipped || Math.abs(button.y - layout.buttons[0].y) > 1 || (index > 0 && button.x < layout.buttons[index - 1].right + 1))) throw new Error('Mobile tab labels overlap, wrap or clip');
+  }
+}
+async function assertFavoriteActions(page) {
+  const cards = page.locator('.favorite-card');
+  if (await cards.count() !== 3) throw new Error('Three saved-team layout was not exercised');
+  for (const card of await cards.all()) {
+    const layout = await card.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const buttons = [...element.querySelectorAll('.favorite-card-actions button')].map(button => { const box = button.getBoundingClientRect(); return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height, clipped: button.scrollWidth > button.clientWidth + 1 }; });
+      const title = element.querySelector('.weekly-section-heading strong').getBoundingClientRect();
+      const remove = element.querySelector('.weekly-section-heading button').getBoundingClientRect();
+      return { left: rect.left, right: rect.right, bottom: rect.bottom, clipped: element.scrollWidth > element.clientWidth + 1, titleRight: title.right, removeLeft: remove.left, buttons };
+    });
+    if (layout.clipped || layout.titleRight > layout.removeLeft || layout.buttons.length !== 3 || layout.buttons.some((button, index) => button.width < 44 || button.height < 44 || button.clipped || button.left < layout.left || button.right > layout.right || button.bottom > layout.bottom || Math.abs(button.top - layout.buttons[0].top) > 1 || (index > 0 && button.left < layout.buttons[index - 1].right + 1))) throw new Error('Saved-team actions do not fit on one accessible row');
+  }
+}
+
 async function navigate(page, view) {
   const [destination, label] = sections[view];
-  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: destination, exact: true }).click();
+  await chooseDestination(page, destination);
   await page.getByRole('tablist', { name: `${destination} sections`, exact: true }).getByRole('tab', { name: label, exact: true }).click();
 }
 async function profileTab(page, label) {
@@ -83,7 +123,7 @@ try {
   browser = await chromium.launch({ headless: true,
     ...(networkGate ? { proxy: { server: `http://127.0.0.1:${networkGate.address().port}` } } : {}) });
   await mkdir('web/mobile-evidence', { recursive: true });
-  for (const width of [375, 390, 768, 1536]) {
+  for (const width of [375, 390, 430, 768, 1536]) {
     const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     page.setDefaultTimeout(10000);
     const errors = [];
@@ -91,9 +131,15 @@ try {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByRole('navigation', { name: 'Main navigation', exact: true }).waitFor();
-    const mainLabels = await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button').allTextContents();
+    const primary = page.getByRole('navigation', { name: 'Main navigation', exact: true });
+    const picker = primary.getByRole('combobox', { name: 'Choose main destination', exact: true });
+    const mobile = width < 768;
+    if (await picker.isVisible() !== mobile) throw new Error('Primary navigation uses the wrong responsive control');
+    const mainLabels = mobile ? await picker.locator('option').allTextContents() : await primary.getByRole('button').allTextContents();
     if (JSON.stringify(mainLabels) !== JSON.stringify(['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'])) throw new Error('Primary navigation must contain exactly five ordered destinations');
-    if (await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Home', exact: true }).getAttribute('aria-current') !== 'page') throw new Error('This Week is not the default homepage');
+    if (mobile && await primary.getByRole('button').count()) throw new Error('Hidden desktop buttons remain exposed on phones');
+    await assertDestination(page, 'Home');
+    await assertMobileTabRows(page, width);
     await page.getByRole('heading', { name: 'Playoff Snapshot', exact: true }).waitFor();
     // Tabs must be operable by keyboard as well as touch.
     await navigate(page, 'rankings');
@@ -104,12 +150,21 @@ try {
     if (await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('End-key navigation failed');
     await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
     if (await modelTab.getAttribute('aria-selected') !== 'true') throw new Error('Home-key navigation failed');
-    if (width <= 390) {
+    if (width < 768) {
       await navigate(page, 'validation');
-      await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Teams', exact: true }).click();
+      await chooseDestination(page, 'Teams');
       const selectedTab = page.getByRole('tab', { name: 'Team Profiles', exact: true });
       const selectedBounds = await selectedTab.boundingBox();
       if (!selectedBounds || selectedBounds.x < 0 || selectedBounds.x + selectedBounds.width > width) throw new Error('Primary navigation retained a previous destination tab scroll');
+      await navigate(page, 'rankings');
+    }
+    if (width === 390) {
+      await navigate(page, 'sources');
+      await page.setViewportSize({ width: 768, height: 844 });
+      await assertDestination(page, 'Research');
+      if (await picker.isVisible()) throw new Error('Tablet retained the mobile dropdown');
+      await page.setViewportSize({ width, height: 844 });
+      await assertDestination(page, 'Research');
       await navigate(page, 'rankings');
     }
     await page.getByLabel('Search teams').fill('Georgia');
@@ -134,6 +189,35 @@ try {
     if (await page.getByText('Prediction model:', { exact: false }).count()) throw new Error('Redundant model notice returned');
     await page.getByText('Our Model Rankings', { exact: false }).first().waitFor();
     await page.screenshot({ path: `web/mobile-evidence/home-${width}.png`, fullPage: true });
+    const roster = await page.evaluate(async () => (await (await fetch('./season-report.json')).json()).rankings.map(row => row.team));
+    const longest = [...roster].filter(team => !['Texas Tech', 'Texas A&M'].includes(team)).sort((a,b) => b.length-a.length)[0];
+    const sampleTeams = ['Texas Tech', 'Texas A&M', longest];
+    if (!sampleTeams.every(team => roster.includes(team))) throw new Error('Missing real teams for reference-layout regression');
+    for (const team of sampleTeams) {
+      const add = page.locator('.favorite-add');
+      if (!(await add.evaluate(element => element.open))) await add.locator('summary').click();
+      await page.getByLabel('Add favorite team').fill(team);
+      await page.getByRole('button', { name: 'Save Team', exact: true }).click();
+      await page.getByRole('button', { name: `Remove ${team} from favorites`, exact: true }).waitFor();
+    }
+    await page.reload({ waitUntil: 'networkidle' });
+    await assertFavoriteActions(page);
+    await page.screenshot({ path: `web/mobile-evidence/home-favorites-${width}.png`, fullPage: true });
+    const firstFavorite = page.locator('.favorite-card').first();
+    await firstFavorite.getByRole('button', { name: 'Team profile', exact: true }).click();
+    await assertDestination(page, 'Teams');
+    if (await page.getByLabel('Choose school').inputValue() !== sampleTeams[0]) throw new Error('Favorite Profile action lost its team');
+    await navigate(page, 'home');
+    await page.locator('.favorite-card').first().getByRole('button', { name: 'Compare', exact: true }).click();
+    await assertDestination(page, 'Teams');
+    if (await page.getByLabel('First school').inputValue() !== sampleTeams[0]) throw new Error('Favorite Compare action lost its team');
+    await navigate(page, 'home');
+    await page.locator('.favorite-card').first().getByRole('button', { name: 'View schedule', exact: true }).click();
+    await assertDestination(page, 'Teams');
+    if (await page.getByLabel('Choose school').inputValue() !== sampleTeams[0]) throw new Error('Favorite Schedule action lost its team');
+    await page.getByRole('tab', { name: 'Schedule & Predictions', exact: true, selected: true }).waitFor();
+    await navigate(page, 'home');
+    for (const team of sampleTeams) await page.getByRole('button', { name: `Remove ${team} from favorites`, exact: true }).click();
     // Exercise favorites persistence without changing the user's actual browser storage.
     await page.evaluate(() => localStorage.removeItem('cfba-favorites-v1'));
     await page.reload({ waitUntil: 'networkidle' });
@@ -267,7 +351,7 @@ try {
         if (await rows.count() > 10) throw new Error('Initial Program Intelligence view exceeds ten teams');
         const firstRow = await rows.first().innerText();
         if (/Too Early to Tell|Insufficient verified snapshots/.test(firstRow)) throw new Error('Legacy placeholders returned');
-        if (width <= 390) {
+        if (width < 768) {
           const fits = await page.locator('.program-intelligence-table').evaluate(el => {
             const rect = el.getBoundingClientRect();
             return rect.left >= -1 && rect.right <= document.documentElement.clientWidth + 1;
@@ -303,7 +387,7 @@ try {
       if (section === 'profile') {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
-        if (width <= 390) {
+        if (width < 768) {
           await page.evaluate(() => window.scrollTo(0, 0));
           const metric = page.locator('.team-profile-tile').filter({ has: page.getByText('Current Model Rank', { exact: true }) });
           const bounds = await metric.boundingBox();
@@ -311,10 +395,13 @@ try {
         }
         await profileTab(page, 'Program Report Card');
         await assertReportCard(page, firstTeam);
+        await assertMobileTabRows(page, width);
+        await page.screenshot({ path: `web/mobile-evidence/profile-report-card-${width}.png`, fullPage: true });
         await profileTab(page, 'Historical Intelligence');
         const verifiedProfile = await page.evaluate(async team => (await (await fetch('./v5-program-report-cards.json')).json()).programs.find(p => p.team === team), firstTeam);
         if (verifiedProfile.trajectory) await page.getByText(`Long-term trajectory: ${verifiedProfile.trajectory.direction}`, { exact: false }).waitFor();
         if (await page.getByText('Not published with verified multi-season coverage', { exact: false }).count() || await page.getByText('Historical research has not passed the publication gate', { exact: false }).count()) throw new Error('Legacy missing-history message contradicts verified publication');
+        await page.screenshot({ path: `web/mobile-evidence/profile-history-${width}.png`, fullPage: true });
         await profileTab(page, 'Schedule & Predictions');
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
         const explanations = page.locator('details').filter({ has: page.locator('summary').getByText('Upcoming prediction explanations', { exact: true }) });
@@ -327,6 +414,7 @@ try {
           await page.screenshot({ path: `web/mobile-evidence/schedule-failure-${width}.png`, fullPage: true });
           throw error;
         }
+        await page.screenshot({ path: `web/mobile-evidence/profile-schedule-${width}.png`, fullPage: true });
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Profile-to-Compare lost selected school');
@@ -404,6 +492,8 @@ try {
       if (section === 'methods') await page.getByRole('heading', { name: 'Model and historical methods', exact: true }).waitFor();
       if (section === 'sources') await page.getByRole('heading', { name: 'Published data and provenance', exact: true }).waitFor();
       if (section === 'validation') await page.getByRole('region', { name: 'Retrospective Weekly Backtest', exact: true }).waitFor();
+      await assertDestination(page, sections[section][0]);
+      await assertMobileTabRows(page, width);
       // Only the CFP page may display the CFP projection's full statistical table.
       if (section !== 'cfp' && await page.getByRole('columnheader', { name: 'Avg Seed If Selected' }).count()) {
         throw new Error(`Unrelated CFP projection table leaked into ${section}`);
