@@ -17,6 +17,15 @@ Keep the released V5 incumbent prediction engine as production authority. Freeze
    forecasts. An archived incumbent forecast must not be silently compared with
    a recomputed challenger on a different feature cutoff or game sample.
 
+The current `pipeline.py` explicitly uses frozen 2026 workbook priors and
+conference membership until a season-specific feed exists. Freezing that code
+alone does not make its inputs valid for 2016–2025. A true incumbent replay
+requires season-specific pre-cutoff priors, roster/classification/conferences
+and rolling ratings as well as time-safe challenger features. Never seed an
+older season with 2026 ratings or later final standings. If those incumbent
+inputs cannot be established, label any alternative a proxy/reference baseline;
+it cannot satisfy the incumbent-paired promotion gate.
+
 ## Evaluation design
 Use rolling chronological, season-held-out validation. Predeclare exactly four distinct primary held-out seasons with genuinely pregame-available inputs for the existing four-fold promotion gate; report any additional seasons too and never select the best four after observing results. If four eligible seasons cannot be established, report research-only results and defer promotion. Evaluate the same eligible games for both models. No training on outcomes or rankings published after each kickoff. Record feature availability, cutoff, training windows, hyperparameter selection and random seeds. Cluster uncertainty by game/week or season as justified, and avoid treating correlated simulations as independent observations.
 

@@ -27,7 +27,7 @@ For each candidate source record provider, original URL, collection date, event 
 1. Recruiting: season-specific classes, recruiting composite and player/team mappings with contemporaneous snapshots; avoid retrospectively edited ratings masquerading as pregame information.
 2. Rosters and transfers: returning production, portal arrivals/departures, experience and eligibility as known at prediction time; record effective dates and uncertainty.
 3. Coaching: head coach/coordinator tenure, changes, continuity and role-effective dates; distinguish announced from effective.
-4. Existing results, strength, polls and forecast outcomes: reuse independently verified V5 data and provenance.
+4. Existing results, strength, polls and forecast outcomes: reuse independently verified V5 data and provenance. The current Strength grade is a current-season rating, not historical as-of ratings. Final polls and full-window historical grades may support descriptive program research but cannot become pregame features for games occurring within those windows. Establish season-specific incumbent priors and conference/roster inputs before claiming a historical incumbent replay; do not backfill them from the frozen 2026 workbook.
 5. Optional injuries and depth charts: use only where dated, reliably sourced, permitted and sufficiently complete; otherwise exclude.
 
 ## Canonical grain and temporal integrity
