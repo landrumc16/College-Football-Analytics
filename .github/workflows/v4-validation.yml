@@ -2,7 +2,7 @@ name: V4 development validation
 
 on:
   push:
-    branches: [v4-development, program-intelligence-redesign, v5-development]
+    branches: [v4-development, program-intelligence-redesign, v5-development, ux-navigation-consolidation]
   workflow_dispatch:
 
 permissions:
@@ -69,6 +69,8 @@ jobs:
       - name: Stage validated incumbent season report for browser smoke
         run: |
           test -s data/season-2026-report.json
+          cp v4-baseline-2026.json web/dist/historical-backtest.json
+          cp data/v2-research-summary.json web/dist/v2-research-summary.json
           cp data/season-2026-report.json web/dist/season-report.json
           cp data/poll-2026-snapshot.json web/dist/poll-snapshot.json
           python scripts/verify_v4_product_release.py --report web/dist/season-report.json

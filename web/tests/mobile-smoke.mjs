@@ -47,6 +47,22 @@ async function waitForPreview() {
   if (!ready) throw new Error('Dashboard development server did not start');
 }
 
+const sections = {
+  home: ['Home', 'This Week'], predictions: ['Home', 'Game Predictions'],
+  rankings: ['Rankings', 'Model Rankings'], ap: ['Rankings', 'AP Poll'], coaches: ['Rankings', 'Coaches Poll'], stock: ['Rankings', 'Team Stock Watch'],
+  profile: ['Teams', 'Team Profiles'], compare: ['Teams', 'Compare & What If'], programs: ['Teams', 'Program Directory'], hype: ['Teams', 'Hype Index'], trajectory: ['Teams', 'Program Trajectory'],
+  cfp: ['Playoffs', 'CFP Projections'], conferences: ['Playoffs', 'Conference Races'], contenders: ['Playoffs', 'Contenders & Pretenders'],
+  research: ['Research', 'Prediction Accuracy'], history: ['Research', 'Historical Research'], methods: ['Research', 'Methodology'], sources: ['Research', 'Data Sources'], validation: ['Research', 'Model Validation'],
+};
+async function navigate(page, view) {
+  const [destination, label] = sections[view];
+  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: destination, exact: true }).click();
+  await page.getByRole('tablist', { name: `${destination} sections`, exact: true }).getByRole('tab', { name: label, exact: true }).click();
+}
+async function profileTab(page, label) {
+  await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).getByRole('tab', { name: label, exact: true }).click();
+}
+
 async function assertReportCard(page, team) {
   const published = await page.evaluate(async () => (await fetch('./v5-program-report-cards.json')).json());
   const record = published.programs.find(p => p.team === team);
@@ -74,7 +90,32 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
-    await page.getByLabel('Choose dashboard section').waitFor();
+    await page.getByRole('navigation', { name: 'Main navigation', exact: true }).waitFor();
+    const mainLabels = await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button').allTextContents();
+    if (JSON.stringify(mainLabels) !== JSON.stringify(['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'])) throw new Error('Primary navigation must contain exactly five ordered destinations');
+    if (await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Home', exact: true }).getAttribute('aria-current') !== 'page') throw new Error('This Week is not the default homepage');
+    await page.getByRole('heading', { name: 'Playoff Snapshot', exact: true }).waitFor();
+    // Tabs must be operable by keyboard as well as touch.
+    await navigate(page, 'rankings');
+    const modelTab = page.getByRole('tab', { name: 'Model Rankings', exact: true });
+    await modelTab.press('ArrowRight');
+    if (await page.getByRole('tab', { name: 'AP Poll', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('Arrow-key navigation failed');
+    await page.getByRole('tab', { name: 'AP Poll', exact: true }).press('End');
+    if (await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('End-key navigation failed');
+    await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
+    if (await modelTab.getAttribute('aria-selected') !== 'true') throw new Error('Home-key navigation failed');
+    if (width <= 390) {
+      await navigate(page, 'validation');
+      await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Teams', exact: true }).click();
+      const selectedTab = page.getByRole('tab', { name: 'Team Profiles', exact: true });
+      const selectedBounds = await selectedTab.boundingBox();
+      if (!selectedBounds || selectedBounds.x < 0 || selectedBounds.x + selectedBounds.width > width) throw new Error('Primary navigation retained a previous destination tab scroll');
+      await navigate(page, 'rankings');
+    }
+    await page.getByLabel('Search teams').fill('Georgia');
+    const rankingNames = await page.locator('table tbody tr td:first-child').allTextContents();
+    if (!rankingNames.length || rankingNames.some(name => !name.includes('Georgia'))) throw new Error('Model ranking search failed');
+    await navigate(page, 'home');
     // V5 public onboarding and privacy disclosure must be available at every viewport.
     const about = page.getByLabel('About, privacy and getting started');
     await about.locator('summary').click();
@@ -120,11 +161,18 @@ try {
     } finally {
       await isolatedContext.close();
     }
+    await page.getByRole('button', { name: 'View schedule', exact: true }).first().click();
+    await page.getByRole('heading', { name: 'Full Season Schedule and Model Outlook', exact: true }).waitFor();
+    if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite schedule shortcut lost its school');
+    if (await page.getByRole('tab', { name: 'Schedule & Predictions', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('Favorite schedule did not open the Profile schedule tab');
+    await profileTab(page, 'Historical Intelligence');
+    await page.getByRole('region', { name: 'Historical FBS results', exact: true }).waitFor();
+    await navigate(page, 'home');
     // A saved school must open its complete Team Profile, not just its schedule.
     await page.getByRole('button', { name: 'Team profile' }).first().click();
     await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
     if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite-to-profile navigation lost the selected team');
-    await page.getByLabel('Choose dashboard section').selectOption('home');
+    await navigate(page, 'home');
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).click();
     await page.reload({ waitUntil: 'networkidle' });
@@ -133,14 +181,14 @@ try {
     const report = await page.evaluate(async () => { const response = await fetch('./season-report.json'); return response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : null; });
     if (!report?.rankings?.length || !report?.predictions?.length) throw new Error('Published report missing usable rankings or predictions');
     // Opening Team Profile directly from navigation must select a real school.
-    await page.getByLabel('Choose dashboard section').selectOption('profile');
+    await navigate(page, 'profile');
     if (await page.getByLabel('Choose school').inputValue() !== report.rankings[0].team) {
       throw new Error('Direct Team Profile navigation did not select the first available school');
     }
-    await page.getByLabel('Choose dashboard section').selectOption('home');
-    for (const section of ['rankings', 'polls', 'predictions', 'conferences', 'cfp', 'schedule', 'matchup', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile']) {
-      await page.getByLabel('Choose dashboard section').selectOption(section);
-      if (section === 'polls') {
+    await navigate(page, 'home');
+    for (const section of ['rankings', 'ap', 'coaches', 'predictions', 'conferences', 'cfp', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile', 'history', 'methods', 'sources', 'validation']) {
+      await navigate(page, section);
+      if (section === 'ap' || section === 'coaches') {
         await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
         const unavailable = await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).count();
         if (!unavailable) {
@@ -158,6 +206,10 @@ try {
       }
       if (section === 'predictions') {
         await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+        await page.getByLabel('Search teams').fill('Georg');
+        await page.getByRole('listbox', { name: 'Suggested schools' }).getByRole('option', { name: 'Georgia', exact: true }).click();
+        if (!(await page.locator('.prediction-card').count()) || (await page.locator('.prediction-matchup').allTextContents()).some(name => !name.includes('Georgia'))) throw new Error('Prediction autocomplete failed');
+        await page.getByLabel('Search teams').fill('');
         const firstCard = page.locator('.prediction-card').first();
         const matchup = (await firstCard.locator('.prediction-matchup').innerText()).split('@').map(part => part.trim());
         if (matchup.length !== 2 || !matchup.every(Boolean)) throw new Error('Prediction card lacks a valid matchup');
@@ -167,9 +219,17 @@ try {
           throw new Error('Prediction-to-Compare did not preserve the visible card matchup');
         }
         await page.getByRole('region', { name: 'Side-by-side team comparison' }).waitFor();
-        await page.getByLabel('Choose dashboard section').selectOption('predictions');
+        await navigate(page, 'predictions');
       }
       if (section === 'hype') await page.getByRole('heading', { name: 'Historical Hype Index', exact: true }).waitFor();
+      if (section === 'hype') {
+        await page.getByText('Current-season poll disagreement', { exact: true }).click();
+        await page.getByRole('region', { name: 'Current-season poll perception', exact: true }).waitFor();
+        await page.getByLabel('Choose AP or Coaches Poll').selectOption('Coaches');
+        await page.getByLabel('Sort current poll perception').selectOption('disagreement');
+        await page.getByLabel('Filter current poll perception by conference').selectOption('all');
+        await page.getByText('Current-season poll disagreement', { exact: true }).click();
+      }
       if (section === 'hype' || section === 'trajectory') {
         await page.getByRole('region', { name: 'Verified national historical intelligence' }).waitFor();
         await page.getByLabel('Choose historical program').selectOption(firstTeam);
@@ -187,7 +247,7 @@ try {
       }
       if (section === 'trajectory') await page.getByRole('heading', { name: 'Program Trajectory & Momentum', exact: true }).waitFor();
       if (['programs', 'stock', 'contenders'].includes(section)) {
-        await page.getByRole('heading', { name: 'Program Intelligence', exact: true }).waitFor();
+        await page.getByRole('heading', { name: section === 'stock' ? 'Team Stock Watch' : section === 'contenders' ? 'Contenders & Pretenders' : 'Program Intelligence', exact: true }).waitFor();
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Top 25 wins' }).waitFor({ state: 'attached' });
@@ -224,10 +284,11 @@ try {
         await row.getByRole('button', { name: `Compare ${firstTeam} with another school` }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Program-to-comparison navigation lost the selected team');
-        await page.getByLabel('Choose dashboard section').selectOption('programs');
+        await navigate(page, 'programs');
         await page.getByLabel('Find a program').fill(firstTeam);
         await page.getByRole('row').filter({ hasText: firstTeam }).first().getByRole('button', { name: 'View team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
+        await page.getByText('Form, conference and postseason details', { exact: true }).click();
         const profileTrend = page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' });
         await profileTrend.waitFor();
         const profileTrendValue = (await profileTrend.locator('strong').textContent() || '').trim();
@@ -237,20 +298,39 @@ try {
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
           throw new Error(`Program Intelligence did not preserve selected team for ${section}`);
         }
-        await page.getByLabel('Choose dashboard section').selectOption(section);
+        await navigate(page, section);
       }
       if (section === 'profile') {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByLabel('Choose school').selectOption(firstTeam);
+        if (width <= 390) {
+          await page.evaluate(() => window.scrollTo(0, 0));
+          const metric = page.locator('.team-profile-tile').filter({ has: page.getByText('Current Model Rank', { exact: true }) });
+          const bounds = await metric.boundingBox();
+          if (!bounds || bounds.y + bounds.height > 844) throw new Error('Profile metrics require an initial phone scroll');
+        }
+        await profileTab(page, 'Program Report Card');
         await assertReportCard(page, firstTeam);
+        await profileTab(page, 'Historical Intelligence');
         const verifiedProfile = await page.evaluate(async team => (await (await fetch('./v5-program-report-cards.json')).json()).programs.find(p => p.team === team), firstTeam);
         if (verifiedProfile.trajectory) await page.getByText(`Long-term trajectory: ${verifiedProfile.trajectory.direction}`, { exact: false }).waitFor();
         if (await page.getByText('Not published with verified multi-season coverage', { exact: false }).count() || await page.getByText('Historical research has not passed the publication gate', { exact: false }).count()) throw new Error('Legacy missing-history message contradicts verified publication');
+        await profileTab(page, 'Schedule & Predictions');
         await page.getByText('Full Season Schedule and Model Outlook').waitFor();
+        const explanations = page.locator('details').filter({ has: page.locator('summary').getByText('Upcoming prediction explanations', { exact: true }) });
+        if (!(await explanations.evaluate(element => element.open))) await explanations.locator('summary').click();
+        try {
+          await explanations.getByRole('columnheader').filter({ hasText: 'Team win probability' }).waitFor();
+        } catch (error) {
+          console.log('Schedule disclosure diagnostic:', await explanations.evaluate(element => ({ open: element.open, headers: [...element.querySelectorAll('th')].map(th => ({ text: th.textContent, display: getComputedStyle(th).display, visibility: getComputedStyle(th).visibility })) })));
+          console.log('Exposed header roles:', await explanations.getByRole('columnheader').allTextContents());
+          await page.screenshot({ path: `web/mobile-evidence/schedule-failure-${width}.png`, fullPage: true });
+          throw error;
+        }
         await page.getByRole('button', { name: 'Compare this school' }).click();
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First school').inputValue() !== firstTeam) throw new Error('Profile-to-Compare lost selected school');
-        await page.getByLabel('Choose dashboard section').selectOption('profile');
+        await navigate(page, 'profile');
       }
       if (section === 'cfp') {
         await page.getByRole('heading', { name: 'Projected 12-Team CFP Field' }).waitFor();
@@ -262,10 +342,6 @@ try {
         } else if (poll.cfp_week != null) {
           await page.getByText(`CFP poll week ${poll.cfp_week}`, { exact: false }).waitFor();
         }
-      }
-      if (section === 'schedule') {
-        await page.getByRole('heading', { name: 'School Season Schedule' }).waitFor();
-        await page.getByLabel('School Schedule').waitFor();
       }
       if (section === 'compare') {
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
@@ -306,21 +382,28 @@ try {
         if (!await historicalComparison.getByText('unadjusted win percentages', { exact: false }).count()) {
           throw new Error('Historical comparison is missing its metric limitations');
         }
+        await page.getByLabel('Game location').selectOption('neutral');
+        await page.locator('.matchup-result').waitFor();
+        await page.getByRole('button', { name: 'Swap schools', exact: true }).click();
+        if (await page.getByLabel('First school').inputValue() !== secondTeam) throw new Error('What If swap failed');
+        await page.getByRole('button', { name: 'Swap schools', exact: true }).click();
         await comparison.getByRole('columnheader', { name: firstTeam }).waitFor();
         await comparison.getByRole('columnheader', { name: secondTeam }).waitFor();
         await comparison.getByRole('button', { name: `View ${firstTeam} profile` }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Compare-to-profile navigation lost team selection');
-        await page.getByLabel('Choose dashboard section').selectOption('compare');
+        await navigate(page, 'compare');
       }
-      if (section === 'matchup') {
-        await page.getByRole('heading', { name: 'Hypothetical Matchup' }).waitFor();
-        await page.getByLabel('First school').waitFor();
-        await page.getByLabel('Second school').waitFor();
-      }
-      if (await page.getByLabel('Choose dashboard section').inputValue() !== section) {
+      if (await page.locator(`#dashboard-panel-${section}`).getAttribute('aria-selected') !== 'true') {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
+      if (section === 'history') {
+        await page.getByText('Multi-season Historical Research', { exact: true }).click();
+        await page.getByRole('region', { name: 'V2 Multi-season Research', exact: true }).waitFor();
+      }
+      if (section === 'methods') await page.getByRole('heading', { name: 'Model and historical methods', exact: true }).waitFor();
+      if (section === 'sources') await page.getByRole('heading', { name: 'Published data and provenance', exact: true }).waitFor();
+      if (section === 'validation') await page.getByRole('region', { name: 'Retrospective Weekly Backtest', exact: true }).waitFor();
       // Only the CFP page may display the CFP projection's full statistical table.
       if (section !== 'cfp' && await page.getByRole('columnheader', { name: 'Avg Seed If Selected' }).count()) {
         throw new Error(`Unrelated CFP projection table leaked into ${section}`);
@@ -331,6 +414,31 @@ try {
         await page.screenshot({ path: `web/mobile-evidence/${section}-${width}.png`, fullPage: true });
       }
       if (errors.length) throw new Error(`Browser error in ${section}: ${errors.join('; ')}`);
+    }
+    // Sharing the richer schedule must preserve the Profile's original fail-closed
+    // behavior for missing finals and forecasts whose opponent identity conflicts.
+    if (width === 390) {
+      const fixture = structuredClone(report);
+      const completed = fixture.schedule.find(game => game.completed && [game.home, game.away].includes(firstTeam));
+      const pending = fixture.schedule.find(game => !game.completed && [game.home, game.away].includes(firstTeam));
+      if (!completed || !pending) throw new Error('Need real completed/upcoming games for schedule guard regression');
+      completed.home_score = null;
+      const forecast = fixture.predictions.find(prediction => prediction.game_id === pending.game_id);
+      if (!forecast) throw new Error('Need real upcoming forecast for schedule guard regression');
+      forecast.home = 'Browser-only mismatched opponent fixture';
+      const guardPage = await browser.newPage({ viewport: { width, height: 844 } });
+      await guardPage.route('**/season-report.json', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixture) }));
+      try {
+        await guardPage.goto(baseUrl, { waitUntil: 'networkidle' });
+        await navigate(guardPage, 'profile');
+        await guardPage.getByLabel('Choose school').selectOption(firstTeam);
+        await profileTab(guardPage, 'Schedule & Predictions');
+        const scheduleRows = guardPage.locator('.matchup-panel tbody tr');
+        const completedOpponent = completed.home === firstTeam ? completed.away : completed.home;
+        const pendingOpponent = pending.home === firstTeam ? pending.away : pending.home;
+        await scheduleRows.filter({ has: guardPage.getByRole('cell', { name: completedOpponent, exact: true }) }).getByText('Final score unavailable', { exact: true }).waitFor();
+        await scheduleRows.filter({ has: guardPage.getByRole('cell', { name: pendingOpponent, exact: true }) }).getByText('Prediction unavailable', { exact: true }).waitFor();
+      } finally { await guardPage.close(); }
     }
     // A correctly dated official CFP snapshot must render, rather than being
     // discarded by the poll-date format gate. This fixture is browser-test-only.
@@ -348,14 +456,13 @@ try {
       }));
       try {
         await pollPage.goto(baseUrl, { waitUntil: 'networkidle' });
-        await pollPage.getByLabel('Choose dashboard section').selectOption('cfp');
+        await navigate(pollPage, 'cfp');
         await pollPage.getByText('Official CFP snapshot:', { exact: false }).waitFor();
         const official = pollPage.locator('section.predictions-intro').filter({ hasText: 'Official CFP snapshot:' });
         await official.getByRole('row').filter({ hasText: topTeam }).locator('td').nth(2).getByText('#1').waitFor();
       } finally { await pollPage.close(); }
     }
-    await page.getByLabel('Choose dashboard section').selectOption('research');
-    await page.getByText('Prediction Tracking & Calibration', { exact: true }).click();
+    await navigate(page, 'research');
     const archive = page.getByRole('region', { name: 'Independent pregame forecast verification' });
     await archive.getByRole('heading', { name: 'Independently verified forecast archive' }).waitFor();
     await archive.getByText('65 predictions', { exact: false }).waitFor();

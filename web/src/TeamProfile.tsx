@@ -1,6 +1,10 @@
 import ProgramReportCard, { useReportCards } from './ProgramReportCard'
 import HistoricalResults from './HistoricalResults'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { SectionTabs } from './Navigation'
+
+export type ProfileSection = 'overview' | 'schedule' | 'history' | 'card'
+const profileSections = [{ id: 'overview', label: 'Overview' }, { id: 'schedule', label: 'Schedule & Predictions' }, { id: 'history', label: 'Historical Intelligence' }, { id: 'card', label: 'Program Report Card' }] as const
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
 import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
 
@@ -19,7 +23,7 @@ type ConferenceTeam = { team: string; conference_title_odds: number; conference_
 
 const label = (value: string | undefined) => value?.replaceAll('_', ' ') || 'Unavailable'
 /** Only use a forecast when its game ID and both opponents match the schedule. */
-const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Prediction | null => {
+export const matchingForecast = (predictions: Prediction[], game: ScheduleGame): Prediction | null => {
   if (game.completed) return null
   const matches = predictions.filter(p => p.game_id === game.game_id)
   if (matches.length !== 1) return null
@@ -42,10 +46,11 @@ const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: 
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, onChoose, onCompare }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
+  section: ProfileSection; onSection: (section: ProfileSection) => void; scheduleContent: ReactNode;
   onChoose: (team: string) => void; onCompare: (team: string) => void;
 }) {
   const reportCards = useReportCards()
@@ -82,22 +87,26 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const forecastConfidence = upcomingForecasts.length ? Math.max(...upcomingForecasts.map(p => Math.max(p, 1 - p))) : null
   const opponentStrength = upcoming.map(g => ({ opponent: g.home === team ? g.away : g.home, rank: rankings.find(r => r.team === (g.home === team ? g.away : g.home))?.rank }))
   const rankedOpponents = opponentStrength.filter(g => g.rank != null).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
-  const games = schedule.filter(g => g.home === team || g.away === team).sort((a, b) => a.week - b.week)
   const ap = poll?.ap_top25.find(r => r.team === team)?.rank
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
-  return <section className="notice">
+  return <section className="notice team-profile">
     <h2>Team Profile</h2><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button>
     <label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
       <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
     </select></label>
-    {team && <><h3>{team}</h3><ProgramReportCard team={team} /><HistoricalResults team={team} onTeam={onChoose} /><div className="team-profile-grid">
+    {team && <><h3>{team}</h3>
+    <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" />
+    <div id="profile-panel" role="tabpanel" aria-labelledby={`profile-panel-${section}`}>
+    {section === 'card' && <ProgramReportCard team={team} />}
+    {section === 'overview' && <><div className="team-profile-grid">
       {tile('Current Model Rank', current ? '#' + current.rank : 'Unavailable')}
       {tile('Current Strength', current ? current.rating.toFixed(1) : 'Unavailable')}
       {tile('Record', current ? current.wins + '–' + current.losses : 'Unavailable')}
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
+    </div><details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
       {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
       {tile('Current-Season Form Trend', seasonTrend ?? 'Requires 8 scored games')}
@@ -112,28 +121,19 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Recruiting Development', recruitingRecord ? recruitingRecord.average_wins_above_recruiting_baseline.toFixed(2) + ' wins vs talent baseline' : 'Insufficient research')}
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
-    </div>
+    </div></details>
     <div className="accuracy-summary"><h3>Program development and expectations</h3>
       <p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form trend: {seasonTrend ?? 'not enough scored games'} (two non-overlapping four-game windows, requiring a two-win difference to classify a change). This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
-      <p><strong>Long-term trajectory:</strong> {verified?.trajectory ? `${verified.trajectory.direction} (${(100 * verified.trajectory.value).toFixed(2)} percentage points/year across 3/5/10-year windows; 2020 excluded)` : reportCards ? 'Insufficient verified historical coverage' : historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
-      <p>AP/Coaches historical expectations: {verified?.hype?.AP && verified?.hype?.Coaches ? 'Published for 10 independently reviewed completed seasons; see separate AP and Coaches records above' : reportCards ? 'Insufficient verified historical coverage' : historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
     </div>
-    {!reportCards && <details><summary>Historical program ranking coverage and sources</summary>
-      <p role="status">{historyStatus === 'published' ? 'Independently reviewed historical research is published.' : historyStatus === 'loading' ? 'Checking historical publication status…' : 'Historical research has not passed the publication gate; rankings, trajectory, and hype remain unavailable.'}</p>
-      <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
-      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th><th>Source evidence</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
-        const score = historical?.program_rankings?.[window]
-        return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td><td>{score?.sources?.length ? <details><summary>{score.sources.length} sourced seasons</summary><ul>{score.sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : 'No reviewed source records published'}</td></tr>
-      })}</tbody></table></div>
-    </details>}
     <details><summary>Coaching, roster and matchup data availability</summary><p>Verified season-specific head-coach and coordinator records, transfer and returning-production data, and offense-versus-defense matchup factors have not been published for this profile. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
-    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch and results versus forecast</summary><p>The approved Team Stock Watch requires a verified 0–100 time-aware index and a four-week change. Neither is inferred from season-total wins above expectation. Results versus Forecast separately compares actual wins with the published model’s expected wins for games with forecasts; at least three forecasted games are required. It is descriptive, not a validated trajectory signal.</p></details>
+    </>}
+    {section === 'schedule' && <>{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Upcoming prediction explanations</summary>
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching, roster, and matchup-specific contributions remain unavailable until validated.</p>
-      <div className="table-wrap"><table><thead><tr><th>Week</th><th>Matchup</th><th>Team win probability</th><th>Current rating gap</th><th>Forecast</th></tr></thead><tbody>{upcoming.map(g => {
+      <div className="table-wrap"><table><thead><tr><th scope="col">Week</th><th scope="col">Matchup</th><th scope="col">Team win probability</th><th scope="col">Current rating gap</th><th scope="col">Forecast</th></tr></thead><tbody>{upcoming.map(g => {
         const opponent = g.home === team ? g.away : g.home
         const forecast = matchingForecast(predictions, g)
         const ourRating = rankings.find(r => r.team === team)?.rating
@@ -145,19 +145,19 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {!upcoming.length && <p>No remaining scheduled games.</p>}
       <p>Model status: {modelMetadata?.model_status || 'Not published'}. Home-field setting: {modelMetadata?.home_field_advantage ?? 'Unavailable'} rating points. Rating scale: {modelMetadata?.prediction_scale ?? 'Unavailable'}.</p>
     </details>
-    <details><summary>Full Season Schedule and Model Outlook</summary>
-      <p>Completed games show actual scores; future games show the existing published model forecast only when one is available.</p>
-      <div className="table-wrap"><table><thead><tr><th>Week</th><th>Opponent</th><th>Result / forecast</th></tr></thead><tbody>{games.map(g => {
-        const opponent = g.home === team ? g.away : g.home
-        const p = matchingForecast(predictions, g)
-        const outcome = g.completed && g.home_score != null && g.away_score != null && Number.isFinite(g.home_score) && Number.isFinite(g.away_score)
-          ? g.home + ' ' + g.home_score + '–' + g.away_score + ' ' + g.away
-          : g.completed ? 'Final score unavailable' : p ? p.predicted_winner + ' favored · ' + (100 * (p.home === team ? p.home_win_probability : 1 - p.home_win_probability)).toFixed(1) + '% ' + team + ' win probability' : 'Forecast unavailable'
-        return <tr key={g.game_id}><td>{g.week}</td><td>{opponent}</td><td>{outcome}</td></tr>
+</>}
+    {section === 'history' && <><HistoricalResults team={team} onTeam={onChoose} /><div className="accuracy-summary"><h3>Program development and historical expectations</h3>      <p><strong>Long-term trajectory:</strong> {verified?.trajectory ? `${verified.trajectory.direction} (${(100 * verified.trajectory.value).toFixed(2)} percentage points/year across 3/5/10-year windows; 2020 excluded)` : reportCards ? 'Insufficient verified historical coverage' : historical?.trajectory?.recent.classification ? label(historical.trajectory.recent.classification) : 'Not published with verified multi-season coverage'}.</p>
+      <p>AP/Coaches historical expectations: {verified?.hype?.AP && verified?.hype?.Coaches ? 'Published for 10 independently reviewed completed seasons; see separate AP and Coaches records under Program Report Card' : reportCards ? 'Insufficient verified historical coverage' : historical?.hype.AP?.historical_tendency ? label(historical.hype.AP.historical_tendency) : 'Not yet verified'}; current poll positions are separate from preseason expectations.</p>
+    {!reportCards && <details><summary>Historical program ranking coverage and sources</summary>
+      <p role="status">{historyStatus === 'published' ? 'Independently reviewed historical research is published.' : historyStatus === 'loading' ? 'Checking historical publication status…' : 'Historical research has not passed the publication gate; rankings, trajectory, and hype remain unavailable.'}</p>
+      <p>Historical rankings are descriptive, not forecasts. A ranking requires verified opponent-adjusted strengths for every completed season in its window. Missing seasons are not imputed.</p>
+      <div className="table-wrap"><table><thead><tr><th>Window</th><th>Rank</th><th>Coverage</th><th>Years available</th><th>Source evidence</th></tr></thead><tbody>{(['10', '5', '3'] as const).map(window => {
+        const score = historical?.program_rankings?.[window]
+        return <tr key={window}><td>{window} seasons</td><td>{score?.rank == null ? 'Unavailable' : '#' + score.rank}</td><td>{score ? score.seasons_available + '/' + score.seasons_required : 'Unavailable'}</td><td>{score?.years?.join(', ') || 'Unavailable'}</td><td>{score?.sources?.length ? <details><summary>{score.sources.length} sourced seasons</summary><ul>{score.sources.map(source => <li key={source.season}>{source.season}: {source.source}</li>)}</ul></details> : 'No reviewed source records published'}</td></tr>
       })}</tbody></table></div>
-      {!games.length && <p>No published games for this program.</p>}
-    </details>
+    </details>}
+</div></>}
     <p>Historical rankings, trajectory, and poll expectations are descriptive only. Missing verified seasons are not estimated. Poll status may be unavailable when no current snapshot is published.</p>
-    </>}
+    </div></>}
   </section>
 }
