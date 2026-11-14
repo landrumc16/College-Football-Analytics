@@ -29,6 +29,20 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
+## Public beta readiness — GO and formally closed (2026-11-14)
+
+The owner approved data-only PR #28 at
+`3b41d327c9a713f00113f720cd598f39c58d7653`. All required checks passed;
+it merged/deployed as `2c47bec5935fd32844ef20c307e3aab4c201d052`.
+The live November 10 CFP comparison matches all 25 reviewed official positions,
+including Texas Tech #12. Existing numeric outputs match the prior deployment
+exactly. Five-width live journeys and Android Chrome-emulated PWA acceptance
+passed. No beta readiness holds remain; GO for the initial 25–50 Texas Tech fans.
+See `docs/PUBLIC-BETA-READINESS.md` and its retained receipt for final evidence.
+Feedback issue #27 remains open for real-user reports. Version 6 stays closed;
+no new version, feature, redesign, model promotion or development cycle is
+started or authorized by this closeout.
+
 ## Version 6 visual/editorial refinement — released and closed (2026-11-14)
 
 The owner approved PR #26 at `2c0bc1b50733272a1d5b76b755b652f1083c97e3`,

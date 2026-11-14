@@ -1,0 +1,84 @@
+{
+  "status": "GO",
+  "scope": "Initial public beta with 25\u201350 Texas Tech fans",
+  "verification_closed": true,
+  "closed_date": "2026-11-14",
+  "date_timezone": "America/Chicago",
+  "approved_pr": 28,
+  "approved_candidate": "3b41d327c9a713f00113f720cd598f39c58d7653",
+  "deployed_commit": "2c47bec5935fd32844ef20c307e3aab4c201d052",
+  "production_url": "https://landrumc16.github.io/College-Football-Analytics/",
+  "pages_build_deploy_and_live_browser_run": 43649840894,
+  "live_audit_run": 43649997557,
+  "live_audit_workflow_commit": "3aaab22d8b458392ee453bbca0bb8350992f2b44",
+  "artifacts": [
+    {
+      "run_id": 43649840894,
+      "id": 14135159391,
+      "name": "v5-live-production-browser-evidence",
+      "sha256": "6ae9f10cb0e2ff8299a40e598c02d361fa5a5c476c9e5635c7dad73aeedccf29"
+    },
+    {
+      "run_id": 43649997557,
+      "id": 14135069240,
+      "name": "beta-live-readiness-evidence",
+      "sha256": "9bd7eb34ae45cc70d10b8e34eaa75c8b5f94563f669716dcecdd545cb4b84b86"
+    }
+  ],
+  "cfp_publication": {
+    "season": 2026,
+    "week": 11,
+    "published_at": "2026-11-10",
+    "source": "https://collegefootballplayoff.com/news/2026/11/10/rankings",
+    "all_25_public_positions_verified": true,
+    "all_25_rendered_positions_verified": true,
+    "texas_tech_rank": 12,
+    "row_hash": "f8c6daa2b6526db43490b3ca051ae92ad1d2428ab16d0e3194a0c19e735fe487"
+  },
+  "checked_at_utc": "2026-11-14T22:49:16.997016+00:00",
+  "report_retrieved_at": "2026-11-14T20:23:05.980115+00:00",
+  "report_age_hours_at_check": 2.4358054158333333,
+  "unchanged_numeric_sections": {
+    "rankings": "5a6af0d8db5e3ad4a2b2475ec79e2f7784c8d9a58b3d229a44dbc2dcfc58a293",
+    "predictions": "a975ec1398337c336f0d182c2d2a1ffa2386324ca9de0b3cc29e5469f4a5ac65",
+    "schedule": "96f5ed1f6747a1531105d61f5ec365514911dcfc23509c555c06002abc1c8830",
+    "cfp": "d21aff7a9345c0329e88a6d1e5e6f28484bfa34a0e4459ead96073e81ebbf86f",
+    "model_metadata": "84e1d81159370e5c6166c47576c8b71a2b226cd399a66e01a313b9838cf23225"
+  },
+  "release_source_and_pwa_code_unchanged": true,
+  "python_tests_passed": 549,
+  "production_build": "passed",
+  "live_browser_viewports": [
+    375,
+    390,
+    430,
+    768,
+    1536
+  ],
+  "live_navigation_search_favorites_profiles_predictions_history": "passed",
+  "android_chrome_emulated_pwa": {
+    "installability": "passed",
+    "update_reload": "passed",
+    "offline": "passed",
+    "recovery": "passed",
+    "physical_device_tested": false
+  },
+  "public_link_statuses": {
+    "checked": 47,
+    "non_200": 0
+  },
+  "runtime_dependency_vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "incumbent_authoritative": true,
+  "challenger_promoted": false,
+  "feedback_issue": 27,
+  "feedback_url": "https://github.com/landrumc16/College-Football-Analytics/issues/27",
+  "remaining_beta_holds": [],
+  "unrelated_features_started": false
+}
