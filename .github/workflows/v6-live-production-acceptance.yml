@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fda1fc284a6214611eeae4451d67daaea722d670
+          ref: 195fbd143df002b733a4f36e6030b5677a9f19d4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -33,22 +33,26 @@ jobs:
           for p in ['src/cfb_analytics/model.py','src/cfb_analytics/pipeline.py','src/cfb_analytics/predictions.py']:
               assert hashlib.sha256(Path(p).read_bytes()).hexdigest()==baseline['files'][p]
           PY
-      - name: Wait for the corrected Pages packet to become available
+      - name: Wait for the refined Pages application to become available
         run: |
           python - <<'PY'
-          import os,time,json,hashlib
+          import os,time,json,hashlib,re
+          from urllib.parse import urljoin
           from urllib.request import Request,urlopen
           base=os.environ['DASHBOARD_URL']
           for attempt in range(24):
               try:
                   report=urlopen(Request(base+'season-report.json',headers={'Cache-Control':'no-cache'}),timeout=30).read()
                   packet=json.load(urlopen(Request(base+'v6-scenario-input.json',headers={'Cache-Control':'no-cache'}),timeout=30))
-                  if packet['report_sha256']==hashlib.sha256(report).hexdigest():
-                      print('Corrected live report/scenario identity confirmed');break
+                  html=urlopen(Request(base+'?release=195fbd1',headers={'Cache-Control':'no-cache'}),timeout=30).read().decode()
+                  script=re.search(r'<script[^>]+src="([^"]+)"',html).group(1)
+                  js=urlopen(urljoin(base,script),timeout=30).read().decode()
+                  if 'Verified pregame picks' in js and 'THE PROGRAM FILE' in js and packet['report_sha256']==hashlib.sha256(report).hexdigest():
+                      print('Refined live application and report/scenario identity confirmed');break
               except Exception as error:
                   print(type(error).__name__)
               time.sleep(10)
-          else:raise RuntimeError('Corrected production packet did not become ready')
+          else:raise RuntimeError('Refined production application did not become ready')
           PY
       - name: Verify actual public data, freshness and non-promotion
         run: |
@@ -57,7 +61,7 @@ jobs:
           from pathlib import Path
           from urllib.request import Request,urlopen
           base=os.environ['DASHBOARD_URL']
-          names=['season-report.json','v6-scenario-input.json','v6-program-context.json','v6-prediction-research.json','manifest.webmanifest','sw.js']
+          names=['index.html','season-report.json','v6-scenario-input.json','v6-program-context.json','v6-prediction-research.json','manifest.webmanifest','sw.js']
           evidence={};data={}
           for name in names:
               with urlopen(Request(base+name,headers={'Cache-Control':'no-cache'}),timeout=40) as r:
