@@ -157,7 +157,20 @@ def main():
         if args.check:
             actual=p.read_bytes()
             if name.endswith('.gz'):actual,data=gzip.decompress(actual),gzip.decompress(data)
-            if actual!=data:raise ValueError('Research replay differs: '+name)
+            if actual!=data:
+                # Preserve diagnostics before failing; never accept a changed score silently.
+                from tempfile import gettempdir
+                (Path(gettempdir())/('v6-regenerated-'+name.removesuffix('.gz'))).write_bytes(data)
+                def difference(a,b,path='$'):
+                    if type(a)!=type(b):return path+': types differ'
+                    if isinstance(a,dict):
+                        if a.keys()!=b.keys():return path+': keys differ'
+                        return next((d for k in a if (d:=difference(a[k],b[k],path+'.'+k))),None)
+                    if isinstance(a,list):
+                        if len(a)!=len(b):return path+': lengths differ'
+                        return next((d for i,(x,y) in enumerate(zip(a,b)) if (d:=difference(x,y,path+f'[{i}]'))),None)
+                    return f'{path}: retained={a!r}, replay={b!r}' if a!=b else None
+                raise ValueError('Research replay differs: '+name+' '+str(difference(json.loads(actual),json.loads(data))))
         else:p.write_bytes(data)
     if args.prospective_output:
         report_now=read(ROOT/'data/season-2026-report.json');snapshot=read(ROOT/'data/cfbd-2026-games.json')

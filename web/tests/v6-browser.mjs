@@ -23,6 +23,7 @@ try {
   await page.goto(url,{waitUntil:'networkidle'})
   const nav=page.getByRole('navigation',{name:'Main navigation',exact:true})
   await nav.getByRole('button',{name:'Teams',exact:true}).click()
+  await chooseSection(page,'Teams sections','Team Profiles')
   await page.getByLabel('Choose school',{exact:true}).fill('Texas Tech')
   await chooseSection(page,'Team Profile sections','Historical Intelligence')
   const program=()=>page.getByRole('region',{name:'Program context for Texas Tech',exact:true})

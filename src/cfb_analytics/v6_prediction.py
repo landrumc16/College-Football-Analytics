@@ -58,7 +58,7 @@ def program_features(records, team, season):
     years = [r['season'] for r in prior]
     rates = [r['fbs_wins']/(r['fbs_wins']+r['fbs_losses']) for r in prior]
     ym, rm = sum(years)/len(years), fsum(rates)/len(rates)
-    slope = fsum((y-ym)*(p-rm) for y,p in zip(years,rates))/sum((y-ym)**2 for y in years)
+    slope = fsum((y-ym)*(p-rm) for y,p in zip(years,rates))/fsum((y-ym)**2 for y in years)
     return [rates[0],sum(r['fbs_wins'] for r in prior)/n,slope,prior[0]['fbs_wins']+prior[0]['fbs_losses']]
 
 

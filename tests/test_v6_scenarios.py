@@ -42,3 +42,9 @@ def test_default_incumbent_random_stream_unchanged():
     data=inputs()
     kw=dict(simulations=30,seed=2026,scale=data['scale'],home_edge=data['home_edge'],fcs_rating=data['fcs_rating'])
     assert simulate_cfp(data['teams'],data['games'],**kw)==simulate_cfp(data['teams'],data['games'],winner_overrides={},**kw)
+
+
+def test_incumbent_default_matches_the_retained_10000_draw_production_report():
+    report=json.loads((ROOT/'data/season-2026-report.json').read_text())
+    data=inputs()
+    assert simulate_cfp(data['teams'],data['games'],scale=data['scale'],home_edge=data['home_edge'],fcs_rating=data['fcs_rating'])==report['cfp']
