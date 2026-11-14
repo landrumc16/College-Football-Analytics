@@ -56,12 +56,19 @@ jobs:
           assert data['v6-prediction-research.json']['promotion']['authorized'] is False
           assert len({r['team'] for r in report['rankings']})==len(report['rankings'])
           schedule={g['game_id']:g for g in report['schedule']}
-          for p in report['predictions']:
-              g=schedule[p['game_id']]
-              assert (p['home'],p['away'],p['week'])==(g['home'],g['away'],g['week'])
-              assert not g['completed']
           raw=json.loads(Path('data/cfbd-2026-games.json').read_text());raw_by_id={g['game_id']:g for g in raw['games']}
           aliases={'Miami':'Miami (FL)','App State':'Appalachian State','Sam Houston':'Sam Houston State','UL Monroe':'ULM'}
+          # The provider packet includes non-FBS forecasts; the UI deliberately
+          # limits visible games to IDs in the published FBS schedule.
+          for p in report['predictions']:
+              g=raw_by_id[p['game_id']]
+              assert (p['home'],p['away'],p['week'])==(aliases.get(g['home'],g['home']),aliases.get(g['away'],g['away']),g['week'])
+              assert not g['completed']
+          visible_predictions=[p for p in report['predictions'] if p['game_id'] in schedule and not schedule[p['game_id']]['completed']]
+          assert visible_predictions
+          for p in visible_predictions:
+              g=schedule[p['game_id']]
+              assert (p['home'],p['away'],p['week'])==(g['home'],g['away'],g['week'])
           for g in report['schedule']:
               source=raw_by_id[g['game_id']]
               assert (g['week'],g['home'],g['away'],g['completed'])==(source['week'],aliases.get(source['home'],source['home']),aliases.get(source['away'],source['away']),source['completed'])
@@ -75,7 +82,7 @@ jobs:
           links=list(concurrent.futures.ThreadPoolExecutor(max_workers=4).map(lambda u:get(u)[0],sorted(source_links)))
           probes=[get(base+n)[0] for n in ['.env','.git/config','.cache/private-v6-inputs/','CFA-V6-M1-Private-Source-Corpus.zip']]
           assert all(p.get('status') in (403,404) for p in probes),probes
-          result={'checked_at_utc':datetime.now(timezone.utc).isoformat(),'deployed_commit':'195fbd143df002b733a4f36e6030b5677a9f19d4','production_url':base,'anonymous_https':receipt,'assets':assets,'live_report_retrieved_at':report['retrieved_at'],'live_report_age_hours':age,'ap_coaches_week':poll['week'],'cfp_week':poll['cfp_week'],'cfp_published_at':poll['cfp_published_at'],'cfp_source':poll['cfp_source'],'known_beta_hold':'Official CFP comparison remains November 3; reviewed November 10 replacement awaits owner approval.','ranked_teams':len(report['rankings']),'joined_schedule_games':len(schedule),'joined_predictions':len(report['predictions']),'texas_tech_remaining_packet_games':tech,'report_packet_identity':'exact','public_links':links,'private_path_probes':probes,'incumbent_authoritative':True,'challenger_promoted':False}
+          result={'checked_at_utc':datetime.now(timezone.utc).isoformat(),'deployed_commit':'195fbd143df002b733a4f36e6030b5677a9f19d4','production_url':base,'anonymous_https':receipt,'assets':assets,'live_report_retrieved_at':report['retrieved_at'],'live_report_age_hours':age,'ap_coaches_week':poll['week'],'cfp_week':poll['cfp_week'],'cfp_published_at':poll['cfp_published_at'],'cfp_source':poll['cfp_source'],'known_beta_hold':'Official CFP comparison remains November 3; reviewed November 10 replacement awaits owner approval.','ranked_teams':len(report['rankings']),'joined_schedule_games':len(schedule),'visible_fbs_joined_predictions':len(visible_predictions),'provider_prediction_count':len(report['predictions']),'texas_tech_remaining_packet_games':tech,'report_packet_identity':'exact','public_links':links,'private_path_probes':probes,'incumbent_authoritative':True,'challenger_promoted':False}
           (out/'beta-live-readiness.json').write_text(json.dumps(result,indent=2)+'\n')
           print(json.dumps({k:v for k,v in result.items() if k not in ('assets','texas_tech_remaining_packet_games','public_links')},indent=2))
           print('Links needing review:',[x for x in links if x.get('status',0)>=400 or 'error' in x])
