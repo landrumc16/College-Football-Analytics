@@ -265,8 +265,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Publish current V6 scenario and retained research packets
-        run: python -m scripts.build_v6_product
       - name: Install and build
         working-directory: web
         run: |
@@ -448,6 +446,21 @@ jobs:
           print("Validated published season report")
           PY
           python scripts/verify_dashboard_bundle.py
+      - name: Publish V6 packets from the final deployed report
+        run: |
+          python -m scripts.build_v6_product
+          cp web/public/v6-program-context.json web/public/v6-prediction-research.json web/public/v6-scenario-input.json web/dist/
+          python - <<'PY_CHECK'
+          import hashlib, json
+          from pathlib import Path
+          report = (Path('web/dist') / 'season-report.json').read_bytes()
+          scenario = json.loads((Path('web/dist') / 'v6-scenario-input.json').read_bytes())
+          assert scenario['report_sha256'] == hashlib.sha256(report).hexdigest(), 'Scenario packet must match the final deployed report bytes'
+          research = json.loads((Path('web/dist') / 'v6-prediction-research.json').read_bytes())
+          assert research['promotion']['incumbent_retained'] is True
+          assert research['promotion']['authorized'] is False
+          print('Final V6 scenario/report identity and incumbent authority verified')
+          PY_CHECK
       - name: Preserve V2 research summary for deployment verification
         uses: actions/upload-artifact@v4
         with:
