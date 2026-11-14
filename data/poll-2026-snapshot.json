@@ -212,107 +212,107 @@
   "week": 11,
   "cfp_top25": [
     {
-      "team": "Miami",
+      "team": "Georgia",
       "rank": 1
     },
     {
-      "team": "Georgia",
+      "team": "Utah",
       "rank": 2
     },
     {
-      "team": "Utah",
+      "team": "Alabama",
       "rank": 3
     },
     {
-      "team": "Indiana",
+      "team": "UCLA",
       "rank": 4
     },
     {
-      "team": "Alabama",
+      "team": "Notre Dame",
       "rank": 5
     },
     {
-      "team": "Kentucky",
+      "team": "Texas",
       "rank": 6
     },
     {
-      "team": "Texas",
+      "team": "Miami (FL)",
       "rank": 7
     },
     {
-      "team": "UCLA",
+      "team": "Tennessee",
       "rank": 8
     },
     {
-      "team": "BYU",
+      "team": "Indiana",
       "rank": 9
     },
     {
-      "team": "Ole Miss",
+      "team": "BYU",
       "rank": 10
     },
     {
-      "team": "Notre Dame",
+      "team": "Kentucky",
       "rank": 11
     },
     {
-      "team": "Ohio State",
+      "team": "Texas Tech",
       "rank": 12
     },
     {
-      "team": "Tennessee",
+      "team": "Wake Forest",
       "rank": 13
     },
     {
-      "team": "LSU",
+      "team": "Houston",
       "rank": 14
     },
     {
-      "team": "Texas Tech",
+      "team": "Iowa",
       "rank": 15
     },
     {
-      "team": "Wake Forest",
+      "team": "Oregon",
       "rank": 16
     },
     {
-      "team": "Houston",
+      "team": "South Carolina",
       "rank": 17
     },
     {
-      "team": "Missouri",
+      "team": "USC",
       "rank": 18
     },
     {
-      "team": "Iowa",
+      "team": "Ole Miss",
       "rank": 19
     },
     {
-      "team": "Southern California",
+      "team": "Ohio State",
       "rank": 20
     },
     {
-      "team": "South Carolina",
+      "team": "LSU",
       "rank": 21
     },
     {
-      "team": "Arizona",
+      "team": "Missouri",
       "rank": 22
     },
     {
-      "team": "Oregon",
+      "team": "Arizona",
       "rank": 23
     },
     {
-      "team": "Florida",
+      "team": "Boise State",
       "rank": 24
     },
     {
-      "team": "Boise State",
+      "team": "Oklahoma State",
       "rank": 25
     }
   ],
-  "cfp_published_at": "2026-11-03",
-  "cfp_week": 10,
-  "cfp_source": "https://collegefootballplayoff.com/news/2026/11/3/rankings"
+  "cfp_published_at": "2026-11-10",
+  "cfp_week": 11,
+  "cfp_source": "https://collegefootballplayoff.com/news/2026/11/10/rankings"
 }
