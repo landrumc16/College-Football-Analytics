@@ -57,7 +57,8 @@ jobs:
       - name: Verify production dashboard bundle identity
         run: python scripts/verify_dashboard_bundle.py
       - name: Check historical publication safeguards
-        run: node web/tests/historical-publication.mjs
+        run: |
+          node web/tests/historical-publication.mjs
           node web/tests/v6-scenarios.mjs
       - name: Install browser acceptance dependencies
         working-directory: web

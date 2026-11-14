@@ -30,7 +30,7 @@ is descriptive dominant-season attribution, not proof of current staff or causal
 The source registry verifies publisher bytes and quality, not every underlying
 player fact independently or historical pregame publication times.
 
-Executed: deterministic offline rebuild matched the retained corpus byte-for-byte;
+Executed: deterministic offline rebuild matched the retained canonical JSON exactly;
 10 new source/identity/temporal/missingness safeguards and the complete 536-test
 Python suite passed. The verified V5 archive and incumbent remain unchanged.
 
@@ -114,9 +114,20 @@ favorites lead scenario results. Detailed matchup probabilities remain incumbent
 outputs, with real rating/location context. Unsupported forecast movement is
 explicitly unavailable rather than synthesized from a recomputation.
 
-Local verification of this integrated pass: 547 Python regressions passed,
+Local verification of the integrated candidate: 549 Python regressions passed,
 TypeScript/Vite production build passed, three Python/browser algorithm parity
 fixtures and published-baseline tolerance passed, and research/product export
-reproduction passed. Five-width browser screenshots, throttled runtime and PWA
-journeys are required on the final candidate; pending results must not be inferred
-from the algorithm checks. No implementation merge or model promotion authorized.
+reproduction passed. Integrated browser run at `dab30b0e1a303ca98e32ee0e2248e4a04f39051a`
+passed all five widths (375/390/430/768/1536): shared-context parity, scenario
+selection/reset, no page errors or horizontal overflow, existing navigation,
+favorites/search/analytics and Android Chromium-emulated PWA
+install/update/offline/recovery. The 390px algorithm benchmark under 4× CPU
+throttling measured 2,023.7 ms against the predeclared 3,000 ms limit. This is a
+throttled Chromium measurement, not a physical Android-device benchmark.
+The preserved homepage document measured 1,425px at 375/390, 1,368px at 430,
+1,104px at 768 and 1,045px at 1536. Screenshots were captured for every width.
+
+The final exact-head rerun also executes the standalone Python/browser parity
+command as its own shell line (not an argument to another Node script). PR #25
+records final SHA, workflow/artifact links, inspected screenshots and release
+approval readiness. No implementation merge or model promotion authorized.
