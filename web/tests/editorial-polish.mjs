@@ -74,6 +74,7 @@ try {
   await archive.getByRole('heading').waitFor()
   const research=page.getByRole('region',{name:'Experimental prediction research',exact:true})
   await research.getByText('3,059',{exact:false}).waitFor()
+  if(phase==='after')assert.equal(await archive.locator('.research-scoreline strong').evaluate(el=>{const r=document.createRange();r.selectNodeContents(el);return r.getClientRects().length}),1,'Accuracy percentage must stay on one line')
   await capture('research',{full:true})
   if(phase==='after')await archive.getByText('Scores, sample and publication record',{exact:true}).click()
   await archive.getByRole('columnheader',{name:/Predicted winner confidence/i}).waitFor()

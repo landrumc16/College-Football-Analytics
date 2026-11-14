@@ -54,9 +54,9 @@
 .editorial-app .verified-picks,.editorial-app .prediction-research{background:transparent;border:0;border-top:1px solid var(--editorial-rule);border-radius:0;padding:22px 0;margin-bottom:12px}
 .editorial-app .verified-picks{border-top:2px solid var(--editorial-gold)}
 .editorial-app .verified-picks>h3,.editorial-app .prediction-research>h3{font-size:26px;line-height:1.2;margin:0 0 15px;letter-spacing:-.3px}
-.research-scoreline{display:grid;grid-template-columns:minmax(110px,.7fr) minmax(0,1.5fr);gap:24px;align-items:center;max-width:680px}
+.research-scoreline{display:grid;grid-template-columns:minmax(130px,.7fr) minmax(0,1.5fr);gap:24px;align-items:center;max-width:680px}
 .research-scoreline>div{display:flex;flex-direction:column;gap:3px}
-.research-scoreline strong{font-family:Georgia,"Times New Roman",serif;font-size:54px;line-height:1;color:var(--editorial-ink);letter-spacing:-1.5px}
+.research-scoreline strong{white-space:nowrap;font-family:Georgia,"Times New Roman",serif;font-size:54px;line-height:1;color:var(--editorial-ink);letter-spacing:-1.5px}
 .research-scoreline span{font-size:12px;color:#c9b08d}
 .editorial-app .research-scoreline p{font-size:15px;line-height:1.5;margin:0}
 .editorial-app .prediction-research>p:not(.section-kicker){max-width:72ch}
