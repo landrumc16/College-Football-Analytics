@@ -7,11 +7,11 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 195fbd143df002b733a4f36e6030b5677a9f19d4
+          ref: 2c47bec5935fd32844ef20c307e3aab4c201d052
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -20,7 +20,7 @@ jobs:
           mkdir -p /tmp/beta-evidence
           git rev-parse HEAD > /tmp/beta-evidence/deployed-source-sha.txt
           python - <<'PY'
-          import concurrent.futures,hashlib,json,re,os
+          import concurrent.futures,hashlib,json,re,os,time
           from urllib.request import Request,urlopen
           from urllib.error import HTTPError
           from urllib.parse import urljoin,urlparse
@@ -35,6 +35,15 @@ jobs:
                       return dict(url=url,status=r.status,final_url=r.url,content_type=r.headers.get('Content-Type'),bytes=len(b),sha256=hashlib.sha256(b).hexdigest()),b
               except HTTPError as e:return dict(url=url,status=e.code),b''
               except Exception as e:return dict(url=url,error=type(e).__name__),b''
+          expected_poll=json.loads(Path('data/poll-2026-snapshot.json').read_text())
+          for attempt in range(36):
+              meta,b=get(base+'poll-snapshot.json?approved=pr28')
+              try:
+                  observed=json.loads(b)
+                  if observed.get('cfp_published_at')=='2026-11-10' and observed.get('cfp_top25')==expected_poll['cfp_top25']:break
+              except (ValueError,TypeError):pass
+              time.sleep(10)
+          else:raise RuntimeError('Approved CFP publication is not yet live')
           receipt,html=get(base)
           assert receipt['status']==200 and receipt['final_url'].startswith('https://')
           assert receipt['sha256']=='a95909a21c9dc7c1a3e9856fcfb369106a4d75242d0595dc196b3a5c8ab7f573','Deployment changed: inspect before reusing release acceptance'
@@ -47,6 +56,13 @@ jobs:
               assets[meta['url']]=meta
               if meta['url'].endswith('.json'):data[meta['url'].rsplit('/',1)[1]]=json.loads(b)
           report=data['season-report.json'];poll=data['poll-snapshot.json'];packet=data['v6-scenario-input.json']
+          assert poll['cfp_published_at']=='2026-11-10' and poll['cfp_week']==11
+          assert poll['cfp_top25']==expected_poll['cfp_top25']
+          assert poll['cfp_source']==expected_poll['cfp_source']
+          assert next(p for p in poll['cfp_top25'] if p['team']=='Texas Tech')['rank']==12
+          previous_section_hashes=json.loads('{"rankings":"5a6af0d8db5e3ad4a2b2475ec79e2f7784c8d9a58b3d229a44dbc2dcfc58a293","predictions":"a975ec1398337c336f0d182c2d2a1ffa2386324ca9de0b3cc29e5469f4a5ac65","schedule":"96f5ed1f6747a1531105d61f5ec365514911dcfc23509c555c06002abc1c8830","cfp":"d21aff7a9345c0329e88a6d1e5e6f28484bfa34a0e4459ead96073e81ebbf86f","model_metadata":"84e1d81159370e5c6166c47576c8b71a2b226cd399a66e01a313b9838cf23225"}')
+          section_hashes={k:hashlib.sha256(json.dumps(report[k],sort_keys=True,separators=(',',':')).encode()).hexdigest() for k in previous_section_hashes}
+          assert section_hashes==previous_section_hashes,'Unchanged released numeric sections must match exactly'
           updated=datetime.fromisoformat(report['retrieved_at'].replace('Z','+00:00'))
           age=(datetime.now(timezone.utc)-updated).total_seconds()/3600
           assert 0<=age<72
@@ -88,7 +104,7 @@ jobs:
           links=list(concurrent.futures.ThreadPoolExecutor(max_workers=4).map(lambda u:get(u)[0],sorted(source_links)))
           probes=[get(base+n)[0] for n in ['.env','.git/config','.cache/private-v6-inputs/','CFA-V6-M1-Private-Source-Corpus.zip']]
           assert all(p.get('status') in (403,404) for p in probes),probes
-          result={'checked_at_utc':datetime.now(timezone.utc).isoformat(),'deployed_commit':'195fbd143df002b733a4f36e6030b5677a9f19d4','production_url':base,'anonymous_https':receipt,'assets':assets,'live_report_retrieved_at':report['retrieved_at'],'live_report_age_hours':age,'ap_coaches_week':poll['week'],'cfp_week':poll['cfp_week'],'cfp_published_at':poll['cfp_published_at'],'cfp_source':poll['cfp_source'],'known_beta_hold':'Official CFP comparison remains November 3; reviewed November 10 replacement awaits owner approval.','ranked_teams':len(report['rankings']),'joined_schedule_games':len(schedule),'visible_fbs_joined_predictions':len(visible_predictions),'provider_prediction_count':len(report['predictions']),'texas_tech_remaining_packet_games':tech,'report_packet_identity':'exact','public_links':links,'private_path_probes':probes,'incumbent_authoritative':True,'challenger_promoted':False}
+          result={'checked_at_utc':datetime.now(timezone.utc).isoformat(),'deployed_commit':'2c47bec5935fd32844ef20c307e3aab4c201d052','production_url':base,'anonymous_https':receipt,'assets':assets,'live_report_retrieved_at':report['retrieved_at'],'live_report_age_hours':age,'ap_coaches_week':poll['week'],'cfp_week':poll['cfp_week'],'cfp_published_at':poll['cfp_published_at'],'cfp_source':poll['cfp_source'],'readiness':'GO','cfp_rankings_verified':poll['cfp_top25'],'unchanged_numeric_sections':section_hashes,'remaining_beta_holds':[],'ranked_teams':len(report['rankings']),'joined_schedule_games':len(schedule),'visible_fbs_joined_predictions':len(visible_predictions),'provider_prediction_count':len(report['predictions']),'texas_tech_remaining_packet_games':tech,'report_packet_identity':'exact','public_links':links,'private_path_probes':probes,'incumbent_authoritative':True,'challenger_promoted':False}
           (out/'beta-live-readiness.json').write_text(json.dumps(result,indent=2)+'\n')
           print(json.dumps({k:v for k,v in result.items() if k not in ('assets','texas_tech_remaining_packet_games','public_links')},indent=2))
           print('Links needing review:',[x for x in links if x.get('status',0)>=400 or 'error' in x])
