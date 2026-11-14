@@ -57,6 +57,8 @@ const sections = {
 async function navigate(page, view) {
   const [destination, label] = sections[view];
   await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: destination, exact: true }).click();
+  if (view === 'home') return;
+  if (view === 'predictions') { await page.getByRole('button', { name: 'All games', exact: false }).click(); return; }
   await page.getByRole('tablist', { name: `${destination} sections`, exact: true }).getByRole('tab', { name: label, exact: true }).click();
 }
 async function profileTab(page, label) {
@@ -83,7 +85,7 @@ try {
   browser = await chromium.launch({ headless: true,
     ...(networkGate ? { proxy: { server: `http://127.0.0.1:${networkGate.address().port}` } } : {}) });
   await mkdir('web/mobile-evidence', { recursive: true });
-  for (const width of [375, 390, 768, 1536]) {
+  for (const width of [375, 390, 430, 768, 1536]) {
     const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });
     page.setDefaultTimeout(10000);
     const errors = [];
@@ -94,7 +96,7 @@ try {
     const mainLabels = await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button').allTextContents();
     if (JSON.stringify(mainLabels) !== JSON.stringify(['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'])) throw new Error('Primary navigation must contain exactly five ordered destinations');
     if (await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Home', exact: true }).getAttribute('aria-current') !== 'page') throw new Error('This Week is not the default homepage');
-    await page.getByRole('heading', { name: 'Playoff Snapshot', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Playoff Watch', exact: true }).waitFor();
     // Tabs must be operable by keyboard as well as touch.
     await navigate(page, 'rankings');
     const modelTab = page.getByRole('tab', { name: 'Model Rankings', exact: true });
@@ -117,6 +119,7 @@ try {
     if (!rankingNames.length || rankingNames.some(name => !name.includes('Georgia'))) throw new Error('Model ranking search failed');
     await navigate(page, 'home');
     // V5 public onboarding and privacy disclosure must be available at every viewport.
+    await page.locator('summary[aria-label="App menu"]').click();
     const about = page.getByLabel('About, privacy and getting started');
     await about.locator('summary').click();
     await about.getByText('Favorites are stored only in this browser', { exact: false }).waitFor();
@@ -126,17 +129,19 @@ try {
     await about.locator('summary').click();
 
     if (await page.getByText('Waiting for live data').count()) throw new Error('Dashboard failed to load season report');
-    // Guard the approved four-section mobile homepage against regressions.
-    for (const title of ['My Teams', 'Featured Games', 'Upset Watch', 'Games That Matter']) {
+    await page.locator('summary[aria-label="App menu"]').click();
+    // Guard the approved five concise editorial sections.
+    for (const title of ['My Teams', 'Featured Matchups', 'Rankings Snapshot', 'Playoff Watch', 'Program Spotlight']) {
       await page.getByRole('heading', { name: title, exact: true }).waitFor();
     }
     if (await page.getByRole('heading', { name: 'Competitive Games', exact: true }).count()) throw new Error('Redundant Competitive Games section returned');
     if (await page.getByText('Prediction model:', { exact: false }).count()) throw new Error('Redundant model notice returned');
-    await page.getByText('Our Model Rankings', { exact: false }).first().waitFor();
+    if (await page.getByRole('tablist').count()) throw new Error('Homepage has redundant secondary tabs');
     await page.screenshot({ path: `web/mobile-evidence/home-${width}.png`, fullPage: true });
     // Exercise favorites persistence without changing the user's actual browser storage.
     await page.evaluate(() => localStorage.removeItem('cfba-favorites-v1'));
     await page.reload({ waitUntil: 'networkidle' });
+    await page.locator('.editorial-favorite-editor > summary').click();
     await page.getByText('+ Add Team', { exact: true }).first().click();
     const firstTeam = await page.evaluate(async () => {
       const response = await fetch('./season-report.json');
@@ -161,7 +166,8 @@ try {
     } finally {
       await isolatedContext.close();
     }
-    await page.getByRole('button', { name: 'View schedule', exact: true }).first().click();
+    await page.getByRole('button', { name: `Open ${firstTeam} Team Profile`, exact: true }).click();
+    await profileTab(page, 'Schedule & Predictions');
     await page.getByRole('heading', { name: 'Full Season Schedule and Model Outlook', exact: true }).waitFor();
     if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite schedule shortcut lost its school');
     if (await page.getByRole('tab', { name: 'Schedule & Predictions', exact: true }).getAttribute('aria-selected') !== 'true') throw new Error('Favorite schedule did not open the Profile schedule tab');
@@ -169,10 +175,11 @@ try {
     await page.getByRole('region', { name: 'Historical FBS results', exact: true }).waitFor();
     await navigate(page, 'home');
     // A saved school must open its complete Team Profile, not just its schedule.
-    await page.getByRole('button', { name: 'Team profile' }).first().click();
+    await page.getByRole('button', { name: `Open ${firstTeam} Team Profile`, exact: true }).click();
     await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
     if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Favorite-to-profile navigation lost the selected team');
     await navigate(page, 'home');
+    await page.locator('.editorial-favorite-editor > summary').click();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).waitFor();
     await page.getByRole('button', { name: `Remove ${firstTeam} from favorites` }).click();
     await page.reload({ waitUntil: 'networkidle' });

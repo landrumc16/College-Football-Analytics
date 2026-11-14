@@ -29,6 +29,19 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
+## Current task — approved homepage redesign (2026-11-14)
+
+The owner's Homepage & Mobile UX Redesign directive supersedes the unmerged
+mobile dropdown proposal. Work on `homepage-editorial-preview` from production.
+
+- The owner approved the actual 390px/1536px visual previews at
+  `9a42e4cdfb14dc985500c7ddfb93a33ddfd9712d`. Complete the approved design,
+  responsive acceptance at 375/390/430/768/1536, regression tests and PWA checks.
+- Work in PR #21 on `homepage-editorial-preview`. Keep production unchanged.
+  A separate explicit approval remains required to merge main.
+- Preserve the engine, archive, calculations, methodology, full analytics views,
+  favorites and PWA. Do not start another version, roadmap or unrelated features.
+
 ## Navigation consolidation — completed and closed (2026-11-13)
 
 The owner approved PR #18 at `e7ea35d439bc51d97d63ba6f74d16de3ffe41a97`.
