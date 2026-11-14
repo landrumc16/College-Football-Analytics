@@ -62,7 +62,7 @@ try {
   assert.ok((await scenario.getByRole('status').innerText()).includes('1 pick applied'))
   await scenario.scrollIntoViewIfNeeded();await page.screenshot({path:`web/v6-evidence/scenario-${width}.png`})
   await scenario.getByRole('button',{name:'Reset to baseline',exact:true}).click()
-  await page.waitForFunction(()=>{const s=document.querySelector('select[aria-label="Scenario matchup"]');return s&&!s.disabled})
+  await page.waitForFunction(baseline=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&s.querySelector('tbody').innerText===baseline},baseline)
   assert.equal(await scenario.locator('tbody').innerText(),baseline,'Reset must exactly restore seeded baseline')
   let benchmark=null
   if(width===390){
