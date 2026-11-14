@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-14T05:54:06.803552+00:00",
+  "as_of": "2026-11-14T13:19:58.344881+00:00",
   "coverage": {
     "hype": {
       "eligible": 138,
@@ -1243,7 +1243,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 44.52554744525548
+          "score": 47.44525547445255
         },
         "trajectory": {
           "grade": "F",
@@ -1269,7 +1269,7 @@
         }
       },
       "overall_grade": "D-",
-      "overall_score": 60.609044915614255,
+      "overall_score": 61.582280925346616,
       "team": "Colorado",
       "trajectory": {
         "annual_slopes": {
@@ -2860,7 +2860,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 12.408759124087592
+          "score": 11.678832116788321
         },
         "trajectory": {
           "grade": "F",
@@ -2886,7 +2886,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 33.369057274166764,
+      "overall_score": 33.12574827173368,
       "team": "Marshall",
       "trajectory": {
         "annual_slopes": {
@@ -2914,7 +2914,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 47.44525547445255
+          "score": 46.715328467153284
         },
         "trajectory": {
           "grade": "F",
@@ -2940,7 +2940,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 33.672228015293705,
+      "overall_score": 33.42891901286062,
       "team": "Maryland",
       "trajectory": {
         "annual_slopes": {
@@ -3907,7 +3907,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 46.715328467153284
+          "score": 45.98540145985402
         },
         "trajectory": {
           "grade": null,
@@ -4738,7 +4738,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 11.678832116788321
+          "score": 12.408759124087592
         },
         "trajectory": {
           "grade": "F",
@@ -4764,7 +4764,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 34.44849959448499,
+      "overall_score": 34.69180859691809,
       "team": "Rice",
       "trajectory": {
         "annual_slopes": {
@@ -5914,7 +5914,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 45.25547445255474
+          "score": 44.52554744525548
         },
         "trajectory": {
           "grade": "F",
@@ -5940,7 +5940,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 40.08515815085158,
+      "overall_score": 39.8418491484185,
       "team": "Tulsa",
       "trajectory": {
         "annual_slopes": {
@@ -6367,7 +6367,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 45.98540145985402
+          "score": 45.25547445255474
         },
         "trajectory": {
           "grade": "F",
@@ -6393,7 +6393,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 36.09566292048044,
+      "overall_score": 35.85235391804735,
       "team": "UTSA",
       "trajectory": {
         "annual_slopes": {
