@@ -4,6 +4,62 @@
 
 Production: https://landrumc16.github.io/College-Football-Analytics/
 
+## Final visual/editorial production acceptance — PR #26
+
+The owner explicitly approved merging PR #26 provided all required checks
+remained passing. All checks passed on the approved refinement candidate
+`2c0bc1b50733272a1d5b76b755b652f1083c97e3` before merge. The merge retains
+the intervening normal game/report and current Report Card refresh; application
+source, analytics and verified archive match the approved candidate.
+
+**Final deployed and production-tested commit:**
+`195fbd143df002b733a4f36e6030b5677a9f19d4`.
+
+- [Successful Pages build, deploy and actual live browser/PWA acceptance](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43642867350).
+- [Actual live V6 program/research/scenario acceptance at all five widths](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43642969381).
+- [Final machine-readable receipt](evidence/v6-editorial-production-2026-11-14.json).
+- [Approved 100-image before/after comparison](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43637886854).
+
+All 549 Python regressions and the production TypeScript/Vite build passed on
+the merged source. The public HTML hash matches the validated Pages artifact,
+identifying `index-CGJ6ua-S.js` and `index-CPDYgCat.css`. The live report matches
+the validated deployment report bytes and its scenario packet's exact-byte hash.
+Both live evidence ZIP hashes and their `production-sha.txt` receipts were checked.
+
+Actual HTTPS production journeys passed at **375, 390, 430, 768 and 1536px**:
+five main destinations, mobile bottom navigation, responsive secondary/Profile
+selectors, keyboard navigation, rankings/polls, school search/autocomplete,
+Team Profiles and all four sections, schedules/predictions, historical
+intelligence/Report Cards, comparisons and persistent isolated favorites.
+The new lead-matchup treatment, ruled profile/program statistics, matchup-first
+comparison and plain-language research presentation are present in production.
+Screenshots of the live homepage, rankings, profiles, program intelligence,
+research and scenarios were inspected; no page overflow or page errors occurred.
+
+Live V6 metrics match across Profile, Program Directory and Compare. Scenario
+winner selection computes conditional CFP/conference results, and Reset restores
+the seeded baseline exactly at every width. The 390px 4x-CPU benchmark took
+**2800.7 ms**, within the existing 3000 ms budget, and matched the retained Python
+reference. Direct browser interaction additionally verified Texas Tech's profile
+and program statistics, the new research copy, a Navy-over-Army scenario changing
+results, exact reset and return to Home. No simulation logic changed.
+
+Android Chrome emulation passed PWA installability, service-worker update/reload,
+actual network outage/offline fallback, no live-JSON caching, failure/recovery
+and return online. These are emulated browser results, not physical-device claims.
+
+The production report still identifies `workbook_2026_baseline` /
+`incumbent_not_v3_promoted`. Incumbent model/pipeline/prediction source hashes
+match the frozen receipt. The public challenger research remains
+`experimental_not_promoted`, `incumbent_retained: true`, `eligible: false`,
+`authorized: false`. The verified historical archive, data definitions and
+limitations remain intact. No prediction improvement is claimed.
+
+**Version 6.0 and the final editorial refinement are formally closed. No release
+blockers remain.** Only closeout documentation changed after this deployed commit;
+no additional application development or feature work was initiated. The next
+owner-stated objective is a small public beta with Texas Tech football fans.
+
 ## Released identity and approval
 
 The owner explicitly approved PR #25 at
@@ -15,7 +71,7 @@ candidate were the existing live game/report and current Report Card refresh.
 The verified historical archive and approved application implementation remain
 preserved.
 
-**Final deployed and production-tested commit:**
+**Initial Version 6 deployed and production-tested commit:**
 `fda1fc284a6214611eeae4451d67daaea722d670`.
 
 One deployment-only correction was necessary. The original Pages workflow

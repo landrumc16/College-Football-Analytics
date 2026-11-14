@@ -29,17 +29,24 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — Version 6 visual and editorial polish
+## Version 6 visual/editorial refinement — released and closed (2026-11-14)
 
-The owner authorized a focused refinement on `v6-editorial-polish` from main
-`70191e42df15f932733843df801a54de04847319`. Improve hierarchy, typography,
-spacing and fan-facing wording within the existing pages. Preserve the approved
-logo/palette/serifs, navigation and mobile bottom bar, all functionality, source
-limits and accessibility. Do not change engine/data/calculations/simulation,
-favorites/PWA contracts or dependencies. No new version or unrelated feature.
-Capture comparable real-build before/after screenshots using the same real data,
-verify all five viewports and existing Python/browser/PWA regressions, and deliver
-a finished PR plus concise visual comparison. Do not merge without owner approval.
+The owner approved PR #26 at `2c0bc1b50733272a1d5b76b755b652f1083c97e3`,
+conditional on passing checks. Every required check passed before merge.
+It merged and deployed as `195fbd143df002b733a4f36e6030b5677a9f19d4`.
+Actual production browser acceptance passed at 375/390/430/768/1536px,
+including rankings, profiles, program intelligence, comparisons, predictions,
+research, favorites, scenario output/exact reset and Android Chrome-emulated
+PWA installation/update/offline/recovery. The approved refinements are live;
+the incumbent remains authoritative and the challenger was not promoted.
+See `docs/V6-PRODUCTION-ACCEPTANCE.md` and
+`docs/evidence/v6-editorial-production-2026-11-14.json` for final evidence.
+
+Version 6, including this refinement, is formally closed. No new feature or
+version is authorized. The next owner-stated objective is preparing the existing
+application for a small public beta with Texas Tech football fans; this closeout
+does not initiate another development cycle. Preserve the released design,
+analytics, verified archive, source limits, favorites and PWA contracts.
 
 ## Version 6.0 — released and closed (2026-11-14)
 

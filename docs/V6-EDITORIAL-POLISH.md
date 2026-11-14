@@ -1,8 +1,16 @@
 # Version 6 — visual and editorial refinement
 
-Focused review branch: `v6-editorial-polish`, based on released main
-`70191e42df15f932733843df801a54de04847319`. This is not a new version and must
-not merge without the owner's explicit visual approval. Production is unchanged.
+**Status: RELEASED AND CLOSED — November 14, 2026 (America/Chicago).**
+
+The owner approved PR #26 after visual review, conditional on passing checks.
+All required checks passed at `2c0bc1b50733272a1d5b76b755b652f1083c97e3`.
+The approved refinement merged and deployed as
+`195fbd143df002b733a4f36e6030b5677a9f19d4`. Production acceptance passed;
+see [final acceptance](V6-PRODUCTION-ACCEPTANCE.md) and its retained receipt.
+
+Review branch: `v6-editorial-polish`, originally based on released main
+`70191e42df15f932733843df801a54de04847319`. This is a focused V6 refinement,
+not a new version.
 
 The reviewed V6 pages overuse nested framed panels and give routine statistics,
 important findings and methodological notes similar visual weight. Compare puts

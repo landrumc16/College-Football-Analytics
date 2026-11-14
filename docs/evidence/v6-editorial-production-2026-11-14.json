@@ -1,0 +1,137 @@
+{
+  "status": "released_and_closed",
+  "closed_date": "2026-11-14",
+  "date_timezone": "America/Chicago",
+  "approved_pr": 26,
+  "approved_candidate": "2c0bc1b50733272a1d5b76b755b652f1083c97e3",
+  "required_checks_passing_before_merge": true,
+  "deployed_commit": "195fbd143df002b733a4f36e6030b5677a9f19d4",
+  "production_url": "https://landrumc16.github.io/College-Football-Analytics/",
+  "pages_and_live_acceptance_run": 43642867350,
+  "live_v6_run": 43642969381,
+  "live_v6_workflow_commit": "e61a301516709267ed5de7b203bfb35b56f0a717",
+  "live_v6_checked_out_commit": "195fbd143df002b733a4f36e6030b5677a9f19d4",
+  "live_navigation_checked_out_commit": "195fbd143df002b733a4f36e6030b5677a9f19d4",
+  "artifacts": [
+    {
+      "run_id": 43642867350,
+      "id": 14132573028,
+      "name": "v5-live-production-browser-evidence",
+      "sha256": "54e9a4259b75c3b2f49a55bf1b5e2c64c507d05a13e1abdf94d707c9a1f67b13"
+    },
+    {
+      "run_id": 43642969381,
+      "id": 14132612826,
+      "name": "v6-live-production-evidence",
+      "sha256": "28c5b009385629106622b2879578e699c9f69f8b922243e5649f38e68c435090"
+    },
+    {
+      "run_id": 43642867350,
+      "id": 14133076149,
+      "name": "github-pages",
+      "sha256": "bf616aa8a284302ba41ee9ed7cec31ace0481b1862f85efc6889dd211393e1e0"
+    }
+  ],
+  "live_viewport_results": [
+    {
+      "width": 375,
+      "crossPageContext": "exact",
+      "scenarioReset": "exact",
+      "benchmarkMs4x": null,
+      "overflow": false,
+      "pageErrors": []
+    },
+    {
+      "width": 390,
+      "crossPageContext": "exact",
+      "scenarioReset": "exact",
+      "benchmarkMs4x": 2800.7000000000116,
+      "overflow": false,
+      "pageErrors": []
+    },
+    {
+      "width": 430,
+      "crossPageContext": "exact",
+      "scenarioReset": "exact",
+      "benchmarkMs4x": null,
+      "overflow": false,
+      "pageErrors": []
+    },
+    {
+      "width": 768,
+      "crossPageContext": "exact",
+      "scenarioReset": "exact",
+      "benchmarkMs4x": null,
+      "overflow": false,
+      "pageErrors": []
+    },
+    {
+      "width": 1536,
+      "crossPageContext": "exact",
+      "scenarioReset": "exact",
+      "benchmarkMs4x": null,
+      "overflow": false,
+      "pageErrors": []
+    }
+  ],
+  "public_assets": {
+    "index.html": {
+      "sha256": "a95909a21c9dc7c1a3e9856fcfb369106a4d75242d0595dc196b3a5c8ab7f573",
+      "bytes": 902
+    },
+    "season-report.json": {
+      "sha256": "c320f54e7b8b014d18cca657a5d9390d5fb4eae151988e1db3a853ac3c7be8aa",
+      "bytes": 575715
+    },
+    "v6-scenario-input.json": {
+      "sha256": "2515519da4d5eb74814d8a5d29c516d1f98bbbdf04e40c43118f63ed5a636c31",
+      "bytes": 48853
+    },
+    "v6-program-context.json": {
+      "sha256": "b94fa52a57510ae475132e81aae59f74c05d0c8e9d3e0fbe5caf8b23342d46a9",
+      "bytes": 296884
+    },
+    "v6-prediction-research.json": {
+      "sha256": "b3ca9a23c40e264dff4873003b8952b9e30b827f92b50a073a24952dad8eb09c",
+      "bytes": 52671
+    },
+    "manifest.webmanifest": {
+      "sha256": "ea9016fb32ea400db9e34c0ae4244c77f3ff31766e1e12e6bbca3160261e1579",
+      "bytes": 830
+    },
+    "sw.js": {
+      "sha256": "c4f586a975a525f8cdd45e23b5afbaae06ba74337ee7d74adac0ec3dd3e92245",
+      "bytes": 1510
+    },
+    "model_metadata": {
+      "model_id": "workbook_2026_baseline",
+      "model_status": "incumbent_not_v3_promoted",
+      "prediction_scale": 18.0,
+      "home_field_advantage": 3.0,
+      "historical_study": "retrospective_research_only"
+    },
+    "retrieved_at": "2026-11-14T20:23:05.980115+00:00",
+    "production_url": "https://landrumc16.github.io/College-Football-Analytics/"
+  },
+  "bundle_identity": {
+    "index_sha256": "a95909a21c9dc7c1a3e9856fcfb369106a4d75242d0595dc196b3a5c8ab7f573",
+    "script": "./assets/index-CGJ6ua-S.js",
+    "stylesheet": "./assets/index-CPDYgCat.css",
+    "matches_validated_pages_artifact": true
+  },
+  "python_tests_passed": 549,
+  "production_build": "passed",
+  "navigation_favorites_predictions_history_regressions": "passed",
+  "pwa_android_chrome_emulation": {
+    "installability": "passed",
+    "update_reload": "passed",
+    "network_outage_offline": "passed",
+    "recovery": "passed",
+    "physical_device_tested": false
+  },
+  "visual_refinements_present": true,
+  "incumbent_authoritative": true,
+  "challenger_promoted": false,
+  "remaining_release_blockers": [],
+  "next_objective": "Prepare the existing application for a small public beta with Texas Tech football fans; no new version or feature cycle started."
+}
