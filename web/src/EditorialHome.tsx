@@ -82,7 +82,7 @@ export default function EditorialHome({ report, games, favorites, poll, favorite
           const game = games.filter(game => game.home === name || game.away === name).sort((a,b) => a.week-b.week)[0]
           const probability = game ? game.home === name ? game.home_win_probability : 1-game.home_win_probability : null
           return <button className="editorial-team-row" key={name} onClick={() => onTeam(name)} aria-label={`Open ${name} Team Profile`}>
-            <span className="editorial-team-identity"><strong>{name}</strong><small>{game ? `${game.home === name ? 'vs.' : 'at'} ${game.home === name ? game.away : game.home}` : 'No upcoming game listed'}</small></span>
+            <span className="editorial-team-identity"><strong>{name}</strong><small>{game ? `W${game.week} · ${game.home === name ? 'vs.' : 'at'} ${game.home === name ? game.away : game.home} · #${rank(game.home === name ? game.away : game.home) ?? '—'}` : 'No upcoming game listed'}</small></span>
             <span className="editorial-team-numbers"><strong>{team ? `#${team.rank} · ${team.wins}–${team.losses}` : 'Unranked'}</strong><small>{probability !== null ? `${percent(probability)} to win` : 'Forecast unavailable'}</small></span><span className="editorial-row-arrow" aria-hidden="true">›</span>
           </button>
         })}</div>

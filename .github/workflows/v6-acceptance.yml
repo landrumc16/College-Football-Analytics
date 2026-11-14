@@ -29,7 +29,9 @@ jobs:
       - name: Evaluate frozen chronological challenger research
         run: |
           mkdir -p /tmp/v6-evidence
-          python -m scripts.evaluate_v6_prediction --output /tmp/v6-evidence --prospective-output /tmp/v6-evidence/experimental-pregame.json
+          python -m scripts.evaluate_v6_prediction --check
+          cp research/v6/prediction-research.json research/v6/challenger-model.json research/v6/research-paired-predictions.json.gz /tmp/v6-evidence/
+          python -m scripts.build_v6_product --check
       - name: Run complete model and data regressions
         run: python -m pytest -q
       - name: Verify retained V5 historical publication

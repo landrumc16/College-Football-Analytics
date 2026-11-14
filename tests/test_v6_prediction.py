@@ -50,3 +50,22 @@ def test_prospective_requires_real_future_kickoff_and_matching_game():
     assert not freeze_prospective(model,rows,report,[{**game,'start_date':None}],'2022-09-01T00:00:00Z','fixture')['predictions']
     assert not freeze_prospective(model,rows,report,[{**game,'away':'Wrong identity'}],'2022-09-01T00:00:00Z','fixture')['predictions']
     with pytest.raises(ValueError):freeze_prospective(model,rows,report,[game],'2022-09-01','fixture')
+
+
+def test_independent_prospective_publication_receipt_and_model_hash():
+    import hashlib,json
+    from pathlib import Path
+    from cfb_analytics.historical import utc_instant
+    root=Path(__file__).resolve().parents[1]
+    receipt=json.loads((root/'research/v6/experimental-publication.json').read_bytes())
+    blob=(root/receipt['predictions_file']).read_bytes()
+    assert hashlib.sha256(blob).hexdigest()==receipt['predictions_sha256']
+    frozen=json.loads(blob)
+    assert len(frozen['predictions'])==receipt['games']==178
+    assert len({r['game_id'] for r in frozen['predictions']})==178
+    published=utc_instant(receipt['publication_at'])
+    for row in frozen['predictions']:
+        assert utc_instant(row['issued_at'])<=published<utc_instant(row['kickoff_at'])
+        assert 0<=row['incumbent_probability']<=1 and 0<=row['challenger_probability']<=1
+    # Exact model bytes from the independently published run remain separately retained.
+    assert hashlib.sha256((root/'research/v6/experimental-model-2026-11-14.json').read_bytes()).hexdigest()==frozen['predictions'][0]['model_input_hash']

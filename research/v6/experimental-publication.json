@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "independently_timestamped_experimental_predictions_not_production",
+  "predictions_file": "research/v6/experimental-pregame-2026-11-14.json",
+  "predictions_sha256": "26c09772c65bcb40eeb8d32d25799d85af9c7b36a997ac2f792c4fb93e6adf98",
+  "games": 178,
+  "issued_at": "2026-11-14T16:12:25.691897+00:00",
+  "publication_at": "2026-11-14T16:12:37Z",
+  "workflow_run": 43614269903,
+  "workflow_url": "https://github.com/landrumc16/College-Football-Analytics/actions/runs/43614269903",
+  "commit": "99ab0bec814ad653ea6a9f14434b8be08c8f03b8",
+  "artifact_id": 14121407839,
+  "artifact_sha256": "df1388581f34269cbd56eb05c514b8afd0cbdcaba7fe4ee4aa29c7246846b8d3",
+  "scope": "Freeze only; no final outcomes or prospective accuracy are claimed. Each selected game was scheduled after issuance and independent artifact publication. Preserve original bytes and verify final outcomes independently before later scoring."
+}

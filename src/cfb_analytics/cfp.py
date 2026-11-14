@@ -12,7 +12,8 @@ from .model import win_probability_from_rating_gap
 
 
 def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
-                 scale=18.0, home_edge=3.0, fcs_rating=-26.0):
+                 scale=18.0, home_edge=3.0, fcs_rating=-26.0,
+                 winner_overrides=None, random_source=None):
     """teams: name -> {conference,rating,wins,conference_wins}.
     games: remaining {home,away,neutral_site} records.
     """
@@ -33,7 +34,16 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
                 raise ValueError(f"Invalid {key} for {name}")
         if team["conference"] != "Independent" and not team["conference"]:
             raise ValueError(f"Missing conference for {name}")
-    rng = Random(seed)
+    # Optional scenario adapters leave every incumbent/default random draw intact.
+    winner_overrides = winner_overrides or {}
+    by_id = {str(g['game_id']): g for g in games if 'game_id' in g}
+    if winner_overrides and len(by_id) != len(games):
+        raise ValueError('Scenario games require unique identities')
+    for game_id, winner in winner_overrides.items():
+        g = by_id.get(str(game_id))
+        if not g or g.get('completed') or winner not in (g['home'], g['away']):
+            raise ValueError('Invalid or completed-game scenario override')
+    rng = random_source if random_source is not None else Random(seed)
     names = sorted(teams)
     if len(names) != len(set(names)):
         raise ValueError("duplicate team names")
@@ -64,7 +74,8 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
         if not game.get("neutral_site", False):
             gap += home_edge
         same_conf = home in teams and away in teams and teams[home]["conference"] == teams[away]["conference"] and teams[home]["conference"] != "Independent"
-        prepared.append((home, away, win_probability_from_rating_gap(gap, scale), same_conf))
+        prepared.append((home, away, win_probability_from_rating_gap(gap, scale), same_conf,
+                         winner_overrides.get(str(game.get('game_id')))))
     totals = defaultdict(Counter)
     conference_matchups = defaultdict(Counter)
     sum_wins = Counter()
@@ -74,8 +85,9 @@ def simulate_cfp(teams, games, *, simulations=10000, seed=2026,
     for _ in range(simulations):
         wins = {n: teams[n]["wins"] for n in names}
         conf_wins = {n: teams[n]["conference_wins"] for n in names}
-        for home, away, p, same_conf in prepared:
-            winner = home if rng.random() < p else away
+        for home, away, p, same_conf, forced in prepared:
+            drawn = home if rng.random() < p else away
+            winner = forced or drawn
             if winner in wins:
                 wins[winner] += 1
                 if same_conf:

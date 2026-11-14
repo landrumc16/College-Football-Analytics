@@ -277,3 +277,8 @@ a:hover{color:#fff1dd}
  .team-profile>h2{margin-top:0}
  .team-profile>h3{margin:12px 0}
 }
+/* Scenario controls reuse the existing page palette and native accessible selects. */
+.scenario-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.scenario-controls label{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 240px}
+.scenario-controls select{max-width:100%;width:100%;min-width:0}
+@media(max-width:600px){.scenario-controls label{flex-basis:100%}.scenario-controls button{min-height:44px}}

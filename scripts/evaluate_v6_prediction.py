@@ -7,6 +7,7 @@ import argparse
 import gzip
 import hashlib
 import json
+from math import fsum
 from collections import Counter
 from datetime import datetime,timezone
 from pathlib import Path
@@ -63,12 +64,14 @@ def run():
     records,rows,eligible,excluded=features_and_games()
     config=protocol['fitting']; references=protocol['reference_feature_indices']
     pairs=[];folds=[]
+    conferences={(r['season'],r['team']):r['conference'] or 'Unavailable' for r in foundation['team_seasons']}
     for season in protocol['primary_heldout_seasons']:
         train,test=chronological_fold(rows,season)
         reference=fit_logistic([[r['features'][i] for i in references] for r in train],[r['outcome'] for r in train],config)
         challenger=fit_logistic([r['features'] for r in train],[r['outcome'] for r in train],config)
         for r in test:
             pairs.append({k:r[k] for k in ['season','week','game_id','outcome']}|{
+                'home_conference':conferences.get((season,r['home']),'Unavailable'),
                 'prediction_kind':'retrospective','incumbent_probability':predict(reference,[r['features'][i] for i in references]),
                 'challenger_probability':predict(challenger,r['features'])})
         folds.append({'season':season,'training_seasons':sorted({r['season'] for r in train}),
@@ -81,7 +84,7 @@ def run():
     by_season=metrics['retrospective_by_season']
     def calibration_error(bins):
         n=sum(b['games'] for b in bins)
-        return sum(b['games']*abs(b['mean_probability']-b['observed_win_rate']) for b in bins if b['games'])/n if n else None
+        return fsum(b['games']*abs(b['mean_probability']-b['observed_win_rate']) for b in bins if b['games'])/n if n else None
     reference_ece=calibration_error(pooled['calibration']['reference'])
     challenger_ece=calibration_error(pooled['calibration']['challenger'])
     log_change=(pooled['challenger']['log_loss']-pooled['reference']['log_loss'])/pooled['reference']['log_loss']
@@ -96,6 +99,8 @@ def run():
     metrics['reference_screen']={'criteria':proxy_screen,'all_pass':all(proxy_screen.values()),'reference_ece':reference_ece,'challenger_ece':challenger_ece,'promotion_authority':False}
     metrics['comparison_label']='prior-results reference proxy vs experimental challenger'
     metrics['clustered_challenger_minus_reference_interval']=ci
+    metrics['by_home_conference']={c:rename_reference(evaluate_pairs([r for r in pairs if r['home_conference']==c]))['retrospective']
+                                   for c in sorted({r['home_conference'] for r in pairs})}
     final=fit_logistic([r['features'] for r in rows if r['season']<=2025],[r['outcome'] for r in rows if r['season']<=2025],config)
     verified,_,authentic=verify()
     finals=read(ROOT/'research/archive/verified/pregame-evaluation-outcomes.json')
@@ -150,7 +155,9 @@ def main():
     for name,data in outputs.items():
         p=args.output/name
         if args.check:
-            if p.read_bytes()!=data:raise ValueError('Research replay differs: '+name)
+            actual=p.read_bytes()
+            if name.endswith('.gz'):actual,data=gzip.decompress(actual),gzip.decompress(data)
+            if actual!=data:raise ValueError('Research replay differs: '+name)
         else:p.write_bytes(data)
     if args.prospective_output:
         report_now=read(ROOT/'data/season-2026-report.json');snapshot=read(ROOT/'data/cfbd-2026-games.json')

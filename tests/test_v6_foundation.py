@@ -30,6 +30,7 @@ def test_missing_ratings_are_not_zero_and_grade_is_not_a_percentage():
     assert result['mean_publisher_grade'] == 100.3 and result['source_grades_over_100'] == 1
     assert result['blue_chip_share'] == 1
     assert finite_mean([None]) is None
+    assert finite_mean([1e16, 1, -1e16]) == 1 / 3
     with pytest.raises(ValueError):recruiting_summary(rows + [rows[0]])
     with pytest.raises(ValueError):finite_mean([float('nan')])
 

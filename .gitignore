@@ -7,3 +7,13 @@ __pycache__/
 
 # Private, checksum-pinned research inputs; never commit raw provider corpora.
 .cache/
+
+# Local builds, browser dependencies and generated live staging files.
+*.egg-info/
+web/node_modules/
+web/dist/
+web/editorial-dist/
+web/*-evidence/
+web/tsconfig.tsbuildinfo
+web/public/season-report.json
+web/public/poll-snapshot.json

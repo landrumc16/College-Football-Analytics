@@ -41,3 +41,82 @@ challenger fitting or held-out inspection. Four chronological seasons, calibrati
 and coverage limits, paired scoring/uncertainty and numerical gates are fixed.
 Known historical availability and incumbent-prior gaps are declared before results;
 proxy research cannot authorize promotion or claim a production accuracy gain.
+
+## M4 — predeclared browser scenario budget (before implementation/benchmark)
+
+Use 2,000 deterministic seeded draws per run in a dedicated worker. A run must
+finish within 3,000 ms under Chromium 4× CPU throttling at 390×844, using the
+actual current national schedule. Main-thread navigation must remain responsive.
+The maximum per-probability Monte Carlo 95% half-width is 2.2 percentage points;
+a difference between independent 2,000-draw runs has a worst-case 3.1-point
+half-width. Comparisons use common random draws to reduce noise. Seeded reset
+must reproduce exactly. Browser/Python reference fixtures must agree within
+1e-9 with a shared random source; comparison to the independently seeded
+10,000-draw published forecast allows at most 5 percentage points per displayed
+probability. Do not describe these conditional simulations as committee forecasts.
+
+## Delivered research and application integration
+
+M1 cross-runtime canonical JSON reproduction passed Python 3.11 CI at
+`99ab0bec814ad653ea6a9f14434b8be08c8f03b8`, research run
+[43614269903](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43614269903).
+Numeric means use accurate summation across Python 3.11/3.12. The retained
+compressed file has its own checksum; canonical decompressed JSON is compared
+exactly during rebuild so zlib container differences cannot alter acceptance.
+
+M2 preregistration was committed at `04f3ff6b8f548fe43face56f67af04f7f5ed0899`
+before fitting/inspection. The 2022/23/24/25 folds contain 766/758/763/772 common
+games, 3,059 pooled; coverage is 98.71/95.71/95.61/95.54%. Lagged results and
+home location are the only features. The reference is a prior-results logistic
+proxy, **not the released incumbent**. Pooled reference/challenger Brier:
+0.221772/0.221793; log loss: 0.634014/0.633601; winner accuracy:
+63.62%/63.55%. Paired challenger-minus-reference Brier 95% interval:
+[-0.001741, +0.001775], 2,000 paired season/week cluster draws, 62 clusters.
+No reliable advantage was established; no hyperparameter tuning followed.
+Frozen predictions, calibration bins, four folds, conference breakdowns,
+missing-history abstentions, hashes and all failed/passed proxy screens are
+retained. Historical incumbent priors and original historical cutoff evidence
+remain unavailable, so incumbent promotion gates cannot be claimed passed.
+Decision: **retain incumbent; experimental research only**.
+
+The separate authentic archive reproduces 65 issued-before-kickoff predictions,
+64.62% correct winners, Brier 0.211392, log loss 0.610860. This is two partial
+2026 weeks, not four archived seasons. Research UI keeps these lanes separate.
+An isolated 178-game experimental future cohort was frozen and independently
+published by GitHub artifact 14121407839 at 2026-11-14T16:12:37Z before every
+selected kickoff; original model/prediction bytes and receipt are retained.
+No prospective score is claimed before independent final-outcome verification.
+
+M3 uses one shared Python transform and one React component across Team Profile
+Historical Intelligence, a selected Program Directory school and Compare.
+The public packet contains 139 programs with observed FBS history (138 current
+2026 programs plus historical Idaho). It describes two completed three-season
+windows, recruiting blue-chip composition, observed roster retention and dominant
+head-coach continuity; unavailable periods remain unavailable. Exact periods,
+counts, source links/hashes, national coverage and non-causal limits are exposed.
+2020 is excluded from performance windows. No V5 grades or calculations change.
+
+M4 reuses cfp.py with optional scenario/random adapters; default incumbent draws
+are preserved. The static browser worker implements the same conference,
+selection and playoff rules. Python/browser outputs match exactly for three
+2,000-draw national fixtures (baseline and opposite Army/Navy winners), including
+CFP, conference and national-title probabilities. Reset is exact. The maximum
+baseline CFP/conference difference versus the published independently seeded
+10,000-draw run is 2.09 percentage points, within the predeclared 5-point limit.
+Overrides reject unknown identities, wrong participants, duplicate/conflicting
+identities, completed games and started/undated choices. A SHA-256 check ties
+scenario inputs to the exact current report. National inputs regenerate during
+production build; no live API/backend or model replacement is introduced.
+
+M5 retains the five-section homepage, bottom navigation and adaptive section
+selectors. Saved-team rows now show next-game week and opponent model rank;
+favorites lead scenario results. Detailed matchup probabilities remain incumbent
+outputs, with real rating/location context. Unsupported forecast movement is
+explicitly unavailable rather than synthesized from a recomputation.
+
+Local verification of this integrated pass: 547 Python regressions passed,
+TypeScript/Vite production build passed, three Python/browser algorithm parity
+fixtures and published-baseline tolerance passed, and research/product export
+reproduction passed. Five-width browser screenshots, throttled runtime and PWA
+journeys are required on the final candidate; pending results must not be inferred
+from the algorithm checks. No implementation merge or model promotion authorized.
