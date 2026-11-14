@@ -1,10 +1,10 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-14T13:19:58.344881+00:00",
+  "retrieved_at": "2026-11-14T17:12:15.152492+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3691,
-    "completed": 3174,
+    "scheduled": 3686,
+    "completed": 3169,
     "pending": 517
   },
   "games": [
@@ -3427,18 +3427,6 @@
       "away_score": 35,
       "neutral_site": false,
       "start_date": "2026-09-04T00:00:00.000Z"
-    },
-    {
-      "game_id": 401907150,
-      "season": 2026,
-      "week": 1,
-      "home": "William Jewell",
-      "away": "Fort Lewis",
-      "completed": true,
-      "home_score": 0,
-      "away_score": 0,
-      "neutral_site": false,
-      "start_date": "2026-08-29T17:00:00.000Z"
     },
     {
       "game_id": 401907151,
@@ -14325,18 +14313,6 @@
       "start_date": "2026-09-26T19:00:00.000Z"
     },
     {
-      "game_id": 401873405,
-      "season": 2026,
-      "week": 4,
-      "home": "Western Connecticut State",
-      "away": "Kean",
-      "completed": true,
-      "home_score": 0,
-      "away_score": 0,
-      "neutral_site": false,
-      "start_date": "2026-09-26T16:00:00.000Z"
-    },
-    {
       "game_id": 401906052,
       "season": 2026,
       "week": 4,
@@ -22677,18 +22653,6 @@
       "start_date": "2026-10-10T16:00:00.000Z"
     },
     {
-      "game_id": 401908594,
-      "season": 2026,
-      "week": 6,
-      "home": "Plymouth State",
-      "away": "Framingham State",
-      "completed": true,
-      "home_score": 0,
-      "away_score": 0,
-      "neutral_site": false,
-      "start_date": "2026-10-10T16:00:00.000Z"
-    },
-    {
       "game_id": 401908599,
       "season": 2026,
       "week": 6,
@@ -22697,18 +22661,6 @@
       "completed": true,
       "home_score": 21,
       "away_score": 10,
-      "neutral_site": false,
-      "start_date": "2026-10-10T16:00:00.000Z"
-    },
-    {
-      "game_id": 401908619,
-      "season": 2026,
-      "week": 6,
-      "home": "Westfield State",
-      "away": "Mass Maritime",
-      "completed": true,
-      "home_score": 0,
-      "away_score": 0,
       "neutral_site": false,
       "start_date": "2026-10-10T16:00:00.000Z"
     },
@@ -24773,18 +24725,6 @@
       "completed": true,
       "home_score": 10,
       "away_score": 25,
-      "neutral_site": false,
-      "start_date": "2026-10-17T19:00:00.000Z"
-    },
-    {
-      "game_id": 401906581,
-      "season": 2026,
-      "week": 7,
-      "home": "Southwestern Oklahoma State",
-      "away": "Southern Nazarene",
-      "completed": true,
-      "home_score": 0,
-      "away_score": 0,
       "neutral_site": false,
       "start_date": "2026-10-17T19:00:00.000Z"
     },
@@ -38193,6 +38133,18 @@
       "start_date": "2026-11-14T21:15:00.000Z"
     },
     {
+      "game_id": 401856887,
+      "season": 2026,
+      "week": 11,
+      "home": "Oklahoma",
+      "away": "Ole Miss",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-15T18:00:00.000Z"
+    },
+    {
       "game_id": 401856888,
       "season": 2026,
       "week": 11,
@@ -42117,18 +42069,6 @@
       "start_date": "2026-11-21T05:00:00.000Z"
     },
     {
-      "game_id": 401856887,
-      "season": 2026,
-      "week": 12,
-      "home": "Oklahoma",
-      "away": "Ole Miss",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
-      "neutral_site": false,
-      "start_date": "2026-11-15T18:00:00.000Z"
-    },
-    {
       "game_id": 401858302,
       "season": 2026,
       "week": 12,
@@ -44301,5 +44241,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-14T13:19:58.344881+00:00"
+  "data_changed_at": "2026-11-14T17:12:15.152492+00:00"
 }
