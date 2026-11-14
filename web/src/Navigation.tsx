@@ -23,7 +23,9 @@ export function SectionTabs({ label, items, value, onChange, panelId, onDropdown
     const phone = window.matchMedia('(max-width: 767px)')
     const measure = () => {
       if (!container.current || !tabs.current) return
-      const next = phone.matches || tabs.current.scrollWidth > container.current.clientWidth - 6
+      const style = getComputedStyle(container.current)
+      const available = container.current.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
+      const next = phone.matches || tabs.current.scrollWidth > available
       setDropdown(next)
       onDropdownChange(next)
     }

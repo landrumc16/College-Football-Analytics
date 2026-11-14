@@ -23,8 +23,11 @@ export async function assertNavigationFits(page, group, width) {
     assert.equal(await page.getByRole('tablist', { name: group, exact: true }).count(), 0);
   } else {
     const tabs = page.getByRole('tablist', { name: group, exact: true });
-    const layout = await tabs.evaluate(row => ({ width: row.scrollWidth, available: row.parentElement.clientWidth - 6,
-      top: [...row.children].map(tab => tab.getBoundingClientRect().top) }));
+    const layout = await tabs.evaluate(row => {
+      const container = row.parentElement, style = getComputedStyle(container);
+      return { width: row.scrollWidth, available: container.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+        top: [...row.children].map(tab => tab.getBoundingClientRect().top) };
+    });
     assert.ok(layout.width <= layout.available && layout.top.every(y => Math.abs(y-layout.top[0]) < 1), JSON.stringify(layout));
   }
   return dropdown;
