@@ -39,6 +39,7 @@ try {
   }
   await page.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()
   proof.favorites=await page.locator('.editorial-team-row').allTextContents()
+  assert.equal(proof.favorites.length,3,'Three real saved-team rows must be visible')
   await capture('home',{full:true})
   if(width<768)assert.ok(proof.layout.home.height<=1688,'Home must remain within two phone screens')
   await nav.getByRole('button',{name:'Rankings',exact:true}).click()
