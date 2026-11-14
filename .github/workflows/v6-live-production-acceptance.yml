@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 60e5c8b762dfaab5f29c2e88389f3516f8edb61e
+          ref: fda1fc284a6214611eeae4451d67daaea722d670
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -32,6 +32,23 @@ jobs:
           baseline=json.loads(Path('research/v6/incumbent-baseline.json').read_text())
           for p in ['src/cfb_analytics/model.py','src/cfb_analytics/pipeline.py','src/cfb_analytics/predictions.py']:
               assert hashlib.sha256(Path(p).read_bytes()).hexdigest()==baseline['files'][p]
+          PY
+      - name: Wait for the corrected Pages packet to become available
+        run: |
+          python - <<'PY'
+          import os,time,json,hashlib
+          from urllib.request import Request,urlopen
+          base=os.environ['DASHBOARD_URL']
+          for attempt in range(24):
+              try:
+                  report=urlopen(Request(base+'season-report.json',headers={'Cache-Control':'no-cache'}),timeout=30).read()
+                  packet=json.load(urlopen(Request(base+'v6-scenario-input.json',headers={'Cache-Control':'no-cache'}),timeout=30))
+                  if packet['report_sha256']==hashlib.sha256(report).hexdigest():
+                      print('Corrected live report/scenario identity confirmed');break
+              except Exception as error:
+                  print(type(error).__name__)
+              time.sleep(10)
+          else:raise RuntimeError('Corrected production packet did not become ready')
           PY
       - name: Verify actual public data, freshness and non-promotion
         run: |
