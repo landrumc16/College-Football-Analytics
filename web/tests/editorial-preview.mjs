@@ -75,7 +75,7 @@ try {
     await page.getByRole('tab', { name: 'Historical Intelligence', exact: true, selected: true }).waitFor();
     assert.equal(await page.getByLabel('Choose school').inputValue(), 'Texas Tech');
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
-    await page.getByRole('button', { name: 'App menu', exact: true }).click();
+    await page.locator('summary[aria-label="App menu"]').click();
     const about = page.getByLabel('About, privacy and getting started');
     await about.locator('summary').click();
     await about.getByText('Favorites are stored only in this browser', { exact: false }).waitFor();
