@@ -271,7 +271,7 @@ export function App({ editorialPreview = false }: { editorialPreview?: boolean }
 
     {editorialPreview ? <EditorialNavigation destination={activeDestination.id} onChange={id => {
       const destination = destinations.find(destination => destination.id === id)!
-      if (destination.id !== activeDestination.id) { setSearch(''); setTab(destination.views[0].id) }
+      setSearch(''); setTab(destination.views[0].id)
     }} /> : (<nav className="primary-navigation" aria-label="Main navigation">
       {destinations.map(destination => <button type="button" key={destination.id}
         aria-current={activeDestination.id === destination.id ? 'page' : undefined}
