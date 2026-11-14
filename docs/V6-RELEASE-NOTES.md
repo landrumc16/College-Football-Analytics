@@ -1,8 +1,11 @@
-# Version 6 release candidate
+# Version 6.0 — released and closed
 
-This candidate preserves the Version 5 design, navigation, verified archive and
-incumbent prediction engine. Implementation lives in PR #25; it is not a
-production release until the owner approves merge and deployment is verified.
+Version 6 preserves the Version 5 design, navigation, verified archive and
+incumbent prediction engine. The owner approved PR #25 after visual review;
+production deployment and live acceptance passed. Deployed commit:
+`fda1fc284a6214611eeae4451d67daaea722d670`. See [formal production closeout](V6-PRODUCTION-ACCEPTANCE.md).
+
+Live application: https://landrumc16.github.io/College-Football-Analytics/
 
 ## Delivered capabilities
 
@@ -70,4 +73,4 @@ Screenshot inventory per width (375, 390, 430, 768, 1536): editorial homepage,
 Team Profile context, Research and Playoff scenarios, plus existing full-view and
 Android PWA screenshots. Final artifacts are attached to the PR acceptance runs.
 
-No owner approval of implementation merge or challenger promotion is implied.
+Owner implementation-merge approval and production acceptance are recorded in the closeout. No challenger promotion was authorized or performed.

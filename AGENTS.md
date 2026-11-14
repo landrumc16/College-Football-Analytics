@@ -29,23 +29,22 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — approved Version 6 implementation (2026-11-14)
+## Version 6.0 — released and closed (2026-11-14)
 
-The owner approved PR #24 at `eb59a35c8013c85972ca28a504c62769cc01d24b`.
-Planning merged as `dd8609bf3d13710305e7ab9425693116e3ee4ebf`; development
-starts from that latest main on `v6-development`. Execute the existing M1–M6
-roadmap in substantial verified passes; prediction accuracy is the priority.
-Do not create another roadmap, redesign V5 or expand scope. Implementation merge
-and challenger promotion require separate explicit owner approvals.
+The owner approved PR #25 at `6bcaa3a649ff781d81906e7f11e468cf3abb23a9`
+after visual review. It merged as `60e5c8b762dfaab5f29c2e88389f3516f8edb61e`.
+Production acceptance passed at `fda1fc284a6214611eeae4451d67daaea722d670`,
+including the deployment-only packet staging correction. See
+`docs/V6-PRODUCTION-ACCEPTANCE.md` and its retained machine-readable receipt.
+All approved milestones, production deployment, live five-width browser journeys
+and Android Chromium-emulated PWA checks are complete. Version 6 is closed.
 
-Preserve the incumbent engine, verified V5 archive, all features, branding,
-homepage, bottom navigation, secondary/Profile dropdowns, favorites and PWA.
-Keep raw provider corpora private where required; publish derived observations,
-source hashes, immutable source references and explicit temporal limitations.
-A retrospective source retrieval is not proof of historical pregame availability.
-Follow the six approved V6 documents and keep milestone evidence with actual
-coverage, tests, exact commits and limitations. Continue independent work until
-finished or a concrete owner-only blocker; no routine approval requests.
+The incumbent remains authoritative; the challenger was not promoted. Preserve
+the V5/V6 design, navigation, functionality, verified archive, source provenance,
+favorites and PWA freshness contract. Raw restricted source corpora stay private.
+Do not reopen completed development, begin another version or add unrelated
+features without a new owner instruction. Separate explicit owner approval is
+still required for any challenger promotion.
 
 ## Navigation consolidation — completed and closed (2026-11-13)
 

@@ -1,5 +1,7 @@
 # V6 Work Execution Handoff
 
+**Closed:** Version 6.0 is deployed and formally closed. The historical execution sequence below is retained for audit, not an active task. See [production acceptance](V6-PRODUCTION-ACCEPTANCE.md). No new version or development pass is authorized.
+
 Implementation update: PR #24 was explicitly approved and merged; `v6-development` and implementation PR #25 now exist. The first-pass checklist below records the original authorization sequence. Current delivered evidence and acceptance state are in `docs/V6-IMPLEMENTATION-EVIDENCE.md`, `docs/V6-RELEASE-NOTES.md` and PR #25. Production merge and challenger promotion remain separate owner gates.
 
 ## Scope and authority

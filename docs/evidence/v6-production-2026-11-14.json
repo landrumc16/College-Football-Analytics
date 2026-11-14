@@ -1,0 +1,126 @@
+{
+  "approved_candidate": "6bcaa3a649ff781d81906e7f11e468cf3abb23a9",
+  "artifacts": [
+    {
+      "id": 14128583209,
+      "name": "v5-live-production-browser-evidence",
+      "run_id": 43632465602,
+      "sha256": "66499075c9f773e2721b81dd1e69d8982639b0ed305be9d2a5e3c0bb3015cdcc"
+    },
+    {
+      "id": 14128553130,
+      "name": "v6-live-production-evidence",
+      "run_id": 43632670251,
+      "sha256": "81da34807305487638977f3499815b47648336985ce03a703d41f6e1cd0aae2f"
+    }
+  ],
+  "challenger_promoted": false,
+  "closed_date": "2026-11-14",
+  "date_timezone": "America/Chicago",
+  "deployed_commit": "fda1fc284a6214611eeae4451d67daaea722d670",
+  "incumbent_authoritative": true,
+  "live_v6_checked_out_commit": "fda1fc284a6214611eeae4451d67daaea722d670",
+  "live_v6_run": 43632670251,
+  "live_v6_workflow_commit": "38faa9d3e93e16f72a7e7ca9eb5ca59cdd7281ba",
+  "live_viewport_results": [
+    {
+      "benchmarkMs4x": null,
+      "crossPageContext": "exact",
+      "overflow": false,
+      "pageErrors": [],
+      "scenarioReset": "exact",
+      "width": 375
+    },
+    {
+      "benchmarkMs4x": 1694.8999999999942,
+      "crossPageContext": "exact",
+      "overflow": false,
+      "pageErrors": [],
+      "scenarioReset": "exact",
+      "width": 390
+    },
+    {
+      "benchmarkMs4x": null,
+      "crossPageContext": "exact",
+      "overflow": false,
+      "pageErrors": [],
+      "scenarioReset": "exact",
+      "width": 430
+    },
+    {
+      "benchmarkMs4x": null,
+      "crossPageContext": "exact",
+      "overflow": false,
+      "pageErrors": [],
+      "scenarioReset": "exact",
+      "width": 768
+    },
+    {
+      "benchmarkMs4x": null,
+      "crossPageContext": "exact",
+      "overflow": false,
+      "pageErrors": [],
+      "scenarioReset": "exact",
+      "width": 1536
+    }
+  ],
+  "merged_commit": "60e5c8b762dfaab5f29c2e88389f3516f8edb61e",
+  "packaging_correction": "Only dashboard workflow staging order changed: regenerate/copy V6 packets after the final report, then assert exact checksum identity before Pages upload. No application/model code changed.",
+  "pages_run": 43632465602,
+  "production_url": "https://landrumc16.github.io/College-Football-Analytics/",
+  "public_assets": {
+    "manifest.webmanifest": {
+      "bytes": 830,
+      "sha256": "ea9016fb32ea400db9e34c0ae4244c77f3ff31766e1e12e6bbca3160261e1579"
+    },
+    "model_metadata": {
+      "historical_study": "retrospective_research_only",
+      "home_field_advantage": 3.0,
+      "model_id": "workbook_2026_baseline",
+      "model_status": "incumbent_not_v3_promoted",
+      "prediction_scale": 18.0
+    },
+    "production_url": "https://landrumc16.github.io/College-Football-Analytics/",
+    "retrieved_at": "2026-11-14T17:12:15.152492+00:00",
+    "season-report.json": {
+      "bytes": 589219,
+      "sha256": "aac62961de45ca948d2c71d9d95e4456bf7ec86cd95f56e662d7bda30eae5ec0"
+    },
+    "sw.js": {
+      "bytes": 1510,
+      "sha256": "c4f586a975a525f8cdd45e23b5afbaae06ba74337ee7d74adac0ec3dd3e92245"
+    },
+    "v6-prediction-research.json": {
+      "bytes": 52671,
+      "sha256": "b3ca9a23c40e264dff4873003b8952b9e30b827f92b50a073a24952dad8eb09c"
+    },
+    "v6-program-context.json": {
+      "bytes": 296884,
+      "sha256": "b94fa52a57510ae475132e81aae59f74c05d0c8e9d3e0fbe5caf8b23342d46a9"
+    },
+    "v6-scenario-input.json": {
+      "bytes": 49045,
+      "sha256": "7799fd7ec28d7235a3c0d01835f1a65a5a47f37a3277e80cd204dbbe257531bc"
+    }
+  },
+  "pwa": {
+    "environment": "Android Chromium emulation, not a physical device",
+    "installability": "passed",
+    "network_only_live_json": "passed",
+    "offline_fallback": "passed",
+    "recovery": "passed",
+    "update_reload": "passed"
+  },
+  "python_tests_passed": 549,
+  "release": "6.0",
+  "remaining_release_blockers": [],
+  "reviewed_screenshots": [
+    "live homepage at all five widths",
+    "live program context at all five widths",
+    "live prediction research at all five widths",
+    "live scenarios at all five widths",
+    "Android offline fallback"
+  ],
+  "schema_version": 1,
+  "status": "released_and_closed"
+}

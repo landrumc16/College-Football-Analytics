@@ -131,3 +131,15 @@ The final exact-head rerun also executes the standalone Python/browser parity
 command as its own shell line (not an argument to another Node script). PR #25
 records final SHA, workflow/artifact links, inspected screenshots and release
 approval readiness. No implementation merge or model promotion authorized.
+
+## Production release — formally closed
+
+After explicit owner merge approval and visual acceptance, PR #25 merged and
+Version 6 deployed. A deployment-only staging-order/checksum issue was reproduced
+and corrected without changing application/model code. Final production SHA:
+`fda1fc284a6214611eeae4451d67daaea722d670`. All 549 tests, Pages deployment,
+five-width live journeys, sourced-context parity, scenario selection/reset and
+Android Chromium-emulated PWA checks passed. Screenshots were inspected; live
+incumbent authority and non-promotion were verified. See
+[V6-PRODUCTION-ACCEPTANCE.md](V6-PRODUCTION-ACCEPTANCE.md) for workflow/artifact
+links, public hashes and formal closure. No release blockers remain.
