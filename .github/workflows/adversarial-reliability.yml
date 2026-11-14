@@ -1,0 +1,65 @@
+name: Isolated production adversarial reliability
+on:
+  push:
+    branches: [v6-adversarial-verification]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  isolated:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Guard production application and engine identity
+        run: |
+          git diff --exit-code 2c47bec5935fd32844ef20c307e3aab4c201d052 -- src web/src web/public web/package.json web/vite.config.ts data research
+          mkdir -p web/adversarial-evidence
+          echo 2c47bec5935fd32844ef20c307e3aab4c201d052 > web/adversarial-evidence/production-sha.txt
+          git rev-parse HEAD > web/adversarial-evidence/harness-sha.txt
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43649840894
+          name: github-pages
+          path: /tmp/production-pages
+      - name: Reuse exact deployed Pages bytes in isolation
+        run: |
+          mkdir -p web/dist
+          tar -xf /tmp/production-pages/artifact.tar -C web/dist
+          sha256sum /tmp/production-pages/artifact.tar > web/adversarial-evidence/pages-tar-sha256.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install existing regression dependencies
+        run: |
+          python -m pip install -e '.[dev]'
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Adversarial UI, fixtures, offline, memory and isolated visitor/request load
+        run: node web/tests/adversarial-reliability.mjs
+      - name: Exercise released Monte Carlo engines across seeds and scenarios
+        if: always()
+        run: python scripts/adversarial_monte_carlo.py
+      - name: Rerun all existing Python regressions
+        if: always()
+        run: python -m pytest -q | tee web/adversarial-evidence/python-regressions.txt
+      - name: Rerun existing browser and PWA journeys against isolated deployed build
+        if: always()
+        run: node web/tests/mobile-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-adversarial-production-evidence
+          path: |
+            web/adversarial-evidence/
+            web/mobile-evidence/
+          retention-days: 90
+          if-no-files-found: error
