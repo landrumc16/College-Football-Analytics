@@ -1,0 +1,1064 @@
+{
+  "by_conference": [
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2016
+    },
+    {
+      "coaching": 12,
+      "conference": "American Athletic",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2016
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2016
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2016
+    },
+    {
+      "coaching": 13,
+      "conference": "Conference USA",
+      "programs": 13,
+      "recruiting": 13,
+      "roster": 13,
+      "season": 2016
+    },
+    {
+      "coaching": 4,
+      "conference": "FBS Independents",
+      "programs": 4,
+      "recruiting": 4,
+      "roster": 4,
+      "season": 2016
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2016
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2016
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2016
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2016
+    },
+    {
+      "coaching": 11,
+      "conference": "Sun Belt",
+      "programs": 11,
+      "recruiting": 11,
+      "roster": 11,
+      "season": 2016
+    },
+    {
+      "coaching": 0,
+      "conference": "Unavailable",
+      "programs": 1,
+      "recruiting": 0,
+      "roster": 0,
+      "season": 2016
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2017
+    },
+    {
+      "coaching": 12,
+      "conference": "American Athletic",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2017
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2017
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2017
+    },
+    {
+      "coaching": 14,
+      "conference": "Conference USA",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2017
+    },
+    {
+      "coaching": 4,
+      "conference": "FBS Independents",
+      "programs": 4,
+      "recruiting": 4,
+      "roster": 4,
+      "season": 2017
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2017
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2017
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2017
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2017
+    },
+    {
+      "coaching": 12,
+      "conference": "Sun Belt",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2017
+    },
+    {
+      "coaching": 0,
+      "conference": "Unavailable",
+      "programs": 1,
+      "recruiting": 1,
+      "roster": 1,
+      "season": 2017
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2018
+    },
+    {
+      "coaching": 12,
+      "conference": "American Athletic",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2018
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2018
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2018
+    },
+    {
+      "coaching": 14,
+      "conference": "Conference USA",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2018
+    },
+    {
+      "coaching": 6,
+      "conference": "FBS Independents",
+      "programs": 6,
+      "recruiting": 6,
+      "roster": 6,
+      "season": 2018
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2018
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2018
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2018
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2018
+    },
+    {
+      "coaching": 10,
+      "conference": "Sun Belt",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2018
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2019
+    },
+    {
+      "coaching": 12,
+      "conference": "American Athletic",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2019
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2019
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2019
+    },
+    {
+      "coaching": 14,
+      "conference": "Conference USA",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2019
+    },
+    {
+      "coaching": 6,
+      "conference": "FBS Independents",
+      "programs": 6,
+      "recruiting": 6,
+      "roster": 6,
+      "season": 2019
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2019
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2019
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2019
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2019
+    },
+    {
+      "coaching": 10,
+      "conference": "Sun Belt",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2019
+    },
+    {
+      "coaching": 15,
+      "conference": "ACC",
+      "programs": 15,
+      "recruiting": 15,
+      "roster": 15,
+      "season": 2020
+    },
+    {
+      "coaching": 11,
+      "conference": "American Athletic",
+      "programs": 11,
+      "recruiting": 11,
+      "roster": 11,
+      "season": 2020
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2020
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2020
+    },
+    {
+      "coaching": 13,
+      "conference": "Conference USA",
+      "programs": 13,
+      "recruiting": 13,
+      "roster": 13,
+      "season": 2020
+    },
+    {
+      "coaching": 5,
+      "conference": "FBS Independents",
+      "programs": 5,
+      "recruiting": 5,
+      "roster": 5,
+      "season": 2020
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2020
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2020
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2020
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2020
+    },
+    {
+      "coaching": 10,
+      "conference": "Sun Belt",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2020
+    },
+    {
+      "coaching": 2,
+      "conference": "Unavailable",
+      "programs": 2,
+      "recruiting": 0,
+      "roster": 0,
+      "season": 2020
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2021
+    },
+    {
+      "coaching": 11,
+      "conference": "American Athletic",
+      "programs": 11,
+      "recruiting": 11,
+      "roster": 11,
+      "season": 2021
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2021
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2021
+    },
+    {
+      "coaching": 14,
+      "conference": "Conference USA",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2021
+    },
+    {
+      "coaching": 7,
+      "conference": "FBS Independents",
+      "programs": 7,
+      "recruiting": 7,
+      "roster": 7,
+      "season": 2021
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2021
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2021
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2021
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2021
+    },
+    {
+      "coaching": 10,
+      "conference": "Sun Belt",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2021
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2022
+    },
+    {
+      "coaching": 11,
+      "conference": "American Athletic",
+      "programs": 11,
+      "recruiting": 11,
+      "roster": 11,
+      "season": 2022
+    },
+    {
+      "coaching": 10,
+      "conference": "Big 12",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2022
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2022
+    },
+    {
+      "coaching": 11,
+      "conference": "Conference USA",
+      "programs": 11,
+      "recruiting": 11,
+      "roster": 11,
+      "season": 2022
+    },
+    {
+      "coaching": 7,
+      "conference": "FBS Independents",
+      "programs": 7,
+      "recruiting": 7,
+      "roster": 7,
+      "season": 2022
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2022
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2022
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2022
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2022
+    },
+    {
+      "coaching": 14,
+      "conference": "Sun Belt",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2022
+    },
+    {
+      "coaching": 14,
+      "conference": "ACC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 14,
+      "conference": "American Athletic",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 14,
+      "conference": "Big 12",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 14,
+      "conference": "Big Ten",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 9,
+      "conference": "Conference USA",
+      "programs": 9,
+      "recruiting": 9,
+      "roster": 9,
+      "season": 2023
+    },
+    {
+      "coaching": 4,
+      "conference": "FBS Independents",
+      "programs": 4,
+      "recruiting": 4,
+      "roster": 4,
+      "season": 2023
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2023
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2023
+    },
+    {
+      "coaching": 12,
+      "conference": "Pac-12",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2023
+    },
+    {
+      "coaching": 14,
+      "conference": "SEC",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 14,
+      "conference": "Sun Belt",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2023
+    },
+    {
+      "coaching": 17,
+      "conference": "ACC",
+      "programs": 17,
+      "recruiting": 17,
+      "roster": 17,
+      "season": 2024
+    },
+    {
+      "coaching": 14,
+      "conference": "American Athletic",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2024
+    },
+    {
+      "coaching": 16,
+      "conference": "Big 12",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2024
+    },
+    {
+      "coaching": 18,
+      "conference": "Big Ten",
+      "programs": 18,
+      "recruiting": 18,
+      "roster": 18,
+      "season": 2024
+    },
+    {
+      "coaching": 10,
+      "conference": "Conference USA",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2024
+    },
+    {
+      "coaching": 3,
+      "conference": "FBS Independents",
+      "programs": 3,
+      "recruiting": 3,
+      "roster": 3,
+      "season": 2024
+    },
+    {
+      "coaching": 12,
+      "conference": "Mid-American",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2024
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2024
+    },
+    {
+      "coaching": 2,
+      "conference": "Pac-12",
+      "programs": 2,
+      "recruiting": 2,
+      "roster": 2,
+      "season": 2024
+    },
+    {
+      "coaching": 16,
+      "conference": "SEC",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2024
+    },
+    {
+      "coaching": 14,
+      "conference": "Sun Belt",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2024
+    },
+    {
+      "coaching": 17,
+      "conference": "ACC",
+      "programs": 17,
+      "recruiting": 17,
+      "roster": 17,
+      "season": 2025
+    },
+    {
+      "coaching": 14,
+      "conference": "American Athletic",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2025
+    },
+    {
+      "coaching": 16,
+      "conference": "Big 12",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2025
+    },
+    {
+      "coaching": 18,
+      "conference": "Big Ten",
+      "programs": 18,
+      "recruiting": 18,
+      "roster": 18,
+      "season": 2025
+    },
+    {
+      "coaching": 12,
+      "conference": "Conference USA",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2025
+    },
+    {
+      "coaching": 2,
+      "conference": "FBS Independents",
+      "programs": 2,
+      "recruiting": 2,
+      "roster": 2,
+      "season": 2025
+    },
+    {
+      "coaching": 13,
+      "conference": "Mid-American",
+      "programs": 13,
+      "recruiting": 13,
+      "roster": 13,
+      "season": 2025
+    },
+    {
+      "coaching": 12,
+      "conference": "Mountain West",
+      "programs": 12,
+      "recruiting": 12,
+      "roster": 12,
+      "season": 2025
+    },
+    {
+      "coaching": 2,
+      "conference": "Pac-12",
+      "programs": 2,
+      "recruiting": 2,
+      "roster": 2,
+      "season": 2025
+    },
+    {
+      "coaching": 16,
+      "conference": "SEC",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2025
+    },
+    {
+      "coaching": 14,
+      "conference": "Sun Belt",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2025
+    },
+    {
+      "coaching": 17,
+      "conference": "ACC",
+      "programs": 17,
+      "recruiting": 17,
+      "roster": 17,
+      "season": 2026
+    },
+    {
+      "coaching": 14,
+      "conference": "American Athletic",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2026
+    },
+    {
+      "coaching": 16,
+      "conference": "Big 12",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2026
+    },
+    {
+      "coaching": 18,
+      "conference": "Big Ten",
+      "programs": 18,
+      "recruiting": 18,
+      "roster": 18,
+      "season": 2026
+    },
+    {
+      "coaching": 10,
+      "conference": "Conference USA",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2026
+    },
+    {
+      "coaching": 2,
+      "conference": "FBS Independents",
+      "programs": 2,
+      "recruiting": 2,
+      "roster": 2,
+      "season": 2026
+    },
+    {
+      "coaching": 13,
+      "conference": "Mid-American",
+      "programs": 13,
+      "recruiting": 13,
+      "roster": 13,
+      "season": 2026
+    },
+    {
+      "coaching": 10,
+      "conference": "Mountain West",
+      "programs": 10,
+      "recruiting": 10,
+      "roster": 10,
+      "season": 2026
+    },
+    {
+      "coaching": 8,
+      "conference": "Pac-12",
+      "programs": 8,
+      "recruiting": 8,
+      "roster": 8,
+      "season": 2026
+    },
+    {
+      "coaching": 16,
+      "conference": "SEC",
+      "programs": 16,
+      "recruiting": 16,
+      "roster": 16,
+      "season": 2026
+    },
+    {
+      "coaching": 14,
+      "conference": "Sun Belt",
+      "programs": 14,
+      "recruiting": 14,
+      "roster": 14,
+      "season": 2026
+    }
+  ],
+  "missingness": [
+    {
+      "coaching_continuity_unknown": 7,
+      "recruiting_unrated_players": 131,
+      "roster_retention_unknown": 1,
+      "season": 2016
+    },
+    {
+      "coaching_continuity_unknown": 10,
+      "recruiting_unrated_players": 143,
+      "roster_retention_unknown": 3,
+      "season": 2017
+    },
+    {
+      "coaching_continuity_unknown": 7,
+      "recruiting_unrated_players": 440,
+      "roster_retention_unknown": 0,
+      "season": 2018
+    },
+    {
+      "coaching_continuity_unknown": 4,
+      "recruiting_unrated_players": 697,
+      "roster_retention_unknown": 0,
+      "season": 2019
+    },
+    {
+      "coaching_continuity_unknown": 5,
+      "recruiting_unrated_players": 701,
+      "roster_retention_unknown": 2,
+      "season": 2020
+    },
+    {
+      "coaching_continuity_unknown": 11,
+      "recruiting_unrated_players": 566,
+      "roster_retention_unknown": 2,
+      "season": 2021
+    },
+    {
+      "coaching_continuity_unknown": 17,
+      "recruiting_unrated_players": 510,
+      "roster_retention_unknown": 1,
+      "season": 2022
+    },
+    {
+      "coaching_continuity_unknown": 12,
+      "recruiting_unrated_players": 298,
+      "roster_retention_unknown": 2,
+      "season": 2023
+    },
+    {
+      "coaching_continuity_unknown": 6,
+      "recruiting_unrated_players": 241,
+      "roster_retention_unknown": 1,
+      "season": 2024
+    },
+    {
+      "coaching_continuity_unknown": 17,
+      "recruiting_unrated_players": 316,
+      "roster_retention_unknown": 2,
+      "season": 2025
+    },
+    {
+      "coaching_continuity_unknown": 13,
+      "recruiting_unrated_players": 264,
+      "roster_retention_unknown": 2,
+      "season": 2026
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "description": "Frozen V6 derived observations and inherited independent classification/results; raw publisher cache stays private",
+  "files": {
+    "research/archive/verified/accepted-team-seasons.json": "54c7ed5eecb90c0d82f0651a96183980dd5f6761b22bbb4cf5a2793bb23c8c2b",
+    "research/archive/verified/espn-games.json.gz": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e",
+    "research/archive/verified/manifest.json": "6cf6add16efdc2c1bfaac3c3824bb5e411513c121e5d9626b0de70a9f8c65ecf",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2016.csv.gz": "562b6282043cdc1eb877212cdf3be4677c31aedca8eb4c63176c8342488bdf78",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2017.csv.gz": "1d24265cc3e35ba8fc28ca4237c1b35c1fb82380afc841d78ca68b5391a6c004",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2018.csv.gz": "fea836eba3ff2c716ac69ea76ce56d5328a1322161041444b5c03522fac7ddc6",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2019.csv.gz": "c947e7dc272b728fd75dbeca9eb9c60678dc98e111b13fe3024c8e8c4d45785f",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2020.csv.gz": "567f860173baa5a187a3c6ea4cb62008f3977fa51b618aafab0b377009dc8403",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2021.csv.gz": "417d9170fc1033e70cb67f8b6c860a3517b407730aaf0541dd5689a0ce9aebe9",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2022.csv.gz": "a66ace4e55df51d48af7dcdff9b8df290c6892e184cf0cc97f1dafd0fd693936",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2023.csv.gz": "cf6684ff72e083b8c0104eed56dee36d0511734f10e0804701c6ac842af1ce64",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2024.csv.gz": "d51e1e41f97abef04cafb87d58034ae609ea50ccfc903620860196ce71eb6872",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2025.csv.gz": "bc385d600f9b127b6a9bc316dad4927795b0cf9f25df46e112d2a449ac9cda92",
+    "research/archive/verified/ncaa/ncaa_mfb_teams_2026.csv.gz": "f592bac1d2a6878551fad33761e52deb70cefffee0dc1767231c08092a5a0f61",
+    "research/v6/coverage-details.json": "5f2ae0f763a8c45cf980e733a346cc27957c564b19e23e23667a8daf38e19118",
+    "research/v6/foundation.json.gz": "242145484807e3aedc4a80aa805cf2b6db5822cffbb701d43372613637bbb106",
+    "research/v6/identities.json": "3a5c7303a6442c86dc9a150db5ab83a0c198a148e59aa91d85bb58342cd058db",
+    "research/v6/sources.json": "737866519d8360801bc40397193403a34a407ddf174dff087e18d79384022c4c"
+  },
+  "schema_version": 1
+}

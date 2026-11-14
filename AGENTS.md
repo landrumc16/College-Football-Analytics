@@ -29,22 +29,23 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
-## Current task — Version 6 planning approval (2026-11-14)
+## Current task — approved Version 6 implementation (2026-11-14)
 
-The owner's V6 Master Execution Directive supersedes archived V5-only branch and
-scope restrictions below. Review the six existing V6 documents in PR #24 on
-`v6-planning`; make necessary documentation corrections only, then present the
-planning PR for explicit approval. Do not merge it or start implementation yet.
-After approval, merge the planning documents and create `v6-development` from
-latest `main`; execute the existing M1–M6 roadmap in substantial verified passes.
-Development merge and challenger promotion each require separate explicit owner
-approval. Do not create another roadmap or expand scope.
+The owner approved PR #24 at `eb59a35c8013c85972ca28a504c62769cc01d24b`.
+Planning merged as `dd8609bf3d13710305e7ab9425693116e3ee4ebf`; development
+starts from that latest main on `v6-development`. Execute the existing M1–M6
+roadmap in substantial verified passes; prediction accuracy is the priority.
+Do not create another roadmap, redesign V5 or expand scope. Implementation merge
+and challenger promotion require separate explicit owner approvals.
 
-Preserve the released V5 homepage, branding, bottom navigation, secondary/Profile
-dropdowns, all analytics, local favorites, network-only live data and offline
-fallback. PR #23 deployed and passed live five-width/PWA verification at
-`56abff306eb3f5f60f3356e01dcdacff68f1b4e9`; subsequent main data refreshes are
-retained. Follow `docs/V6-WORK-HANDOFF.md` and its five companion V6 documents.
+Preserve the incumbent engine, verified V5 archive, all features, branding,
+homepage, bottom navigation, secondary/Profile dropdowns, favorites and PWA.
+Keep raw provider corpora private where required; publish derived observations,
+source hashes, immutable source references and explicit temporal limitations.
+A retrospective source retrieval is not proof of historical pregame availability.
+Follow the six approved V6 documents and keep milestone evidence with actual
+coverage, tests, exact commits and limitations. Continue independent work until
+finished or a concrete owner-only blocker; no routine approval requests.
 
 ## Navigation consolidation — completed and closed (2026-11-13)
 

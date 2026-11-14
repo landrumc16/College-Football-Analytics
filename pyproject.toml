@@ -10,6 +10,7 @@ description = "Reproducible college football model migration"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+research = ["pyarrow>=18"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

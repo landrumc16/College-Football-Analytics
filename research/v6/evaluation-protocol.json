@@ -1,0 +1,56 @@
+{
+  "authentic_baseline": "retained 65-game published 2026 incumbent cohort, reported separately",
+  "challenger": "L2 logistic regression with prior-results, recruiting composition, roster membership retention, dominant head-coach continuity and home-location inputs",
+  "cohort": "independently corroborated FBS-FBS exact-score games with complete paired features; exclude the three retained score disputes and 2020",
+  "evaluation_kind": "exploratory_chronological_replay_not_authentic_historical_live_forecasts",
+  "features": [
+    "prior_fbs_win_rate_difference",
+    "mean_recruiting_stars_difference",
+    "roster_returning_share_difference",
+    "dominant_coach_continuity_difference",
+    "home_location_indicator"
+  ],
+  "fitting": {
+    "epochs": 400,
+    "l2": 0.02,
+    "learning_rate": 0.15,
+    "probability_clip": 1e-06,
+    "standardization": "training rows only; constant scales=1",
+    "tuning": "none; report all four primary folds"
+  },
+  "known_pretest_eligibility_failures": [
+    "historical recruiting/roster/coaching cutoff availability unverified",
+    "season-specific historical incumbent priors unavailable; proxy reference cannot satisfy incumbent gate"
+  ],
+  "primary_heldout_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "promotion_gates": {
+    "bootstrap_draws": 2000,
+    "calibration_bins": 10,
+    "clustered_ci95_upper_challenger_minus_incumbent": 0,
+    "historical_feature_cutoff_verified_share": 1.0,
+    "maximum_calibration_error_increase": 0.02,
+    "maximum_relative_logloss_regression": 0.02,
+    "maximum_weighted_calibration_error": 0.1,
+    "minimum_common_game_coverage_per_season": 0.8,
+    "minimum_paired_games_per_season": 250,
+    "minimum_pooled_games": 1000,
+    "relative_brier_improvement": 0.05,
+    "seasons_improved": 3,
+    "seed": 2026,
+    "true_incumbent_pairing_required": true
+  },
+  "prospective_research": "freeze experimental candidate and incumbent probabilities only for games with scheduled kickoff after issuance; retain exact model/input and independent GitHub publication evidence; never replace production predictions",
+  "reference": "prior-results logistic reference proxy, NOT the released incumbent engine",
+  "reference_feature_indices": [
+    0,
+    4
+  ],
+  "schema_version": 1,
+  "status": "predeclared_before_challenger_testing",
+  "training": "expanding seasons 2017..year-1; exclude 2020; no held-out tuning"
+}

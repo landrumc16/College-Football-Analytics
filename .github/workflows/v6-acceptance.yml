@@ -1,0 +1,53 @@
+name: V6 research and release acceptance
+on:
+  push:
+    branches: [v6-development]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/v6/**'
+      - 'src/cfb_analytics/v6*'
+      - 'scripts/*v6*'
+      - 'tests/test_v6*'
+      - '.github/workflows/v6-acceptance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install research decoder and tests
+        run: python -m pip install -e '.[dev,research]'
+      - name: Reproduce foundation from immutable publisher inputs
+        run: python -m scripts.build_v6_foundation --cache /tmp/private-v6-inputs --check
+      - name: Run complete model and data regressions
+        run: python -m pytest -q
+      - name: Verify retained V5 historical publication
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from cfb_analytics.v6_foundation import load_foundation
+          from scripts.verify_v5_pregame_archive import verify
+          load_foundation(Path('.'))
+          rows, _, _ = verify()
+          assert len(rows) == 65
+          PY
+      - name: Record exact research revision
+        run: |
+          mkdir -p /tmp/v6-evidence
+          git rev-parse HEAD > /tmp/v6-evidence/tested-sha.txt
+          cp research/v6/COVERAGE.md research/v6/manifest.json /tmp/v6-evidence/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v6-research-evidence
+          path: /tmp/v6-evidence/
+          if-no-files-found: warn
+          retention-days: 30
+      # Raw CFBD-origin/enriched sources remain ephemeral and are never uploaded.

@@ -4,3 +4,6 @@ __pycache__/
 .venv/
 .env
 *.sqlite3
+
+# Private, checksum-pinned research inputs; never commit raw provider corpora.
+.cache/
