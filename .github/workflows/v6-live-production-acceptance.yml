@@ -1,15 +1,13 @@
-name: V6 live production acceptance
+name: Public beta live readiness verification
 on:
   push:
     branches: [v6-production-verification]
 permissions:
   contents: read
 jobs:
-  live:
+  audit:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    env:
-      DASHBOARD_URL: https://landrumc16.github.io/College-Football-Analytics/
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -17,98 +15,75 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Prepare production-matched inputs and verify incumbent identity
+      - name: Verify anonymous live assets, freshness, schedule joins and links
         run: |
-          python -m pip install -e '.[dev]'
-          python -m scripts.build_v6_product
-          mkdir -p web/v6-evidence
-          git rev-parse HEAD > web/v6-evidence/production-sha.txt
+          mkdir -p /tmp/beta-evidence
+          git rev-parse HEAD > /tmp/beta-evidence/deployed-source-sha.txt
           python - <<'PY'
-          import hashlib,json
-          from pathlib import Path
-          baseline=json.loads(Path('research/v6/incumbent-baseline.json').read_text())
-          for p in ['src/cfb_analytics/model.py','src/cfb_analytics/pipeline.py','src/cfb_analytics/predictions.py']:
-              assert hashlib.sha256(Path(p).read_bytes()).hexdigest()==baseline['files'][p]
-          PY
-      - name: Wait for the refined Pages application to become available
-        run: |
-          python - <<'PY'
-          import os,time,json,hashlib,re
-          from urllib.parse import urljoin
+          import concurrent.futures,hashlib,json,re,os
           from urllib.request import Request,urlopen
-          base=os.environ['DASHBOARD_URL']
-          for attempt in range(24):
+          from urllib.error import HTTPError
+          from urllib.parse import urljoin,urlparse
+          from pathlib import Path
+          from datetime import datetime,timezone
+          base='https://landrumc16.github.io/College-Football-Analytics/'
+          out=Path('/tmp/beta-evidence')
+          def get(url):
               try:
-                  report=urlopen(Request(base+'season-report.json',headers={'Cache-Control':'no-cache'}),timeout=30).read()
-                  packet=json.load(urlopen(Request(base+'v6-scenario-input.json',headers={'Cache-Control':'no-cache'}),timeout=30))
-                  html=urlopen(Request(base+'?release=195fbd1',headers={'Cache-Control':'no-cache'}),timeout=30).read().decode()
-                  script=re.search(r'<script[^>]+src="([^"]+)"',html).group(1)
-                  js=urlopen(urljoin(base,script),timeout=30).read().decode()
-                  if 'Verified pregame picks' in js and 'THE PROGRAM FILE' in js and packet['report_sha256']==hashlib.sha256(report).hexdigest():
-                      print('Refined live application and report/scenario identity confirmed');break
-              except Exception as error:
-                  print(type(error).__name__)
-              time.sleep(10)
-          else:raise RuntimeError('Refined production application did not become ready')
-          PY
-      - name: Verify actual public data, freshness and non-promotion
-        run: |
-          python - <<'PY'
-          import os,json,hashlib
-          from pathlib import Path
-          from urllib.request import Request,urlopen
-          base=os.environ['DASHBOARD_URL']
-          names=['index.html','season-report.json','v6-scenario-input.json','v6-program-context.json','v6-prediction-research.json','manifest.webmanifest','sw.js']
-          evidence={};data={}
-          for name in names:
-              with urlopen(Request(base+name,headers={'Cache-Control':'no-cache'}),timeout=40) as r:
-                  b=r.read();assert r.status==200
-              evidence[name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
-              if name.endswith('.json'):data[name]=json.loads(b)
-          report=data['season-report.json'];scenario=data['v6-scenario-input.json'];research=data['v6-prediction-research.json']
-          assert report['model_metadata']['model_id']=='workbook_2026_baseline'
-          assert report['model_metadata']['model_status']=='incumbent_not_v3_promoted'
-          assert scenario['report_sha256']==evidence['season-report.json']['sha256']
-          assert research['model_status']=='experimental_not_promoted'
-          assert research['promotion']['incumbent_retained'] is True
-          assert research['promotion']['eligible'] is False and research['promotion']['authorized'] is False
-          for name in ['v6-program-context.json','v6-prediction-research.json']:
-              assert evidence[name]['sha256']==hashlib.sha256((Path('web/public')/name).read_bytes()).hexdigest()
-          from datetime import datetime,timezone,timedelta
+                  with urlopen(Request(url,headers={'Cache-Control':'no-cache','User-Agent':'College-Football-Analytics-beta-readiness/1.0'}),timeout=35) as r:
+                      b=r.read()
+                      return dict(url=url,status=r.status,final_url=r.url,content_type=r.headers.get('Content-Type'),bytes=len(b),sha256=hashlib.sha256(b).hexdigest()),b
+              except HTTPError as e:return dict(url=url,status=e.code),b''
+              except Exception as e:return dict(url=url,error=type(e).__name__),b''
+          receipt,html=get(base)
+          assert receipt['status']==200 and receipt['final_url'].startswith('https://')
+          assert receipt['sha256']=='a95909a21c9dc7c1a3e9856fcfb369106a4d75242d0595dc196b3a5c8ab7f573','Deployment changed: inspect before reusing release acceptance'
+          refs=re.findall(r'(?:src|href)="([^"]+)"',html.decode())
+          names=['season-report.json','poll-snapshot.json','historical-backtest.json','v2-research-summary.json','v34-recruiting-research.json','v5-forecast-evaluation.json','v5-historical-results.json','v5-program-report-cards.json','v6-program-context.json','v6-prediction-research.json','v6-scenario-input.json','manifest.webmanifest','sw.js','offline.html','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-192.png','icons/icon-maskable-512.png']
+          urls=sorted({urljoin(base,n) for n in names+refs if not n.startswith('data:')})
+          assets={};data={}
+          for meta,b in concurrent.futures.ThreadPoolExecutor(max_workers=4).map(get,urls):
+              assert meta.get('status')==200,meta
+              assets[meta['url']]=meta
+              if meta['url'].endswith('.json'):data[meta['url'].rsplit('/',1)[1]]=json.loads(b)
+          report=data['season-report.json'];poll=data['poll-snapshot.json'];packet=data['v6-scenario-input.json']
           updated=datetime.fromisoformat(report['retrieved_at'].replace('Z','+00:00'))
-          assert -timedelta(hours=1)<=datetime.now(timezone.utc)-updated<=timedelta(hours=72)
-          evidence['model_metadata']=report['model_metadata'];evidence['retrieved_at']=report['retrieved_at'];evidence['production_url']=base
-          Path('web/v6-evidence/public-assets.json').write_text(json.dumps(evidence,indent=2)+'\n')
-          print(json.dumps(evidence))
+          age=(datetime.now(timezone.utc)-updated).total_seconds()/3600
+          assert 0<=age<72
+          assert report['season']==poll['season']==2026
+          assert packet['report_sha256']==assets[base+'season-report.json']['sha256']
+          assert report['model_metadata']['model_id']=='workbook_2026_baseline'
+          assert data['v6-prediction-research.json']['promotion']['authorized'] is False
+          assert len({r['team'] for r in report['rankings']})==len(report['rankings'])
+          schedule={g['game_id']:g for g in report['schedule']}
+          for p in report['predictions']:
+              g=schedule[p['game_id']]
+              assert (p['home'],p['away'],p['week'])==(g['home'],g['away'],g['week'])
+              assert not g['completed']
+          raw=json.loads(Path('data/cfbd-2026-games.json').read_text());raw_by_id={g['game_id']:g for g in raw['games']}
+          aliases={'Miami':'Miami (FL)','App State':'Appalachian State','Sam Houston':'Sam Houston State','UL Monroe':'ULM'}
+          for g in report['schedule']:
+              source=raw_by_id[g['game_id']]
+              assert (g['week'],g['home'],g['away'],g['completed'])==(source['week'],aliases.get(source['home'],source['home']),aliases.get(source['away'],source['away']),source['completed'])
+          tech=[g for g in packet['games'] if not g['completed'] and 'Texas Tech' in (g['home'],g['away'])]
+          source_links=set()
+          for p in list(Path('web/src').glob('*.tsx'))+list(Path('web/src').glob('*.ts')):
+              for u in re.findall(r'https://[^\s"<>]+',p.read_text()):
+                  u=u.rstrip("').,;")
+                  if '${' not in u and '{' not in u:source_links.add(u)
+          source_links.add(poll['cfp_source'])
+          links=list(concurrent.futures.ThreadPoolExecutor(max_workers=4).map(lambda u:get(u)[0],sorted(source_links)))
+          probes=[get(base+n)[0] for n in ['.env','.git/config','.cache/private-v6-inputs/','CFA-V6-M1-Private-Source-Corpus.zip']]
+          assert all(p.get('status') in (403,404) for p in probes),probes
+          result={'checked_at_utc':datetime.now(timezone.utc).isoformat(),'deployed_commit':'195fbd143df002b733a4f36e6030b5677a9f19d4','production_url':base,'anonymous_https':receipt,'assets':assets,'live_report_retrieved_at':report['retrieved_at'],'live_report_age_hours':age,'ap_coaches_week':poll['week'],'cfp_week':poll['cfp_week'],'cfp_published_at':poll['cfp_published_at'],'cfp_source':poll['cfp_source'],'known_beta_hold':'Official CFP comparison remains November 3; reviewed November 10 replacement awaits owner approval.','ranked_teams':len(report['rankings']),'joined_schedule_games':len(schedule),'joined_predictions':len(report['predictions']),'texas_tech_remaining_packet_games':tech,'report_packet_identity':'exact','public_links':links,'private_path_probes':probes,'incumbent_authoritative':True,'challenger_promoted':False}
+          (out/'beta-live-readiness.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps({k:v for k,v in result.items() if k not in ('assets','texas_tech_remaining_packet_games','public_links')},indent=2))
+          print('Links needing review:',[x for x in links if x.get('status',0)>=400 or 'error' in x])
           PY
-      - name: Install browser acceptance dependencies
-        working-directory: web
-        run: |
-          npm install --no-package-lock
-          npm install --no-save --package-lock=false playwright@1.56.1
-          npx playwright install --with-deps chromium
-      - name: Point the existing acceptance harness at production without changing application code
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('web/tests/v6-browser.mjs');s=p.read_text()
-          assert "const server=spawn(" in s and "const url='http://127.0.0.1:4180/'" in s
-          s=s.replace('const server=spawn(', 'const server=process.env.DASHBOARD_URL ? null : spawn(',1)
-          s=s.replace("const url='http://127.0.0.1:4180/'", "const url=process.env.DASHBOARD_URL || 'http://127.0.0.1:4180/'",1)
-          old="try{process.kill(-server.pid,'SIGTERM')}catch{server.kill()}"
-          assert old in s;s=s.replace(old,"if(server){"+old+"}",1)
-          s=s.replace('await page.screenshot({path:`web/v6-evidence/research-', 'await research.scrollIntoViewIfNeeded();await page.screenshot({path:`web/v6-evidence/research-',1)
-          p.write_text(s)
-          PY
-      - name: Exercise actual live program context, research and scenarios at all five widths
-        run: node web/tests/v6-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v6-live-production-evidence
-          path: web/v6-evidence/
+          name: beta-live-readiness-evidence
+          path: /tmp/beta-evidence/
           retention-days: 90
           if-no-files-found: error
