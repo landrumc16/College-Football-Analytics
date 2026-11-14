@@ -79,6 +79,12 @@ jobs:
                   u=u.rstrip("').,;")
                   if '${' not in u and '{' not in u:source_links.add(u)
           source_links.add(poll['cfp_source'])
+          source_links.update(row['url'] for row in data['v6-program-context.json']['sources'])
+          source_links.update(data['v5-program-report-cards.json']['sources'])
+          source_links.add(data['v5-forecast-evaluation.json']['forecast_publication']['workflow_url'])
+          source_links.add('https://collegefootballplayoff.com/news/2026/11/10/rankings')
+          source_links.add('https://github.com/landrumc16/College-Football-Analytics/issues/27')
+          source_links={u for u in source_links if urlparse(u).scheme=='https' and urlparse(u).hostname}
           links=list(concurrent.futures.ThreadPoolExecutor(max_workers=4).map(lambda u:get(u)[0],sorted(source_links)))
           probes=[get(base+n)[0] for n in ['.env','.git/config','.cache/private-v6-inputs/','CFA-V6-M1-Private-Source-Corpus.zip']]
           assert all(p.get('status') in (403,404) for p in probes),probes
@@ -87,6 +93,13 @@ jobs:
           print(json.dumps({k:v for k,v in result.items() if k not in ('assets','texas_tech_remaining_packet_games','public_links')},indent=2))
           print('Links needing review:',[x for x in links if x.get('status',0)>=400 or 'error' in x])
           PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Check existing production runtime dependencies
+        run: |
+          npm --prefix web install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm --prefix web audit --omit=dev --json > /tmp/beta-evidence/runtime-dependency-audit.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
