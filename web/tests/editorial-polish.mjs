@@ -93,11 +93,11 @@ try {
   const baseline=await scenario.locator('tbody').textContent()
   await page.getByRole('combobox',{name:'Scenario matchup',exact:true}).selectOption('401862844')
   await page.getByRole('combobox',{name:'Scenario winner',exact:true}).selectOption('Navy')
-  await page.waitForFunction(()=>!document.querySelector('[aria-label="Scenario winner"]').disabled)
+  await page.waitForFunction(baseline=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&s.querySelector('tbody').textContent!==baseline},baseline)
   proof.scenario=await scenario.locator('tbody').textContent()
   await capture('scenarios',{region:scenario})
   await scenario.getByRole('button',{name:'Reset to baseline',exact:true}).click()
-  await page.waitForFunction(()=>!document.querySelector('[aria-label="Scenario matchup"]').disabled)
+  await page.waitForFunction(baseline=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&s.querySelector('tbody').textContent===baseline},baseline)
   assert.equal(await scenario.locator('tbody').textContent(),baseline)
   assert.deepEqual(errors,[])
   proof.errors=errors
