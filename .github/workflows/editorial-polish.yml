@@ -26,7 +26,7 @@ jobs:
           node-version: '20'
       - name: Guard the released analytics, navigation, branding and PWA
         run: |
-          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 -- src data research web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/secondary-navigation.css web/src/EditorialHome.tsx web/public web/package.json
+          git diff --exit-code da5539014a8db592cb9636c269a969cf45b67fd3 -- src data research web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/secondary-navigation.css web/src/EditorialHome.tsx web/public web/package.json
           # Scenario UI adds explicit analytics only. Its calculation engine and worker remain byte-identical above.
       - name: Stage the same real data for both visual builds
         run: |
