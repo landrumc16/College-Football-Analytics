@@ -1,0 +1,97 @@
+name: Pre-beta QA gap review — isolated released artifact
+on:
+  push:
+    branches: [prebeta-qa-gap-review]
+    paths: ['.github/workflows/prebeta-qa-gap-review.yml','qa/prebeta-gap-review.mjs']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  bounded-gap-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download the actual released Pages artifact without deploying
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          run-id: 43727666899
+          github-token: ${{ github.token }}
+          path: /tmp/released-pages
+      - name: Extract released bytes and record identity
+        run: |
+          mkdir -p web/dist qa/evidence
+          tar -xf /tmp/released-pages/artifact.tar -C web/dist
+          sha256sum /tmp/released-pages/artifact.tar > qa/evidence/artifact-sha256.txt
+          echo ae15ad13c3da7dad5ea3d5416fa25819bf113ea6 > qa/evidence/production-sha.txt
+          du -sb web/dist > qa/evidence/published-size.txt
+      - name: Audit project dependencies without running package lifecycle scripts
+        run: |
+          npm --prefix web install --package-lock-only --ignore-scripts
+          python - <<'PY'
+          import subprocess,json
+          from pathlib import Path
+          for scope,args in [('runtime',['--omit=dev']),('all-project-dependencies',[])]:
+              r=subprocess.run(['npm','--prefix','web','audit','--json',*args],capture_output=True,text=True)
+              Path('qa/evidence/'+scope+'-audit.json').write_text(r.stdout)
+              try:d=json.loads(r.stdout);print(scope,json.dumps(d.get('metadata',{})))
+              except Exception:print(scope,'audit unavailable',r.returncode)
+          PY
+      - name: Install QA-only browser and accessibility tools
+        run: |
+          npm --prefix web install --ignore-scripts --no-save --package-lock=false playwright@1.56.1 axe-core@4.10.3
+          cd web
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Run bounded cross-engine, keyboard and accessibility checks in isolation
+        run: node qa/prebeta-gap-review.mjs
+      - name: Inspect released files and read-only production headers and freshness
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,re,hashlib,urllib.request,urllib.error
+          from pathlib import Path
+          from datetime import datetime,timezone
+          root=Path('web/dist');base='https://landrumc16.github.io/College-Football-Analytics/'
+          files=[p for p in root.rglob('*') if p.is_file()]
+          private_files=[str(p.relative_to(root)) for p in files if p.name=='.env' or '.git' in p.parts or p.suffix in ['.pem','.key'] or 'private-cache' in p.parts]
+          patterns={'github-token':rb'(?:ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})','posthog-secret':rb'phx_[A-Za-z0-9]{20,}','private-key':rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'}
+          matches=[]
+          for p in files:
+              if p.suffix not in ['.js','.json','.html','.txt','.css','.map']:continue
+              data=p.read_bytes()
+              for kind,pattern in patterns.items():
+                  if re.search(pattern,data):matches.append({'file':str(p.relative_to(root)),'kind':kind})
+          results={'productionCommit':'ae15ad13c3da7dad5ea3d5416fa25819bf113ea6','files':len(files),'publishedBytes':sum(p.stat().st_size for p in files),'sourceMaps':sum(p.suffix=='.map' for p in files),'privatePaths':private_files,'credentialPatternMatches':matches,'http':[]}
+          for rel in ['', 'season-report.json', 'poll-snapshot.json', '.env', '.git/config', 'package.json']:
+              try:
+                  req=urllib.request.Request(base+rel,headers={'User-Agent':'CFA-owner-bounded-QA'})
+                  with urllib.request.urlopen(req,timeout=20) as response:
+                      record={'path':rel or '/', 'status':response.status,'headers':{k:v for k,v in response.headers.items() if k.lower() in ['content-type','content-security-policy','strict-transport-security','x-content-type-options','referrer-policy','cache-control','x-frame-options']}}
+                      if rel in ['season-report.json','poll-snapshot.json']:
+                          raw=response.read();d=json.loads(raw);record['bytes']=len(raw);record['matchesReleasedArtifact']=hashlib.sha256(raw).digest()==hashlib.sha256((root/rel).read_bytes()).digest()
+                          record['retrieved_at']=d.get('retrieved_at');record['season']=d.get('season')
+                          if rel=='season-report.json':
+                              t=datetime.fromisoformat(d['retrieved_at'].replace('Z','+00:00'));record['ageHours']=(datetime.now(timezone.utc)-t).total_seconds()/3600
+                              record['summary']=d.get('summary');record['model']=d.get('model_metadata',{}).get('model_id')
+                              snap=json.loads(Path('data/cfbd-2026-games.json').read_text())
+                              record['sourceSnapshotRetrievedAt']=snap.get('retrieved_at');record['sourceSnapshotMatches']=snap.get('retrieved_at')==d.get('retrieved_at')
+                      results['http'].append(record)
+              except urllib.error.HTTPError as e:results['http'].append({'path':rel,'status':e.code})
+              except Exception as e:results['http'].append({'path':rel,'error':str(e)})
+          Path('qa/evidence/security-freshness.json').write_text(json.dumps(results,indent=2)+'\n')
+          print('QA_SECURITY_FRESHNESS '+json.dumps(results))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prebeta-qa-gap-evidence
+          path: qa/evidence/
+          if-no-files-found: error
+          retention-days: 90
