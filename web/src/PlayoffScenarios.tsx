@@ -13,6 +13,10 @@ export default function PlayoffScenarios({ retrievedAt, favorites, published }: 
       .then(async([data,bytes]:[ScenarioInput,ArrayBuffer])=>{
         const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('')
         if(hash!==data.report_sha256 || data.retrieved_at!==retrievedAt || data.schema_version!==1)throw Error('Scenario snapshot differs from the current report. Refresh to retry.')
+        if(!Number.isFinite(data.scale) || data.scale<=0 || !Number.isFinite(data.home_edge) ||
+           !Number.isFinite(data.fcs_rating) || !Number.isInteger(data.seed) || data.seed<0 || data.seed>0xffffffff ||
+           data.draws!==2000 || !data.teams || typeof data.teams!=='object' || Array.isArray(data.teams) ||
+           !Array.isArray(data.games))throw Error('Scenario data is invalid. Published forecasts remain unchanged. Refresh to retry.')
         if(active)setInput(data)
       }).catch(e=>{if(active)setError(String(e.message||e))})
     return()=>{active=false;worker.current?.terminate()}

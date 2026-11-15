@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import DataBoundary from './DataBoundary'
 
 type Window = { seasons: number[]; games: number; fbs_win_rate: number | null; recruiting_seasons: number; rated_recruits: number; blue_chip_share: number | null }
 type Program = { team: string; season: number; recent: Window; prior: Window; win_rate_change: number | null; blue_chip_share_change: number | null; recruiting: { players: number; star_rated: number; mean_stars: number | null; blue_chip_share: number | null } | null; roster: { players: number; retained_share_of_prior_roster: number | null; returning_observed_players: number | null } | null; coaching: { unambiguous_dominant_coach: boolean; consecutive_observed_seasons: number | null } | null; source_ids: string[] }
@@ -6,7 +7,7 @@ type Context = { schema_version: number; status: string; knowledge_as_of: string
 const percentage = (x: number | null | undefined) => x == null ? 'Unavailable' : `${(100*x).toFixed(1)}%`
 const change = (x: number | null) => x == null ? 'Unavailable' : `${x > 0 ? '+' : ''}${(100*x).toFixed(1)} pp`
 
-export default function ProgramContext({ team }: { team: string }) {
+function ProgramContextBody({ team }: { team: string }) {
   const [data,setData] = useState<Context | null>(null)
   const [failed,setFailed] = useState(false)
   useEffect(() => {
@@ -40,4 +41,8 @@ export default function ProgramContext({ team }: { team: string }) {
       </details>
     </>}
   </section>
+}
+
+export default function ProgramContext({ team }: { team: string }) {
+  return <DataBoundary key={team}><ProgramContextBody team={team} /></DataBoundary>
 }
