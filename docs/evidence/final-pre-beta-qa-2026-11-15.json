@@ -392,12 +392,126 @@
   "npm_audit_runtime": "0 vulnerabilities",
   "npm_audit_all": "vite 5.4.21 (high) / esbuild 0.21.5 (moderate): dev-server-only advisories"
  },
- "not_executed": [
-  "Firefox",
-  "WebKit/Safari (cdn.playwright.dev download declined)",
-  "physical devices",
-  "real screen readers",
-  "human first-time usability",
-  "PostHog private dashboard / project privacy settings (owner sign-in)"
- ]
+ "pwa_render_perf": {
+  "manifest": {
+   "display": "standalone",
+   "start_url": "./",
+   "scope": "./",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192",
+     "status": 200,
+     "png": true,
+     "actual": "192x192"
+    },
+    {
+     "src": "icons/icon-512.png",
+     "sizes": "512x512",
+     "status": 200,
+     "png": true,
+     "actual": "512x512"
+    },
+    {
+     "src": "icons/icon-maskable-192.png",
+     "sizes": "192x192",
+     "status": 200,
+     "png": true,
+     "actual": "192x192"
+    },
+    {
+     "src": "icons/icon-maskable-512.png",
+     "sizes": "512x512",
+     "status": 200,
+     "png": true,
+     "actual": "512x512"
+    }
+   ]
+  },
+  "offline.html": {
+   "status": 200,
+   "type": "text/html; charset=utf-8",
+   "cache": "max-age=600"
+  },
+  "sw.js": {
+   "status": 200,
+   "type": "application/javascript; charset=utf-8",
+   "cache": "max-age=600"
+  },
+  "forced-colors": {
+   "errors": [],
+   "overflow": 0,
+   "longAnimations": 0
+  },
+  "reduced-motion": {
+   "errors": [],
+   "overflow": 0,
+   "longAnimations": 0
+  },
+  "light-scheme": {
+   "errors": [],
+   "overflow": 0,
+   "longAnimations": 0
+  },
+  "coldLoad": [
+   {
+    "featuredMatchupsVisibleMs": 792,
+    "ttfb": 117,
+    "domContentLoaded": 383,
+    "fcp": 508,
+    "transferKB": 158
+   },
+   {
+    "featuredMatchupsVisibleMs": 701,
+    "ttfb": 86,
+    "domContentLoaded": 303,
+    "fcp": 428,
+    "transferKB": 158
+   },
+   {
+    "featuredMatchupsVisibleMs": 699,
+    "ttfb": 87,
+    "domContentLoaded": 292,
+    "fcp": 404,
+    "transferKB": 224
+   }
+  ],
+  "links": [
+   "https://posthog.com/privacy",
+   "https://github.com/landrumc16/College-Football-Analytics/issues/new"
+  ],
+  "linksNewTabWithoutNoopener": []
+ },
+ "data_accuracy_recompute": {
+  "live_report_vs_repo": "identical except generated_at",
+  "ranking_records_vs_alias_resolved_snapshot": "0 mismatches across 138 teams",
+  "fbs_vs_fbs_games_missing_from_schedule": 0,
+  "prediction_winner_margin_probability_inconsistencies": 0,
+  "cfp_sum_national_title": 1.0,
+  "cfp_sum_field": 12.0,
+  "poll_unmatched_names": {
+   "ap_top25": [
+    "Miami"
+   ],
+   "coaches_top25": [
+    "Miami"
+   ],
+   "cfp_top25": []
+  },
+  "D4_live_ui": {
+   "team_profile_miami_fl": "AP Unranked / Coaches Unranked (actual AP #5, Coaches #6)",
+   "poll_comparison_rows": [
+    "Miami \u2014 5 6 \u2014",
+    "Miami (FL) 3 \u2014 \u2014 7"
+   ]
+  }
+ },
+ "pending": {
+  "firefox": "PENDING - binary download needs cdn.playwright.dev (deferred by owner)",
+  "webkit_safari": "PENDING - same",
+  "physical_devices": "PENDING - owner devices",
+  "screen_readers": "PENDING",
+  "human_usability": "PENDING - first beta cohort",
+  "posthog_project_settings": "PENDING - owner sign-in"
+ }
 }

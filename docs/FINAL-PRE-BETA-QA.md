@@ -17,11 +17,12 @@ Machine-readable receipt: [`evidence/final-pre-beta-qa-2026-11-15.json`](evidenc
 | Area | Already verified (prior evidence) | Executed in this review | Result | Gap left |
 | --- | --- | --- | --- | --- |
 | Chromium functional journeys, five widths | V6 acceptance, PR #29/#30, every deploy (`mobile-smoke.mjs`) | Live journeys during the a11y/privacy harness | Pass | — |
-| Firefox | None | Not executed (no browser binary; see §2) | — | **Unverified** |
-| WebKit / Safari (iPhone) | None | Not executed (no browser binary) | — | **Unverified; most likely fan browser** |
-| Accessibility | Nav dropdowns ≥44 px; focus styles in CSS; no audit tool ever run | axe-core WCAG 2.2 A/AA on 5 destinations at 390/1280; 60-stop Tab walk; touch-target scan; reflow at 320 px and at 640 px (200% zoom); 200% root text | 1 rule failing (D2); everything else passes; no contrast violations | Real screen readers |
-| Security / privacy | Secret scan of 1,609 blobs; runtime `npm audit` 0; consent/GPC/DNT unit and CI tests | Probed 20 sensitive paths on live; scanned live bundle; checked headers; `npm audit` (runtime and all); first-visit storage, cookies and outbound requests (default and GPC) | No exposure; no request before consent; only key stored is favorites | Owner-only PostHog project settings |
-| Data integrity | 25/25 CFP positions; byte/SHA parity; adversarial malformed-publication containment (PR #29) | Live JSON audit: ranks, uniqueness, probability bounds, kickoff vs. "upcoming", scenario packet hash, freshness | Pass (see §3.4) | — |
+| Firefox | None | **PENDING:** deferred by the owner until computer access (binary download) | Pending, not pass or fail | Run when access allows |
+| WebKit / Safari (iPhone) | None | **PENDING:** deferred by the owner (binary download); physical iPhone check in §5 | Pending, not pass or fail | Most likely fan browser |
+| Accessibility | Nav dropdowns ≥44 px; focus styles in CSS; no audit tool ever run | axe-core WCAG 2.2 A/AA on 5 destinations at 390/1280; 60-stop Tab walk; touch-target scan; reflow at 320 px and at 640 px (200% zoom); 200% root text; forced colors; reduced motion; light scheme | 1 rule failing (D2); everything else passes; no contrast violations; forced colors legible | Real screen readers (pending) |
+| Security / privacy | Secret scan of 1,609 blobs; runtime `npm audit` 0; consent/GPC/DNT unit and CI tests | Probed 20 sensitive paths on live; scanned live bundle; checked headers; `npm audit` (runtime and all); first-visit storage, cookies and outbound requests (default and GPC); outbound link inventory | No exposure; no request before consent; only key stored is favorites; 2 outbound links (PostHog privacy, GitHub issue form) | PostHog project settings (owner, pending) |
+| Data integrity / accuracy | 25/25 CFP positions; byte/SHA parity; adversarial malformed-publication containment (PR #29) | Live JSON audit; independent recomputation of all 138 W–L records from the raw snapshot; live report vs. checked-in report; prediction winner/margin/probability consistency; CFP sums; poll name matching in the live UI | Data correct; **D4:** AP/Coaches name mismatch shows Miami (FL) as Unranked | — |
+| PWA assets / load | Emulated install/update/offline every deploy | Live manifest, all 4 icons (types and dimensions), offline page, worker; 3 cold loads at 390 px with 4× CPU throttle | Pass; Featured Matchups visible in 0.70–0.79 s, 158–224 KB transferred | Physical install (pending) |
 | Scheduled-update recovery | Unit tests for empty, cross-season and duplicate responses | 12 isolated fault injections through the real refresh, report and workflow gate code | **D1:** truncated or regressed responses publish | — |
 | Operations | Deploy-time live smoke; 72 h stale gate; client 72 h stale banner | Reviewed Actions history and workflows | D3, L7, L8 | No error monitoring by default |
 | Physical devices | **None** (all PWA/Android evidence is emulation) | None possible here | — | **Required (§5)** |
@@ -41,6 +42,7 @@ cd web && npm install && npm run build                # passed
 npm audit --omit=dev; npm audit                       # 0 runtime; dev-only vite/esbuild advisories
 npm i --no-save axe-core@4.10.3 playwright && cd ..
 node web/tests/qa/production-a11y-privacy.mjs         # writes web/qa-evidence/results.json
+NODE_USE_ENV_PROXY=1 node web/tests/qa/production-pwa-render-perf.mjs   # proxy flag only needed behind a proxy
 git worktree add --detach /tmp/wt HEAD && cd /tmp/wt && pip install pyyaml &&
   python scripts/qa_refresh_fault_injection.py /tmp/wt   # disposable worktree only
 ```
@@ -48,9 +50,9 @@ git worktree add --detach /tmp/wt HEAD && cd /tmp/wt && pip install pyyaml &&
 Both harnesses were run twice with identical outcomes. They are new test-only files
 and do not change application behaviour.
 
-Firefox and WebKit could not be run. Their browser binaries come from
-`cdn.playwright.dev`, and adding that host to this environment's network allowlist
-was declined. Coverage is therefore Chromium only.
+Firefox and WebKit are **pending, not failed or passed**. Their browser binaries
+come from `cdn.playwright.dev`. The owner deferred that network permission until
+they have computer access. Browser coverage in this review is Chromium only.
 
 ## 3. Findings
 
@@ -104,6 +106,22 @@ scores can therefore lag by hours. Home shows only "Checked Nov 15", with no tim
 Mitigation: tell fans the app is a forecast snapshot updated a few times a day, not
 live scores. Optionally, the owner can trigger a manual refresh after Texas Tech games.
 
+**D4 — Medium. Recommended before invites; not a hard blocker. Miami (FL) loses its AP and Coaches rank.**
+The published poll snapshot lists AP and Coaches entries as CFBD names them
+(`Miami`: AP #5, Coaches #6). The model and the CFP snapshot use `Miami (FL)`, and
+the web app matches names exactly. Observed in the live UI:
+- the Miami (FL) Team Profile shows **AP Poll: Unranked, Coaches Poll: Unranked**;
+- Rankings → AP Poll shows two rows, `Miami — 5 6 —` and `Miami (FL) 3 — — 7`.
+
+Every other AP/Coaches team matches. The cause is that `poll_refresh.py` does not
+apply the verified alias map that `pipeline.py` and `report.py` already use
+(`Miami`→`Miami (FL)`, `App State`, `Sam Houston`, `UL Monroe`).
+
+*Smallest proposed correction (awaiting approval):* apply that existing alias map
+when `poll_refresh.py` builds each row, plus a test. Then republish the poll
+snapshot (a published-data change, so it needs your approval). An app-only
+alternative is canonical-name matching in the four poll lookups.
+
 ### Low-severity observations (none block the beta)
 
 - **L1:** no committed `package-lock.json`, so each Pages build resolves `^` ranges fresh.
@@ -146,7 +164,18 @@ live scores. Optionally, the owner can trigger a manual refresh after Texas Tech
   (D2/D3/NAIA) predictions remain in the JSON after kickoff because CFBD never
   marked them final. The UI filters predictions to upcoming FBS schedule games,
   so fans don't see them.
-- **Texas Tech:** model #10, 9–1, after the Nov 15 refresh.
+- **Texas Tech:** model #10, 9–1, after the Nov 15 refresh; official CFP #12
+  (Nov 10 release, week 11); AP/Coaches week 11.
+- **Live vs. checked-in report:** the live `season-report.json` is identical to
+  `data/season-2026-report.json` apart from `generated_at`.
+- **Records:** all 138 published W–L records match an independent recomputation
+  from the raw snapshot with aliases resolved. All 718 FBS-vs-FBS games are in
+  the schedule.
+- **Predictions:** predicted winner, margin sign and probability agree for all
+  233. CFP national-title probabilities sum to 1.000 and field probabilities to
+  12.000.
+- **Polls:** AP, Coaches and CFP each have ranks 1–25 exactly once. The only
+  unmatched names are `Miami` in AP and Coaches (D4).
 
 ## 4. Operational readiness
 
@@ -203,13 +232,20 @@ Record the device, OS and browser versions in issue #27.
    guard, or accept D1 for the beta with a manual check after each game day:
    Texas Tech's record and the completed-game count look right. Use the §4
    rollback if not.
-3. Recommended, not blocking: the D2 table focusability markup; mentioning in the
+3. Recommended before invites: the D4 poll-name alias fix, so a top-5 team
+   doesn't show as Unranked.
+4. Recommended, not blocking: the D2 table focusability markup; mentioning in the
    invitation that data refreshes a few times a day (D3).
-4. Later, optional: commit a lockfile (L1); add a CSP meta tag (L2); title, focus
+5. **Pending, waiting for computer access:** Firefox and WebKit automated runs;
+   the §5 physical-device checklist; screen-reader spot checks; PostHog project
+   privacy settings and private dashboard; the first-cohort usability session.
+6. Later, optional: commit a lockfile (L1); add a CSP meta tag (L2); title, focus
    and live-region announcements (L5).
 
 **Final recommendation: CONDITIONAL GO for the initial 25–50 Texas Tech fan beta.**
-No Critical defect was found. Production data, privacy behaviour and Chromium
-journeys verify correctly. The beta becomes a full GO once conditions 1 and 2
-are met. No code was changed, nothing was merged or deployed, and Version 6
+No Critical defect was found. Game data, records, predictions, privacy behaviour
+and Chromium journeys verify correctly. The one display-accuracy defect is D4
+(Miami's AP and Coaches rank). The beta becomes a full GO once conditions 1 and 2
+are met; the D4 fix is strongly recommended alongside them. Firefox and WebKit
+are pending, not failed. No code was changed, nothing was merged or deployed, and Version 6
 remains closed.
