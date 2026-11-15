@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
+import { startAsDeclinedVisitor } from './consent-prompt.mjs';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4179', '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
@@ -11,7 +12,7 @@ let browser;
 let activePage;
 try {
   for (let i = 0; i < 40; i++) { try { if ((await fetch(url)).ok) break; } catch {} await delay(500); }
-  browser = await chromium.launch({ headless: true });
+  browser = startAsDeclinedVisitor(await chromium.launch({ headless: true }));
   await mkdir('web/editorial-evidence', { recursive: true });
   const results = [];
   for (const width of [375,390,430,768,1536]) {

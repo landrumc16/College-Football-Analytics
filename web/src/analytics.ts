@@ -42,7 +42,8 @@ export function analyticsStatus(){
 function stop(){pending=[];clearTimeout(timer);timer=undefined;for(const c of inflight)c.abort();inflight.clear();activeRuns.clear();visit=null;pageKey='';profileKey='';comparisonKey=''}
 function allowed(){return configured && !privacyRequested() && analyticsStatus().mode!=='off' && navigator.onLine}
 export function analyticsConsentUndecided(){
-  return analyticsStatus().configured && !privacyRequested() && get('localStorage',CHOICE)===null && get('sessionStorage',CHOICE)===null && get('localStorage',RETURN)===null
+  // Undecided only when no choice exists in storage or memory (memory covers blocked storage), so a choice is never re-asked.
+  return analyticsStatus().configured && !privacyRequested() && memoryConsent===null && get('localStorage',CHOICE)===null && get('sessionStorage',CHOICE)===null && get('localStorage',RETURN)===null
 }
 export function setAnalyticsConsent(mode:Consent){
   try{

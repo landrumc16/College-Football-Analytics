@@ -3,6 +3,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises'
 import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
+import {startAsDeclinedVisitor} from './consent-prompt.mjs'
 import ts from 'typescript'
 import {chooseSection,assertNavigationFits} from './section-navigation.mjs'
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4180','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
@@ -12,7 +13,7 @@ await mkdir('web/v6-evidence',{recursive:true})
 const results=[]
 try {
  for(let i=0;i<40;i++){try{if((await fetch(url)).ok)break}catch{}await delay(500)}
- browser=await chromium.launch({headless:true})
+ browser=startAsDeclinedVisitor(await chromium.launch({headless:true}))
  const source=await readFile('web/src/scenarios.ts','utf8')
  const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
  const fixture=JSON.parse(await readFile('research/v6/scenario-python-fixtures.json','utf8'))

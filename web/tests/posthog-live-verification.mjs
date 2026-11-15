@@ -6,6 +6,7 @@ import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 import {chooseSection} from './section-navigation.mjs'
 import {captureAcknowledgment} from './posthog-capture-response.mjs'
+import {answerConsentPrompt} from './consent-prompt.mjs'
 const liveUrl=process.env.DASHBOARD_URL
 if(liveUrl && liveUrl!=='https://landrumc16.github.io/College-Football-Analytics/')throw Error('Unexpected production verification target')
 const origin=liveUrl||'http://127.0.0.1:4193/',endpoint='https://us.i.posthog.com/batch/',out='web/posthog-live-evidence'
@@ -46,7 +47,7 @@ try{
  const nav=name=>page.getByRole('navigation',{name:'Main navigation',exact:true}).getByRole('button',{name,exact:true}).click()
  await page.goto(origin+'?analytics_test=1',{waitUntil:'networkidle'});await page.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await delay(500)
  if(observed)fail('capture_before_consent')
- await page.locator('.editorial-menu > summary').click();await page.locator('.analytics-privacy > summary').click();await page.getByRole('button',{name:'Allow this visit only',exact:true}).click();await page.locator('.editorial-menu > summary').click();await delay(600)
+ await answerConsentPrompt(page,true);await delay(600)
  await nav('Rankings');await delay(600)
  await nav('Teams');await page.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(page,'Team Profile sections','Schedule & Predictions');await delay(600)
  await chooseSection(page,'Teams sections','Compare & What If');await page.getByLabel('First school',{exact:true}).selectOption('Texas Tech');await page.getByLabel('Second school',{exact:true}).selectOption('Georgia');await delay(600)
@@ -77,9 +78,7 @@ try{
   const fanPage=await fanContext.newPage()
   await fanPage.goto(origin,{waitUntil:'networkidle'})
   await fanPage.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()
-  await fanPage.locator('.editorial-menu > summary').click()
-  await fanPage.locator('.analytics-privacy > summary').click()
-  await fanPage.getByRole('button',{name:'Allow this visit only',exact:true}).click()
+  await answerConsentPrompt(fanPage,true)
   await delay(900)
   if(!fanTypes.length||fanTypes.some(type=>type!=='beta'))fail('invalid_payload')
   receipt.betaClassificationVerified=true
