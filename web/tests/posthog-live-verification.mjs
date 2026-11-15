@@ -5,6 +5,7 @@ import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 import {chooseSection} from './section-navigation.mjs'
+import {captureAcknowledgment} from './posthog-capture-response.mjs'
 const origin='http://127.0.0.1:4193/',endpoint='https://us.i.posthog.com/batch/',out='web/posthog-live-evidence'
 const required=['cfa_visit_started','cfa_page_view','cfa_rankings_viewed','cfa_team_profile_opened','cfa_predictions_viewed','cfa_comparison_viewed','cfa_scenario_started','cfa_scenario_completed']
 const keys=new Set(['view','section','profile_section','team','opponent','venue','previous_view','run_id','picks_count','error_kind','schema_version','traffic_type','device_type','display_mode','identity_scope','return_visit','$session_id','sequence','$process_person_profile','$geoip_disable','$ip','$insert_id'])
@@ -36,9 +37,9 @@ try{
  })
  const page=await context.newPage();page.setDefaultTimeout(15000);page.on('pageerror',()=>wireFailures.push('browser_error'))
  page.on('response',r=>{if(r.url()!==endpoint)return;pending.push((async()=>{
-  let accepted=false;try{const data=await r.json();accepted=r.status()>=200&&r.status()<300&&data.status===1}catch{}
+  let acknowledgment=captureAcknowledgment(r.status(),null);try{acknowledgment=captureAcknowledgment(r.status(),await r.json())}catch{}
   let events=[];try{events=JSON.parse(r.request().postData()||'{}').batch||[]}catch{}
-  receipt.requests.push({httpStatus:r.status(),acceptedByCaptureApi:accepted,eventCount:events.length,eventNames:events.map(e=>e.event),insertIds:events.map(e=>e.properties?.$insert_id),sessionIds:[...new Set(events.map(e=>e.properties?.$session_id))]})
+  receipt.requests.push({httpStatus:r.status(),...acknowledgment,eventCount:events.length,eventNames:events.map(e=>e.event),insertIds:events.map(e=>e.properties?.$insert_id),sessionIds:[...new Set(events.map(e=>e.properties?.$session_id))]})
  })())})
  const nav=name=>page.getByRole('navigation',{name:'Main navigation',exact:true}).getByRole('button',{name,exact:true}).click()
  await page.goto(origin+'?analytics_test=1',{waitUntil:'networkidle'});await page.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await delay(500)

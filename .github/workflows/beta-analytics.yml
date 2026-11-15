@@ -49,6 +49,7 @@ jobs:
           set -o pipefail
           python -m pytest -q | tee web/analytics-evidence/python.txt
           node web/tests/analytics-unit.mjs | tee web/analytics-evidence/privacy-unit.json
+          node --test web/tests/posthog-capture-response.test.mjs
           python scripts/configure_beta_posthog.py > web/analytics-evidence/dashboard-plan.json
       - name: Stage and build actual football data
         run: |
