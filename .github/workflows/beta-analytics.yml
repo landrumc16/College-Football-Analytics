@@ -107,3 +107,57 @@ jobs:
             web/editorial-evidence/
           retention-days: 90
           if-no-files-found: error
+
+  deployment-secret-and-live-capture:
+    # Only the owner-controlled development branch push receives the real secret.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      # Identical to deployment; never echo these values or upload the built bundle.
+      VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}
+      VITE_POSTHOG_HOST: ${{ secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || '' }}
+      VITE_POSTHOG_TRAFFIC: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm deployment secret access without exposing its value
+        run: |
+          python - <<'PYTHON'
+          import os,re,json
+          from pathlib import Path
+          out=Path('web/posthog-live-evidence');out.mkdir(parents=True,exist_ok=True)
+          token=os.environ.get('VITE_POSTHOG_PUBLIC_KEY','')
+          available=bool(token);valid=bool(re.fullmatch(r'phc_[A-Za-z0-9]{10,}',token))
+          receipt={'projectExpected':737110,'deploymentSecretAccessible':available,'validPublicTokenShape':valid,'valueRecorded':False,'hostMatchesUS':os.environ.get('VITE_POSTHOG_HOST')=='https://us.i.posthog.com'}
+          (out/'secret-access.json').write_text(json.dumps(receipt,indent=2));print(json.dumps(receipt))
+          if not available:raise SystemExit('POSTHOG_PUBLIC_KEY is unavailable. It must be an Actions repository secret, not an environment-only secret or variable.')
+          if not valid:raise SystemExit('The saved value is not an intended public project token. Its value has not been printed.')
+          PYTHON
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build isolated candidate with the actual deployment secret
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m scripts.build_v6_product
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          npm --prefix web run build
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Verify real PostHog acceptance from one controlled browser journey
+        run: node web/tests/posthog-live-verification.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: posthog-deployment-secret-and-controlled-delivery
+          path: web/posthog-live-evidence/
+          retention-days: 90
+          if-no-files-found: error

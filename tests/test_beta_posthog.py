@@ -40,3 +40,25 @@ def test_public_token_wiring_uses_masked_repository_secret_and_us_region():
     assert "secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || ''" in workflow
     assert 'vars.POSTHOG_PUBLIC_KEY' not in workflow
     assert 'POSTHOG_PERSONAL_API_KEY' not in workflow
+
+
+def test_live_verification_uses_deployment_secret_without_admin_keys():
+    from pathlib import Path
+    workflow=Path('.github/workflows/beta-analytics.yml').read_text()
+    live=workflow.split('  deployment-secret-and-live-capture:')[1]
+    assert "if: github.event_name == 'push'" in live
+    assert 'VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}' in live
+    assert "secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || ''" in live
+    assert 'VITE_POSTHOG_TRAFFIC: test' in live
+    assert 'POSTHOG_PERSONAL_API_KEY' not in live
+    assert 'path: web/posthog-live-evidence/' in live and 'path: web/dist' not in live
+
+
+def test_direct_setup_reuses_every_existing_dashboard_query():
+    from pathlib import Path
+    guide=Path('docs/POSTHOG-DIRECT-SETUP.md').read_text()
+    spec=json.loads(SPEC.read_text())
+    for insight in spec['insights']:
+        assert insight['name'] in guide
+        assert insight['query']['source']['query'] in guide
+    assert '737110' in guide and 'public sharing **off**' in guide

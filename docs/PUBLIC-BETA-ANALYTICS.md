@@ -86,6 +86,12 @@ dashboard or ingestion has been verified.
 
 ## Owner configuration needed
 
+The public token is now reported saved by the owner. The controlled Actions
+verification checks actual deployment-secret access without reading its value
+back into chat. Follow [direct PostHog setup](POSTHOG-DIRECT-SETUP.md) to complete
+the private dashboard without the ChatGPT connection or a personal API key.
+
+
 1. The target is US PostHog project **737110**. Keep project membership to the
    owner/explicit trusted maintainers; do not create a public share link.
 2. In Project settings enable **Discard client IP data**; disable session replay,
@@ -144,3 +150,19 @@ Official references checked for this implementation:
 - https://posthog.com/docs/privacy/data-collection
 - https://posthog.com/docs/api/dashboards
 - https://posthog.com/docs/api/insights
+
+## Live-delivery verification boundary
+
+The owner-authorized `deployment-secret-and-live-capture` job runs only on pushes
+to the dedicated development branch. It builds with the actual repository secret
+through exactly the deployment's environment references and uses one local
+Chromium visitor to exercise consent, rankings, profiles/schedules, comparisons,
+predictions and a completed playoff simulation. All outbound captures are marked
+`traffic_type=test`; all other external browser traffic is blocked. No live fan
+traffic or public GitHub Pages load is generated. Opt-out stops further requests.
+
+The job stores only sanitized access booleans, HTTP/API acceptance, event names,
+random insertion/session IDs and the source SHA. No raw bodies, token, browser
+trace, cookies or compiled bundle are uploaded. Capture acceptance is a delivery
+check, not private dashboard access: the owner must match those session IDs in
+project 737110 and complete the dashboard/privacy checks in the direct setup guide.
