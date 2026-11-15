@@ -1,0 +1,4 @@
+/* Only the new privacy controls; reuse the masthead menu's collegiate palette. */
+.analytics-privacy.install-guide{background:transparent;color:inherit}
+.analytics-privacy .analytics-choices{display:grid;gap:8px;margin:12px 0}
+.analytics-privacy .analytics-choices button{min-height:44px;max-width:100%;white-space:normal}
