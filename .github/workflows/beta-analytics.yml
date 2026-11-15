@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
         run: |
-          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 -- src data research web/public web/package.json web/vite.config.ts web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
           mkdir -p web/analytics-evidence
           git rev-parse HEAD > web/analytics-evidence/tested-sha.txt
       - uses: actions/setup-python@v5
@@ -59,6 +59,18 @@ jobs:
           cp data/v2-research-summary.json web/public/v2-research-summary.json
           npm --prefix web run build
           python scripts/verify_dashboard_bundle.py
+      - name: Reject secret-shaped build keys without printing them
+        run: |
+          python - <<'PYTHON'
+          import os,subprocess,json
+          from pathlib import Path
+          fixture='phx_NOT_A_REAL_SECRET_BUILD_REJECTION_FIXTURE'
+          env={**os.environ,'VITE_POSTHOG_PUBLIC_KEY':fixture}
+          result=subprocess.run(['npm','--prefix','web','run','build'],env=env,capture_output=True,text=True)
+          assert result.returncode!=0,'Private-shaped key was accepted by the build'
+          assert fixture not in result.stdout+result.stderr,'Rejected key appeared in build diagnostics'
+          Path('web/analytics-evidence/key-guard.json').write_text(json.dumps({'privateKeyBuildRejected':True,'keyValueInDiagnostics':False,'fixtureOnly':True}))
+          PYTHON
       - name: Verify explicit events and consent at five widths with intercepted ingestion
         run: node web/tests/beta-analytics.mjs
       - name: Existing browser, historical and PWA regressions

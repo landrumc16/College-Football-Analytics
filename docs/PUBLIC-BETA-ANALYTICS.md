@@ -57,7 +57,9 @@ PostHog events cannot be remotely erased merely by changing this browser setting
   Other tabs honor a persisted opt-out through storage events.
 
 Tracking needs a real public project token plus its correct regional ingestion
-host. Empty/secret-shaped keys and unknown hosts disable capture. Defaults contain
+host. Empty values disable capture. Secret-shaped keys, unknown hosts and incomplete
+settings also fail the build before any token can be embedded in JavaScript.
+Defaults contain
 no credentials. No personal or secret project API key may enter Vite, frontend
 files, GitHub variables exposed to the build, or public artifacts.
 
