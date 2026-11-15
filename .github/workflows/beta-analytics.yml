@@ -1,0 +1,97 @@
+name: Public beta analytics acceptance
+on:
+  push:
+    branches: [public-beta-analytics]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'web/src/analytics.ts'
+      - 'web/src/AnalyticsPrivacy.tsx'
+      - 'web/tests/*analytics*'
+      - 'ops/posthog/**'
+      - 'scripts/configure_beta_posthog.py'
+      - '.github/workflows/beta-analytics.yml'
+permissions:
+  contents: read
+jobs:
+  privacy-and-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      # Intentional noncredential fixture. All ingestion is intercepted, never sent to a live project.
+      VITE_POSTHOG_PUBLIC_KEY: phc_00000000000000000000000000000000
+      VITE_POSTHOG_HOST: https://us.i.posthog.com
+      VITE_POSTHOG_TRAFFIC: test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve the analytics platform and existing visual identity
+        run: |
+          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 -- src data research web/public web/package.json web/vite.config.ts web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          mkdir -p web/analytics-evidence
+          git rev-parse HEAD > web/analytics-evidence/tested-sha.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install existing dependencies and stage the current verified publication
+        run: |
+          python -m pip install -e '.[dev]'
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Regression and privacy contracts
+        run: |
+          set -o pipefail
+          python -m pytest -q | tee web/analytics-evidence/python.txt
+          node web/tests/analytics-unit.mjs | tee web/analytics-evidence/privacy-unit.json
+          python scripts/configure_beta_posthog.py > web/analytics-evidence/dashboard-plan.json
+      - name: Stage and build actual football data
+        run: |
+          python -m scripts.build_v6_product
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
+          npm --prefix web run build
+          python scripts/verify_dashboard_bundle.py
+      - name: Verify explicit events and consent at five widths with intercepted ingestion
+        run: node web/tests/beta-analytics.mjs
+      - name: Existing browser, historical and PWA regressions
+        if: always()
+        run: |
+          node web/tests/historical-publication.mjs
+          node web/tests/v6-scenarios.mjs
+          node web/tests/mobile-smoke.mjs
+          node web/tests/editorial-home.mjs
+          node web/tests/v6-browser.mjs
+      - name: Compare gzip JavaScript against the current production source
+        run: |
+          cp -a web/dist /tmp/analytics-dist
+          git worktree add --detach /tmp/cfa-without-analytics a229aba690ed353b259863719d3bafd7a5901e57
+          ln -s "$GITHUB_WORKSPACE/web/node_modules" /tmp/cfa-without-analytics/web/node_modules
+          cp web/public/*.json /tmp/cfa-without-analytics/web/public/
+          npm --prefix /tmp/cfa-without-analytics/web run build
+          python - <<'PY'
+          import gzip,json
+          from pathlib import Path
+          def size(root):return sum(len(gzip.compress(p.read_bytes(),mtime=0)) for p in Path(root).glob('assets/*.js'))
+          before=size('/tmp/cfa-without-analytics/web/dist');after=size('/tmp/analytics-dist')
+          proof={'beforeGzipJsBytes':before,'afterGzipJsBytes':after,'increaseBytes':after-before,'limitBytes':10240,'sdkAdded':False}
+          Path('web/analytics-evidence/bundle-size.json').write_text(json.dumps(proof,indent=2))
+          assert after-before<=10240,proof
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: beta-analytics-privacy-and-browser-evidence
+          path: |
+            web/analytics-evidence/
+            web/mobile-evidence/
+            web/editorial-evidence/
+          retention-days: 90
+          if-no-files-found: error

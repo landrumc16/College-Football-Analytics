@@ -196,6 +196,9 @@ jobs:
           print('V2 research dashboard build and summary smoke verified')
           PY
   build:
+    env:
+      VITE_POSTHOG_PUBLIC_KEY: ${{ vars.POSTHOG_PUBLIC_KEY }}
+      VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
     if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     steps:
