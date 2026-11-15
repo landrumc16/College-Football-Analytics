@@ -2,3 +2,15 @@
 .analytics-privacy.install-guide{background:transparent;color:inherit}
 .analytics-privacy .analytics-choices{display:grid;gap:8px;margin:12px 0}
 .analytics-privacy .analytics-choices button{min-height:44px;max-width:100%;white-space:normal}
+
+/* First-visit choice is rendered in a body portal so collapsed navigation cannot hide it. */
+.analytics-prompt-backdrop{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:16px}
+.analytics-prompt{box-sizing:border-box;width:min(100%,480px);max-height:calc(100dvh - 32px);overflow:auto;background:#fff;color:#17202b;border-radius:12px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.analytics-prompt h2{margin:0 0 12px;font-size:1.35rem;line-height:1.3;color:#17202b}
+.analytics-prompt p{line-height:1.5;margin:10px 0}
+.analytics-prompt-actions{display:grid;gap:10px;margin:18px 0}
+.analytics-prompt-actions button{min-height:48px;padding:10px 16px;border-radius:6px;font:inherit;font-weight:700;cursor:pointer}
+.analytics-prompt-actions button:first-child{background:#9e1b32;color:#fff;border:2px solid #9e1b32}
+.analytics-prompt-actions button:last-child{background:#fff;color:#17202b;border:2px solid #4d5661}
+.analytics-prompt-actions button:focus-visible{outline:3px solid #1d6dce;outline-offset:3px}
+.analytics-prompt .analytics-prompt-note{font-size:.85rem;color:#505966}
