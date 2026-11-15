@@ -41,6 +41,9 @@ export function analyticsStatus(){
 }
 function stop(){pending=[];clearTimeout(timer);timer=undefined;for(const c of inflight)c.abort();inflight.clear();activeRuns.clear();visit=null;pageKey='';profileKey='';comparisonKey=''}
 function allowed(){return configured && !privacyRequested() && analyticsStatus().mode!=='off' && navigator.onLine}
+export function analyticsConsentUndecided(){
+  return analyticsStatus().configured && !privacyRequested() && get('localStorage',CHOICE)===null && get('sessionStorage',CHOICE)===null && get('localStorage',RETURN)===null
+}
 export function setAnalyticsConsent(mode:Consent){
   try{
   if(!['off','session','returning'].includes(mode)||privacyRequested())mode='off'
