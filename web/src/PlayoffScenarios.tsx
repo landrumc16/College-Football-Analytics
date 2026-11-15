@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { analyticsError, scenarioStarted, scenarioCompleted } from './analytics'
 import type { ScenarioInput, ScenarioResult } from './scenarios'
 const pct=(n:number)=>`${(100*n).toFixed(1)}%`
 export default function PlayoffScenarios({ retrievedAt, favorites, published }: { retrievedAt?: string | null; favorites: (string|null)[]; published: {team:string;cfp_field:number}[] }) {
@@ -25,12 +26,14 @@ export default function PlayoffScenarios({ retrievedAt, favorites, published }: 
     if(!input || !open)return
     worker.current?.terminate();setBusy(true);setError('')
     const w=new Worker(new URL('./scenario.worker.ts',import.meta.url),{type:'module'});worker.current=w
+    const analyticsRun=scenarioStarted(Object.keys(overrides).length)
     w.onmessage=event=>{
+      if(event.data.error)analyticsError('scenario_unavailable');else scenarioCompleted(analyticsRun)
       if(event.data.error)setError(event.data.error)
       else {setResult(event.data.result);if(!Object.keys(overrides).length)setBaseline(event.data.result)}
       setBusy(false);w.terminate()
     }
-    w.onerror=()=>{setError('Scenario computation unavailable. Published forecasts remain unchanged.');setBusy(false);w.terminate()}
+    w.onerror=()=>{analyticsError('scenario_unavailable');setError('Scenario computation unavailable. Published forecasts remain unchanged.');setBusy(false);w.terminate()}
     w.postMessage({input,overrides,now:new Date().toISOString()})
     return()=>w.terminate()
   },[input,overrides,open])

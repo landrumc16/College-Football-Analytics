@@ -1,0 +1,139 @@
+{
+  "name": "College Football Analytics \u2014 Fan Beta",
+  "description": "Private owner dashboard. Opt-in, anonymous/pseudonymous usage only; visit-only IDs cannot measure unique people or cross-visit retention. Beta tiles exclude test traffic. Last-page and unfinished-run counts are directional, not proof of abandonment. No replay or person profiles.",
+  "tag": "cfa-beta-v1",
+  "insights": [
+    {
+      "name": "Visitors and visits",
+      "description": "Consenting browsers only. Visit-only IDs count as separate visitors; not a census of fans.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT uniq(distinct_id) AS participating_browsers_or_visits, uniq(properties.$session_id) AS visits FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_visit_started'"
+        }
+      }
+    },
+    {
+      "name": "Repeat visits",
+      "description": "Only browsers that separately allow 30-day repeat measurement. Clearing storage resets this estimate.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT toDate(timestamp) AS day, count() AS visits, countIf(properties.return_visit = true) AS repeat_visits FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_visit_started' AND properties.identity_scope = 'returning' GROUP BY day ORDER BY day"
+        }
+      }
+    },
+    {
+      "name": "Popular schools",
+      "description": "Profiles opened, not saved favorites or typed searches.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT properties.team AS school, count() AS profile_opens FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_team_profile_opened' GROUP BY school ORDER BY profile_opens DESC LIMIT 20"
+        }
+      }
+    },
+    {
+      "name": "Popular sections",
+      "description": "Intentional page transitions. Re-selecting the same page does not count again.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT properties.section AS section, properties.view AS page, count() AS views FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_page_view' GROUP BY section, page ORDER BY views DESC"
+        }
+      }
+    },
+    {
+      "name": "Mobile and desktop use",
+      "description": "Coarse viewport categories, including tablet. Not device fingerprinting.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT properties.device_type AS screen, properties.display_mode AS app_or_browser, uniq(properties.$session_id) AS visits FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_page_view' GROUP BY screen, app_or_browser ORDER BY visits DESC"
+        }
+      }
+    },
+    {
+      "name": "Team comparisons",
+      "description": "Valid two-school selections only; changes in venue count as another comparison.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT properties.team AS first_school, properties.opponent AS second_school, count() AS comparisons FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_comparison_viewed' GROUP BY first_school, second_school ORDER BY comparisons DESC LIMIT 20"
+        }
+      }
+    },
+    {
+      "name": "Rankings and predictions",
+      "description": "Published section views; no query text or prediction math is captured.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT event AS activity, properties.view AS page, count() AS views FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event IN ('cfa_rankings_viewed','cfa_predictions_viewed') GROUP BY activity, page ORDER BY views DESC"
+        }
+      }
+    },
+    {
+      "name": "Simulator starts and completions",
+      "description": "Counts by run ID. Canceled computations, navigation away, blockers and lost events can leave a start without completion; this is not automatically an app error.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT uniqIf(properties.run_id,event = 'cfa_scenario_started') AS starts, uniqIf(properties.run_id,event = 'cfa_scenario_completed') AS completions FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event IN ('cfa_scenario_started','cfa_scenario_completed')"
+        }
+      }
+    },
+    {
+      "name": "Navigation journeys",
+      "description": "Aggregate page-to-page transitions; no person or individual-session list.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT properties.previous_view AS from_page, properties.view AS to_page, count() AS transitions FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_page_view' AND properties.previous_view IS NOT NULL GROUP BY from_page, to_page ORDER BY transitions DESC LIMIT 30"
+        }
+      }
+    },
+    {
+      "name": "Last page in a visit",
+      "description": "Observed last pages, not proven dissatisfaction. Visits ending in the last 30 minutes are omitted; opt-out, blockers and dropped events affect this estimate.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT last_page, count() AS visits_ending_here FROM (SELECT properties.$session_id AS visit, argMax(properties.view,timestamp) AS last_page, max(timestamp) AS last_seen FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_page_view' GROUP BY visit HAVING last_seen < now() - INTERVAL 30 MINUTE) GROUP BY last_page ORDER BY visits_ending_here DESC"
+        }
+      }
+    },
+    {
+      "name": "Error trends",
+      "description": "Broad fixed categories only. Exception text, stacks, resource URLs and search strings are never sent.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT toDate(timestamp) AS day, properties.error_kind AS category, properties.view AS page, count() AS reports FROM events WHERE timestamp >= now() - INTERVAL 30 DAY AND properties.traffic_type = 'beta' AND event = 'cfa_application_error' GROUP BY day, category, page ORDER BY day DESC"
+        }
+      }
+    },
+    {
+      "name": "Controlled test traffic",
+      "description": "Deliberately excluded from every beta tile above. Use ?analytics_test=1 for production verification; no traffic is fabricated by setup.",
+      "query": {
+        "kind": "DataTableNode",
+        "source": {
+          "kind": "HogQLQuery",
+          "query": "SELECT event, count() AS test_events FROM events WHERE timestamp >= now() - INTERVAL 7 DAY AND properties.traffic_type = 'test' AND event LIKE 'cfa_%' GROUP BY event ORDER BY test_events DESC"
+        }
+      }
+    }
+  ]
+}

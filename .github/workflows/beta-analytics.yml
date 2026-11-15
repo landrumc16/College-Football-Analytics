@@ -1,0 +1,167 @@
+name: Public beta analytics acceptance
+on:
+  push:
+    branches: [public-beta-analytics]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'web/src/analytics.ts'
+      - 'web/src/AnalyticsPrivacy.tsx'
+      - 'web/tests/*analytics*'
+      - 'ops/posthog/**'
+      - 'scripts/configure_beta_posthog.py'
+      - '.github/workflows/beta-analytics.yml'
+permissions:
+  contents: read
+jobs:
+  privacy-and-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      # Intentional noncredential fixture. All ingestion is intercepted, never sent to a live project.
+      VITE_POSTHOG_PUBLIC_KEY: phc_00000000000000000000000000000000
+      VITE_POSTHOG_HOST: https://us.i.posthog.com
+      VITE_POSTHOG_TRAFFIC: test
+      # PR checkouts include main's routine data refreshes; audit only this PR's source.
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve the analytics platform and existing visual identity
+        run: |
+          git diff --exit-code 451f6107c24f0f240a84d1e31906bd2c2fcccad0 "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          mkdir -p web/analytics-evidence
+          printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
+          git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install existing dependencies and stage the current verified publication
+        run: |
+          python -m pip install -e '.[dev]'
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Regression and privacy contracts
+        run: |
+          set -o pipefail
+          python -m pytest -q | tee web/analytics-evidence/python.txt
+          node web/tests/analytics-unit.mjs | tee web/analytics-evidence/privacy-unit.json
+          node --test web/tests/posthog-capture-response.test.mjs
+          python scripts/configure_beta_posthog.py > web/analytics-evidence/dashboard-plan.json
+      - name: Stage and build actual football data
+        run: |
+          python -m scripts.build_v6_product
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
+          npm --prefix web run build
+          python scripts/verify_dashboard_bundle.py
+      - name: Reject secret-shaped build keys without printing them
+        run: |
+          python - <<'PYTHON'
+          import os,subprocess,json
+          from pathlib import Path
+          fixture='phx_NOT_A_REAL_SECRET_BUILD_REJECTION_FIXTURE'
+          env={**os.environ,'VITE_POSTHOG_PUBLIC_KEY':fixture}
+          result=subprocess.run(['npm','--prefix','web','run','build'],env=env,capture_output=True,text=True)
+          assert result.returncode!=0,'Private-shaped key was accepted by the build'
+          assert fixture not in result.stdout+result.stderr,'Rejected key appeared in build diagnostics'
+          Path('web/analytics-evidence/key-guard.json').write_text(json.dumps({'privateKeyBuildRejected':True,'keyValueInDiagnostics':False,'fixtureOnly':True}))
+          PYTHON
+      - name: Verify explicit events and consent at five widths with intercepted ingestion
+        run: node web/tests/beta-analytics.mjs
+      - name: Existing browser, historical and PWA regressions
+        if: always()
+        run: |
+          node web/tests/historical-publication.mjs
+          node web/tests/v6-scenarios.mjs
+          node web/tests/mobile-smoke.mjs
+          node web/tests/editorial-home.mjs
+          node web/tests/v6-browser.mjs
+      - name: Compare gzip JavaScript against the current production source
+        run: |
+          cp -a web/dist /tmp/analytics-dist
+          git worktree add --detach /tmp/cfa-without-analytics 451f6107c24f0f240a84d1e31906bd2c2fcccad0
+          ln -s "$GITHUB_WORKSPACE/web/node_modules" /tmp/cfa-without-analytics/web/node_modules
+          cp web/public/*.json /tmp/cfa-without-analytics/web/public/
+          npm --prefix /tmp/cfa-without-analytics/web run build
+          python - <<'PY'
+          import gzip,json
+          from pathlib import Path
+          def size(root):return sum(len(gzip.compress(p.read_bytes(),mtime=0)) for p in Path(root).glob('assets/*.js'))
+          before=size('/tmp/cfa-without-analytics/web/dist');after=size('/tmp/analytics-dist')
+          proof={'beforeGzipJsBytes':before,'afterGzipJsBytes':after,'increaseBytes':after-before,'limitBytes':10240,'sdkAdded':False}
+          Path('web/analytics-evidence/bundle-size.json').write_text(json.dumps(proof,indent=2))
+          assert after-before<=10240,proof
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: beta-analytics-privacy-and-browser-evidence
+          path: |
+            web/analytics-evidence/
+            web/mobile-evidence/
+            web/editorial-evidence/
+          retention-days: 90
+          if-no-files-found: error
+
+  deployment-secret-and-live-capture:
+    # Only the owner-controlled development branch push receives the real secret.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      # Identical to deployment; never echo these values or upload the built bundle.
+      VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}
+      VITE_POSTHOG_HOST: ${{ secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || '' }}
+      VITE_POSTHOG_TRAFFIC: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm deployment secret access without exposing its value
+        run: |
+          python - <<'PYTHON'
+          import os,re,json
+          from pathlib import Path
+          out=Path('web/posthog-live-evidence');out.mkdir(parents=True,exist_ok=True)
+          token=os.environ.get('VITE_POSTHOG_PUBLIC_KEY','')
+          available=bool(token);valid=bool(re.fullmatch(r'phc_[A-Za-z0-9]{10,}',token))
+          receipt={'projectExpected':737110,'deploymentSecretAccessible':available,'validPublicTokenShape':valid,'valueRecorded':False,'hostMatchesUS':os.environ.get('VITE_POSTHOG_HOST')=='https://us.i.posthog.com'}
+          (out/'secret-access.json').write_text(json.dumps(receipt,indent=2));print(json.dumps(receipt))
+          if not available:raise SystemExit('POSTHOG_PUBLIC_KEY is unavailable. It must be an Actions repository secret, not an environment-only secret or variable.')
+          if not valid:raise SystemExit('The saved value is not an intended public project token. Its value has not been printed.')
+          PYTHON
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build isolated candidate with the actual deployment secret
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m scripts.build_v6_product
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          npm --prefix web run build
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Verify real PostHog acceptance from one controlled browser journey
+        run: node web/tests/posthog-live-verification.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: posthog-deployment-secret-and-controlled-delivery
+          path: web/posthog-live-evidence/
+          retention-days: 90
+          if-no-files-found: error

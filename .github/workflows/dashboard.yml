@@ -196,6 +196,10 @@ jobs:
           print('V2 research dashboard build and summary smoke verified')
           PY
   build:
+    env:
+      # Intended public project token only; Secret storage masks it in Actions logs.
+      VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}
+      VITE_POSTHOG_HOST: ${{ secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || '' }}
     if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     steps:
@@ -628,6 +632,19 @@ jobs:
           mkdir -p web/mobile-evidence
           git rev-parse HEAD > web/mobile-evidence/production-sha.txt
           node web/tests/mobile-smoke.mjs
+      - name: Verify consented production analytics with excluded test traffic
+        env:
+          DASHBOARD_URL: ${{ steps.deployment.outputs.page_url }}
+          VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}
+        run: node web/tests/posthog-live-verification.mjs
+      - name: Preserve controlled production analytics receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-posthog-controlled-delivery
+          path: web/posthog-live-evidence/
+          if-no-files-found: error
+          retention-days: 90
       - name: Preserve live production verification evidence
         if: always()
         uses: actions/upload-artifact@v4
