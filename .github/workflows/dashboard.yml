@@ -197,8 +197,9 @@ jobs:
           PY
   build:
     env:
-      VITE_POSTHOG_PUBLIC_KEY: ${{ vars.POSTHOG_PUBLIC_KEY }}
-      VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
+      # Intended public project token only; Secret storage masks it in Actions logs.
+      VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}
+      VITE_POSTHOG_HOST: ${{ secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || '' }}
     if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     steps:

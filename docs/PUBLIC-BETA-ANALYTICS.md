@@ -78,34 +78,38 @@ and dropped events can look like abandonment. The dashboard exposes aggregate
 journeys, not a list of identifiable fans. SQL/query execution in a real project
 must still be verified before claiming a working dashboard.
 
-The PostHog connection was declined for this request. No project or account has
-been accessed and no live dashboard or ingestion is claimed. The implementation
-and reproducible dashboard setup can be reviewed without that connection.
+The owner selected US project **737110**:
+https://us.posthog.com/project/737110 . The app connection was previously declined;
+a signed-in PostHog browser can be used for dashboard setup without a personal API
+key. At this preparation checkpoint the project requires sign-in and no live
+dashboard or ingestion has been verified.
 
 ## Owner configuration needed
 
-1. Create/select a dedicated PostHog project in the desired US/EU region. Supply
-   its project ID and project URL, **public** project token and ingestion host.
-   Keep project membership to the owner/explicit trusted maintainers; do not
-   create a public share link. Set account MFA as available.
+1. The target is US PostHog project **737110**. Keep project membership to the
+   owner/explicit trusted maintainers; do not create a public share link.
 2. In Project settings enable **Discard client IP data**; disable session replay,
    autocapture, exception autocapture and unnecessary location enrichment. Confirm
    event retention appropriate to the beta (prefer 30 days if your plan supports
    it; otherwise record the actual retention and deletion process). These settings
-   and owner access cannot be verified without project access.
-3. Create the dashboard through PostHog using the reviewed manifest, or run
-   `python scripts/configure_beta_posthog.py` to inspect the plan. An owner can
-   run `--apply` in a **private local environment** with `POSTHOG_APP_HOST`,
-   `POSTHOG_PROJECT_ID` and `POSTHOG_PERSONAL_API_KEY` scoped to dashboard/insight
-   read/write. Never paste that private key in chat, commit it, or put it in Vite.
-   The script is idempotent for managed tagged resources; it refuses a publicly
-   shared dashboard, cross-project pagination and redirected credential requests.
-   It does not change project-wide privacy settings or membership automatically.
-4. After settings review, set repository **Variables** `POSTHOG_PUBLIC_KEY` and
-   `POSTHOG_HOST` (`https://us.i.posthog.com` or `https://eu.i.posthog.com`). The
-   approved Pages build forwards only these public values into Vite. Never set a
-   personal API key there. Local previews use `web/.env.example` with real public
-   values only; its fixture values are empty and do not invent credentials.
+   and owner access must be verified in a signed-in project.
+3. Dashboard setup for this request uses the signed-in PostHog website and the
+   reviewed 12-insight manifest. **No personal API key is requested or needed.**
+   The optional administrative provisioner remains a separately owner-run utility;
+   it is not required for this browser-based setup.
+4. Enter the **public project token** only in GitHub:
+   - Open `landrumc16/College-Football-Analytics` → **Settings** →
+     **Secrets and variables** → **Actions** → **Secrets**.
+   - Choose **New repository secret**.
+   - **Name:** `POSTHOG_PUBLIC_KEY`.
+   - **Secret:** paste the public project token from project 737110's settings.
+   - Choose **Add secret**. Do not paste it in chat, an issue or PR comment.
+   No host variable is necessary: the Pages build selects
+   `https://us.i.posthog.com` when this secret is present, and leaves analytics
+   unconfigured when it is absent. Never enter a personal API key. The Vite build
+   rejects non-public key types before bundling. GitHub masks repository secrets
+   in Actions logs; the intended public token is still included in the browser
+   bundle as required for capture and is not an administrative credential.
 5. Request owner merge approval after acceptance. PR #29 remains separately
    awaiting approval; this PR neither incorporates it nor changes its NO-GO.
 

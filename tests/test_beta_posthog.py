@@ -31,3 +31,12 @@ def test_dashboard_setup_is_idempotent_and_not_public():
     dashboards[0]['is_shared']=True
     import pytest
     with pytest.raises(ValueError,match='Public sharing'):provision(api,'42',spec)
+
+
+def test_public_token_wiring_uses_masked_repository_secret_and_us_region():
+    from pathlib import Path
+    workflow=Path('.github/workflows/dashboard.yml').read_text()
+    assert 'VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.POSTHOG_PUBLIC_KEY }}' in workflow
+    assert "secrets.POSTHOG_PUBLIC_KEY != '' && 'https://us.i.posthog.com' || ''" in workflow
+    assert 'vars.POSTHOG_PUBLIC_KEY' not in workflow
+    assert 'POSTHOG_PERSONAL_API_KEY' not in workflow
