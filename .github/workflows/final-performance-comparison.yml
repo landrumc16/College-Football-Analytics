@@ -46,6 +46,40 @@ jobs:
           npm --prefix /tmp/cfa-performance-baseline/web run build
           npm --prefix web run build
           git diff --exit-code da5539014a8db592cb9636c269a969cf45b67fd3 HEAD -- web/src/scenarios.ts web/src/scenario.worker.ts research/v6/scenario-python-fixtures.json web/tests/v6-browser.mjs
+
+      - name: Reproduce regression-suite order before controlled measurements
+        run: |
+          node web/tests/analytics-unit.mjs
+          node web/tests/historical-publication.mjs
+          node web/tests/v6-scenarios.mjs
+          node web/tests/mobile-smoke.mjs
+          node web/tests/editorial-home.mjs
+          ps -eo pid,ppid,pcpu,pmem,args --sort=-pcpu | head -25
+      - name: Instrument application and fresh-renderer measurements without changing calculations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          injection="""   await cdp.send('Performance.enable')
+             const before=await cdp.send('Performance.getMetrics')
+             const hostBefore=await readFile('/proc/stat','utf8')
+             benchmark=await page.evaluate(async({js,fixture})=>{const{simulate}=await import('data:text/javascript,'+encodeURIComponent(js));return simulate(fixture.input,{},fixture.now)},{js,fixture})
+             const after=await cdp.send('Performance.getMetrics')
+             const hostAfter=await readFile('/proc/stat','utf8')
+             const isolatedContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1})
+             const isolatedPage=await isolatedContext.newPage()
+             const isolatedCDP=await isolatedContext.newCDPSession(isolatedPage)
+             await isolatedCDP.send('Emulation.setCPUThrottlingRate',{rate:4})
+             const isolated=await isolatedPage.evaluate(async({js,fixture})=>{const{simulate}=await import('data:text/javascript,'+encodeURIComponent(js));return simulate(fixture.input,{},fixture.now)},{js,fixture})
+             assert.deepEqual(isolated.teams,fixture.cases[0].teams)
+             console.log('RENDERER_DIAGNOSTIC '+JSON.stringify({appMs:benchmark.milliseconds,isolatedMs:isolated.milliseconds,before:before.metrics,after:after.metrics,hostBefore:hostBefore.split('\\n')[0],hostAfter:hostAfter.split('\\n')[0]}))
+             await isolatedContext.close()"""
+          needle="   benchmark=await page.evaluate(async({js,fixture})=>{const{simulate}=await import('data:text/javascript,'+encodeURIComponent(js));return simulate(fixture.input,{},fixture.now)},{js,fixture})"
+          for root in [Path.cwd(),Path('/tmp/cfa-performance-baseline')]:
+              path=root/'web/tests/v6-browser.mjs'
+              source=path.read_text()
+              assert source.count(needle)==1
+              path.write_text(source.replace(needle,injection))
+          PY
       - name: Run unchanged acceptance test in paired ABBA order without retries
         run: |
           mkdir -p performance-evidence
@@ -61,6 +95,7 @@ jobs:
               result=subprocess.run(['node','web/tests/v6-browser.mjs'],cwd=cwd,capture_output=True,text=True)
               output=result.stdout+result.stderr
               (root/'performance-evidence'/f'{index}-{label}.log').write_text(output)
+              print('\n'.join(line for line in output.splitlines() if line.startswith('RENDERER_DIAGNOSTIC ')),flush=True)
               match=re.search(r'budget exceeded: ([0-9.]+) ms',output)
               timing=float(match.group(1)) if match else None
               if result.returncode==0:
@@ -69,7 +104,7 @@ jobs:
               row={'order':index,'source':label,'sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=cwd,text=True).strip(),'exitCode':result.returncode,'milliseconds4x':timing,'limitMs':3000}
               rows.append(row)
               print(json.dumps(row),flush=True)
-          receipt={'os':platform.platform(),'playwrightVersion':version,'cpuThrottle':4,'viewport':[390,844],'draws':2000,'originalTest':'web/tests/v6-browser.mjs','order':'ABBA','retries':0,'allOriginalAssertionsPreserved':True,'rows':rows,'status':'PASS' if all(r['exitCode']==0 for r in rows) else 'FAIL'}
+          receipt={'diagnosticSetup':'full regression predecessors; app versus fresh renderer; original assertion retained','os':platform.platform(),'playwrightVersion':version,'cpuThrottle':4,'viewport':[390,844],'draws':2000,'originalTest':'web/tests/v6-browser.mjs','order':'ABBA','retries':0,'allOriginalAssertionsPreserved':True,'rows':rows,'status':'PASS' if all(r['exitCode']==0 for r in rows) else 'FAIL'}
           (root/'performance-evidence/results.json').write_text(json.dumps(receipt,indent=2)+'\n')
           if receipt['status']!='PASS':raise SystemExit('Original acceptance gate failed; do not merge.')
           PY
