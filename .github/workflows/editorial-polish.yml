@@ -26,7 +26,10 @@ jobs:
           node-version: '20'
       - name: Guard the released analytics, navigation, branding and PWA
         run: |
-          git diff --exit-code 451f6107c24f0f240a84d1e31906bd2c2fcccad0 -- src data research web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/secondary-navigation.css web/src/EditorialHome.tsx web/public web/package.json
+          # Baseline is the PR merge-base with main, so routine data refreshes on main are not attributed to the PR.
+          guard_base="$(git merge-base "${{ github.event.pull_request.base.sha || '451f6107c24f0f240a84d1e31906bd2c2fcccad0' }}" HEAD)"
+          echo "Guard baseline: $guard_base"
+          git diff --exit-code "$guard_base" -- src data research web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/secondary-navigation.css web/src/EditorialHome.tsx web/public web/package.json
           # Scenario UI adds explicit analytics only. Its calculation engine and worker remain byte-identical above.
       - name: Stage the same real data for both visual builds
         run: |

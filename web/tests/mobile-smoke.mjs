@@ -1,6 +1,7 @@
 import { chooseSection, assertSection } from './section-navigation.mjs';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
+import { startAsDeclinedVisitor } from './consent-prompt.mjs';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { createServer } from 'node:http';
@@ -85,6 +86,7 @@ try {
   await waitForPreview();
   browser = await chromium.launch({ headless: true,
     ...(networkGate ? { proxy: { server: `http://127.0.0.1:${networkGate.address().port}` } } : {}) });
+  startAsDeclinedVisitor(browser);
   await mkdir('web/mobile-evidence', { recursive: true });
   for (const width of [375, 390, 430, 768, 1536]) {
     const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: 1 });

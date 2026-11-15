@@ -24,13 +24,18 @@ jobs:
       VITE_POSTHOG_TRAFFIC: test
       # PR checkouts include main's routine data refreshes; audit only this PR's source.
       CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      # Guard baseline: the PR's merge-base with main (routine data refreshes on main are not this PR's
+      # changes); direct pushes keep the original verified release baseline.
+      GUARD_BASE_SHA: ${{ github.event.pull_request.base.sha || '451f6107c24f0f240a84d1e31906bd2c2fcccad0' }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
         run: |
-          git diff --exit-code 451f6107c24f0f240a84d1e31906bd2c2fcccad0 "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          guard_base="$(git merge-base "$GUARD_BASE_SHA" "$CANDIDATE_SHA")"
+          echo "Guard baseline: $guard_base"
+          git diff --exit-code "$guard_base" "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
           mkdir -p web/analytics-evidence
           printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
           git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
