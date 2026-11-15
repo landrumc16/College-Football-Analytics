@@ -9,7 +9,7 @@ await mkdir(out,{recursive:true})
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4189','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
 let browser;const results=[]
 const nav=(p,name)=>p.getByRole('navigation',{name:'Main navigation',exact:true}).getByRole('button',{name,exact:true}).click()
-async function settings(p){const menu=p.locator('.editorial-menu');if(await menu.getAttribute('open')===null)await menu.locator(':scope > summary').click();const privacy=p.getByRole('group',{name:'Optional usage analytics',exact:true});if(await privacy.getAttribute('open')===null)await privacy.locator('summary').click()}
+async function settings(p){const menu=p.locator('.editorial-menu');if(await menu.getAttribute('open')===null)await menu.locator(':scope > summary').click();const privacy=p.getByRole('group',{name:'Optional usage analytics',exact:true});if(await privacy.getAttribute('open')===null)await privacy.locator(':scope > summary').click()}
 async function fits(p){assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Page overflow')}
 const endpoint='https://us.i.posthog.com/batch/'
 try{
