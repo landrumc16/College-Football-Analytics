@@ -39,10 +39,16 @@ try {
     assert.deepEqual(await nav.getByRole('button').allTextContents(), ['Home','Rankings','Teams','Playoffs','Research']);
     assert.equal(await page.getByRole('tab', { name: 'This Week', exact: true }).count(), 0);
     assert.equal(await page.getByRole('tab', { name: 'Game Predictions', exact: true }).count(), 0);
-    assert.equal(await page.locator('.editorial-game:visible').count(), width < 768 ? 2 : 3);
+    const data = await page.evaluate(async () => ({ season: await (await fetch('./season-report.json')).json(), cards: await (await fetch('./v5-program-report-cards.json')).json() }));
+    const remaining = new Set(data.season.schedule.filter(game => !game.completed).map(game => game.game_id));
+    const upcoming = data.season.predictions.filter(game => remaining.has(game.game_id));
+    const nextWeek = Math.min(...upcoming.map(game => game.week));
+    const availableFeatured = upcoming.filter(game => game.week === nextWeek);
+    assert.ok(availableFeatured.length > 0, 'Need a published upcoming matchup for featured-link acceptance');
+    assert.equal(await page.locator('.editorial-game').count(), Math.min(3, availableFeatured.length));
+    assert.equal(await page.locator('.editorial-game:visible').count(), Math.min(width < 768 ? 2 : 3, availableFeatured.length));
     assert.equal(await page.locator('.editorial-team-row').count(), 3);
     assert.equal(await page.locator('.editorial-rankings li').count(), 5);
-    const data = await page.evaluate(async () => ({ season: await (await fetch('./season-report.json')).json(), cards: await (await fetch('./v5-program-report-cards.json')).json() }));
     const tech = data.cards.programs.find(row => row.team === 'Texas Tech');
     const spotlight = await page.locator('.editorial-spotlight').innerText();
     for (const window of ['3','10']) assert.ok(spotlight.includes((100*tech.trajectory.windows[window]).toFixed(1)+'%'));

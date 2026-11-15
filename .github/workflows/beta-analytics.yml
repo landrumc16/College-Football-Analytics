@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
         run: |
-          git diff --exit-code da5539014a8db592cb9636c269a969cf45b67fd3 "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          git diff --exit-code 451f6107c24f0f240a84d1e31906bd2c2fcccad0 "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
           mkdir -p web/analytics-evidence
           printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
           git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
@@ -88,7 +88,7 @@ jobs:
       - name: Compare gzip JavaScript against the current production source
         run: |
           cp -a web/dist /tmp/analytics-dist
-          git worktree add --detach /tmp/cfa-without-analytics da5539014a8db592cb9636c269a969cf45b67fd3
+          git worktree add --detach /tmp/cfa-without-analytics 451f6107c24f0f240a84d1e31906bd2c2fcccad0
           ln -s "$GITHUB_WORKSPACE/web/node_modules" /tmp/cfa-without-analytics/web/node_modules
           cp web/public/*.json /tmp/cfa-without-analytics/web/public/
           npm --prefix /tmp/cfa-without-analytics/web run build
