@@ -22,15 +22,18 @@ jobs:
       VITE_POSTHOG_PUBLIC_KEY: phc_00000000000000000000000000000000
       VITE_POSTHOG_HOST: https://us.i.posthog.com
       VITE_POSTHOG_TRAFFIC: test
+      # PR checkouts include main's routine data refreshes; audit only this PR's source.
+      CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
         run: |
-          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          git diff --exit-code a229aba690ed353b259863719d3bafd7a5901e57 "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
           mkdir -p web/analytics-evidence
-          git rev-parse HEAD > web/analytics-evidence/tested-sha.txt
+          printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
+          git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
