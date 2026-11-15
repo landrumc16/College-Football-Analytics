@@ -115,7 +115,8 @@ failure, offline interruptions, canonical schools, paired simulator runs, all
 375/390/430/768/1536 widths, and existing browser/PWA/regression tests. PostHog
 requests are intercepted with a visibly fake test token; **no live ingestion is
 claimed by those tests**. Bundle gzip growth is capped at 10 KiB over the exact
-production source; no SDK is added. Raw results, screenshots and exact tested SHA
+production source; no SDK is added. The live-vs-published scenario tolerance check uses the matching current packet;
+immutable retained fixtures still verify exact Python/browser parity. Raw results, screenshots and exact tested SHA
 are retained in the acceptance artifact and PR receipt.
 
 After the project is configured and merge is explicitly approved, use

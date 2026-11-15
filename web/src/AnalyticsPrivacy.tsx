@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { analyticsStatus, setAnalyticsConsent, type Consent } from './analytics'
 export default function AnalyticsPrivacy(){
   const [status,setStatus]=useState(analyticsStatus)
-  useEffect(()=>{const sync=()=>setStatus(analyticsStatus());window.addEventListener('cfba-analytics-consent',sync);return()=>window.removeEventListener('cfba-analytics-consent',sync)},[])
+  useEffect(()=>{const sync=()=>setStatus(analyticsStatus());const events=['cfba-analytics-consent','pageshow','focus'];for(const event of events)window.addEventListener(event,sync);return()=>{for(const event of events)window.removeEventListener(event,sync)}},[])
   const choose=(mode:Consent)=>{setAnalyticsConsent(mode);setStatus(analyticsStatus())}
   return <details className="install-guide" aria-label="Optional usage analytics"><summary>Usage analytics: {status.mode==='off'?'off':'on'}</summary><div className="install-guide-content">
     <p>Help improve the fan beta by sharing which sections and schools you open, comparisons, simulator use and broad error categories with PostHog. This is optional and starts only with your permission.</p>

@@ -90,7 +90,7 @@ function flush(){
     const batch=pending;pending=[];if(!batch.length)return
     const controller=new AbortController();inflight.add(controller)
     const timeout=setTimeout(()=>controller.abort(),2500)
-    void Promise.resolve().then(()=>fetch(host+'/batch/',{method:'POST',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:key,batch}),signal:controller.signal}))
+    void Promise.resolve().then(()=>fetch(host+'/batch/',{method:'POST',redirect:'error',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:key,batch}),signal:controller.signal}))
       .catch(()=>{/* Drop failures; never retry or persist an offline queue. */}).finally(()=>{clearTimeout(timeout);inflight.delete(controller)})
   }catch{/* Includes unavailable fetch and storage APIs. */}
 }

@@ -16,8 +16,11 @@ assert.deepEqual(base.teams,simulate(fixture.input,{},fixture.now).teams)
 for(const choices of [{'no-game':'Texas'},{[fixture.input.games[0].game_id]:'not-participant'}])assert.throws(()=>simulate(fixture.input,choices,fixture.now))
 assert.throws(()=>simulate(fixture.input,fixture.cases[1].overrides,'2027-01-01T00:00:00Z'))
 const report=JSON.parse(await readFile('data/season-2026-report.json','utf8'))
+// Retained parity fixtures stay immutable; compare live odds with the matching live packet.
+const currentInput=JSON.parse(await readFile('web/public/v6-scenario-input.json','utf8'))
+const currentBaseline=simulate(currentInput,{},new Date().toISOString())
 const published=new Map(report.cfp.teams.map(t=>[t.team,t]))
 let maxDifference=0
-for(const t of base.teams)for(const key of ['cfp_field','conference_title'])maxDifference=Math.max(maxDifference,Math.abs(t[key]-published.get(t.team)[key]))
+for(const t of currentBaseline.teams)for(const key of ['cfp_field','conference_title'])maxDifference=Math.max(maxDifference,Math.abs(t[key]-published.get(t.team)[key]))
 assert.ok(maxDifference<=.05,`Baseline exceeds predeclared 5pp tolerance: ${maxDifference}`)
 console.log(JSON.stringify({pythonBrowserParity:'exact',cases:fixture.cases.length,draws:fixture.input.draws,reset:'exact',maxPublishedProbabilityDifference:maxDifference,unthrottledNodeMs:base.milliseconds}))
