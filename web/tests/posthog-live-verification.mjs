@@ -1,4 +1,4 @@
-// Controlled live capture from an isolated PR build, never public Pages load.
+// One controlled test-tagged journey against an isolated build or the deployed Pages app.
 // No raw request/response bodies, token values, browser traces or cookies are logged.
 import {mkdir,writeFile} from 'node:fs/promises'
 import {spawn} from 'node:child_process'
@@ -6,11 +6,13 @@ import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 import {chooseSection} from './section-navigation.mjs'
 import {captureAcknowledgment} from './posthog-capture-response.mjs'
-const origin='http://127.0.0.1:4193/',endpoint='https://us.i.posthog.com/batch/',out='web/posthog-live-evidence'
+const liveUrl=process.env.DASHBOARD_URL
+if(liveUrl && liveUrl!=='https://landrumc16.github.io/College-Football-Analytics/')throw Error('Unexpected production verification target')
+const origin=liveUrl||'http://127.0.0.1:4193/',endpoint='https://us.i.posthog.com/batch/',out='web/posthog-live-evidence'
 const required=['cfa_visit_started','cfa_page_view','cfa_rankings_viewed','cfa_team_profile_opened','cfa_predictions_viewed','cfa_comparison_viewed','cfa_scenario_started','cfa_scenario_completed']
 const keys=new Set(['view','section','profile_section','team','opponent','venue','previous_view','run_id','picks_count','error_kind','schema_version','traffic_type','device_type','display_mode','identity_scope','return_visit','$session_id','sequence','$process_person_profile','$geoip_disable','$ip','$insert_id'])
 const codes=new Set(['missing_secret','invalid_token_shape','unexpected_network_target','invalid_payload','unsafe_properties','credential_header','capture_before_consent','capture_not_accepted','missing_events','duplicate_events','capture_after_opt_out','browser_error'])
-const receipt={projectExpected:737110,sourceCommit:process.env.GITHUB_SHA||'local',host:'https://us.i.posthog.com',trafficType:'test',productionDeployed:false,secretValueRecorded:false,personalApiKeyUsed:false,connectionRequired:false,requests:[],status:'FAIL',privateProjectVerification:'Owner must confirm the session IDs in project 737110; the public capture API cannot read private project contents.'}
+const receipt={projectExpected:737110,sourceCommit:process.env.GITHUB_SHA||'local',host:'https://us.i.posthog.com',trafficType:'test',productionDeployed:Boolean(liveUrl),secretValueRecorded:false,personalApiKeyUsed:false,connectionRequired:false,requests:[],status:'FAIL',privateProjectVerification:'Read back the retained session IDs in project 737110; capture acceptance alone does not prove indexing.'}
 await mkdir(out,{recursive:true})
 const fail=code=>{throw Error(code)}
 let browser,server,observed=0;const pending=[],wireFailures=[]
@@ -19,7 +21,7 @@ try{
  if(!token)fail('missing_secret')
  if(!/^phc_[a-zA-Z0-9]{10,}$/.test(token)||token.trim()!==token)fail('invalid_token_shape')
  receipt.deploymentSecretAccessible=true
- server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4193','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
+ if(!liveUrl)server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4193','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
  for(let i=0;i<40;i++){try{if((await fetch(origin)).ok)break}catch{}await delay(250)}
  browser=await chromium.launch({headless:true})
  const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'})
@@ -60,6 +62,6 @@ try{
  await page.locator('.editorial-menu > summary').click();const privacy=page.locator('.analytics-privacy');if(await privacy.getAttribute('open')===null)await privacy.locator(':scope > summary').click();await page.getByRole('button',{name:'Turn analytics off',exact:true}).click();const before=observed
  await page.locator('.editorial-menu > summary').click();await nav('Home');await nav('Rankings');await delay(900)
  if(observed!==before)fail('capture_after_opt_out')
- receipt.status='PASS';receipt.delivery='PostHog capture API accepted controlled events from the actual isolated PR build.'
+ receipt.status='PASS';receipt.delivery=liveUrl?'PostHog capture API accepted controlled test events from the deployed Pages application.':'PostHog capture API accepted controlled events from the actual isolated PR build.'
 }catch(e){receipt.failure=codes.has(e.message)?e.message:'browser_or_network_verification_failed';process.exitCode=1}
 finally{await browser?.close();if(server?.pid)process.kill(-server.pid,'SIGTERM');await writeFile(out+'/delivery.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2))}
