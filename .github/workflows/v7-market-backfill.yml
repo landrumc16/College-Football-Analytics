@@ -13,6 +13,8 @@ on:
       - 'tests/test_v7_market_archive.py'
       - 'src/cfb_analytics/v7_market_metrics.py'
       - 'tests/test_v7_market_metrics.py'
+      - 'src/cfb_analytics/v7_validation.py'
+      - 'tests/test_v7_validation.py'
       - '.github/workflows/v7-market-backfill.yml'
   workflow_dispatch:
     inputs:
@@ -153,15 +155,19 @@ jobs:
         run: |
           python -m cfb_analytics.v7_market_metrics
           python -m cfb_analytics.v7_market_metrics --check
+      - name: M6 historical validation (archive integrity, authentic-only model vs market; aggregates only)
+        run: |
+          python -m cfb_analytics.v7_validation
+          python -m cfb_analytics.v7_validation --check
       - name: Licensing guard and committed-output tests
-        run: python -m pytest -q tests/test_v7_market_archive.py tests/test_v7_market_metrics.py
+        run: python -m pytest -q tests/test_v7_market_archive.py tests/test_v7_market_metrics.py tests/test_v7_validation.py
       - name: Commit derived public outputs and receipts only
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/v7-market-receipts.json web/public/v7-team-market-history.json web/public/v7-team-lines \
-            web/public/v7-market-metrics.json web/public/v7-model-market
-          if git status --porcelain | grep -vE '^(M |A |D ) (data/v7-market-receipts.json|web/public/v7-team-market-history.json|web/public/v7-market-metrics.json|web/public/v7-(team-lines|model-market)/[a-z0-9-]+\.json)$'; then
+            web/public/v7-market-metrics.json web/public/v7-model-market research/v7/historical-validation.json
+          if git status --porcelain | grep -vE '^(M |A |D ) (data/v7-market-receipts.json|research/v7/historical-validation.json|web/public/v7-team-market-history.json|web/public/v7-market-metrics.json|web/public/v7-(team-lines|model-market)/[a-z0-9-]+\.json)$'; then
             echo "unexpected files changed; refusing to commit"; exit 1
           fi
           if ! git diff --cached --quiet; then
@@ -201,7 +207,7 @@ jobs:
           raw_markers = ("formattedSpread", "spreadOpen", "overUnderOpen", "homeMoneyline", "awayMoneyline", "\"lines\":[")
           public = [pathlib.Path("data/v7-market-receipts.json"), pathlib.Path("web/public/v7-team-market-history.json"),
                     *sorted(pathlib.Path("web/public/v7-team-lines").glob("*.json")),
-                    pathlib.Path("web/public/v7-market-metrics.json"), *sorted(pathlib.Path("web/public/v7-model-market").glob("*.json"))]
+                    pathlib.Path("web/public/v7-market-metrics.json"), pathlib.Path("research/v7/historical-validation.json"), *sorted(pathlib.Path("web/public/v7-model-market").glob("*.json"))]
           for f in public:
               text = f.read_text()
               bad += [f"{f}: {m}" for m in raw_markers if m in text]

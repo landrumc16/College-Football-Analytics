@@ -39,7 +39,7 @@ try {
   for (let i = 0; i < 40; i++) { try { if ((await fetch(base)).ok) break; } catch {} await delay(500); }
   browser = startAsDeclinedVisitor(await chromium.launch());
 
-  for (const width of [375, 390, 430, 768, 1536]) {
+  for (const width of [320, 375, 390, 430, 768, 1536]) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: width === 390 ? 2 : 1 });
     const outbound = [];
     page.on('request', r => outbound.push(`${r.url()} ${r.postData() || ''}`));
@@ -96,6 +96,19 @@ try {
     await awaySpread.fill('PK');
     assert.ok((await text(0)).includes('PK (0)'));
 
+    // Accessibility: WCAG AA contrast for every calculator text element and visible keyboard focus.
+    // Reflow: 320px is WCAG 1.4.10 (1280px at 400%); 200% zoom of a 768px window is a 384px layout (covered by 375/390).
+    const contrast = await calc.evaluate(root => {
+      const rgb = c => (c.match(/[\d.]+/g) || []).map(Number);
+      const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+      const bg = el => { for (let e = el; e; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c.length === 3 || (c.length === 4 && c[3] > 0.9)) return c.slice(0, 3); } return [11, 18, 32]; };
+      return [...root.querySelectorAll('h3,p,label,small,dt,dd,legend,.market-badge,.market-error,strong')].filter(e => e.textContent.trim() && e.getClientRects().length)
+        .map(e => { const a = lum(rgb(getComputedStyle(e).color).slice(0, 3)), b = lum(bg(e)); return { text: e.textContent.trim().slice(0, 40), ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) }; });
+    });
+    const low = contrast.filter(c => c.ratio < 4.5);
+    assert.deepEqual(low, [], `contrast below 4.5:1 at ${width}: ${JSON.stringify(low)}`);
+    await awaySpread.focus();
+    assert.notEqual(await awaySpread.evaluate(e => getComputedStyle(e).outlineStyle), 'none', 'visible focus outline');
     // Layout: no horizontal overflow at any width.
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert.ok(overflow <= 1, `horizontal overflow ${overflow}px at ${width}`);
