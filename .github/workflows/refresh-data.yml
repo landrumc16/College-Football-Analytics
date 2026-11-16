@@ -149,7 +149,7 @@ jobs:
           git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
           git add web/public/v5-program-report-cards.json web/public/v5-historical-results.json
           if [ -f data/v7-market-receipts.json ]; then
-            git add data/v7-market-receipts.json web/public/v7-team-market-history.json
+            git add data/v7-market-receipts.json web/public/v7-team-market-history.json web/public/v7-team-lines
           fi
           if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then
             git add data/cfbd-recruiting-*.json

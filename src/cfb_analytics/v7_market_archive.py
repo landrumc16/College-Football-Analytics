@@ -4,10 +4,11 @@ Joins CFBD /lines to the verified results archive by game ID, selects one provid
 per game and market with a deterministic, versioned policy, computes ATS and
 over/under results, and publishes **derived team statistics only**.
 
-Licensing boundary (CFBD Terms ss.4-5): raw responses, provider-level lines and
-selected per-game lines stay private (runner workspace or the gitignored --cache).
-Public outputs contain counts, W/L/P letters and rounded averages over at least
-MIN_AVG_GAMES games, never per-game line values or cover margins.
+Licensing boundary (CFBD Terms ss.4-5 plus CFBD's written permission, docs/V7-LICENSING.md):
+raw responses, multi-provider lines, opening values and private snapshots never become public.
+Public outputs are derived team statistics and, as authorized, one provider's closing spread
+and closing total per game (provider named) in per-team files that back team and game pages,
+never a standalone dataset, bulk download or data feed.
 
 Usage:
   CFBD_API_KEY=... python -m cfb_analytics.v7_market_archive --backfill 2016-2025
@@ -20,6 +21,8 @@ import hashlib
 import json
 import math
 import os
+import re
+import shutil
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -113,7 +116,7 @@ def historical_results(seasons, archive=ARCHIVE):
     for season in seasons:
         for g in data[str(season)]:
             if g.get("fbs_participant"):
-                out[str(g["game_id"])] = {"game_id": str(g["game_id"]), "season": season, "season_type": g.get("season_type"),
+                out[str(g["game_id"])] = {"game_id": str(g["game_id"]), "season": season, "season_type": g.get("season_type"), "week": g.get("week"),
                                           "kickoff": g["kickoff"], "home": g["home"], "away": g["away"],
                                           "home_score": g["home_score"], "away_score": g["away_score"],
                                           "neutral_site": bool(g.get("neutral_site")), "completed": True}
@@ -134,7 +137,7 @@ def current_results(season, games_path=CURRENT_GAMES, report_path=CURRENT_REPORT
         # No future leakage: only completed games whose kickoff is in the past count.
         completed = bool(g.get("completed")) and kickoff is not None and kickoff < now \
             and g.get("home_score") is not None and g.get("away_score") is not None
-        out[str(g["game_id"])] = {"game_id": str(g["game_id"]), "season": season, "season_type": "regular",
+        out[str(g["game_id"])] = {"game_id": str(g["game_id"]), "season": season, "season_type": "regular", "week": g.get("week"),
                                   "kickoff": g.get("start_date"), "home": g["home"], "away": g["away"],
                                   "home_score": g.get("home_score"), "away_score": g.get("away_score"),
                                   "neutral_site": bool(g.get("neutral_site")), "completed": completed}
@@ -281,7 +284,8 @@ FLIP = {"W": "L", "L": "W", "P": "P"}
 def game_outcome(result, spread_sel, total_sel):
     """Private per-game outcome. Never published as-is."""
     margin = result["home_score"] - result["away_score"]
-    out = {"game_id": result["game_id"], "season": result["season"], "kickoff": result["kickoff"],
+    out = {"game_id": result["game_id"], "season": result["season"], "kickoff": result["kickoff"], "week": result.get("week"),
+           "season_type": result.get("season_type"), "home_score": result["home_score"], "away_score": result["away_score"],
            "home": result["home"], "away": result["away"], "neutral": result["neutral_site"],
            "spread_status": spread_sel["status"], "total_status": total_sel["status"],
            "spread_provider": spread_sel.get("provider"), "total_provider": total_sel.get("provider")}
@@ -290,6 +294,7 @@ def game_outcome(result, spread_sel, total_sel):
         out["home_spread"] = spread_sel["value"]
     if total_sel["status"] in ("ok", "disputed"):
         out["ou"] = ou_result(result["home_score"] + result["away_score"], total_sel["value"])
+        out["total"] = total_sel["value"]
     return out
 
 
@@ -601,7 +606,7 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
                                "primary_denominator": "games with a non-disputed, non-suspicious closing value for that market",
                                "avg_cover_margin_min_games": MIN_AVG_GAMES,
                                "limitations": ["Opening lines unavailable before 2021",
-                                               "Per-game lines are not published (CFBD redistribution terms pending clarification)",
+                                               "Per-game closing lines are shown on team and game pages with written permission from CollegeFootballData.com; not offered as a dataset or data feed",
                                                "Current-season records include completed games only",
                                                "Published teams are current FBS programs; seasons before a program joined FBS include only games against FBS opponents",
                                                "Descriptive records are not predictions"]},
@@ -611,10 +616,78 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
     return payload
 
 
-def write_atomic(pairs):
-    """Write all (path, payload) temps first, then replace; on any error nothing is replaced.
-    The public archive is written compactly (browser payload); receipts stay indented for review."""
-    temps = []
+# ---------------------------------------------------------------- authorized per-game lines (CFBD written permission)
+LINES_LICENSE = ("Closing lines: one provider per game, provider named, used with written permission from "
+                 "CollegeFootballData.com for display on team and game pages. Not offered as a dataset or data feed.")
+LINE_GAME_KEYS = {"game_id", "season", "week", "season_type", "date", "opponent", "venue", "team_score", "opponent_score",
+                  "spread", "spread_provider", "spread_status", "total", "total_provider", "total_status", "ats", "ou"}
+
+
+def team_slug(team):
+    return re.sub(r"[^a-z0-9]+", "-", team.lower()).strip("-")
+
+
+def _line_entry(o, side):
+    team_side = side == "home"
+    spread_ok = o["spread_status"] in ("ok", "disputed")
+    total_ok = o["total_status"] in ("ok", "disputed")
+    letter = (o["home_ats"] if team_side else FLIP[o["home_ats"]]) if spread_ok else None
+    return {"game_id": o["game_id"], "season": o["season"], "week": o.get("week"), "season_type": o.get("season_type"),
+            "date": (o["kickoff"] or "")[:10] or None, "opponent": o["away"] if team_side else o["home"],
+            "venue": "neutral" if o["neutral"] else ("home" if team_side else "away"),
+            "team_score": o["home_score"] if team_side else o["away_score"],
+            "opponent_score": o["away_score"] if team_side else o["home_score"],
+            # Team-perspective closing spread (negative = this team favoured) from one named provider.
+            "spread": (o["home_spread"] if team_side else -o["home_spread"]) if spread_ok else None,
+            "spread_provider": o["spread_provider"] if spread_ok else None, "spread_status": o["spread_status"],
+            "total": o.get("total") if total_ok else None, "total_provider": o["total_provider"] if total_ok else None,
+            "total_status": o["total_status"], "ats": letter, "ou": o.get("ou") if total_ok else None}
+
+
+def team_game_lines(outcomes, publish_teams, generated_at, current_season=None, prior_lines=None):
+    """Per-team browser files for team and game pages. Incremental mode keeps prior seasons from prior files."""
+    games = {team: [g for g in (prior_lines or {}).get(team, []) if g["season"] != current_season] for team in publish_teams}
+    for o in outcomes:
+        for side in ("home", "away"):
+            team = o[side]
+            if team in publish_teams:
+                games[team].append(_line_entry(o, side))
+    files = {}
+    for team in sorted(publish_teams):
+        rows = sorted(games[team], key=lambda g: (g["date"] or "", g["game_id"]))
+        if not rows:
+            continue
+        files[team_slug(team)] = {"schema_version": SCHEMA_VERSION, "provider_policy_version": POLICY_VERSION, "team": team,
+                                  "generated_at": generated_at, "attribution": ATTRIBUTION, "license": LINES_LICENSE,
+                                  "spread_convention": "team spread, negative = this team favoured", "games": rows}
+    return files
+
+
+def assert_team_lines_safe(payload):
+    """Licensing guard for authorized per-game files: exactly one closing spread/total per game with its provider."""
+    if set(payload) != {"schema_version", "provider_policy_version", "team", "generated_at", "attribution", "license",
+                        "spread_convention", "games"}:
+        raise ArchiveRejected("unexpected keys in team lines file")
+    seen = set()
+    for g in payload["games"]:
+        if set(g) != LINE_GAME_KEYS:
+            raise ArchiveRejected(f"unexpected per-game fields: {sorted(set(g) ^ LINE_GAME_KEYS)}")
+        if g["game_id"] in seen:
+            raise ArchiveRejected("duplicate game in team lines file")
+        seen.add(g["game_id"])
+        for market in ("spread", "total"):
+            value, provider = g[market], g[market + "_provider"]
+            if (value is None) != (provider is None) or (provider is not None and not isinstance(provider, str)):
+                raise ArchiveRejected(f"{market} must carry exactly one named provider")
+            if value is not None and not isinstance(value, (int, float)):
+                raise ArchiveRejected(f"non-numeric {market}")
+
+
+def write_atomic(pairs, lines=None):
+    """Write all temps first, then replace; on any error nothing is replaced.
+    The public archive is written compactly (browser payload); receipts stay indented for review.
+    lines = (directory, {slug: payload}) is staged in a sibling temp directory and swapped in last."""
+    temps, staged = [], None
     try:
         for path, payload in pairs:
             tmp = Path(str(path) + ".tmp")
@@ -623,17 +696,40 @@ def write_atomic(pairs):
             text = json.dumps(payload, sort_keys=True, separators=(",", ":")) if compact else json.dumps(payload, indent=1, sort_keys=True)
             tmp.write_text(text + "\n")
             temps.append((tmp, Path(path)))
+        if lines is not None:
+            directory, files = Path(lines[0]), lines[1]
+            staged = directory.with_name(directory.name + ".tmp")
+            if staged.exists():
+                shutil.rmtree(staged)
+            staged.mkdir(parents=True)
+            for slug, payload in files.items():
+                (staged / f"{slug}.json").write_text(json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n")
         for tmp, path in temps:
             tmp.replace(path)
+        if staged is not None:
+            old = directory.with_name(directory.name + ".old")
+            if old.exists():
+                shutil.rmtree(old)
+            if directory.exists():
+                directory.rename(old)
+            staged.rename(directory)
+            staged = None
+            if old.exists():
+                shutil.rmtree(old)
     finally:
         for tmp, _ in temps:
             tmp.unlink(missing_ok=True)
+        if staged is not None and staged.exists():
+            shutil.rmtree(staged)
 
 
 def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=False, incremental=False, refresh_upstream=False,
         fetch=fetch_cfbd_lines,
-        receipts_path=RECEIPTS, public_path=PUBLIC, archive=ARCHIVE, games_path=CURRENT_GAMES, report_path=CURRENT_REPORT, now=None):
-    """Build, validate and atomically publish. Any ArchiveRejected leaves both outputs untouched."""
+        receipts_path=RECEIPTS, public_path=PUBLIC, archive=ARCHIVE, games_path=CURRENT_GAMES, report_path=CURRENT_REPORT, now=None,
+        lines_dir=None):
+    """Build, validate and atomically publish. Any ArchiveRejected leaves all outputs untouched."""
+    lines_dir = Path(lines_dir) if lines_dir else Path(public_path).parent / "v7-team-lines"
+    prior_lines = None
     prior = json.loads(Path(receipts_path).read_text()) if Path(receipts_path).exists() else {"seasons": {}}
     receipts = {"schema_version": SCHEMA_VERSION, "provider_policy_version": POLICY_VERSION, "source": SOURCE,
                 "attribution": ATTRIBUTION, "seasons": {}}
@@ -646,6 +742,7 @@ def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=F
         if prior_public.get("provider_policy_version") != POLICY_VERSION:
             raise ArchiveRejected("provider policy changed; run a full backfill")
         prior_teams = prior_public["teams"]
+        prior_lines = {json.loads(f.read_text())["team"]: json.loads(f.read_text())["games"] for f in sorted(lines_dir.glob("*.json"))}
         for s, entry in prior["seasons"].items():
             if int(s) != current_season:
                 receipts["seasons"][s] = entry
@@ -672,8 +769,12 @@ def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=F
         coverage[str(season)] = cov
         outcomes += season_outcomes
     receipts["seasons"] = dict(sorted(receipts["seasons"].items()))
-    payload = build_public(outcomes, coverage, receipts, current_season, prior_teams, fbs_teams(report_path))
-    write_atomic([(receipts_path, receipts), (public_path, payload)])
+    publish = fbs_teams(report_path)
+    payload = build_public(outcomes, coverage, receipts, current_season, prior_teams, publish)
+    lines = team_game_lines(outcomes, publish, payload["generated_at"], current_season, prior_lines)
+    for team_file in lines.values():
+        assert_team_lines_safe(team_file)
+    write_atomic([(receipts_path, receipts), (public_path, payload)], (lines_dir, lines))
     return receipts, payload
 
 
@@ -709,16 +810,20 @@ def main():
         print(json.dumps(report, indent=1))
         return
     if a.check:
-        before = (RECEIPTS.read_bytes(), PUBLIC.read_bytes())
+        lines_dir = PUBLIC.parent / "v7-team-lines"
+        snapshot = lambda d: {f.name: f.read_bytes() for f in sorted(Path(d).glob("*.json"))}
+        before = (RECEIPTS.read_bytes(), PUBLIC.read_bytes(), snapshot(lines_dir))
         tmp_r, tmp_p = Path(str(RECEIPTS) + ".check"), Path(str(PUBLIC) + ".check")
+        tmp_l = PUBLIC.parent / "v7-team-lines.check"
         try:
             tmp_r.write_bytes(before[0])
-            run(seasons, a.season, "", a.cache, offline=True, receipts_path=tmp_r, public_path=tmp_p)
-            if (tmp_r.read_bytes(), tmp_p.read_bytes()) != before:
+            run(seasons, a.season, "", a.cache, offline=True, receipts_path=tmp_r, public_path=tmp_p, lines_dir=tmp_l)
+            if (tmp_r.read_bytes(), tmp_p.read_bytes(), snapshot(tmp_l)) != before:
                 raise SystemExit("regeneration differs from committed outputs")
         finally:
             tmp_r.unlink(missing_ok=True)
             tmp_p.unlink(missing_ok=True)
+            shutil.rmtree(tmp_l, ignore_errors=True)
         print("check: byte-identical")
         return
     try:

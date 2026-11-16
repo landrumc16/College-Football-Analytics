@@ -15,6 +15,14 @@ instruction to start Milestone 2.
 - **Out of scope:** Kalshi (blocked), model-vs-total, intraday movement,
   order-book depth, any UI (M5) and any new model.
 
+> **Licensing amendment (CFBD written permission, recorded 2026-11-16; see `docs/V7-LICENSING.md`).**
+> One provider's closing spread and closing total per FBS game since 2016, provider named, may
+> appear in browser JSON backing team and game pages, but never as a standalone dataset, bulk
+> download or data feed. The M2 public contract therefore adds per-team files
+> `web/public/v7-team-lines/<team>.json`. Opening values, other providers, moneylines, raw responses
+> and snapshots stay private. The §3C and §5 statements that "no per-game spreads/totals are
+> published" are superseded for these authorized fields only.
+
 > **Implementation amendment (provider policy v2).** The first real backfill stopped at
 > the unchanged 5% disputed threshold. Aggregate diagnostics showed priority-provider
 > sole outliers: 2016 consensus, and DraftKings in 2023–2025. §4 rules 1 and 4 therefore

@@ -559,3 +559,86 @@ def test_current_season_is_always_refetched_even_when_stored(world, store):
     feeds[(2026, "regular")][0]["homeScore"] = feeds[(2026, "regular")][0]["homeScore"]  # unchanged but must be re-read
     m.run([2026], 2026, "k", work / "v7-cfbd-lines", incremental=True, fetch=fetch, **env)
     assert calls == [(2026, "regular"), (2026, "postseason")]
+
+
+
+# ---------------------------------------------------------------- authorized per-game lines (CFBD written permission)
+def test_documented_texas_tech_games_publish_one_named_closing_line_per_market():
+    outcomes, _ = m.build_season(2016, DOCUMENTED, results_for(DOCUMENTED))
+    files = m.team_game_lines(outcomes, {"Texas Tech"}, "2026-11-16T00:00:00+00:00")
+    games = {g["game_id"]: g for g in files["texas-tech"]["games"]}
+    wvu = games["400869627"]
+    assert (wvu["spread"], wvu["spread_provider"], wvu["ats"]) == (3, "teamrankings", "L")      # consensus outlier replaced
+    assert (wvu["total"], wvu["total_provider"], wvu["ou"]) == (82, "teamrankings", "U")
+    assert (wvu["venue"], wvu["opponent"], wvu["team_score"], wvu["opponent_score"]) == ("home", "West Virginia", 17, 48)
+    asu = games["400869100"]
+    assert (asu["spread"], asu["venue"], asu["ats"]) == (-1.5, "away", "L")                    # team perspective of +1.5 home
+    sfa = games["400869625"]
+    assert sfa["total"] is None and sfa["total_provider"] is None and sfa["total_status"] == "no_line"
+    for g in games.values():
+        assert set(g) == m.LINE_GAME_KEYS                                                          # no opening/moneyline/other providers
+    m.assert_team_lines_safe(files["texas-tech"])
+
+
+@pytest.mark.parametrize("mutate", [lambda g: g.update(spread_open=-2.5), lambda g: g.update(home_moneyline=-150),
+                                    lambda g: g.update(providers=["a", "b"]), lambda g: g.update(spread_provider=None),
+                                    lambda g: g.update(disagreement=4.0), lambda g: g.update(spread="-3")])
+def test_team_lines_guard_rejects_unauthorized_fields(mutate):
+    outcomes, _ = m.build_season(2016, [TTU_KU], results_for([TTU_KU]))
+    payload = m.team_game_lines(outcomes, {"Texas Tech"}, "t")["texas-tech"]
+    mutate(payload["games"][0])
+    with pytest.raises(ArchiveRejected):
+        m.assert_team_lines_safe(payload)
+
+
+def test_team_lines_guard_rejects_duplicates_and_extra_file_keys():
+    outcomes, _ = m.build_season(2016, [TTU_KU], results_for([TTU_KU]))
+    payload = m.team_game_lines(outcomes, {"Texas Tech"}, "t")["texas-tech"]
+    with pytest.raises(ArchiveRejected, match="duplicate"):
+        m.assert_team_lines_safe({**payload, "games": payload["games"] * 2})
+    with pytest.raises(ArchiveRejected, match="unexpected keys"):
+        m.assert_team_lines_safe({**payload, "download_url": "x"})
+
+
+def test_run_writes_per_team_files_only_and_incremental_matches_full(world):
+    feeds, fetch, calls, env, tmp = world
+    m.run([2018, 2019], None, "k", None, fetch=fetch, **env)
+    m.run([2026], 2026, "k", None, incremental=True, fetch=fetch, **env)
+    lines = tmp / "v7-team-lines"
+    names = sorted(f.name for f in lines.iterdir())
+    assert names == sorted(f"t{i}.json" for i in range(12))                     # one file per published team; no index or bulk file
+    full_env = dict(env, receipts_path=tmp / "r2.json", public_path=tmp / "full" / "p.json")
+    (tmp / "full").mkdir()
+    m.run([2018, 2019, 2026], 2026, "k", None, fetch=fetch, **full_env)
+    strip = lambda d: {f.name: {k: v for k, v in json.loads(f.read_text()).items() if k != "generated_at"} for f in sorted(d.glob("*.json"))}
+    assert strip(lines) == strip(tmp / "full" / "v7-team-lines")
+    t0 = json.loads((lines / "t0.json").read_text())
+    assert {g["season"] for g in t0["games"]} == {2018, 2019, 2026}
+    m.assert_team_lines_safe(t0)
+
+
+def test_failed_refresh_keeps_last_verified_team_line_files(world):
+    feeds, fetch, calls, env, tmp = world
+    m.run([2018, 2019], None, "k", None, fetch=fetch, **env)
+    before = {f.name: f.read_bytes() for f in (tmp / "v7-team-lines").iterdir()}
+
+    def broken(season, st, key):
+        if season == 2019:
+            raise TimeoutError("timed out")
+        return fetch(season, st, key)
+    with pytest.raises(TimeoutError):
+        m.run([2018, 2019], None, "k", None, fetch=broken, **env)
+    assert {f.name: f.read_bytes() for f in (tmp / "v7-team-lines").iterdir()} == before
+    assert not (tmp / "v7-team-lines.tmp").exists()
+
+
+def test_committed_team_line_files_are_license_safe():
+    lines = Path(m.PUBLIC).parent / "v7-team-lines"
+    if not lines.exists():
+        pytest.skip("team line files not generated yet")
+    files = sorted(lines.glob("*.json"))
+    assert files and not (lines / "index.json").exists()
+    for f in files:
+        payload = json.loads(f.read_text())
+        m.assert_team_lines_safe(payload)
+        assert f.stem == m.team_slug(payload["team"])

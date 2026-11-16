@@ -130,25 +130,36 @@ change is covered by regression tests.
 Both the primary and sensitivity counts are published, each with its own
 denominator.
 
-## 5. Licensing safeguards (verified)
+## 5. Licensing safeguards (updated for CFBD's written permission, see `docs/V7-LICENSING.md`)
 
-- **Public file contents:** team keys are limited to counts, W/L/P letters
-  (`ats_sequence`, `recent_results`), rounded average cover margins and
-  history cover-margin sums.
-  - Averages and sums appear only when based on **5 or more** games, so a small
-    sample cannot reveal a line.
-  - There are **no per-game spreads, totals, cover margins, providers or game
-    IDs**.
-- **Enforcement:** `assert_public_safe` runs on every build. Tests reject each
-  restricted field.
-- **Raw data:** raw CFBD responses and per-game selected lines exist only in the
-  runner's `$RUNNER_TEMP`. They are not in the repository, artifacts, caches or
-  logs.
-- **CI output:** logs carry aggregates plus 13 hand-check lines with outcome
-  letters.
-- **Attribution:** "Data provided by CollegeFootballData.com".
-- **Pending:** the CFBD answer on per-game display. Nothing game-level is
-  published until it arrives.
+**Public outputs:**
+- **Team statistics** (`web/public/v7-team-market-history.json`):
+  - counts and W/L/P letters;
+  - average cover margins and history cover-margin sums, shown only when based
+    on 5 or more games;
+  - no providers or game IDs.
+- **Authorized per-game lines** (`web/public/v7-team-lines/<team>.json`, one file
+  per current FBS program): for each game, a closing spread and a closing total
+  from **one** selected provider, each with the provider named and a status.
+  Each game also carries its date and opponent, home/away/neutral, the score,
+  and the ATS and over/under result.
+  - There is no combined file, no index and no download link.
+  - The files back team and game pages only.
+
+**Never published:**
+- opening lines, other providers' values and moneylines;
+- disagreement magnitudes;
+- raw CFBD responses and private snapshots.
+
+**Enforcement:**
+- `assert_team_lines_safe` and `assert_public_safe` run on every build.
+- Tests reject unauthorized fields, a line without exactly one named provider,
+  duplicate games and extra file keys such as download links.
+
+**Other boundaries:**
+- CI logs carry aggregates plus 13 hand-check lines with outcome letters only.
+- Attribution ("Data provided by CollegeFootballData.com") and the permission
+  note travel with every public file.
 
 ## 6. Durable private snapshot retention — **integrated; waiting on owner setup**
 

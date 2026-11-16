@@ -132,6 +132,11 @@ FBS-participant games in our archive.
 
 ## 4. CFBD licensing (full official terms, effective Aug. 12, 2026)
 
+> **Update (2026-11-16):** the clarification requested below was answered in writing by a CFBD
+> administrator. One provider's closing spread and closing total per FBS game since 2016, with
+> the provider named, may be shown in browser JSON supporting team and game pages, but never as a
+> standalone dataset, bulk download or data feed. See `docs/V7-LICENSING.md`.
+
 **Relevant text:**
 
 | Section | Text |
