@@ -1,0 +1,110 @@
+name: V7 historical market archive backfill
+# Development only (v7-development). Uses the existing CFBD_API_KEY secret.
+# Raw CFBD responses stay in the runner's temporary workspace: never committed, uploaded as
+# artifacts or printed. Only derived public statistics and counts-only receipts are committed.
+on:
+  push:
+    branches: [v7-development]
+    paths:
+      - 'src/cfb_analytics/v7_market_archive.py'
+      - 'tests/test_v7_market_archive.py'
+      - '.github/workflows/v7-market-backfill.yml'
+  workflow_dispatch:
+    inputs:
+      accept_upstream_change:
+        description: Accept reviewed upstream CFBD historical changes
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: v7-market-archive
+  cancel-in-progress: false
+jobs:
+  backfill:
+    if: github.ref == 'refs/heads/v7-development'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - name: Full regression suite
+        run: python -m pytest -q
+      - name: Full rebuild 2016-2025 plus current season (private snapshots in runner temp only)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          ACCEPT: ${{ github.event.inputs.accept_upstream_change == 'true' && '--accept-upstream-change' || '' }}
+        run: python -m cfb_analytics.v7_market_archive --backfill 2016-2025 --season 2026 --cache "$RUNNER_TEMP/v7-private" $ACCEPT
+      - name: Offline regeneration from private snapshots is byte-identical
+        run: python -m cfb_analytics.v7_market_archive --check --season 2026 --cache "$RUNNER_TEMP/v7-private"
+      - name: Incremental current-season refresh reproduces the full rebuild (2 calls, no history download)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          cp web/public/v7-team-market-history.json "$RUNNER_TEMP/full.json"
+          python -m cfb_analytics.v7_market_archive --season 2026 --cache "$RUNNER_TEMP/v7-incremental"
+          python - <<'PY'
+          import json, os
+          full = json.load(open(os.environ["RUNNER_TEMP"] + "/full.json"))
+          inc = json.load(open("web/public/v7-team-market-history.json"))
+          assert inc["teams"] == full["teams"] and inc["coverage"] == full["coverage"], "incremental differs from full rebuild"
+          print("incremental == full rebuild for", len(inc["teams"]), "teams")
+          PY
+      - name: Independent hand-check and Texas Tech reconciliation (outcome letters only, no line values)
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from cfb_analytics import v7_market_archive as m
+          cache = Path(os.environ["RUNNER_TEMP"]) / "v7-private"
+          ids = {"400869627": 2016, "400869100": 2016, "400869359": 2016, "400869625": 2016, "400869598": 2016}
+          checked = 0
+          for season in (2016, 2020, 2025):
+              rows = json.loads((cache / f"{season}-regular.json").read_text()) + json.loads((cache / f"{season}-postseason.json").read_text())
+              results = m.historical_results([season])
+              outcomes = {o["game_id"]: o for o in m.build_season(season, rows, results)[0]}
+              picks = [g for g in ids if ids[g] == season] or [g for g in sorted(outcomes) if outcomes[g]["spread_status"] == "ok"][:4]
+              for gid in picks:
+                  o, r = outcomes[gid], results[gid]
+                  row = next(x for x in rows if str(x["id"]) == gid)
+                  # Independent recomputation: priority provider by hand, explicit orientation, plain arithmetic.
+                  provs = {l["provider"]: l for l in row["lines"]}
+                  order = [p for p in m.PROVIDER_PRIORITY if p in provs and provs[p].get("spread") is not None] or sorted(p for p in provs if provs[p].get("spread") is not None)
+                  if not order:
+                      assert o["spread_status"] == "no_line"; checked += 1; continue
+                  spread = float(provs[order[0]]["spread"])
+                  if m.ALIASES.get(row["homeTeam"], row["homeTeam"]) != r["home"]:
+                      spread = -spread
+                  cover = (r["home_score"] - r["away_score"]) + spread
+                  expect = "W" if cover > 0 else "L" if cover < 0 else "P"
+                  assert o["spread_provider"] == order[0], gid
+                  if o["spread_status"] in ("ok", "disputed"):
+                      assert o["home_ats"] == expect, gid
+                  print(f"handcheck {season} {gid} {r['away']} at {r['home']}: provider={order[0]} status={o['spread_status']} home_ats={o.get('home_ats')} ou={o.get('ou')} PASS")
+                  checked += 1
+          assert checked >= 10, checked
+          pub = json.load(open("web/public/v7-team-market-history.json"))
+          ttu = pub["teams"]["Texas Tech"]
+          total = {k: sum(b["ats"][k] for b in ttu["by_season"].values()) for k in "wlp"}
+          assert total == ttu["overall"]["ats"], (total, ttu["overall"]["ats"])
+          ou = {k: sum(b["ou"][k] for b in ttu["by_season"].values()) for k in "oup"}
+          assert ou == ttu["overall"]["ou"]
+          print("Texas Tech overall ATS", ttu["overall"]["ats"], "O/U", ttu["overall"]["ou"], "reconciles with per-season records")
+          PY
+      - name: Licensing guard and committed-output tests
+        run: python -m pytest -q tests/test_v7_market_archive.py
+      - name: Commit derived public outputs and receipts only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/v7-market-receipts.json web/public/v7-team-market-history.json
+          if git status --porcelain | grep -vE '^(M |A ) (data/v7-market-receipts.json|web/public/v7-team-market-history.json)$'; then
+            echo "unexpected files changed; refusing to commit"; exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "V7 M2: derived historical market archive from CFBD backfill"
+            git push origin HEAD:v7-development
+          fi

@@ -195,7 +195,7 @@ the measured counts. Receipts carry hashes and counts only, never line values.
 | Game | Lines | Expected result |
 | --- | --- | --- |
 | 2016 Texas Tech vs. West Virginia (`400869627`) | consensus −1; teamrankings +3; numberfire +3 | Selected consensus; disagreement 4.0; `disputed`, excluded |
-| 2016 Arizona State vs. Texas Tech (`400869100`) | consensus −5; teamrankings +1.5; numberfire +1 | Disagreement 6.0; `disputed`, excluded |
+| 2016 Arizona State vs. Texas Tech (`400869100`) | consensus −5; teamrankings +1.5; numberfire +1 | Disagreement 6.5 (corrected from 6.0 during implementation); `disputed`, excluded |
 | 2016 Texas Tech vs. Louisiana Tech (`400869359`) | consensus −12; −11; −10.5 | Disagreement 1.5; included |
 | 2016 Texas Tech vs. Stephen F. Austin (`400869625`) | consensus only (−42), no total | `single_provider` spread; total `no_line` |
 
