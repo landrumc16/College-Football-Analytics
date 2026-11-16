@@ -142,6 +142,14 @@ jobs:
       - name: Report V7 market refresh failure without blocking football results
         if: steps.v7_market.outcome == 'failure'
         run: echo "::warning::V7 market refresh rejected; previous verified market archive retained"
+      - name: Refresh V7 market metrics from the archive and forecast ledger (isolated; failure keeps last good)
+        id: v7_metrics
+        if: hashFiles('data/v7-market-receipts.json') != ''
+        continue-on-error: true
+        run: python -m cfb_analytics.v7_market_metrics
+      - name: Report V7 metrics failure without blocking football results
+        if: steps.v7_metrics.outcome == 'failure'
+        run: echo "::warning::V7 market metrics rejected; previous metrics retained"
       - name: Commit changed snapshot
         run: |
           git config user.name 'github-actions[bot]'
@@ -149,7 +157,7 @@ jobs:
           git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
           git add web/public/v5-program-report-cards.json web/public/v5-historical-results.json
           if [ -f data/v7-market-receipts.json ]; then
-            git add data/v7-market-receipts.json web/public/v7-team-market-history.json web/public/v7-team-lines
+            git add data/v7-market-receipts.json web/public/v7-team-market-history.json web/public/v7-team-lines web/public/v7-market-metrics.json web/public/v7-model-market
           fi
           if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then
             git add data/cfbd-recruiting-*.json
