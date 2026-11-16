@@ -113,6 +113,8 @@ def current_results(season, games_path=CURRENT_GAMES, report_path=CURRENT_REPORT
     now = now or datetime.now(timezone.utc)
     out = {}
     for g in snap["games"]:
+        # The snapshot keeps raw CFBD names; canonicalize exactly as pipeline.py does before reporting.
+        g = {**g, "home": ALIASES.get(g["home"], g["home"]), "away": ALIASES.get(g["away"], g["away"])}
         if g.get("season", season) != season or not (g["home"] in fbs or g["away"] in fbs):
             continue
         kickoff = aware_utc(g.get("start_date"))

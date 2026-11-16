@@ -427,3 +427,15 @@ def test_selected_sportsbook_replaced_when_it_is_the_sole_outlier():
     spread, total = m.select_market(games["40"], "spread", 1), m.select_market(games["40"], "total", 1)
     assert spread["provider"] == "ESPN Bet" and spread["reason"] == "priority_outlier_replaced" and spread["status"] == "ok"
     assert total["provider"] == "ESPN Bet" and total["reason"] == "priority_outlier_replaced"
+
+
+def test_current_season_snapshot_names_are_canonicalized_like_the_report(world):
+    feeds, fetch, calls, env, tmp = world
+    snap = json.loads(env["games_path"].read_text())
+    snap["games"][0]["away"] = "UL Monroe"
+    env["games_path"].write_text(json.dumps(snap))
+    report = json.loads(env["report_path"].read_text())
+    report["rankings"].append({"team": "ULM"})
+    env["report_path"].write_text(json.dumps(report))
+    res = m.current_results(2026, env["games_path"], env["report_path"], env["now"])
+    assert res[str(snap["games"][0]["game_id"])]["away"] == "ULM"
