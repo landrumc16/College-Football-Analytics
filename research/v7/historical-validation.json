@@ -12,8 +12,8 @@
  },
  "frozen_inputs_sha256": {
   "comparison_dir": "dc5f6a5f11f559f7e1cb1ef10c8c0b5d3fdc2e8c52a07a0801bb63a0c0baf4aa",
-  "current_results": "08780ec9377a74ffacb3e31086dc8c5ec77a4d80be8f2168f0ca3c8ed9698d5c",
-  "forecast_ledger": "e870158e67a8109d957966c4a8606dcd6c256aba190a4d71dfa5fe8287f82b2e",
+  "current_results": "808a8f697a1962ca7da9b21c12801377fd07724dd0a624d7555a178954e89f84",
+  "forecast_ledger": "e8031d26c8852b2dfd0458be89b0adedafd75620326be8373167fc41c620a262",
   "lines_dir": "cd0ef0d28d70df961c5c8bae1e8ef5821a1e558ad0b3347a93af70551157bf69",
   "verified_publication_rows": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
   "verified_results_archive": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
