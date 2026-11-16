@@ -65,4 +65,4 @@ try {
     console.log(`Poll Rankings passed at ${width}px`)
     await context.close()
   }
-} finally { await browser?.close(); process.kill(-server.pid, 'SIGTERM') }
+} finally { await browser?.close(); try { process.kill(-server.pid, 'SIGTERM') } catch (error) { if (error.code !== 'ESRCH') throw error } }
