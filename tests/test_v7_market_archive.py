@@ -475,3 +475,87 @@ def test_public_format_is_independent_of_output_path(tmp_path):
     m.write_atomic([(tmp_path / "public.json.check", {"teams": {}, "a": 1}), (tmp_path / "receipts.json.check", {"seasons": {}})])
     assert (tmp_path / "public.json.check").read_text().count("\n") == 1
     assert (tmp_path / "receipts.json.check").read_text().count("\n") > 1
+
+
+# ---------------------------------------------------------------- durable private snapshot store (git remote)
+import subprocess
+
+
+def git(*args, cwd):
+    subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True,
+                   env={"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid", "GIT_COMMITTER_NAME": "t",
+                        "GIT_COMMITTER_EMAIL": "t@example.invalid", "PATH": "/usr/bin:/bin:/usr/local/bin", "HOME": str(cwd)})
+
+
+@pytest.fixture
+def store(tmp_path):
+    remote = tmp_path / "private-remote.git"
+    git("init", "--bare", "-q", str(remote), cwd=tmp_path)
+    work = tmp_path / "store-a"
+    git("clone", "-q", str(remote), str(work), cwd=tmp_path)
+    return remote, work
+
+
+def push_store(work):
+    git("add", "-A", ".", cwd=work)
+    git("commit", "-q", "-m", "snapshots", cwd=work)
+    git("push", "-q", "origin", "HEAD:main", cwd=work)
+
+
+def test_snapshots_saved_to_private_store_restore_without_download(world, store):
+    feeds, fetch, calls, env, tmp = world
+    remote, work = store
+    m.run([2018, 2019, 2026], 2026, "k", work / "v7-cfbd-lines", fetch=fetch, **env)
+    first = (env["receipts_path"].read_bytes(), env["public_path"].read_bytes())
+    assert len(list((work / "v7-cfbd-lines").glob("*.meta.json"))) == 6
+    push_store(work)
+    fresh = tmp / "store-b"
+    git("clone", "-q", "-b", "main", str(remote), str(fresh), cwd=tmp)
+
+    def no_network(*a):
+        raise AssertionError("restore must not download")
+    m.run([2018, 2019, 2026], 2026, "", fresh / "v7-cfbd-lines", offline=True, fetch=no_network, **env)
+    assert (env["receipts_path"].read_bytes(), env["public_path"].read_bytes()) == first
+
+
+def test_tampered_or_corrupt_store_snapshot_is_rejected_and_outputs_kept(world, store):
+    feeds, fetch, calls, env, tmp = world
+    remote, work = store
+    m.run([2018, 2019], None, "k", work / "v7-cfbd-lines", fetch=fetch, **env)
+    before = (env["receipts_path"].read_bytes(), env["public_path"].read_bytes())
+    snap = work / "v7-cfbd-lines" / "2018-regular.json"
+    rows = json.loads(snap.read_text())
+    rows[0]["lines"][0]["spread"] = -20.5
+    snap.write_text(json.dumps(rows))
+    with pytest.raises(ArchiveRejected, match="stored checksum"):
+        m.run([2018, 2019], None, "", work / "v7-cfbd-lines", offline=True, fetch=fetch, **env)
+    # Even with a consistent forged checksum, the committed public receipt still rejects it, and acceptance cannot override.
+    meta = work / "v7-cfbd-lines" / "2018-regular.meta.json"
+    meta.write_text(json.dumps({"retrieved_at": "x", "sha256": m.sha256(m.canonical_bytes(rows))}))
+    with pytest.raises(ArchiveRejected, match="does not match the verified receipt"):
+        m.run([2018, 2019], None, "", work / "v7-cfbd-lines", offline=True, accept_upstream=True, fetch=fetch, **env)
+    assert (env["receipts_path"].read_bytes(), env["public_path"].read_bytes()) == before
+
+
+def test_refresh_upstream_detects_source_changes_against_stored_receipts(world, store):
+    feeds, fetch, calls, env, tmp = world
+    remote, work = store
+    m.run([2018, 2019], None, "k", work / "v7-cfbd-lines", fetch=fetch, **env)
+    calls.clear()
+    m.run([2018, 2019], None, "k", work / "v7-cfbd-lines", fetch=fetch, **env)
+    assert calls == []                                       # history comes from the store: no repeated downloads
+    feeds[(2019, "regular")][3]["lines"][0]["overUnder"] = 70.5
+    with pytest.raises(ArchiveRejected, match="upstream change 2019 regular"):
+        m.run([2018, 2019], None, "k", work / "v7-cfbd-lines", refresh_upstream=True, fetch=fetch, **env)
+    assert calls == [(2018, "regular"), (2018, "postseason"), (2019, "regular")]   # stops at the first change
+
+
+def test_current_season_is_always_refetched_even_when_stored(world, store):
+    feeds, fetch, calls, env, tmp = world
+    remote, work = store
+    m.run([2018, 2019], None, "k", work / "v7-cfbd-lines", fetch=fetch, **env)
+    m.run([2026], 2026, "k", work / "v7-cfbd-lines", incremental=True, fetch=fetch, **env)
+    calls.clear()
+    feeds[(2026, "regular")][0]["homeScore"] = feeds[(2026, "regular")][0]["homeScore"]  # unchanged but must be re-read
+    m.run([2026], 2026, "k", work / "v7-cfbd-lines", incremental=True, fetch=fetch, **env)
+    assert calls == [(2026, "regular"), (2026, "postseason")]

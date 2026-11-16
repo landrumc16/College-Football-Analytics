@@ -17,3 +17,7 @@ web/*-evidence/
 web/tsconfig.tsbuildinfo
 web/public/season-report.json
 web/public/poll-snapshot.json
+
+# V7 private CFBD snapshot store checkouts (CI only; never commit)
+/private-store/
+/private-store-verify/

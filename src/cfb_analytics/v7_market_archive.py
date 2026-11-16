@@ -60,14 +60,24 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def acquire(season, season_type, key, cache, prior_receipt, *, offline=False, accept_upstream=False, fetch=fetch_cfbd_lines):
-    """Return (rows, receipt). Detects upstream changes and truncation before acceptance."""
+def acquire(season, season_type, key, cache, prior_receipt, *, offline=False, accept_upstream=False, refresh=False,
+            fetch=fetch_cfbd_lines):
+    """Return (rows, receipt) from the private snapshot store when present, otherwise from CFBD.
+
+    Restored snapshots must match both their own stored checksum and the committed public receipt (tampering or
+    corruption is always rejected; --accept-upstream-change never applies to stored bytes). refresh=True re-downloads
+    and compares with the receipt (upstream-change detection); the current season always refreshes.
+    """
     path = Path(cache) / f"{season}-{season_type}.json" if cache else None
-    if path and path.exists():
-        data = path.read_bytes()
-        rows = json.loads(data)
-        retrieved_at = json.loads((path.with_suffix(".meta.json")).read_text())["retrieved_at"]
+    meta_path = path.with_suffix(".meta.json") if path else None
+    stored = bool(path and path.exists() and not refresh)
+    if stored:
+        rows = json.loads(path.read_bytes())
+        meta = json.loads(meta_path.read_text())
         data = canonical_bytes(rows)
+        if sha256(data) != meta.get("sha256"):
+            raise ArchiveRejected(f"private snapshot {season}-{season_type} fails its stored checksum")
+        retrieved_at = meta["retrieved_at"]
     elif offline:
         raise ArchiveRejected(f"missing private snapshot {season}-{season_type}")
     else:
@@ -78,6 +88,8 @@ def acquire(season, season_type, key, cache, prior_receipt, *, offline=False, ac
         retrieved_at = datetime.now(timezone.utc).isoformat()
     receipt = {"retrieved_at": retrieved_at, "sha256": sha256(data), "rows": len(rows)}
     if prior_receipt:
+        if prior_receipt["sha256"] != receipt["sha256"] and stored:
+            raise ArchiveRejected(f"private snapshot {season}-{season_type} does not match the verified receipt")
         if prior_receipt.get("rows") and len(rows) < THRESHOLDS["truncation"] * prior_receipt["rows"]:
             raise ArchiveRejected(f"truncated response {season} {season_type}: {len(rows)} < 90% of {prior_receipt['rows']}")
         if prior_receipt["sha256"] != receipt["sha256"]:
@@ -86,10 +98,11 @@ def acquire(season, season_type, key, cache, prior_receipt, *, offline=False, ac
                                       "re-run with --accept-upstream-change after review")
         else:
             receipt["retrieved_at"] = prior_receipt["retrieved_at"]  # unchanged bytes keep provenance and determinism
-    if path and not path.exists():
+    if path and not stored:
+        # Written to the private store only; the caller commits the store after the whole run validates.
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-        path.with_suffix(".meta.json").write_text(json.dumps({"retrieved_at": retrieved_at, "sha256": receipt["sha256"]}))
+        meta_path.write_text(json.dumps({"retrieved_at": receipt["retrieved_at"], "sha256": receipt["sha256"]}, sort_keys=True))
     return rows, receipt
 
 
@@ -617,7 +630,8 @@ def write_atomic(pairs):
             tmp.unlink(missing_ok=True)
 
 
-def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=False, incremental=False, fetch=fetch_cfbd_lines,
+def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=False, incremental=False, refresh_upstream=False,
+        fetch=fetch_cfbd_lines,
         receipts_path=RECEIPTS, public_path=PUBLIC, archive=ARCHIVE, games_path=CURRENT_GAMES, report_path=CURRENT_REPORT, now=None):
     """Build, validate and atomically publish. Any ArchiveRejected leaves both outputs untouched."""
     prior = json.loads(Path(receipts_path).read_text()) if Path(receipts_path).exists() else {"seasons": {}}
@@ -648,7 +662,8 @@ def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=F
             prior_r = prior["seasons"].get(str(season), {}).get(st)
             # The current season legitimately changes every week; only completed seasons are change-guarded.
             guard = prior_r if season != current_season else None
-            r, receipt = acquire(season, st, key, cache, guard, offline=offline, accept_upstream=accept_upstream, fetch=fetch)
+            r, receipt = acquire(season, st, key, cache, guard, offline=offline, accept_upstream=accept_upstream,
+                                 refresh=(season == current_season and not offline) or refresh_upstream, fetch=fetch)
             receipts["seasons"][str(season)][st] = receipt
             rows += r
         season_outcomes, cov = build_season(season, rows, results)
@@ -670,6 +685,7 @@ def main():
     p.add_argument("--offline", action="store_true")
     p.add_argument("--check", action="store_true", help="offline full rebuild must reproduce committed outputs byte-for-byte")
     p.add_argument("--accept-upstream-change", action="store_true")
+    p.add_argument("--refresh-upstream", action="store_true", help="re-download history and compare with receipts (upstream-change check)")
     p.add_argument("--diagnose", action="store_true", help="print aggregate dispute diagnostics per season and exit (no outputs written)")
     a = p.parse_args()
     incremental = bool(a.season and not a.backfill and not a.check)
@@ -707,7 +723,7 @@ def main():
         return
     try:
         receipts, payload = run(seasons, a.season, os.environ.get("CFBD_API_KEY", ""), a.cache, offline=a.offline,
-                                accept_upstream=a.accept_upstream_change, incremental=incremental)
+                                accept_upstream=a.accept_upstream_change, incremental=incremental, refresh_upstream=a.refresh_upstream)
     except ArchiveRejected as exc:
         raise SystemExit(f"market archive rejected; last verified outputs kept: {exc}")
     # Aggregates only: never print per-game values in CI logs.

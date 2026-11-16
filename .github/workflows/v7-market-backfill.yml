@@ -1,7 +1,10 @@
 name: V7 historical market archive backfill
 # Development only (v7-development). Uses the existing CFBD_API_KEY secret.
-# Raw CFBD responses stay in the runner's temporary workspace: never committed, uploaded as
-# artifacts or printed. Only derived public statistics and counts-only receipts are committed.
+# Raw CFBD snapshots are retained only in the owner's PRIVATE snapshot repository (secret
+# CFBD_SNAPSHOT_TOKEN: fine-grained token, Contents read/write on that one repository). Without it
+# they live only in the runner's temporary workspace. Raw data is never committed to this public
+# repository, uploaded as artifacts, cached or printed. Runs only on pushes to v7-development
+# (never on pull requests), so fork workflows cannot reach the token.
 on:
   push:
     branches: [v7-development]
@@ -25,8 +28,27 @@ jobs:
     if: github.ref == 'refs/heads/v7-development'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      HAS_STORE: ${{ secrets.CFBD_SNAPSHOT_TOKEN != '' }}
+      SNAPSHOT_REPO: ${{ vars.CFBD_SNAPSHOT_REPO || 'landrumc16/cfb-analytics-private-data' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Restore durable private snapshot store
+        if: env.HAS_STORE == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SNAPSHOT_REPO }}
+          token: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+          path: private-store
+      - name: Select snapshot location
+        run: |
+          if [ "$HAS_STORE" = "true" ]; then
+            echo "STORE=$GITHUB_WORKSPACE/private-store/v7-cfbd-lines" >> "$GITHUB_ENV"
+            echo "Durable private snapshot store: restored ($(ls private-store/v7-cfbd-lines 2>/dev/null | grep -c '\.meta\.json$' || true) snapshots)"
+          else
+            echo "STORE=$RUNNER_TEMP/v7-private" >> "$GITHUB_ENV"
+            echo "::warning::Durable private snapshot store not configured (CFBD_SNAPSHOT_TOKEN missing); snapshots are temporary for this run"
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -36,20 +58,20 @@ jobs:
       - name: Dispute diagnostics (aggregate counts only; populates private runner cache)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-        run: python -m cfb_analytics.v7_market_archive --diagnose --backfill 2016-2025 --cache "$RUNNER_TEMP/v7-private"
-      - name: Full rebuild 2016-2025 plus current season (private snapshots in runner temp only)
+        run: python -m cfb_analytics.v7_market_archive --diagnose --backfill 2016-2025 --cache "$STORE"
+      - name: Full rebuild 2016-2025 plus current season (history restored from the private store when present)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           ACCEPT: ${{ github.event.inputs.accept_upstream_change == 'true' && '--accept-upstream-change' || '' }}
-        run: python -m cfb_analytics.v7_market_archive --backfill 2016-2025 --season 2026 --cache "$RUNNER_TEMP/v7-private" $ACCEPT
+        run: python -m cfb_analytics.v7_market_archive --backfill 2016-2025 --season 2026 --cache "$STORE" $ACCEPT
       - name: Offline regeneration from private snapshots is byte-identical
-        run: python -m cfb_analytics.v7_market_archive --check --season 2026 --cache "$RUNNER_TEMP/v7-private"
+        run: python -m cfb_analytics.v7_market_archive --check --season 2026 --cache "$STORE"
       - name: Incremental current-season refresh reproduces the full rebuild (2 calls, no history download)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           cp web/public/v7-team-market-history.json "$RUNNER_TEMP/full.json"
-          python -m cfb_analytics.v7_market_archive --season 2026 --cache "$RUNNER_TEMP/v7-incremental"
+          python -m cfb_analytics.v7_market_archive --season 2026 --cache "$STORE"
           python - <<'PY'
           import json, os
           full = json.load(open(os.environ["RUNNER_TEMP"] + "/full.json"))
@@ -63,7 +85,7 @@ jobs:
           import json, os
           from pathlib import Path
           from cfb_analytics import v7_market_archive as m
-          cache = Path(os.environ["RUNNER_TEMP"]) / "v7-private"
+          cache = Path(os.environ["STORE"])
           ids = {"400869627": 2016, "400869100": 2016, "400869359": 2016, "400869625": 2016, "400869598": 2016}
           checked = 0
           for season in (2016, 2020, 2025):
@@ -120,3 +142,25 @@ jobs:
             git commit -m "V7 M2: derived historical market archive from CFBD backfill"
             git push origin HEAD:v7-development
           fi
+      - name: Save validated snapshots to the durable private store
+        if: env.HAS_STORE == 'true'
+        working-directory: private-store
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add v7-cfbd-lines
+          if ! git diff --cached --quiet; then
+            git commit -q -m "CFBD /lines snapshots (validated by College-Football-Analytics run ${GITHUB_RUN_ID})"
+            git push -q
+          fi
+          echo "Private store holds $(ls v7-cfbd-lines | grep -c '\.meta\.json$') snapshots at $(git rev-parse --short HEAD)"
+      - name: Verify durable restore from a fresh private clone (offline, byte-identical)
+        if: env.HAS_STORE == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SNAPSHOT_REPO }}
+          token: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+          path: private-store-verify
+      - name: Regenerate public outputs from the fresh private clone without downloading
+        if: env.HAS_STORE == 'true'
+        run: python -m cfb_analytics.v7_market_archive --check --season 2026 --cache private-store-verify/v7-cfbd-lines
