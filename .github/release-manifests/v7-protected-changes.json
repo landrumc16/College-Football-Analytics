@@ -18,5 +18,15 @@
   },
   "modified_additive_only": {
     "src/cfb_analytics/refresh.py": "adds fetch_cfbd_lines beside the existing CFBD fetch; no existing line changes"
+  },
+  "modified_exact": {
+    "web/src/Navigation.tsx": {
+      "sha256": "1fcaf5f656572357b4a291c95bdd146d0fa49a8c5d70949afa0da073c5fb60df",
+      "reason": "owner-approved V7 information architecture: Market destination added; Research & Data kept as a full destination reached from the top menu"
+    },
+    "web/src/EditorialHome.tsx": {
+      "sha256": "7d212f3b00d91450abb4aa3deca088300fd0f7cce6f86424a80c54b78db59daf",
+      "reason": "bottom navigation renders the five primary destinations (Market replaces Research) and adds the Market icon"
+    }
   }
 }

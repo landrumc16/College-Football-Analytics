@@ -50,3 +50,16 @@ def test_listed_existing_file_must_be_additive_only():
 def test_missing_manifest_is_strict():
     _, rejected = guard.evaluate(V7_ROWS, None, "v7-development", True, none_removed)
     assert len(rejected) == 4
+
+
+def test_reviewed_protected_edits_are_pinned_to_exact_content(monkeypatch):
+    rows = [("M", "web/src/Navigation.tsx"), ("M", "web/src/EditorialHome.tsx")]
+    pinned = {p: MANIFEST["modified_exact"][p]["sha256"] for p, _ in [(r[1], 0) for r in rows]}
+    monkeypatch.setattr(guard, "file_sha256", lambda path: pinned[path])
+    approved, rejected = guard.evaluate(rows, MANIFEST, "v7-development", True, lambda p: 5)
+    assert rejected == [] and len(approved) == 2
+    monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)          # any further edit
+    _, rejected = guard.evaluate(rows, MANIFEST, "v7-development", True, lambda p: 5)
+    assert len(rejected) == 2
+    _, rejected = guard.evaluate(rows, MANIFEST, "main", True, lambda p: 5)    # other branches stay strict
+    assert len(rejected) == 2

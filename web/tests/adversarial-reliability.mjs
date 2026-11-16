@@ -6,7 +6,7 @@ import {resolve,extname} from 'node:path'
 import {performance} from 'node:perf_hooks'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
-import {chooseSection} from './section-navigation.mjs'
+import {chooseSection,openDestination,PRIMARY} from './section-navigation.mjs'
 const root=resolve('web/dist'),out='web/adversarial-evidence',url='http://127.0.0.1:4190/'
 assert.equal(new URL(url).hostname,'127.0.0.1')
 await mkdir(out,{recursive:true})
@@ -30,14 +30,14 @@ async function run(name,fn){caseName=name;const start=performance.now();try{cons
 async function context(options={}){const c=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block',...options});await c.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost'].includes(u.hostname)?route.continue():route.abort()});return c}
 async function pageIn(c){const p=await c.newPage();activePage=p;p.setDefaultTimeout(7000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));return p}
 async function home(p){await p.goto(url,{waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()}
-async function nav(p,name){await p.getByRole('navigation',{name:'Main navigation',exact:true}).getByRole('button',{name,exact:true}).click()}
+async function nav(p,name){await openDestination(p,name)}
 async function healthy(p){assert.deepEqual(p.errors,[],'Uncaught browser errors');assert.ok(await p.getByRole('navigation',{name:'Main navigation',exact:true}).isVisible(),'Navigation vanished');const d=await p.evaluate(()=>({w:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(d.scroll<=d.w+1,'Page overflow '+JSON.stringify(d))}
 async function withPage(fn,options){const c=await context(options),p=await pageIn(c);try{return await fn(p,c)}catch(e){await p.screenshot({path:`${out}/${caseName}.png`,fullPage:true}).catch(()=>{});throw e}finally{await c.close()}}
 try{
  await run('rapid-navigation-search-and-profile',()=>withPage(async p=>{
   await home(p)
-  const names=['Home','Rankings','Teams','Playoffs','Research']
-  for(let i=0;i<100;i++)await nav(p,names[i%5])
+  const names=[...PRIMARY,'Research']
+  for(let i=0;i<100;i++)await nav(p,names[i%names.length])
   await nav(p,'Rankings')
   for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search teams',{exact:true}).fill(text);await healthy(p)}
   await p.getByLabel('Search teams',{exact:true}).fill('')
@@ -116,7 +116,7 @@ try{
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
   const errors=[...p.errors];assert.deepEqual(errors,[],'Malformed input crashed the page')
   if(f.name.includes('wrong-shape')||f.name.includes('malformed-scale'))await p.screenshot({path:`${out}/fixture-${f.name}-contained.png`,fullPage:true})
-  intercept=false;const retry=p.getByRole('button',{name:'Retry loading data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await healthy(p)
+  intercept=false;const retry=p.getByRole('button',{name:'Retry loading data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await healthy(p);await home(p);await healthy(p)
   return {injectedPath:f.path,payload:f.body.length<400?f.body:'See named mutation in test source',recovery:'healthy after restoring original bytes'}
  }))
  await run('pwa-disconnect-poisoned-cache-recovery',()=>withPage(async(p,c)=>{

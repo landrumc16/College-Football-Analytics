@@ -5,7 +5,7 @@ import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 import {startAsDeclinedVisitor} from './consent-prompt.mjs'
 import ts from 'typescript'
-import {chooseSection,assertNavigationFits} from './section-navigation.mjs'
+import {chooseSection,assertNavigationFits,openDestination} from './section-navigation.mjs'
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4180','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
 const url='http://127.0.0.1:4180/'
 let browser,page
@@ -43,7 +43,7 @@ try {
   await page.getByLabel('Second school',{exact:true}).selectOption('Texas A&M')
   await program().getByText('FBS win-rate change',{exact:true}).waitFor()
   assert.deepEqual(await program().locator('.team-profile-tile strong').allTextContents(),metrics)
-  await nav.getByRole('button',{name:'Research',exact:true}).click()
+  await openDestination(page,'Research')
   const research=page.getByRole('region',{name:'Experimental prediction research',exact:true})
   await research.getByRole('heading',{name:'Why we kept the current model'}).waitFor()
   assert.ok((await research.innerText()).includes('3,059'))

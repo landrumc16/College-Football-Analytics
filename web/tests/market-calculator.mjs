@@ -48,6 +48,12 @@ try {
     await page.getByLabel('First school').selectOption(game.home);
     await page.getByLabel('Second school').selectOption(game.away);
     await page.getByLabel('Game location').selectOption('home');
+    // Compare holds no calculator: it links to the one Market Analysis page and carries the matchup in memory.
+    assert.equal(await page.locator('.market-calculator').count(), 0, 'calculator must live only on Market Analysis');
+    await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
+    await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
+    assert.equal(await page.getByLabel('Game', { exact: true }).inputValue(), String(game.game_id), 'selected matchup transferred');
+    assert.ok(page.url().endsWith('#/market') && !/[?&]/.test(new URL(page.url()).hash), 'only the view name is in the URL');
     const calc = page.locator('.market-calculator');
     await calc.getByRole('heading', { name: 'Market Analysis Calculator' }).waitFor();
     await calc.getByText('Published forecast', { exact: true }).waitFor();
@@ -58,7 +64,7 @@ try {
     const prob = calc.getByLabel(`${game.home} prediction-market win probability (%)`);
     const line = calc.getByLabel(`${game.home} American moneyline`);
     for (const input of [spread, prob, line]) assert.ok((await input.boundingBox()).height >= 44);
-    assert.equal(await calc.getByRole('group', { name: 'Compare from the perspective of' }).count(), 1);
+    assert.equal(await calc.getByRole('group', { name: '1. Analyze for' }).count(), 1);
 
     await spread.fill(SPREAD); await prob.fill(PROB); await line.fill(LINE);
     const results = calc.locator('.market-result');
@@ -122,8 +128,14 @@ try {
 
     // A different venue is not the scheduled game: hypothetical source, entries reset.
     if (!scheduledNeutral) {
+      // Browser Back returns to Compare with the matchup intact; a non-scheduled venue carries over as a hypothetical.
+      await page.goBack();
+      await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
+      assert.equal(await page.getByLabel('First school').inputValue(), game.home);
       await page.getByLabel('Game location').selectOption('neutral');
+      await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
       await calc.getByText('Hypothetical matchup', { exact: true }).waitFor();
+      assert.match(await page.getByLabel('Game', { exact: true }).locator('option:checked').textContent(), /^Your matchup \(hypothetical\)/);
       assert.equal(await calc.getByLabel(`${game.home} point spread`).inputValue(), '');
     }
     await page.close();
@@ -142,6 +154,7 @@ try {
   await page.getByLabel('First school').selectOption(game.home);
   await page.getByLabel('Second school').selectOption(game.away);
   await page.getByLabel('Game location').selectOption('home');
+  await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
   const missing = page.locator('.market-calculator');
   await missing.getByText('Model prediction unavailable for this matchup', { exact: false }).waitFor();
   assert.equal(await missing.locator('input[inputmode]').count(), 0);

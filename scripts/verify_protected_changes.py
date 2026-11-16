@@ -3,8 +3,11 @@
 Default (any branch): protected paths must be byte-identical to the merge base, exactly as before.
 Only a same-repository pull request whose head branch equals the manifest's head_ref may carry the
 manifest's explicitly listed additions, and additive-only edits to the listed existing files.
+Reviewed edits to protected files are pinned by the exact SHA-256 of their committed content ("modified_exact"):
+any further change to such a file fails until the manifest is re-reviewed.
 Deletions, renames, mode changes and any other modification still fail.
 """
+import hashlib
 import json
 import re
 import subprocess
@@ -32,6 +35,13 @@ def deletions(base, path):
     return int(removed)
 
 
+def head_sha256(path):
+    return hashlib.sha256(subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True).stdout).hexdigest()
+
+
+file_sha256 = head_sha256
+
+
 def evaluate(rows, manifest, head_ref, same_repo, removed_lines):
     """Return (approved, rejected) lists. removed_lines(path) -> lines deleted versus the base."""
     applies = manifest is not None and same_repo and head_ref == manifest.get("head_ref")
@@ -49,6 +59,10 @@ def evaluate(rows, manifest, head_ref, same_repo, removed_lines):
         elif applies and status == "M" and path in manifest["modified_additive_only"]:
             if removed_lines(path) == 0:
                 reason = manifest["modified_additive_only"][path]
+        elif applies and status == "M" and path in manifest.get("modified_exact", {}):
+            entry = manifest["modified_exact"][path]
+            if file_sha256(path) == entry["sha256"]:
+                reason = entry["reason"]
         (approved if reason else rejected).append((status, path, reason))
     return approved, rejected
 

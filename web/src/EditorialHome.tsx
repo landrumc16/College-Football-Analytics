@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { destinations } from './Navigation'
+import { primaryDestinations } from './Navigation'
 import { useReportCards } from './ProgramReportCard'
 import './editorial-home.css'
 
@@ -19,6 +19,7 @@ function DestinationIcon({ destination }: { destination: string }) {
     teams: 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6ZM8 11h8M12 7v8',
     playoffs: 'M8 3h8v7a4 4 0 0 1-8 0ZM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4m-4 2v6m-4 1h8',
     research: 'M12 5C9 3 5 3 3 4v15c3-1 6-1 9 1m0-15c3-2 7-2 9-1v15c-3-1-6-1-9 1Z',
+    market: 'M4 19h16M6 16l4-5 3 3 5-7m0 0h-3m3 0v3',
   }
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={paths[destination]} /></svg>
 }
@@ -33,7 +34,7 @@ export function EditorialMasthead({ children }: { children: ReactNode }) {
 
 export function EditorialNavigation({ destination, onChange }: { destination: string; onChange: (id: string) => void }) {
   return <nav className="editorial-navigation" aria-label="Main navigation">
-    {destinations.map(item => <button key={item.id} type="button" aria-current={destination === item.id ? 'page' : undefined} onClick={() => onChange(item.id)}>
+    {primaryDestinations.map(item => <button key={item.id} type="button" aria-current={destination === item.id ? 'page' : undefined} onClick={() => onChange(item.id)}>
       <DestinationIcon destination={item.id} /><span>{item.label}</span>
     </button>)}
   </nav>

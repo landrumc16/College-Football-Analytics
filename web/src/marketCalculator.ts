@@ -106,3 +106,28 @@ export function flipProbabilityInput(raw: string): string {
   if (!parsed.ok) return raw
   return String(Number((100 - parsed.value * 100).toFixed(2)))
 }
+
+/** Flip the sign of a typed spread or moneyline (phone decimal keypads often have no minus key). */
+export function toggleSign(raw: string): string {
+  const text = raw.trim().replace(/−/g, '-')
+  if (!text) return '-'
+  if (/^(pk|pick|pickem|pick'em|even|0+(\.0*)?)$/i.test(text)) return text
+  if (text.startsWith('-')) return '+' + text.slice(1)
+  if (text.startsWith('+')) return '-' + text.slice(1)
+  return '-' + text
+}
+
+/** One-line result headline, read first; the full sentence follows. */
+export function headlineSpread(team: string, margin: number, spread: number): string {
+  const d = Number(spreadDifference(margin, spread).toFixed(1))
+  if (Math.abs(d) < EPSILON) return `Model matches the spread for ${team}`
+  return `Model is ${points(d)} ${d > 0 ? 'more' : 'less'} favourable to ${team}`
+}
+
+export function headlineProbability(team: string, model: number, market: number): string {
+  const d = Number(probabilityDifference(model, market).toFixed(1))
+  if (Math.abs(d) < EPSILON) return `Model matches the market for ${team}`
+  return `Model gives ${team} ${Math.abs(d).toFixed(1)} percentage points ${d > 0 ? 'more' : 'less'} win chance`
+}
+
+export const spreadExample = (team: string) => `Example: ${team} −7 means ${team} is favoured by 7; ${team} +3.5 means ${team} is a 3.5-point underdog.`

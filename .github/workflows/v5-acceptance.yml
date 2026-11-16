@@ -75,6 +75,8 @@ jobs:
         run: node web/tests/v6-browser.mjs
       - name: Verify Market Analysis Calculator (five widths, perspective, invalid input, missing model, privacy)
         run: node web/tests/market-calculator.mjs
+      - name: Verify Market Analysis page (entry point, matchup transfer, deep links, Back/Forward, privacy)
+        run: node web/tests/market-analysis.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

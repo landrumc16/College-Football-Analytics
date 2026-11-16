@@ -112,4 +112,17 @@ check('switching team re-expresses the same entered market', () => {
   assert.equal(c.flipProbabilityInput('0'), '100'); assert.equal(c.flipProbabilityInput('x'), 'x')
 })
 
+check('sign toggle for phone keypads and one-line headlines', () => {
+  assert.equal(c.toggleSign('6.5'), '-6.5'); assert.equal(c.toggleSign('-6.5'), '+6.5'); assert.equal(c.toggleSign('+130'), '-130')
+  assert.equal(c.toggleSign(''), '-'); assert.equal(c.toggleSign('\u2212110'), '+110'); assert.equal(c.toggleSign('PK'), 'PK'); assert.equal(c.toggleSign('0'), '0')
+  assert.equal(c.headlineSpread('Florida', 12.9, -6.5), 'Model is 6.4 points more favourable to Florida')
+  assert.equal(c.headlineSpread('Vanderbilt', -12.9, 6.5), 'Model is 6.4 points less favourable to Vanderbilt')
+  assert.equal(c.headlineSpread('A', 7, -7), 'Model matches the spread for A')
+  assert.equal(c.headlineSpread('A', 2, -1), 'Model is 1.0 point more favourable to A')
+  assert.equal(c.headlineProbability('Florida', 0.839, 0.565), 'Model gives Florida 27.4 percentage points more win chance')
+  assert.equal(c.headlineProbability('A', 0.4, 0.6), 'Model gives A 20.0 percentage points less win chance')
+  assert.equal(c.headlineProbability('A', 0.6, 0.6), 'Model matches the market for A')
+  assert.match(c.spreadExample('Florida'), /Florida −7 means Florida is favoured by 7/)
+})
+
 console.log(JSON.stringify({status: 'PASS', cases: results.length, results}, null, 2))
