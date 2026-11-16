@@ -487,6 +487,20 @@ def diagnose_season(season, raw_rows, results):
                 med = others[len(others) // 2]
                 if abs(vals["consensus"] - med) >= DISPUTE_POINTS and (vals["consensus"] < 0) != (med < 0) and market == "spread":
                     out["spread_consensus_opposite_favourite"] += 1
+    for gid, result in results.items():
+        if result["season"] != season or gid not in games:
+            continue
+        sign = orient(games[gid], result)
+        for market in ("spread", "total"):
+            sel = select_market(games[gid], market, sign)
+            if sel["status"] == "suspicious":
+                out[f"policy_v2_{market}_suspicious_flag_{sel.get('flag')}"] += 1
+            if sel["status"] == "disputed":
+                out[f"policy_v2_{market}_disputed_selected_{sel['provider']}"] += 1
+                vals = {p: r[market] for p, r in games[gid]["providers"].items() if isinstance(r[market], float)}
+                rest = [v for p, v in vals.items() if p != sel["provider"]]
+                if len(rest) >= 2 and max(rest) - min(rest) < DISPUTE_POINTS:
+                    out[f"policy_v2_{market}_disputed_selected_sole_outlier"] += 1
     _, cov = build_season(season, raw_rows, {g: r for g, r in results.items() if r["season"] == season})
     for k in ("spread_disputed", "total_disputed", "spread_consensus_replaced", "total_consensus_replaced", "spread_suspicious", "total_suspicious"):
         out["policy_v2_" + k] = cov[k]
