@@ -606,7 +606,7 @@ def write_atomic(pairs):
         for path, payload in pairs:
             tmp = Path(str(path) + ".tmp")
             tmp.parent.mkdir(parents=True, exist_ok=True)
-            compact = Path(path).suffix == ".json" and "receipts" not in Path(path).name
+            compact = "teams" in payload   # the public archive payload; independent of the file name
             text = json.dumps(payload, sort_keys=True, separators=(",", ":")) if compact else json.dumps(payload, indent=1, sort_keys=True)
             tmp.write_text(text + "\n")
             temps.append((tmp, Path(path)))

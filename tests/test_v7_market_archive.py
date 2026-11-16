@@ -469,3 +469,9 @@ def test_only_current_fbs_programs_are_published_but_their_fcs_games_count(world
     t1 = payload["teams"]["T1"]["by_season"]["2018"]
     assert t1["games"] == sum(1 for g in arc["2018"] if "T1" in (g["home"], g["away"]))
     assert env["public_path"].read_text().count("\n") == 1     # compact browser payload
+
+
+def test_public_format_is_independent_of_output_path(tmp_path):
+    m.write_atomic([(tmp_path / "public.json.check", {"teams": {}, "a": 1}), (tmp_path / "receipts.json.check", {"seasons": {}})])
+    assert (tmp_path / "public.json.check").read_text().count("\n") == 1
+    assert (tmp_path / "receipts.json.check").read_text().count("\n") > 1
