@@ -29,7 +29,7 @@ def test_every_other_branch_and_forks_stay_strict(head_ref, same_repo):
 
 @pytest.mark.parametrize("row", [
     ("M", "src/cfb_analytics/model.py"),                       # existing model code
-    ("M", "web/src/Navigation.tsx"),                           # released navigation
+    ("M", "web/src/scenarios.ts"),                             # released scenario engine (Navigation.tsx: pinned test below)
     ("D", "web/public/v5-program-report-cards.json"),          # deletion
     ("M", "web/public/v7-team-market-history.json"),           # listed as added, not as modified
     ("A", "web/public/v7-team-lines/nested/x.json"),           # outside the pattern
