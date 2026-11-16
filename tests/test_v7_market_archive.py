@@ -330,6 +330,18 @@ def test_backfill_writes_provenance_and_is_reproducible(world):
 
 def test_incremental_current_season_equals_full_rebuild_without_historical_download(world):
     feeds, fetch, calls, env, tmp = world
+    # A small-history opponent (2 historical games) exercises the withheld-sum disclosure rule in both modes.
+    arc = json.loads(gzip.decompress(env["archive"].read_bytes()))
+    for i, gid in enumerate((9101, 9102)):
+        feeds[(2018, "regular")].append(cfbd(gid, "T1", "FCS Visitor", 45, 10 + i, [line("consensus", -28 + i, 60)]))
+        arc["2018"].append(archive_game(gid, 2018, "T1", "FCS Visitor", 45, 10 + i, "2018-09-02T18:00:00Z"))
+    snap = json.loads(env["games_path"].read_text())
+    for k, gid in enumerate((9201, 9202, 9203)):   # 2 historical + 3 current = 5 ATS games overall
+        feeds[(2026, "regular")].append(cfbd(gid, f"T{k + 2}", "FCS Visitor", 40, 7 + k, [line("consensus", -30, 58)]))
+        snap["games"].append({"game_id": gid, "season": 2026, "week": 2 + k, "home": f"T{k + 2}", "away": "FCS Visitor", "completed": True,
+                              "home_score": 40, "away_score": 7 + k, "neutral_site": False, "start_date": f"2026-09-{12 + k}T16:00:00.000Z"})
+    env["games_path"].write_text(json.dumps(snap))
+    env["archive"].write_bytes(gzip.compress(json.dumps(arc).encode()))
     m.run([2018, 2019], None, "k", None, fetch=fetch, **env)
     calls.clear()
     m.run([2026], 2026, "k", None, incremental=True, fetch=fetch, **env)
@@ -339,6 +351,8 @@ def test_incremental_current_season_equals_full_rebuild_without_historical_downl
     m.run([2018, 2019, 2026], 2026, "k", None, fetch=fetch, **full_env)
     full = json.loads(full_env["public_path"].read_text())
     assert incremental["teams"] == full["teams"] and incremental["coverage"] == full["coverage"]
+    visitor = full["teams"]["FCS Visitor"]
+    assert visitor["history"]["cover_sum"] is None and visitor["overall"]["avg_cover_margin"] is None
 
 
 def test_future_games_are_never_counted(world):

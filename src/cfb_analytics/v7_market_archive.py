@@ -381,6 +381,12 @@ def team_statistics(outcomes, current_season=None, prior_teams=None):
             if letter:
                 t["seq"].append((o["season"], letter))
                 t["by_season"][key][1].setdefault("_seq", []).append(letter)
+    for t in work.values():
+        # Same disclosure rule as the public history block: a withheld small-sample sum is unknown in both modes,
+        # so full rebuilds and incremental refreshes produce identical outputs.
+        for k in ("hist", "hist_sens"):
+            if 0 < t[k]["cover_n"] < MIN_AVG_GAMES:
+                t[k]["cover_sum"] = None
     public = {}
     for name, t in sorted(work.items()):
         by_season = {}
