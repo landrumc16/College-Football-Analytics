@@ -179,9 +179,16 @@ def _half_point(x):
 
 
 def _favored_name_conflict(formatted, spread, home, away):
+    """True when formattedSpread names the opposite favourite. Matches the full team name followed by the number,
+    trying the longer name first so 'Texas Tech -3' is never read as 'Texas'."""
     if not formatted or spread == 0:
         return False
-    named = home if formatted.startswith(home) else away if formatted.startswith(away) else None
+    named = None
+    for name in sorted((home or "", away or ""), key=len, reverse=True):
+        rest = formatted[len(name):] if name and formatted.startswith(name) else None
+        if rest is not None and (rest == "" or rest.startswith(" ")) and not rest.strip()[:1].isalpha():
+            named = name
+            break
     if named is None:
         return False
     return (spread < 0) != (named == home)
@@ -208,20 +215,26 @@ def select_market(game, market, sign):
         return {"status": "no_line", "provider": None}
     if any(v == "invalid" for _, v in values):
         return {"status": "suspicious", "provider": values[0][0], "flag": "non_numeric", "single_provider": len(values) == 1}
-    independents = [(p, v) for p, v in values if p != "consensus"]
-    consensus = next((v for p, v in values if p == "consensus"), None)
-    replaced = (consensus is not None and len(independents) >= 2
-                and max(v for _, v in independents) - min(v for _, v in independents) < DISPUTE_POINTS
-                and abs(consensus - _median([v for _, v in independents])) >= DISPUTE_POINTS)
-    pool = independents if replaced else values
+    first, first_value = values[0]
+    rest = values[1:]
+    # Sole-outlier rule: the priority choice is replaced only when >= 2 other providers agree with each other within
+    # DISPUTE_POINTS and the priority choice is >= DISPUTE_POINTS from their median.
+    replaced = (len(rest) >= 2 and max(v for _, v in rest) - min(v for _, v in rest) < DISPUTE_POINTS
+                and abs(first_value - _median([v for _, v in rest])) >= DISPUTE_POINTS)
+    pool = rest if replaced else values
     provider, value = pool[0]
-    reason = ("consensus_outlier_replaced" if replaced else "priority" if provider == "consensus"
-              else "fallback_missing_consensus" if "consensus" not in game["providers"] else "fallback_missing_value")
+    if replaced:
+        reason = "consensus_outlier_replaced" if first == "consensus" else "priority_outlier_replaced"
+    else:
+        reason = ("priority" if provider == "consensus" else
+                  "fallback_missing_consensus" if "consensus" not in game["providers"] else "fallback_missing_value")
     rec = game["providers"][provider]
     sel = {"provider": provider, "reason": reason, "single_provider": len(values) == 1}
     if market == "spread":
-        if abs(value) > 70 or not _half_point(value) or _favored_name_conflict(rec["formatted_spread"], value, game["home"], game["away"]):
-            return {**sel, "status": "suspicious", "flag": "spread_value_or_sign"}
+        flag = ("spread_magnitude" if abs(value) > 70 else "spread_increment" if not _half_point(value) else
+                "spread_sign_conflict" if _favored_name_conflict(rec["formatted_spread"], value, game["home"], game["away"]) else None)
+        if flag:
+            return {**sel, "status": "suspicious", "flag": flag}
     elif not 20 <= value <= 110 or not _half_point(value):
         return {**sel, "status": "suspicious", "flag": "total_value"}
     others = [v for p, v in pool if p != provider]
@@ -417,6 +430,8 @@ def build_season(season, raw_rows, results):
         cov["spread_single_provider"] += bool(spread.get("single_provider"))
         cov["spread_consensus_replaced"] += spread.get("reason") == "consensus_outlier_replaced"
         cov["total_consensus_replaced"] += total.get("reason") == "consensus_outlier_replaced"
+        cov["spread_priority_replaced"] += spread.get("reason") == "priority_outlier_replaced"
+        cov["total_priority_replaced"] += total.get("reason") == "priority_outlier_replaced"
         if spread.get("provider"):
             providers_spread[spread["provider"]] += 1
         if total.get("provider"):
@@ -429,7 +444,7 @@ def build_season(season, raw_rows, results):
         "spread_ok", "spread_disputed", "spread_no_line", "spread_suspicious",
         "total_ok", "total_disputed", "total_no_line", "total_suspicious",
         "spread_open_available", "total_open_available", "spread_single_provider",
-        "spread_consensus_replaced", "total_consensus_replaced")}
+        "spread_consensus_replaced", "total_consensus_replaced", "spread_priority_replaced", "total_priority_replaced")}
     coverage["selected_spread_providers"] = dict(sorted(providers_spread.items()))
     coverage["selected_total_providers"] = dict(sorted(providers_total.items()))
     return outcomes, coverage
@@ -502,7 +517,8 @@ def diagnose_season(season, raw_rows, results):
                 if len(rest) >= 2 and max(rest) - min(rest) < DISPUTE_POINTS:
                     out[f"policy_v2_{market}_disputed_selected_sole_outlier"] += 1
     _, cov = build_season(season, raw_rows, {g: r for g, r in results.items() if r["season"] == season})
-    for k in ("spread_disputed", "total_disputed", "spread_consensus_replaced", "total_consensus_replaced", "spread_suspicious", "total_suspicious"):
+    for k in ("spread_disputed", "total_disputed", "spread_consensus_replaced", "total_consensus_replaced",
+              "spread_priority_replaced", "total_priority_replaced", "spread_suspicious", "total_suspicious"):
         out["policy_v2_" + k] = cov[k]
     return dict(sorted(out.items()))
 
@@ -552,7 +568,7 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
                                "provider_priority": list(PROVIDER_PRIORITY) + ["others alphabetically"],
                                "dispute_threshold_points": DISPUTE_POINTS,
                                "dispute_test": "selected closing value vs median of other providers (comparison only)",
-                               "consensus_outlier_rule": "consensus replaced by highest-priority independent provider when it is the sole outlier vs >= 2 agreeing independent providers",
+                               "sole_outlier_rule": "the priority provider (consensus or a sportsbook) is replaced by the highest-priority provider of an agreeing group when it is >= 3 points from the median of >= 2 other providers that agree within 3 points",
                                "spread_convention": "home spread, negative = home favourite",
                                "primary_denominator": "games with a non-disputed, non-suspicious closing value for that market",
                                "avg_cover_margin_min_games": MIN_AVG_GAMES,

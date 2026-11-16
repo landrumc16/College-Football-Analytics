@@ -409,3 +409,21 @@ def test_dispute_diagnostics_identify_consensus_as_sole_outlier():
     assert diag["policy_v2_spread_disputed"] == 0 and diag["policy_v2_spread_consensus_replaced"] == 2
     assert diag["spread_consensus_opposite_favourite"] == 2  # WVU: -1 vs +3; ASU: -5 vs +1.5/+1
     assert "value" not in json.dumps(diag)
+
+
+@pytest.mark.parametrize("home,away,formatted,spread,conflict", [
+    ("Texas", "Texas Tech", "Texas Tech -3", 3, False),       # away favourite named by the longer name
+    ("Texas", "Texas Tech", "Texas -3", -3, False),
+    ("Texas Tech", "Texas", "Texas -7", -7, True),            # home spread negative but away named: conflict
+    ("Georgia", "Georgia Tech", "Georgia Tech -2.5", 2.5, False),
+    ("Miami (OH)", "Miami", "Miami -10", 10, False)])
+def test_formatted_spread_name_matching_handles_shared_prefixes(home, away, formatted, spread, conflict):
+    assert m._favored_name_conflict(formatted, spread, home, away) is conflict
+
+
+def test_selected_sportsbook_replaced_when_it_is_the_sole_outlier():
+    row = cfbd(40, "A", "B", 24, 20, [line("DraftKings", -10, 61), line("Bovada", -6, 55), line("ESPN Bet", -6.5, 55.5)])
+    games = m.normalize([row])[0]
+    spread, total = m.select_market(games["40"], "spread", 1), m.select_market(games["40"], "total", 1)
+    assert spread["provider"] == "ESPN Bet" and spread["reason"] == "priority_outlier_replaced" and spread["status"] == "ok"
+    assert total["provider"] == "ESPN Bet" and total["reason"] == "priority_outlier_replaced"
