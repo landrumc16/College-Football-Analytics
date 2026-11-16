@@ -1,0 +1,483 @@
+{
+ "attribution": "Data provided by CollegeFootballData.com",
+ "provider_policy_version": 2,
+ "schema_version": 1,
+ "seasons": {
+  "2016": {
+   "coverage": {
+    "archive_games": 873,
+    "completed": 873,
+    "conflicting_duplicates": 0,
+    "matched": 873,
+    "selected_spread_providers": {
+     "consensus": 638,
+     "numberfire": 1,
+     "teamrankings": 227
+    },
+    "selected_total_providers": {
+     "numberfire": 4,
+     "teamrankings": 756
+    },
+    "spread_consensus_replaced": 204,
+    "spread_disputed": 11,
+    "spread_no_line": 7,
+    "spread_ok": 855,
+    "spread_open_available": 0,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 110,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 14,
+    "total_no_line": 113,
+    "total_ok": 746,
+    "total_open_available": 0,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:13.603745+00:00",
+    "rows": 41,
+    "sha256": "de809f47f2c349db221924a4143c82f6786bb2899c8848719bf706a70a227ce2"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:13.435224+00:00",
+    "rows": 832,
+    "sha256": "f954f9ffc123f0c345e02f2e6d81503effd8c870d253dcca7d5158a7b3d27cee"
+   }
+  },
+  "2017": {
+   "coverage": {
+    "archive_games": 874,
+    "completed": 874,
+    "conflicting_duplicates": 0,
+    "matched": 874,
+    "selected_spread_providers": {
+     "consensus": 853,
+     "teamrankings": 20
+    },
+    "selected_total_providers": {
+     "consensus": 773,
+     "teamrankings": 12
+    },
+    "spread_consensus_replaced": 6,
+    "spread_disputed": 0,
+    "spread_no_line": 1,
+    "spread_ok": 873,
+    "spread_open_available": 0,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 97,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 0,
+    "total_no_line": 89,
+    "total_ok": 785,
+    "total_open_available": 0,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:15.920771+00:00",
+    "rows": 40,
+    "sha256": "febf2d594fb438ad8e0b8222e189a07e02009f69e999bff1b8a4b1687c87fb29"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:15.767878+00:00",
+    "rows": 834,
+    "sha256": "c432495990d57a9b6b1296735fcf61e0dc98e1dc92e84c356bf68f733fa8696c"
+   }
+  },
+  "2018": {
+   "coverage": {
+    "archive_games": 884,
+    "completed": 884,
+    "conflicting_duplicates": 0,
+    "matched": 884,
+    "selected_spread_providers": {
+     "Caesars": 9,
+     "consensus": 797,
+     "teamrankings": 63
+    },
+    "selected_total_providers": {
+     "Caesars": 6,
+     "consensus": 777,
+     "teamrankings": 68
+    },
+    "spread_consensus_replaced": 3,
+    "spread_disputed": 5,
+    "spread_no_line": 15,
+    "spread_ok": 864,
+    "spread_open_available": 0,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 94,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 6,
+    "total_disputed": 4,
+    "total_no_line": 33,
+    "total_ok": 847,
+    "total_open_available": 0,
+    "total_priority_replaced": 1,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:19.271997+00:00",
+    "rows": 39,
+    "sha256": "0f523807f8432aa3a99e5b493130d090552fa0e8e7feae8c3fffec5d0c04644d"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:18.232904+00:00",
+    "rows": 845,
+    "sha256": "89f16d8e034f7b7392107fbf6a4a7d4613a2bfda7dac24d0ac83fde4f4988b06"
+   }
+  },
+  "2019": {
+   "coverage": {
+    "archive_games": 888,
+    "completed": 888,
+    "conflicting_duplicates": 0,
+    "matched": 888,
+    "selected_spread_providers": {
+     "consensus": 880,
+     "teamrankings": 1
+    },
+    "selected_total_providers": {
+     "consensus": 881
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 2,
+    "spread_no_line": 7,
+    "spread_ok": 879,
+    "spread_open_available": 0,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 107,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 1,
+    "total_no_line": 7,
+    "total_ok": 880,
+    "total_open_available": 0,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:22.189083+00:00",
+    "rows": 40,
+    "sha256": "dbee65d2c4e2251fb61eaf73f1242a3362096bef184a236d34443f406d115f40"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:22.035844+00:00",
+    "rows": 848,
+    "sha256": "dc9ec309efb8c7a440d8f9acc5fd221c9f463752767115122f25d05241f90ae0"
+   }
+  },
+  "2020": {
+   "coverage": {
+    "archive_games": 570,
+    "completed": 568,
+    "conflicting_duplicates": 0,
+    "matched": 568,
+    "selected_spread_providers": {
+     "William Hill (New Jersey)": 1,
+     "consensus": 566
+    },
+    "selected_total_providers": {
+     "consensus": 567
+    },
+    "spread_consensus_replaced": 1,
+    "spread_disputed": 6,
+    "spread_no_line": 1,
+    "spread_ok": 561,
+    "spread_open_available": 0,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 19,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 0,
+    "total_no_line": 1,
+    "total_ok": 567,
+    "total_open_available": 0,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 2
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:24.853561+00:00",
+    "rows": 26,
+    "sha256": "45efdb72430a13e4e18a6551078be80395575ca633d951df552811415d85b674"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:24.706403+00:00",
+    "rows": 542,
+    "sha256": "f495480613ed69d1b55e32a93b038bf47556ced6709a8b07e39e8da776d7f2a2"
+   }
+  },
+  "2021": {
+   "coverage": {
+    "archive_games": 887,
+    "completed": 887,
+    "conflicting_duplicates": 0,
+    "matched": 887,
+    "selected_spread_providers": {
+     "Bovada": 13,
+     "William Hill (New Jersey)": 6,
+     "consensus": 868
+    },
+    "selected_total_providers": {
+     "Bovada": 12,
+     "William Hill (New Jersey)": 5,
+     "consensus": 870
+    },
+    "spread_consensus_replaced": 2,
+    "spread_disputed": 0,
+    "spread_no_line": 0,
+    "spread_ok": 887,
+    "spread_open_available": 13,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 12,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 0,
+    "total_no_line": 0,
+    "total_ok": 887,
+    "total_open_available": 12,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:27.132877+00:00",
+    "rows": 38,
+    "sha256": "6ea325e70ed774c46054f62e69cd16fee3b4cee8e6e7e3e9f10656023ec9275b"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:26.955458+00:00",
+    "rows": 849,
+    "sha256": "c3637f8b837e32a8452b446ede2b2554dc3340aa3e54212a76800c9a06d21ae0"
+   }
+  },
+  "2022": {
+   "coverage": {
+    "archive_games": 896,
+    "completed": 896,
+    "conflicting_duplicates": 0,
+    "matched": 896,
+    "selected_spread_providers": {
+     "Bovada": 11,
+     "William Hill (New Jersey)": 1,
+     "consensus": 880
+    },
+    "selected_total_providers": {
+     "Bovada": 11,
+     "William Hill (New Jersey)": 1,
+     "consensus": 880
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 0,
+    "spread_no_line": 4,
+    "spread_ok": 892,
+    "spread_open_available": 11,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 11,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 0,
+    "total_no_line": 4,
+    "total_ok": 892,
+    "total_open_available": 11,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:32.128736+00:00",
+    "rows": 46,
+    "sha256": "bab97bbe1dc27b51447b934e1714732ea85ea0567bb989fa6f06674dd383d4c2"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:31.873316+00:00",
+    "rows": 1417,
+    "sha256": "5dccf847596a97152022f8dae6243a25f4713ba506ddde9ba0eff102a67e2e3b"
+   }
+  },
+  "2023": {
+   "coverage": {
+    "archive_games": 910,
+    "completed": 910,
+    "conflicting_duplicates": 0,
+    "matched": 910,
+    "selected_spread_providers": {
+     "Bovada": 90,
+     "Caesars Sportsbook (Colorado)": 2,
+     "DraftKings": 679,
+     "ESPN Bet": 58,
+     "William Hill (New Jersey)": 49,
+     "consensus": 29
+    },
+    "selected_total_providers": {
+     "Bovada": 103,
+     "Caesars Sportsbook (Colorado)": 2,
+     "DraftKings": 568,
+     "ESPN Bet": 160,
+     "William Hill (New Jersey)": 47,
+     "consensus": 27
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 12,
+    "spread_no_line": 3,
+    "spread_ok": 895,
+    "spread_open_available": 769,
+    "spread_priority_replaced": 46,
+    "spread_single_provider": 59,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 2,
+    "total_disputed": 12,
+    "total_no_line": 3,
+    "total_ok": 895,
+    "total_open_available": 516,
+    "total_priority_replaced": 51,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:36.590220+00:00",
+    "rows": 66,
+    "sha256": "627b52268e41e0eec921067cd846496288762a8540e0e2f6f08cac0bb4f5901d"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:36.401965+00:00",
+    "rows": 1350,
+    "sha256": "a7ea110cedd653f47c5088b479d612a1df9c54fb6e3acbe2e3b21a5e50c65167"
+   }
+  },
+  "2024": {
+   "coverage": {
+    "archive_games": 919,
+    "completed": 919,
+    "conflicting_duplicates": 0,
+    "matched": 919,
+    "selected_spread_providers": {
+     "DraftKings": 797,
+     "ESPN Bet": 107
+    },
+    "selected_total_providers": {
+     "DraftKings": 794,
+     "ESPN Bet": 109
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 7,
+    "spread_no_line": 15,
+    "spread_ok": 897,
+    "spread_open_available": 757,
+    "spread_priority_replaced": 14,
+    "spread_single_provider": 81,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 7,
+    "total_no_line": 16,
+    "total_ok": 896,
+    "total_open_available": 203,
+    "total_priority_replaced": 16,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:40.686895+00:00",
+    "rows": 50,
+    "sha256": "7cfdf23c94666599aeaaeb5073d981ddc90ef4c89a48d37b0adad93f15a449d3"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:40.514277+00:00",
+    "rows": 1523,
+    "sha256": "eb670a71cd050c2dae668570baceaf4af5130c9e8ea454ea830b10153a1fa8e0"
+   }
+  },
+  "2025": {
+   "coverage": {
+    "archive_games": 934,
+    "completed": 934,
+    "conflicting_duplicates": 0,
+    "matched": 934,
+    "selected_spread_providers": {
+     "Bovada": 6,
+     "DraftKings": 793,
+     "ESPN Bet": 135
+    },
+    "selected_total_providers": {
+     "Bovada": 1,
+     "DraftKings": 788,
+     "ESPN Bet": 145
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 11,
+    "spread_no_line": 0,
+    "spread_ok": 923,
+    "spread_open_available": 811,
+    "spread_priority_replaced": 12,
+    "spread_single_provider": 10,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 3,
+    "total_no_line": 0,
+    "total_ok": 931,
+    "total_open_available": 215,
+    "total_priority_replaced": 15,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:45.033895+00:00",
+    "rows": 50,
+    "sha256": "428fd31051e21d92f988b83742b41e88b44222cb40e28408efb7013481e662bb"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:44.854025+00:00",
+    "rows": 1547,
+    "sha256": "5681bbdbe2385491fc73bbcbd12e26a599b127bb2a308eab39363abbf5388353"
+   }
+  },
+  "2026": {
+   "coverage": {
+    "archive_games": 888,
+    "completed": 752,
+    "conflicting_duplicates": 0,
+    "matched": 888,
+    "selected_spread_providers": {
+     "DraftKings": 833
+    },
+    "selected_total_providers": {
+     "DraftKings": 833
+    },
+    "spread_consensus_replaced": 0,
+    "spread_disputed": 4,
+    "spread_no_line": 55,
+    "spread_ok": 829,
+    "spread_open_available": 825,
+    "spread_priority_replaced": 0,
+    "spread_single_provider": 29,
+    "spread_suspicious": 0,
+    "total_consensus_replaced": 0,
+    "total_disputed": 3,
+    "total_no_line": 55,
+    "total_ok": 830,
+    "total_open_available": 767,
+    "total_priority_replaced": 0,
+    "total_suspicious": 0,
+    "unmatched": 0
+   },
+   "postseason": {
+    "retrieved_at": "2026-11-16T13:43:53.252422+00:00",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "regular": {
+    "retrieved_at": "2026-11-16T13:43:53.099410+00:00",
+    "rows": 1477,
+    "sha256": "2dae792458c2b265ef5c184935c62b39534b8801af17312184c532305caf573b"
+   }
+  }
+ },
+ "source": "CollegeFootballData.com /lines"
+}
