@@ -342,6 +342,9 @@ def test_incremental_current_season_equals_full_rebuild_without_historical_downl
                               "home_score": 40, "away_score": 7 + k, "neutral_site": False, "start_date": f"2026-09-{12 + k}T16:00:00.000Z"})
     env["games_path"].write_text(json.dumps(snap))
     env["archive"].write_bytes(gzip.compress(json.dumps(arc).encode()))
+    report = json.loads(env["report_path"].read_text())   # treat the visitor as a program that later joined FBS
+    report["rankings"].append({"team": "FCS Visitor"})
+    env["report_path"].write_text(json.dumps(report))
     m.run([2018, 2019], None, "k", None, fetch=fetch, **env)
     calls.clear()
     m.run([2026], 2026, "k", None, incremental=True, fetch=fetch, **env)
@@ -453,3 +456,16 @@ def test_current_season_snapshot_names_are_canonicalized_like_the_report(world):
     env["report_path"].write_text(json.dumps(report))
     res = m.current_results(2026, env["games_path"], env["report_path"], env["now"])
     assert res[str(snap["games"][0]["game_id"])]["away"] == "ULM"
+
+
+def test_only_current_fbs_programs_are_published_but_their_fcs_games_count(world):
+    feeds, fetch, calls, env, tmp = world
+    feeds[(2018, "regular")].append(cfbd(9301, "T1", "Small College", 52, 3, [line("consensus", -35, 62)]))
+    arc = json.loads(gzip.decompress(env["archive"].read_bytes()))
+    arc["2018"].append(archive_game(9301, 2018, "T1", "Small College", 52, 3, "2018-09-01T18:00:00Z"))
+    env["archive"].write_bytes(gzip.compress(json.dumps(arc).encode()))
+    _, payload = m.run([2018, 2019], None, "k", None, fetch=fetch, **env)
+    assert "Small College" not in payload["teams"] and set(payload["teams"]) <= {f"T{i}" for i in range(12)}
+    t1 = payload["teams"]["T1"]["by_season"]["2018"]
+    assert t1["games"] == sum(1 for g in arc["2018"] if "T1" in (g["home"], g["away"]))
+    assert env["public_path"].read_text().count("\n") == 1     # compact browser payload

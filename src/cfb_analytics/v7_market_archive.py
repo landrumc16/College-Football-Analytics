@@ -567,8 +567,15 @@ def sensitivity_summary(teams):
             "max_team_cover_rate_change_pct_points": round(100 * max_shift, 1)}
 
 
-def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=None):
+def fbs_teams(report_path=CURRENT_REPORT):
+    return {t["team"] for t in json.loads(Path(report_path).read_text())["rankings"]}
+
+
+def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=None, publish_teams=None):
     teams = team_statistics(outcomes, current_season, prior_teams)
+    if publish_teams is not None:
+        # Records are published for current FBS programs only; their games against FCS opponents still count.
+        teams = {name: t for name, t in teams.items() if name in publish_teams}
     generated = max(r["retrieved_at"] for s in receipts["seasons"].values() for t, r in s.items() if t in SEASON_TYPES)
     payload = {"schema_version": SCHEMA_VERSION, "provider_policy_version": POLICY_VERSION, "generated_at": generated,
                "source": SOURCE, "attribution": ATTRIBUTION,
@@ -583,6 +590,7 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
                                "limitations": ["Opening lines unavailable before 2021",
                                                "Per-game lines are not published (CFBD redistribution terms pending clarification)",
                                                "Current-season records include completed games only",
+                                               "Published teams are current FBS programs; seasons before a program joined FBS include only games against FBS opponents",
                                                "Descriptive records are not predictions"]},
                "seasons": sorted(int(s) for s in coverage), "current_season": current_season,
                "coverage": dict(sorted(coverage.items())), "sensitivity": sensitivity_summary(teams), "teams": teams}
@@ -591,13 +599,16 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
 
 
 def write_atomic(pairs):
-    """Write all (path, payload) temps first, then replace; on any error nothing is replaced."""
+    """Write all (path, payload) temps first, then replace; on any error nothing is replaced.
+    The public archive is written compactly (browser payload); receipts stay indented for review."""
     temps = []
     try:
         for path, payload in pairs:
             tmp = Path(str(path) + ".tmp")
             tmp.parent.mkdir(parents=True, exist_ok=True)
-            tmp.write_text(json.dumps(payload, indent=1, sort_keys=True) + "\n")
+            compact = Path(path).suffix == ".json" and "receipts" not in Path(path).name
+            text = json.dumps(payload, sort_keys=True, separators=(",", ":")) if compact else json.dumps(payload, indent=1, sort_keys=True)
+            tmp.write_text(text + "\n")
             temps.append((tmp, Path(path)))
         for tmp, path in temps:
             tmp.replace(path)
@@ -646,7 +657,7 @@ def run(seasons, current_season, key, cache, *, offline=False, accept_upstream=F
         coverage[str(season)] = cov
         outcomes += season_outcomes
     receipts["seasons"] = dict(sorted(receipts["seasons"].items()))
-    payload = build_public(outcomes, coverage, receipts, current_season, prior_teams)
+    payload = build_public(outcomes, coverage, receipts, current_season, prior_teams, fbs_teams(report_path))
     write_atomic([(receipts_path, receipts), (public_path, payload)])
     return receipts, payload
 
