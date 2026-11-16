@@ -1,259 +1,335 @@
-# Version 7 — Milestone 1: Research and data feasibility
+# Version 7 — Milestone 1: Research and data feasibility (final)
 
-Date: November 16, 2026. Branch: `v7-market-intelligence-roadmap` (PR #32).
-Baseline `main`: `5a6fd8d8dda02f9c61c81248f31b0648c39e6968`. This branch adds only
-data refreshes and planning documents.
-Scope: research only. No V7 code, data ingestion, production change or merge.
+**Date:** November 16, 2026.
+**Branch / PR:** `v7-market-intelligence-roadmap`, PR #32.
+**Baseline `main`:** `5a6fd8d8dda02f9c61c81248f31b0648c39e6968`.
+**Scope:** research and read-only verification only. No V7 app code, no data
+ingestion into the app, no production change, no merge.
 
-**Bottom line**
+## Milestone 1 verdict
 
-1. Historical **spreads and totals** for 2016–2025 appear obtainable through the
-   CFBD API we already use, but per-season coverage is unverified until a sample
-   is pulled. Its terms permit commercial use; the redistribution clauses still
-   need to be read in full.
-2. **Kalshi** college football game markets exist only since the 2025 season.
-   Market data is technically retrievable, but Kalshi's data terms appear to
-   **prohibit public display or redistribution without written consent**.
-3. Our model already publishes the two outputs a market comparison needs:
-   **projected margin** and **win probability**. Only the 2026 forecasts are
-   authentic archived pregame predictions; 2016–2025 are retrospective replays.
-4. **Milestone 1 is not yet complete.** The roadmap requires samples retrieved and
-   verified from each selected source. Live retrieval failed in this session
-   (§9), so no sample has been verified. Milestone 2 (the CFBD-based archive)
-   should wait for those samples and the CFBD redistribution check. Kalshi's
-   answer on display rights gates only Market Watch.
+**Internal research and verification are complete.** Two items now depend on third
+parties:
 
-Status labels used below: **VERIFIED AVAILABLE**, **AVAILABLE WITH RESTRICTIONS**,
-**UNVERIFIED** and **UNAVAILABLE**. VERIFIED AVAILABLE is used only for
-resources confirmed directly in repository code or data. External capabilities
-are based on search excerpts of the official pages linked below, plus clearly
-labelled secondary sources; no external page or endpoint was opened directly in
-this session. External items are therefore at most AVAILABLE WITH RESTRICTIONS
-until a live sample confirms them.
+- **Kalshi** must grant written permission before any Market Watch display.
+- **CFBD** is asked to confirm one point: how much per-game line data a public
+  static site may publish. This is a clarification, not a blocker.
 
-## 1. Existing reusable resources (inspected in the repository)
+**Readiness:**
+- **Historical spread/ATS/totals work (CFBD): ready for Milestone 2.**
+- **Kalshi Market Watch: blocked pending authorization.**
 
-| Resource | Location | V7 use | Status |
-| --- | --- | --- | --- |
-| Incumbent model outputs: `home_margin`, `home_win_probability` and predicted winner for every upcoming game | `data/season-2026-report.json`, `src/cfb_analytics/pipeline.py`, `predictions.py` | Model side of the comparison: margin vs. spread, probability vs. market-implied probability. No new model is needed. | VERIFIED AVAILABLE |
-| Immutable 2026 pregame forecast ledger: 858 entries with `forecast_recorded_at` and kickoff provenance | `data/pregame-2026-history.json`, `forecast_ledger.py` | The only **authentic** archived model forecasts. Usable for honest 2026 comparisons where a market quote with an earlier timestamp exists. | VERIFIED AVAILABLE |
-| Independently verified published-forecast subset: 65 FBS-vs-FBS games (2026 weeks 10–11) | `web/public/v5-forecast-evaluation.json` | Small authentic validation sample. Too small for strong conclusions. | VERIFIED AVAILABLE |
-| 2016–2025 results archive and retrospective replay: 3,059 games in the challenger research and 3,174 in the V2 walk-forward | `web/public/v5-historical-results.json`, `v6-prediction-research.json`, `data/v2-research-summary.json` | Game identities and outcomes for joining historical lines. Model replays are **retrospective, not authentic pregame**, and must be labelled that way. | VERIFIED AVAILABLE (retrospective) |
-| Team identity normalization and aliases (e.g. `Miami` → `Miami (FL)`) | `pipeline.py`, `report.py`, `forecast_ledger.py` | Joining CFBD lines and Kalshi tickers to our games. The alias gap in polls (QA finding D4) shows normalization must be applied at every ingestion point. | VERIFIED AVAILABLE |
-| Spread-to-probability conversion `1/(1+10^(spread/19.5))` and an existing slot for a closing spread | `model.py:70`, `predictions.py`, `workbook_prediction.py` | Converting a spread to an implied win probability for comparison. The 19.5 scale comes from the spreadsheet and must be validated before V7 relies on it. | VERIFIED AVAILABLE (needs validation) |
-| Market benchmark protocol: same-intersection comparison, MAE/RMSE for margin, Brier/log loss for probability, no cover rate as winner accuracy | `docs/V2-SPREADSHEET-MARKET-BENCHMARK.md` | The evaluation design for M6 already exists. | VERIFIED AVAILABLE |
-| CFBD API client, refresh workflow, `CFBD_API_KEY` secret, atomic snapshots, scheduled Actions, static Pages publishing | `refresh.py`, `.github/workflows/refresh-data.yml`, `dashboard.yml` | Reuse the same pipeline for lines and market snapshots. No backend needed. | VERIFIED AVAILABLE |
-
-**Do not rebuild:** game results, team identities, model outputs, the forecast
-ledger or the evaluation protocol. Historical lines must be **joined** to the
-existing archive, not acquired as a second game database.
-
-## 2. Data providers and official sources
-
-| Provider | What it offers | Access | Official source |
-| --- | --- | --- | --- |
-| **CollegeFootballData (CFBD)** — recommended | `GET /lines`: per-game spread, total, moneylines and opening values by provider | API key (we already hold one). Free tier about 1,000 calls/month; Patreon tiers from $1/month. | [Terms](https://collegefootballdata.com/terms), [API tiers](https://collegefootballdata.com/api-tiers), [usage and access](https://apinext.collegefootballdata.com/usage-and-access), [data availability](https://apinext.collegefootballdata.com/data-availability) |
-| **Kalshi** — prediction market | `KXNCAAFGAME` game markets, plus spread, total and team-total ladders; market, trade and candlestick endpoints, and a historical archive behind a cutoff | Market-data reads are reported as public; trading and some depth need an API key. The Developer Agreement applies on first API use. | [Historical data](https://docs.kalshi.com/getting_started/historical_data), [rate limits](https://docs.kalshi.com/getting_started/rate_limits), [historical trades](https://docs.kalshi.com/api-reference/historical/get-historical-trades.md), [Developer Agreement](https://kalshi-public-docs.s3.amazonaws.com/Kalshi-Developer-Agreement.pdf), [Data Terms](https://kalshi-public-docs.s3.amazonaws.com/kalshi-data-terms-of-service.pdf) |
-| **The Odds API** — paid fallback | Historical odds snapshots (featured markets from June 2020; 10-minute intervals, 5-minute from Sept. 2022); NCAAF history on paid plans | Paid credits; historical calls cost about 10× normal | [Historical odds](https://the-odds-api.com/historical-odds-data/), [NCAAF](https://the-odds-api.com/sports/ncaaf-odds.html), [v4 docs](https://the-odds-api.com/liveapi/guides/v4/) |
-| Polymarket — not recommended | Public Gamma/CLOB reads with price history per token. College football coverage was not confirmed. Its US exchange is a separate venue. | Public reads | [Docs](https://docs.polymarket.com/api-reference) |
-| SportsDataIO, OddsPapi, SportsGameOdds — not recommended | Commercial odds feeds | Paid contracts | Not evaluated further: they offer no advantage over CFBD for history or over Kalshi for prediction markets |
-| Free websites (Stick to the Model, SportsOddsHistory, legacy forum spreadsheets) — **rejected** | Scraped or uncredited closing lines | Unclear licence and provenance | No verifiable source, licence or capture time. Not acceptable under the "no unverified data" rule. |
-
-## 3. Historical data coverage
-
-| Capability (2016–2025 unless noted) | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Closing point spread per FBS game | CFBD `/lines` | **UNVERIFIED** (strong secondary evidence) | Third-party reviews report CFBD history from 2013 with per-game, per-provider coverage that varies. Coverage per season must be measured from a real pull before any claim. |
-| Opening spread and total | CFBD `/lines` (opening fields) | **UNVERIFIED** | cfbfastR documents an opening over/under and moneylines. Opening-spread availability by provider and season is unconfirmed. "Open" means the provider's first captured value, not a market-wide open. |
-| Closing over/under | CFBD `/lines` | **UNVERIFIED** | Same basis as spreads. |
-| ATS results, home/away, favourite/underdog, O/U records, cover margin | Derived from lines plus our verified results archive | **AVAILABLE WITH RESTRICTIONS** | Pure calculation once lines exist. Pushes and missing lines must stay explicit. Limited by line coverage. |
-| Intraday line movement | The Odds API (paid; NCAAF start date unconfirmed, featured markets from mid-2020) | **AVAILABLE WITH RESTRICTIONS** (cost); **UNAVAILABLE** before 2020 | CFBD offers only open and close points. Full movement history would need a paid feed and would still not cover 2016–2019. |
-| Consensus vs. per-book lines | CFBD providers (documented values include Caesars, consensus, numberfire, teamrankings) | **UNVERIFIED** | The provider list changes over the years. Pick one stated provider rule (for example consensus, else a named fallback) and record it per game. |
-| Kalshi college football game markets | Kalshi | **AVAILABLE WITH RESTRICTIONS** | Only from the **2025 season** (moneyline from launch; spread and total self-certified Aug. 25, 2025). No 2016–2024 history exists. |
-| Kalshi historical prices (candlesticks) and trades | Kalshi `/historical/*` behind `GET /historical/cutoff` | **AVAILABLE WITH RESTRICTIONS** | Technically documented. Separate cutoffs for settled markets, trades and orders, and they move forward. Display rights are not granted (§4). |
-| Historical Kalshi order-book depth | — | **UNAVAILABLE** | Not provided historically. It can only exist if we capture snapshots ourselves going forward, and the licence would also have to permit that. |
-
-## 4. Licensing and redistribution
-
-- **CFBD — AVAILABLE WITH RESTRICTIONS.**
-  - The official terms (effective Aug. 12, 2026) permit commercial use on every
-    tier. Attribution is requested but optional ("Data provided by
-    CollegeFootballData.com").
-  - Secondary summaries say the terms bar reselling raw data as a bulk download
-    or substitute API.
-  - The **redistribution clauses were not read in full** (fetch blocked). Before
-    M2, confirm that publishing derived per-game lines and ATS records on a free
-    public site is allowed.
-  - Recommended publication shape: derived records and the lines needed per game,
-    with no bulk raw dump.
-- **Kalshi — blocker for public display.**
-  - The Developer Agreement binds every API user. Secondary sources describe a
-    §3.1 restricting collecting, caching, aggregating or storing API data except
-    for one's own trading, and sharing it with third parties without prior
-    written authorization. One summary instead says v1.1 is silent on data.
-  - The Kalshi Data Terms of Service limit website content to personal,
-    non-commercial use and exclude archived or cached datasets and AI/ML use
-    without written consent.
-  - Kalshi licenses institutional data distribution commercially (LO:TECH).
-  - **Conclusion:** displaying Kalshi prices, volume or history on our public
-    site is **not permitted unless Kalshi grants written permission**. Its
-    endpoints being public is not a licence.
-  - **Action:** the owner contacts Kalshi for written display permission and its
-    terms.
-- **The Odds API — AVAILABLE WITH RESTRICTIONS.** It is a paid commercial licence.
-  Display and redistribution terms must be checked in the plan agreement before
-  purchase. Not needed if CFBD coverage is sufficient.
-- **Free scraped archives — UNAVAILABLE.** No licence or provenance.
-
-## 5. Kalshi API capabilities and limitations
-
-| Capability | Status | Detail |
+| # | Completion criterion | Result |
 | --- | --- | --- |
-| Discover college football game markets | AVAILABLE WITH RESTRICTIONS | Series `KXNCAAFGAME`, with tickers like `KXNCAAFGAME-26OCT03LOUNCST` (date plus team codes). Team codes need a mapping table to our canonical names. |
-| Current prices (yes/no bid, ask, last) and volume and open interest per market | AVAILABLE WITH RESTRICTIONS | Documented market fields. Reads are reported as needing no key. **Live call not verified in this session.** |
-| Bid-ask spread and liquidity (order book) | AVAILABLE WITH RESTRICTIONS | `GET /markets/{ticker}/orderbook`. Sources conflict on whether it needs authentication. Depth is current-only. |
-| Historical prices | AVAILABLE WITH RESTRICTIONS | Candlesticks via `period_interval`, with a batch route for up to 100 tickers. Older settled markets are served from `/historical/markets/{ticker}/candlesticks`. |
-| Historical trades (actual transactions) | AVAILABLE WITH RESTRICTIONS | `/historical/trades` before the cutoff. These are executed trades, unlike quotes. |
-| Historical order-book depth | UNAVAILABLE | Never served historically. |
-| Rate limits | AVAILABLE WITH RESTRICTIONS | A token-bucket model by tier (Basic, Advanced and higher). Exact Predictions budgets come from `GET /account/limits`, so they were **unverified** here. Older docs listed about 10–20 reads/s at Basic. A few hundred calls per refresh is far below any tier. |
-| Historical coverage | AVAILABLE WITH RESTRICTIONS | College football begins with the 2025 season, so only the 2025–2026 seasons exist. |
-| Licence to display | **UNAVAILABLE without written consent** | See §4. |
+| 1 | CFBD samples retrieved and checked against existing results | **Met.** 20 live calls; 8,633 games matched with 100% name and score agreement (§3). |
+| 2 | Coverage and missing-data limits documented | **Met** (§3). |
+| 3 | CFBD redistribution confirmed or explicitly unresolved | **Met.** Display and derived outputs are permitted; one scope question goes to CFBD (§4). |
+| 4 | Kalshi capabilities checked against read-only samples | **Met** (§5). |
+| 5 | Kalshi display rights established or classified | **Met.** Written permission is required; Market Watch is blocked (§6). |
+| 6 | Model compatibility verified | **Met** (§7). |
+| 7 | Architecture and costs documented | **Met** (§8, §9). |
+| 8 | Ready vs. blocked features identified | **Met** (§10). |
 
-**Measures to keep separate:**
-- **Last trade** is a transaction.
-- **Bid and ask** are quotes; their midpoint is a market-implied estimate, and a
-  wide spread means low confidence in it.
-- **Volume** counts contracts traded and **open interest** counts outstanding
-  contracts. Neither is a share of people or of money on a side.
-- Kalshi prices include no vig, but trading fees apply.
-- Spread and total contracts are threshold ladders ("wins by more than X"), so
-  they are not directly a single sportsbook line.
+Status labels:
+- **VERIFIED AVAILABLE:** confirmed in repository code or data, or by live
+  retrieval in this milestone.
+- **AVAILABLE WITH RESTRICTIONS:** retrievable, but limited by licence, coverage
+  or quality.
+- **UNVERIFIED:** documented but not confirmed.
+- **UNAVAILABLE:** does not exist or cannot be used.
 
-## 6. Model compatibility
+## 1. Evidence produced
 
-**Already exists (no new model):**
-- Projected home margin. Compare it with the spread (sign convention: negative
-  home spread means the home team is favoured) using MAE/RMSE and the share of
-  games where the model and the spread pick different sides.
-- Model win probability. Compare it with market-implied probability using Brier,
-  log loss and calibration on the same game sample.
-
-**Needs validation before display:**
-- The 19.5 spread-to-probability scale.
-- Any vig removal for moneylines.
-- Mapping Kalshi spread and total ladders to a single implied line.
-- Whether "model disagreement" thresholds carry information.
-
-**Does not exist and must not be invented:**
-- A model projected **total**. The incumbent outputs margin and win probability
-  only, so model-vs-total comparisons are **UNAVAILABLE** unless a total model is
-  separately approved. Descriptive over/under records are still available.
-
-**Avoiding hindsight bias:**
-- **2026:** the ledger's `forecast_recorded_at` must be earlier than the market
-  observation time, which must be earlier than kickoff. Use closing lines for
-  "market at close" and the quote with the latest earlier timestamp for matched
-  comparisons.
-- **2016–2025:** model forecasts are retrospective walk-forward replays. Label
-  every result "retrospective replay vs. historical closing line", never
-  "authentic pregame prediction".
-- Use the same intersection of games for model and market. Report coverage and
-  confidence intervals, and no profitability claims without executable-price
-  evidence (roadmap M6).
-
-## 7. Technical architecture recommendation
-
-Extend what already exists. **No new backend.**
-
-1. **Historical lines (one-off backfill):**
-   - The scheduled pipeline pulls CFBD `/lines` by season and week into
-     immutable, checksummed snapshots, with provenance and coverage reports.
-   - Join to the existing results archive by CFBD game ID.
-   - Publish small derived JSON (per-team ATS and O/U splits, per-game close
-     lines) alongside the existing `web/public/*.json`.
-2. **Current lines:** add a lines pull to the existing refresh workflow, once
-   daily plus before kickoff windows.
-3. **Kalshi, only if permission is granted:**
-   - A separate scheduled job snapshots open `KXNCAAFGAME` markets for that
-     week's games (price, bid, ask, volume, open interest, timestamp) every
-     30–60 minutes on game days.
-   - Settled-market candlesticks fill in the history.
-   - Retain only what the licence permits.
-4. **Publishing:**
-   - Static GitHub Pages and JSON stay as they are.
-   - The existing PWA rule stays: live JSON is never cached.
-   - Stale banners use the existing 72-hour pattern, with a shorter threshold for
-     market data.
-5. **Failure handling:**
-   - Reuse the atomic write with last-good retention.
-   - Add the completeness and regression checks proposed in the final pre-beta QA
-     (finding D1), so a partial lines or market response cannot publish.
-6. **Constraint:** GitHub Actions scheduling is unreliable for frequent jobs.
-   QA observed 4–8 hour gaps against a 15-minute cron. Market Watch must
-   therefore be presented as **periodic snapshots with timestamps, not live
-   prices**. True live data would need a server or a client-side call, which the
-   licence most likely forbids.
-
-**Storage estimates (assumptions, not measurements):**
-- CFBD lines for 10 seasons: about 8,000 FBS games × a few providers ≈ 5–15 MB
-  raw. Derived public JSON is under 1 MB.
-- Kalshi snapshots: about 60 FBS games/week × about 6 markets × 30 snapshots ≈
-  10–20k rows/week, roughly 5–10 MB per season raw.
-
-All of this fits comfortably in the repository and in Pages limits.
-
-## 8. Estimated ongoing costs (published list prices; not verified invoices)
-
-| Item | Estimate |
+| Evidence | Where |
 | --- | --- |
-| CFBD | The 10-season backfill is roughly 1 call per season-week, about 160 calls; each refresh adds calls. Free tier (1,000/month) may suffice; **$1–$5/month Patreon** (5,000–30,000 calls) gives headroom. Confirm on the official tiers page. |
-| Kalshi | $0 in API fees for market data reads. **Display licence: unknown, pending Kalshi's answer.** |
-| The Odds API (only if intraday movement is required) | Third-party listings show paid plans of about **$30–$249/month**, with historical calls at about 10× credits. Not recommended for the minimum release. |
-| Hosting and CI | $0 extra: public-repo GitHub Pages and Actions. |
-| **Minimum release total** | **$0–$5/month**, plus Kalshi licence terms if pursued. |
+| CFBD `/lines` sample: 2016–2025 regular and postseason, 20 API calls through the existing `CFBD_API_KEY` secret, joined to `research/archive/verified/espn-games.json.gz` | Workflow `.github/workflows/v7-cfbd-lines-sample.yml`, script `scripts/v7_cfbd_lines_sample.py`, [run 43865079391](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43865079391) at `29a2441`. The run logs aggregates and 12 hand-check games only; raw responses were never stored. |
+| Kalshi read-only public API samples (no account; about 15 requests on 2026-11-16) | Reported below. Responses were kept only in a temporary scratch area and deleted, consistent with Developer Agreement §3.1. |
+| CFBD Terms of Use, full text (effective Aug. 12, 2026) | https://collegefootballdata.com/terms |
+| Kalshi Developer Agreement v1.1, full text | https://kalshi-public-docs.s3.amazonaws.com/Kalshi-Developer-Agreement.pdf |
+| Kalshi Data Terms of Use, full text | https://kalshi-public-docs.s3.amazonaws.com/kalshi-data-terms-of-service.pdf |
+| Kalshi rate limits and historical data docs | https://docs.kalshi.com/getting_started/rate_limits , https://docs.kalshi.com/getting_started/historical_data |
 
-## 9. Missing information and genuine blockers
+## 2. Existing reusable resources (VERIFIED AVAILABLE)
 
-1. **No live samples verified (M1 incomplete).**
-   - This session could not run the retrievals. The command-safety check failed
-     repeatedly, and web fetches did not use the newly allowed hosts.
-   - Required next steps, which are read-only:
-     - (a) `GET /historical/cutoff` and `GET /markets?series_ticker=KXNCAAFGAME`
-       from Kalshi;
-     - (b) one settled game's candlesticks and trades;
-     - (c) CFBD `/lines?year=2016…2025` for a handful of known games, checked by
-       hand against the archive.
+- **Results archive:** 2016–2025, ESPN-ID keyed and independently corroborated
+  (`research/archive/verified/espn-games.json.gz`; 8,635 FBS-participant games).
+  CFBD game IDs equal these IDs, so lines join directly; no new game database is
+  needed.
+- **Incumbent model outputs:** `home_margin` and `home_win_probability` in
+  `data/season-2026-report.json`.
+- **2026 pregame ledger:** `data/pregame-2026-history.json`.
+- **Team aliases:** in `pipeline.py` and `report.py`.
+- **Spread-conversion helper:** in `model.py`.
+- **Market benchmark protocol:** `docs/V2-SPREADSHEET-MARKET-BENCHMARK.md`.
+- **Pipeline:** the refresh workflow, atomic snapshots and static Pages
+  publishing.
 
-   The CFBD key exists only as a GitHub secret, so CFBD samples should be pulled
-   by a manual Actions workflow on this branch or with a locally provided key.
-2. **Kalshi display permission (blocker for Market Watch).** Needs written consent
-   from Kalshi. Without it, Kalshi data cannot appear publicly.
-3. **CFBD redistribution clause.** Read the full terms and confirm that derived
-   lines and ATS records may be published. Ask CFBD if the wording is ambiguous.
-4. **CFBD per-season line coverage and opening-line availability.** Must be
-   measured from real data.
-5. **Validation of the spread-to-probability scale** before any probability
-   comparison is shown.
-6. **The Odds API NCAAF start date and licence.** Unconfirmed; only relevant if
-   intraday movement is required.
+## 3. CFBD historical lines — live verification results
 
-## 10. Recommended minimum complete V7 feature set
+The join uses the CFBD game ID, which is the ESPN event ID. All counts are
+FBS-participant games in our archive.
 
-| Feature | Data | Decision |
+| Season | Archive games | Matched | Names / scores agree | With a closing spread | With an opening spread | With a closing total | With an opening total | ATS pushes | O/U pushes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2016 | 873 | 873 | 873 / 873 | 866 | 0 | 760 | 0 | 21 | 0 |
+| 2017 | 874 | 874 | 874 / 874 | 873 | 0 | 785 | 0 | 23 | 8 |
+| 2018 | 884 | 884 | 884 / 884 | 869 | 0 | 851 | 0 | 20 | 8 |
+| 2019 | 888 | 888 | 888 / 888 | 881 | 0 | 881 | 0 | 18 | 14 |
+| 2020 | 570 | 568 | 568 / 568 | 567 | 0 | 567 | 0 | 9 | 8 |
+| 2021 | 887 | 887 | 887 / 887 | 887 | 878 | 887 | 879 | 13 | 8 |
+| 2022 | 896 | 896 | 896 / 896 | 892 | 818 | 892 | 823 | 14 | 12 |
+| 2023 | 910 | 910 | 910 / 910 | 907 | 849 | 907 | 851 | 14 | 11 |
+| 2024 | 919 | 919 | 919 / 919 | 904 | 861 | 903 | 861 | 16 | 10 |
+| 2025 | 934 | 934 | 934 / 934 | 934 | 934 | 934 | 934 | 8 | 1 |
+| **Total** | **8,635** | **8,633** | **100% / 100%** | **8,580 (99.4%)** | **4,340 (2021+ only)** | **8,367 (96.9%)** | **4,348 (2021+ only)** | | |
+
+**Findings:**
+
+- **Closing spreads, 2016–2025: VERIFIED AVAILABLE.** 99.4% of FBS-participant
+  games have one.
+  - **Join quality:** 8,633 of 8,635 games matched by ID. Both team names and
+    both scores agree with our independently corroborated archive for all
+    8,633.
+  - **Correct calculations:** ATS and over/under results compute correctly from
+    our archived scores. 12 Texas Tech games from 2016 were hand-checked against
+    the archive; all scores and sign conventions agree.
+  - **Two gaps:** 2 archive games from 2020 are missing in CFBD, and 53 matched
+    games have no line.
+- **Closing totals: VERIFIED AVAILABLE.** 96.9% of games. In 2016–2019 the
+  `consensus` row often has no total, so a provider-fallback rule is required:
+  with consensus only, 7,586 games are computable.
+- **Opening spreads and totals: AVAILABLE WITH RESTRICTIONS.** They exist only for
+  **2021–2025** (about 94% of those games) and are **absent for 2016–2020**.
+  Opening-to-close movement must show N/A before 2021. "Open" means the
+  provider's first value, not a market-wide open.
+- **Intraday movement: UNAVAILABLE from CFBD.** Only open and close values exist.
+- **Provider coverage changes over time: AVAILABLE WITH RESTRICTIONS.**
+
+  | Seasons | Providers |
+  | --- | --- |
+  | 2016–2017 | consensus, teamrankings, numberfire |
+  | 2018–2020 | adds Caesars and Bovada |
+  | 2021–2022 | consensus, Bovada, William Hill (NJ) |
+  | 2023 | Bovada, DraftKings, ESPN Bet, William Hill; consensus nearly gone (29 games) |
+  | 2024–2025 | DraftKings, Bovada, ESPN Bet only |
+
+  No single provider spans all 10 seasons. M2 needs a documented, per-game
+  recorded selection rule. Suggested order: consensus, then DraftKings, Bovada,
+  ESPN Bet, William Hill, Caesars, teamrankings, numberfire.
+- **Data-quality caveat (provider disagreement).** In the hand-checks, 2016
+  `consensus` sometimes disagrees materially with the other two providers:
+  - Texas Tech vs. West Virginia: consensus −1 vs. +3 / +3;
+  - Arizona State vs. Texas Tech: consensus −5 vs. +1.5 / +1.
+
+  M2 must therefore record which provider was used, flag disagreements of 3 or
+  more points, and show the provider beside every historical line.
+- **Moneylines:** fields exist (`homeMoneyline`, `awayMoneyline`). Coverage was
+  not measured; they are not required for the minimum product.
+- **API fields observed:** `id`, `season`, `week`, `seasonType`, `startDate`,
+  team/score/conference/classification fields; per line `provider`, `spread`,
+  `formattedSpread`, `spreadOpen`, `overUnder`, `overUnderOpen`,
+  `homeMoneyline`, `awayMoneyline`.
+
+## 4. CFBD licensing (full official terms, effective Aug. 12, 2026)
+
+**Relevant text:**
+
+| Section | Text |
+| --- | --- |
+| Front matter | "Commercial use is permitted." |
+| §4 Commercial Use and Permitted Uses | You may "use API Data in free or paid websites, applications, dashboards…"; "privately cache, store, normalize, and retain API responses"; "**display reasonable portions of factual API Data as part of a larger product**"; "perform historical analysis, backtesting…"; and "**publish and commercialize independently created analyses … rankings, visualizations, and other Derived Outputs**". |
+| §1 Definitions | **Redistribution** is "providing API Data itself to a third party as a standalone dataset, bulk download, raw feed, database mirror, substitute API…". "Reasonable display and ordinary exports permitted by Section 4 are not Redistribution." |
+| §5 Prohibited Redistribution | You may not "publish, or provide API Data as a standalone dataset or bulk download"; "operate a raw feed, public database mirror, proxy, substitute API"; or "expose … an API key in public or client-side code". |
+| §6 Attribution | Optional; recommended wording "Data provided by CollegeFootballData.com." |
+| §10 Betting-related uses | Permitted, subject to law; CFBD does not endorse any sportsbook. |
+
+**What this means for our free public app:**
+
+| Display | Status |
+| --- | --- |
+| Derived ATS records, derived O/U records, team-level betting statistics (cover rates, splits, average cover margin) | **Permitted.** These are Derived Outputs. |
+| Historical spreads and totals shown for a game or team's schedule inside the app | **Permitted** as "reasonable portions of factual API Data as part of a larger product". |
+| A complete per-game line archive (all games, all providers, every season) as one publicly fetchable static JSON file | **Unresolved; do not do this.** On GitHub Pages every app data file is publicly downloadable, so a complete archive file could function as a "standalone dataset or bulk download". |
+| Raw responses, a mirror or exposing the key | **Prohibited.** The key already stays in Actions secrets. |
+
+**Design rule for M2:**
+- Publish derived records.
+- Publish per-game lines only in the slices the UI needs: one closing spread and
+  total per game, with the provider named. Split them per team and season, not
+  as one bulk file.
+- Never publish raw provider-level responses.
+- Show the attribution.
+
+**Clarification to request from CFBD** (via the contact address on the terms page
+or their Discord):
+
+> "Our free, no-account site is statically hosted, so the JSON files the browser
+> loads are technically downloadable. Is it acceptable under §4 and §5 to publish
+> one closing spread and total per FBS game (2016–present, provider named),
+> split into per-team files, plus derived ATS/O-U records? Or should per-game
+> lines be limited to a narrower window?"
+
+This does not block M2: derived records alone are clearly permitted.
+
+## 5. Kalshi API — confirmed behaviour (live, read-only, no account)
+
+| Capability | Status | Evidence (2026-11-16) |
 | --- | --- | --- |
-| Team Market History: ATS overall and by season, home/away, favourite/underdog, last 5/10/20, O/U records, cover margin, pushes, coverage denominators | CFBD closing lines plus our results | **GO, conditional** on the sample and redistribution checks (#1, #3) |
-| Game detail: model projected margin vs. consensus closing or current spread; model win probability vs. spread-implied probability (validated scale) | Existing model plus CFBD | **GO, conditional** (#1, #5) |
-| Opening-to-closing line movement | CFBD opening fields | **Conditional** on measured coverage (#4). Show N/A where missing. |
-| Honest validation: 2026 authentic ledger vs. closing lines; 2016–2025 labelled retrospective replay vs. closing lines | Existing archive plus CFBD | **GO, conditional** (#1) |
-| Learn & Research explainers: spread, ATS, push, totals, implied probability, bid/ask, liquidity, fees, uncertainty | None | **GO** |
-| Market Watch with Kalshi prices, volume, open interest, bid-ask spread and history | Kalshi | **NO-GO until written permission** (#2). If granted: snapshot-based, 2025 onward. |
-| Intraday sportsbook movement charts | The Odds API (paid) | **Defer.** Not needed for the minimum release. |
-| Model-vs-total comparisons | — | **UNAVAILABLE.** No model total exists. |
-| Historical order-book depth | — | **UNAVAILABLE.** |
+| Public market data without authentication | **VERIFIED AVAILABLE** (technical) | `GET /trade-api/v2/series/KXNCAAFGAME` and `/markets?series_ticker=KXNCAAFGAME&status=open` returned 200 without credentials. |
+| College football market discovery | **VERIFIED AVAILABLE** (technical) | Game winner `KXNCAAFGAME` (200+ open markets, paginated). The series list includes `KXNCAAFSPREAD` (spread ladder, e.g. "Fresno St. wins by over 50.5 points"), `KXNCAAFTOTAL`, `KXNCAAFTEAMTOTAL`, quarter/half markets and futures. |
+| Current prices | **VERIFIED AVAILABLE** (technical) | Fields `yes_bid_dollars`, `yes_ask_dollars`, `last_price_dollars`, `no_*`. Example: Miami (FL) vs. Virginia Tech, Miami yes bid 0.89 / ask 0.92 / last 0.92. |
+| Volume and open interest | **VERIFIED AVAILABLE** (technical) | `volume_fp`, `volume_24h_fp`, `open_interest_fp` per market. |
+| Bid-ask size and order book | **VERIFIED AVAILABLE** (technical) | `yes_bid_size_fp`, `yes_ask_size_fp`; `GET /markets/{ticker}/orderbook?depth=5` returned 200 without authentication, with 5 price levels per side. **Current only.** |
+| Historical prices (candlesticks) | **VERIFIED AVAILABLE** (technical) | Live market: `/series/…/markets/{t}/candlesticks?period_interval=60` (valid values 1, 60, 1440). Settled 2025 market: `/historical/markets/KXNCAAFGAME-26JAN01ORETTU-TTU/candlesticks` returned 167 hourly candles with OHLC bid, ask and trade price, volume and open interest. |
+| Historical trades (actual transactions) | **VERIFIED AVAILABLE** (technical) | `/historical/trades?ticker=…` returned individual trades (`count_fp`, `yes_price_dollars`, `taker_side`, `created_time`). |
+| Coverage from 2025 | **VERIFIED AVAILABLE** (technical) | `/historical/markets?series_ticker=KXNCAAFGAME` returned 2,532 settled markets (1,266 game events) between 2025-07-01 and the cutoff, 1,868 of them from the 2025 season. Median volume about 540k contracts (10th percentile 32k; 90th percentile 5.6M). |
+| Historical cutoff | **VERIFIED AVAILABLE** | `GET /historical/cutoff`: `market_settled_ts` and `trades_created_ts` = 2026-09-17; `orders_updated_ts` = 2026-11-02. Data newer than the cutoff is served from live endpoints. |
+| Historical order-book depth | **UNAVAILABLE** | Not offered; it would exist only if snapshots were captured going forward. |
+| Matching to our games | **AVAILABLE WITH RESTRICTIONS** | 859 of 936 (92%) 2025-season events matched our archive using simple name normalization. The misses are aliases (NC State, San José State, FIU, ULM, UMass) or non-archive FCS games, so an alias table is needed. Kickoff time must come from our archive: `occurrence_datetime` is empty on historical markets. |
+| Rate limits and authentication | **AVAILABLE WITH RESTRICTIONS** | Official docs use a token-bucket model per tier, and unauthenticated public requests have separate, undisclosed limits. We received **HTTP 429 after about 5 rapid unauthenticated calls**; with 2–3 s spacing the calls succeeded. Cacheable responses carry no rate-limit headers. Any production collector needs backoff and low call volume. |
+| **In-game trading** | **Important constraint** | Game markets trade until the game ends (the Oregon–Texas Tech market closed after the final, last price 0.01). Last price and close are therefore post-result, not pregame. Pregame comparisons must use the last candle **before kickoff**. |
 
-**Readiness for Milestone 2:** not yet. Proceed when:
-- (a) the read-only samples in #1 are retrieved and hand-verified; and
-- (b) the CFBD redistribution check (#3) passes.
+## 6. Kalshi public-display rights (full official terms)
 
-Kalshi permission (#2) gates only Market Watch. It does not block starting the
-CFBD-based historical archive.
+- **Developer Agreement v1.1, §3:** "Use of Kalshi APIs is expressly limited to
+  facilitating a members own trading on the Exchange; all other usages are
+  disallowed." §3.1 prohibits "Collecting, caching, aggregating, or storing data
+  or content accessed via the API except for purposes of facilitating your own
+  trading on Kalshi. You may not share such data or content with third parties
+  in any manner without prior written authorization from Kalshi."
+- **Data Terms of Use, Part I:** "You may access content only for your personal use
+  for non-commercial purposes", excluding "providing archived or cached data sets
+  containing Kalshi Data". Without prior written authorization it prohibits
+  "publicly displaying, publishing … compiling … systematic retrieval to create
+  collections … databases".
+
+**Classification:** public display, caching, aggregation and redistribution of
+Kalshi data by our app is **UNAVAILABLE without Kalshi's prior written
+authorization**. Kalshi Market Watch is **BLOCKED pending authorization**.
+
+- **No Kalshi data is stored in the repository or published.**
+- The read-only samples above were limited to feasibility verification, which §3
+  does not expressly cover. **No further Kalshi API collection should occur until
+  permission is granted.**
+
+The draft permission request is in the Appendix. It has not been sent.
+
+## 7. Model compatibility (VERIFIED AVAILABLE)
+
+- **Projected margin and win probability:** all 212 current predictions satisfy
+  `home_win_probability = 1/(1+10^(−home_margin/18))` exactly (model
+  `workbook_2026_baseline`, home-field advantage 3.0).
+- **Authentic 2026 pregame forecasts:**
+  - The ledger has 858 entries; **838** have full provenance
+    (`source_retrieved_at`, `forecast_recorded_at`, `scheduled_kickoff_at`).
+  - Of those, **256 are FBS vs. FBS**, all from weeks 10–13 only, because
+    archiving began in November 2026.
+  - These, plus the 65 independently verified FBS games, are the only authentic
+    pregame comparisons available.
+  - **2016–2025 model results are retrospective replays** and must always be
+    labelled that way.
+- **Spread-to-probability conversion** (`model.py`
+  `market_home_win_probability`, scale 19.5): tested on **7,560** FBS-vs-FBS
+  2016–2025 games, using the selected closing spread against actual winners.
+
+  | Scale | Brier | Log loss |
+  | --- | --- | --- |
+  | 19.5 (current) | **0.17477** | 0.51986 |
+  | 20.5 (best by log loss) | 0.17468 | 0.51967 |
+  | 15 | 0.17741 | 0.53084 |
+  | 25 | 0.17564 | 0.52356 |
+
+  **Conclusion:** 19.5 is within 0.0002 log loss of the best scale in this
+  sample, so it is **suitable for V7 as a labelled approximation** of
+  spread-implied win probability. Show it as "spread-implied", not as a
+  market-quoted price.
+- **Not available:** a model projected total. No total model will be created, so
+  model-vs-total comparisons are **UNAVAILABLE**. Descriptive over/under records
+  remain available.
+
+## 8. Architecture recommendation
+
+Extend the existing scheduled pipeline and static Pages site. **No new backend.**
+
+1. **M2 historical backfill:**
+   - Pull CFBD `/lines` once per season and season type, about **20 calls**, into
+     private checksummed snapshots in the pipeline (cache and store are
+     permitted).
+   - Normalize by game ID against the verified archive.
+   - Apply the documented provider-selection rule and disagreement flags.
+   - Publish only derived per-team ATS/O-U records and per-team, per-season
+     closing lines.
+2. **Current season:** add the lines pull to the existing refresh workflow (a
+   few calls per run). Reuse the atomic write, last-good retention and stale
+   banner, and add completeness checks (QA finding D1) so a partial lines
+   response cannot publish.
+3. **Kalshi:** nothing until written permission arrives. If granted:
+   - a low-frequency snapshot job (respecting 429 and backoff), with pregame cut
+     at kickoff;
+   - published as timestamped snapshots, not live prices, because GitHub Actions
+     scheduling showed 4–8 hour gaps.
+
+## 9. Costs (realistic)
+
+| Item | Cost |
+| --- | --- |
+| CFBD | The backfill is about 20 calls, and the current season adds a few calls per refresh. The **free tier (1,000 calls/month)** is sufficient; $1–$5/month Patreon only for headroom. |
+| Kalshi | $0 API fees; display licence terms unknown until Kalshi replies. |
+| Hosting and CI | $0 extra (public repo, Pages, Actions). |
+| Paid intraday odds (The Odds API) | Not needed for the minimum product. |
+| **Total** | **$0/month** for the minimum product (optionally $1–$5). |
+
+## 10. Minimum complete V7 product — ready vs. blocked
+
+| Feature | Status |
+| --- | --- |
+| Team Market History (2016–2025 + current): ATS overall and by season, home/away, favourite/underdog, last 5/10/20, O/U records, cover margin, pushes, coverage counts, provider named | **READY for M2** (VERIFIED AVAILABLE; derived outputs permitted) |
+| Game detail: model projected margin vs. closing/current spread; model win probability vs. spread-implied probability (scale 19.5, labelled) | **READY for M2** |
+| Historical validation: authentic 2026 ledger vs. closing lines (256 FBS games, small sample); 2016–2025 retrospective replay vs. closing lines (labelled) | **READY for M2** |
+| Opening-to-closing movement | **READY, 2021–2025 only**; N/A for 2016–2020 |
+| Learn & Research explainers | **READY** |
+| Per-game historical line display beyond team/schedule views | **Pending CFBD clarification** (§4); derived records are unaffected |
+| Kalshi Market Watch (prices, volume, open interest, spread, history) | **BLOCKED** pending Kalshi written authorization |
+| Intraday sportsbook movement | **Deferred / UNAVAILABLE** from CFBD |
+| Model-vs-total comparison | **UNAVAILABLE** (no total model) |
+| Historical order-book depth | **UNAVAILABLE** |
+
+## Appendix — Kalshi permission request (draft; **not sent**, needs owner approval)
+
+> **Subject:** Request for written authorization to display Kalshi college football
+> market data — College Football Analytics (educational, non-wagering)
+>
+> Hello Kalshi team,
+>
+> I run College Football Analytics (https://landrumc16.github.io/College-Football-Analytics/),
+> a free, no-account, educational website for college football fans. It
+> publishes independent team ratings, game forecasts and historical analysis.
+> It does not accept wagers, execute trades, link accounts, or provide betting or
+> trading recommendations.
+>
+> Under Section 3.1 of the Kalshi Developer Agreement and the Kalshi Data Terms of
+> Use, I am requesting prior written authorization to display limited Kalshi
+> market information alongside our model's forecasts in an educational "Market
+> Watch" section:
+>
+> - **Markets:** KXNCAAFGAME game-winner markets for FBS games, and optionally
+>   KXNCAAFSPREAD / KXNCAAFTOTAL.
+> - **Fields:** yes bid, yes ask, last traded price, volume, open interest, and a
+>   timestamp, with Kalshi named as the source.
+> - **Update frequency:** periodic snapshots, about every 30–60 minutes on game
+>   days and a few times daily otherwise, using the public REST API with
+>   backoff. No streaming.
+> - **History:** pregame price history (hourly candles up to kickoff) for the
+>   current and previous seasons. Retention for the life of the educational
+>   archive, or a period you specify.
+> - **No raw dataset, bulk download, data feed or resale.** Data is shown only in
+>   our app's charts and tables.
+> - **No trading, account creation or recommendations.** We add clear
+>   educational disclaimers.
+>
+> Please let me know whether this use can be authorized, any conditions
+> (attribution, delay, retention or display limits), and whether a separate data
+> licence is required.
+>
+> Thank you,
+> [Owner name], College Football Analytics
