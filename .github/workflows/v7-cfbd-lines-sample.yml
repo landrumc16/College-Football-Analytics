@@ -1,0 +1,31 @@
+name: V7 M1 CFBD lines feasibility sample
+# Research-only, read-only verification for the V7 planning branch. 20 CFBD calls.
+# Prints aggregates and a small hand-check sample; raw API responses are never stored.
+on:
+  push:
+    branches: [v7-market-intelligence-roadmap]
+    paths:
+      - 'scripts/v7_cfbd_lines_sample.py'
+      - '.github/workflows/v7-cfbd-lines-sample.yml'
+permissions:
+  contents: read
+jobs:
+  sample:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Retrieve and verify CFBD lines against the verified archive
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python scripts/v7_cfbd_lines_sample.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v7-cfbd-lines-summary
+          path: v7-evidence/
+          retention-days: 30
+          if-no-files-found: warn
