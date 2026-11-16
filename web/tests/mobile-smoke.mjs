@@ -225,7 +225,16 @@ try {
         await page.getByRole('listbox', { name: 'Suggested schools' }).getByRole('option', { name: 'Georgia', exact: true }).click();
         if (!(await page.locator('.prediction-card').count()) || (await page.locator('.prediction-matchup').allTextContents()).some(name => !name.includes('Georgia'))) throw new Error('Prediction autocomplete failed');
         await page.getByLabel('Search teams').fill('');
-        const firstCard = page.locator('.prediction-card').first();
+        // Compare is offered only when both schools are rated FBS programs; use the first such card.
+        const fbsNames = new Set(report.rankings.map(t => t.team));
+        const cardTexts = await page.locator('.prediction-matchup').allInnerTexts();
+        const comparable = cardTexts.map(t => t.split('@').every(part => fbsNames.has(part.trim())));
+        for (const [i, ok] of comparable.entries()) {
+          const offered = await page.locator('.prediction-card').nth(i).getByRole('button', { name: 'Compare teams' }).count();
+          if (offered !== (ok ? 1 : 0)) throw new Error(`Compare action must appear only for FBS-vs-FBS cards (card ${i})`);
+        }
+        if (!comparable.includes(true)) throw new Error('No FBS-vs-FBS prediction card available to verify Compare');
+        const firstCard = page.locator('.prediction-card').nth(comparable.indexOf(true));
         const matchup = (await firstCard.locator('.prediction-matchup').innerText()).split('@').map(part => part.trim());
         if (matchup.length !== 2 || !matchup.every(Boolean)) throw new Error('Prediction card lacks a valid matchup');
         await firstCard.getByRole('button', { name: 'Compare teams' }).click();
