@@ -6,7 +6,7 @@ planning documents (`79ebed1`).
 at `35d9d75`. Derived outputs were committed by that run as `07d49e9`.
 
 **Determination: BLOCKED on one criterion, durable private snapshot retention
-(§6).** Every other Milestone 2 criterion passes. Nothing was merged or deployed;
+(§6): integrated and tested; waiting on owner repository and token setup.** Every other Milestone 2 criterion passes. Nothing was merged or deployed;
 the V6 beta is untouched.
 
 ## 1. What was built
@@ -150,37 +150,58 @@ denominator.
 - **Pending:** the CFBD answer on per-game display. Nothing game-level is
   published until it arrives.
 
-## 6. Durable private snapshot retention — **BLOCKED**
+## 6. Durable private snapshot retention — **integrated; waiting on owner setup**
 
-- **What exists:**
-  - checksummed receipts with upstream-change detection;
-  - deterministic regeneration (verified from the runner's private snapshots);
-  - last-good preservation;
-  - a private gitignored `--cache` for the owner's machine.
-- **Why durability is missing:** no **authorized durable private storage**
-  exists for this repository's CI.
-  - The repository is public.
-  - Artifacts and logs of a public repository are public.
-  - Actions caches can be restored by fork pull requests.
-  - The account's private repositories belong to unrelated projects, and CI
-    has no credential for them.
+The owner approved **Option A**: a dedicated private GitHub repository.
 
-  So snapshots persist only for the duration of a run. Each re-derivation
-  re-fetches them (20 calls), and the receipts' hashes prove whether the source
-  bytes are unchanged.
-- **Owner decision needed (free options):**
-  - (a) Create a dedicated private repository, e.g. `cfb-analytics-private-data`,
-    and add a fine-grained write token as an Actions secret. The backfill then
-    pushes snapshots there.
-  - (b) Designate the owner's local machine as the retention location.
+**Built and verified** (`8ac35c3`, [run 43896436085](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43896436085)):
 
-  Neither was set up without approval.
+- **Restore:**
+  - The backfill workflow checks out the private store into `private-store/`
+    (gitignored here) and reads `v7-cfbd-lines/` from it with no CFBD download.
+  - Every snapshot must match its stored SHA-256 **and** the committed public
+    receipt. Tampered, corrupt or forged-checksum snapshots are always rejected;
+    `--accept-upstream-change` never applies to stored bytes.
+- **Upstream changes:** `--refresh-upstream` re-downloads history and fails
+  closed when the source changed.
+- **Current season:** always re-fetched. This fixed a latent stale-cache read.
+- **Save:** after a fully validated run, new snapshots are committed and pushed
+  to the private repository.
+- **Durable-restore proof:** a fresh clone of the private repository regenerates
+  the public outputs offline, and they must be byte-identical.
+- **Security:**
+  - The workflow runs only on pushes to `v7-development`, never on
+    `pull_request`, so fork workflows cannot read the token.
+  - Raw data never enters this repository, its artifacts, caches or logs.
+- **Tests:** save → push → fresh clone → offline restore, tamper and
+  forged-checksum rejection, no repeated downloads, upstream-refresh detection
+  and current-season re-fetch. All run against a real local git remote that
+  stands in for the private repository.
+- **Fallback:** without the token, the run uses temporary storage and raises a
+  visible warning. Run 43896436085 confirmed this path is green.
+
+**Owner setup still required.** Claude cannot do these steps: its GitHub access
+is limited to this repository, and it is not permitted to create repositories or
+secrets.
+
+1. Create a **private** repository `landrumc16/cfb-analytics-private-data`, with
+   **Add a README** ticked so it is not empty.
+2. Create a **fine-grained personal access token** limited to that one
+   repository, with **Contents: Read and write**.
+3. In this repository, go to **Settings → Secrets and variables → Actions** and
+   add a secret named `CFBD_SNAPSHOT_TOKEN`.
+4. If you use a different name, also add an Actions **variable**
+   `CFBD_SNAPSHOT_REPO` set to `owner/name`.
+
+After setup, one backfill run, triggered by a push to `v7-development`, saves
+the snapshots, re-clones the store and proves byte-identical offline
+regeneration. **Criterion 7 stays unmet until that run passes.**
 
 ## 7. Tests
 
 | Suite | Result |
 | --- | --- |
-| `pytest` (full) | **613 passed**: 554 pre-existing plus 59 new in `tests/test_v7_market_archive.py` (the committed-archive test now runs against the real file) |
+| `pytest` (full) | **617 passed**: 554 pre-existing plus 63 new in `tests/test_v7_market_archive.py`, including 4 private-store tests (the committed-archive test now runs against the real file) |
 | Real backfill workflow | All steps green (run above) |
 | Frontend `npm run build` | Passes. The app source is unchanged; the new public file is copied into `dist` |
 
