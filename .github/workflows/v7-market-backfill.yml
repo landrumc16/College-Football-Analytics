@@ -33,13 +33,32 @@ jobs:
       SNAPSHOT_REPO: ${{ vars.CFBD_SNAPSHOT_REPO || 'landrumc16/cfb-analytics-private-data' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Verify the snapshot repository is reachable and private
+        if: env.HAS_STORE == 'true'
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+        run: |
+          code=$(curl -sS -o "$RUNNER_TEMP/repo.json" -w '%{http_code}' -H "Authorization: Bearer $TOKEN" \
+            -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$SNAPSHOT_REPO")
+          python - "$code" <<'PY'
+          import json, os, sys
+          code = sys.argv[1]
+          if code != "200":
+              sys.exit(f"snapshot repository not reachable with CFBD_SNAPSHOT_TOKEN (HTTP {code})")
+          repo = json.load(open(os.environ["RUNNER_TEMP"] + "/repo.json"))
+          if repo.get("private") is not True or repo.get("visibility") not in ("private", "internal"):
+              sys.exit("snapshot repository is not private; refusing to store provider data")
+          print(f"Snapshot repository reachable; private={repo['private']} visibility={repo['visibility']} empty={repo.get('size', 0) == 0}")
+          PY
+          rm -f "$RUNNER_TEMP/repo.json"
       - name: Restore durable private snapshot store
         if: env.HAS_STORE == 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.SNAPSHOT_REPO }}
-          token: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
-          path: private-store
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+        run: |
+          # A plain clone also works for a brand-new empty repository (actions/checkout does not).
+          git clone -q "https://x-access-token:${TOKEN}@github.com/${SNAPSHOT_REPO}.git" private-store 2>&1 | sed "s/${TOKEN}/***/g"
+          test -d private-store/.git
       - name: Select snapshot location
         run: |
           if [ "$HAS_STORE" = "true" ]; then
@@ -145,22 +164,47 @@ jobs:
       - name: Save validated snapshots to the durable private store
         if: env.HAS_STORE == 'true'
         working-directory: private-store
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add v7-cfbd-lines
           if ! git diff --cached --quiet; then
             git commit -q -m "CFBD /lines snapshots (validated by College-Football-Analytics run ${GITHUB_RUN_ID})"
-            git push -q
+            git push -q origin HEAD:main 2>&1 | sed "s/${TOKEN}/***/g"
           fi
           echo "Private store holds $(ls v7-cfbd-lines | grep -c '\.meta\.json$') snapshots at $(git rev-parse --short HEAD)"
       - name: Verify durable restore from a fresh private clone (offline, byte-identical)
         if: env.HAS_STORE == 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.SNAPSHOT_REPO }}
-          token: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
-          path: private-store-verify
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+        run: |
+          git clone -q "https://x-access-token:${TOKEN}@github.com/${SNAPSHOT_REPO}.git" private-store-verify 2>&1 | sed "s/${TOKEN}/***/g"
+          echo "Fresh private clone holds $(ls private-store-verify/v7-cfbd-lines | grep -c '\.meta\.json$') snapshots"
       - name: Regenerate public outputs from the fresh private clone without downloading
         if: env.HAS_STORE == 'true'
         run: python -m cfb_analytics.v7_market_archive --check --season 2026 --cache private-store-verify/v7-cfbd-lines
+      - name: Leak scan - no raw provider data, snapshots or credentials in public outputs or the public index
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, pathlib, subprocess, sys
+          bad = []
+          raw_markers = ("formattedSpread", "spreadOpen", "overUnderOpen", "homeMoneyline", "awayMoneyline", "\"lines\":[")
+          public = [pathlib.Path("data/v7-market-receipts.json"), pathlib.Path("web/public/v7-team-market-history.json"),
+                    *sorted(pathlib.Path("web/public/v7-team-lines").glob("*.json"))]
+          for f in public:
+              text = f.read_text()
+              bad += [f"{f}: {m}" for m in raw_markers if m in text]
+              bad += [f"{f}: credential-like string" for m in ("ghp_", "github_pat_", "x-access-token") if m in text]
+          tracked = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True).stdout.splitlines()
+          bad += [f"tracked private path: {t}" for t in tracked if t.startswith(("private-store", "v7-cfbd-lines")) or "/v7-cfbd-lines/" in t]
+          for f in pathlib.Path("web/public/v7-team-lines").glob("*.json"):
+              for g in json.loads(f.read_text())["games"]:
+                  if not all(isinstance(g.get(k), (str, type(None))) for k in ("spread_provider", "total_provider")):
+                      bad.append(f"{f}: provider is not a single name")
+          if bad:
+              sys.exit("LEAK SCAN FAILED:\n" + "\n".join(bad[:20]))
+          print(f"Leak scan passed: {len(public)} public files, {len(tracked)} tracked paths; no raw provider fields, snapshots or credentials")
+          PY
