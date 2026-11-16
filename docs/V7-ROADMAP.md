@@ -19,6 +19,35 @@ Help college football fans understand how independent football analysis, histori
 7. Prefer existing Python/TypeScript, scheduled data pipeline, static publishing and testing. Do not introduce a persistent server unless a verified requirement cannot be met otherwise.
 8. Preserve V6 production during the beta. Research and roadmap may proceed; implementation/release only on explicit subsequent owner instruction. No merge to `main` without explicit owner approval.
 
+## Amendment — market analysis refocus (owner decision, 2026-11-16)
+
+The owner approved a simplified, **user-powered Market Analysis Calculator** as the core remaining V7
+market-comparison feature.
+
+**Unchanged.** M1–M3 are complete and kept (`docs/V7-M2-RESULTS.md`, `docs/V7-M3-RESULTS.md`).
+
+**Withdrawn.** These will not be built:
+- live odds feeds;
+- automated prediction-market integrations, including any Kalshi retrieval or publishing;
+- continuous market monitoring;
+- liquidity or stale-market alerts;
+- line-movement tracking.
+
+**Market Watch replaced.** The *Market Watch* section and M4 below are replaced by the calculator,
+which is integrated into the existing Compare & What If matchup view. The user types:
+- a point spread;
+- a prediction-market win probability;
+- an American moneyline.
+
+The calculator compares each with the model's actual output for that matchup and that team. The
+entered numbers stay in the browser: they are not retrieved, verified, stored or transmitted. M5 is
+narrowed to this integration.
+
+**Still applies.** M6 (honest historical validation on archived closing lines) and M7 (release
+verification) are unchanged, as are all boundaries above.
+
+Results: `docs/V7-MARKET-CALCULATOR.md`.
+
 ## User-facing product
 ### Market Intelligence landing
 Mobile-first overview of upcoming games with available model/market comparisons, timestamp and source, expandable explanations and clear unavailable states. Sections: **This Week**, **Market Watch**, **Team Market History**, **Learn & Research**. No intrusive wagering language or bet-oriented homepage takeover.
@@ -33,7 +62,7 @@ Mobile-first overview of upcoming games with available model/market comparisons,
 ### Team Market History
 ATS overall and by season; favorite/underdog; home/away; last 5/10/20 and season filters; over/under record; cover margin; opening/closing movement; opponent-strength context. Show pushes, no-action/void rules, exact source, denominator and coverage. Descriptive records are not future-win probabilities.
 
-### Market Watch
+### Market Watch (withdrawn 2026-11-16, see Amendment)
 Kalshi-first feasibility, with sportsbook closing lines for ATS/totals if lawful and licensed. Prices, bid-ask spread, volume, open interest, liquidity and historical movements where available. Distinguish current order book from historical trade/candle data; never claim historical order-book depth unless snapshots were actually retained. Flags: model disagreement, stale/thin/wide market, unusual price movement. No claims about trader identities, sentiment, money percentages or causation without direct evidence.
 
 ### Education and research
@@ -62,11 +91,11 @@ Ingest licensed spreads/totals and permitted prediction-market historical observ
 Calculate ATS, totals, cover margins, home/away/favorite/underdog splits, implied probabilities with quote/fee caveats, model-market differences and appropriate uncertainty. Only use model outputs actually supported.
 **Done:** independent calculation fixtures, pushes/voids/price boundary tests, cross-source contract comparability tests, no unsupported model-margin/total outputs, sample-size labeling and explainable N/A states.
 
-### M4 — Market Watch and cautious flags
+### M4 — Market Watch and cautious flags (withdrawn 2026-11-16; replaced by the Market Analysis Calculator, see Amendment)
 Ingest available current market observations, store permitted historical snapshots, chart observed movement, flag stale/wide/thin markets and evidence-supported model-market differences. Never equate probabilities with share of trades.
 **Done:** real-source end-to-end demonstration, clear timestamps and source, historical-vs-live distinction, threshold documentation and sensitivity tests, simulated stale/429/outage/recovery tests, no trade execution or calls to action.
 
-### M5 — Integrated mobile-first UI
+### M5 — Integrated mobile-first UI (narrowed 2026-11-16 to the calculator in Compare & What If, see Amendment)
 Build optional Market Intelligence destination with This Week, Market Watch, Team Market History and Learn & Research; contextual links from existing game/team pages only where helpful. Keep default homepage and current navigation concise.
 **Done:** real-data journeys at 375/390/430/768/1536px, accessible keyboard/focus/contrast/touch/text enlargement, meaningful empty and stale states, no horizontal overflow, no changes to incumbent predictions, rankings, CFP, favorites or PWA.
 

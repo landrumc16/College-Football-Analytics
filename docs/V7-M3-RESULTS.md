@@ -212,17 +212,8 @@ CI results for the pushed commit are recorded in the closeout report.
 | 7 | Required tests pass | ✅ §7 (CI in the closeout report) |
 | 8 | Implementation and evidence committed to `v7-development` | ✅ |
 
-## 10. Next: M4, Market Watch and cautious flags (not started)
+## 10. Next
 
-These requirements are from the roadmap; no new plan.
-
-- **Current market observations, with timestamps and source.**
-  - Sportsbook: current and upcoming CFBD lines for the selected provider. This is covered by the
-    CFBD permission only for closing-line display, so the permission must be confirmed for
-    pre-close current lines.
-  - Kalshi: **blocked until written authorization arrives**.
-- **Stored history:** keep permitted historical snapshots and chart observed movement.
-- **Flags:** stale, wide and thin markets, and evidence-supported model-market differences.
-  Thresholds must be documented and sensitivity-tested.
-- **Done criteria:** a real-source end-to-end demonstration; simulated stale, 429, outage and
-  recovery tests; no trade execution or calls to action.
+M4 (Market Watch) was withdrawn by the 2026-11-16 market analysis refocus. The remaining market-comparison
+feature is the user-powered Market Analysis Calculator: see the amendment in `docs/V7-ROADMAP.md` and
+`docs/V7-MARKET-CALCULATOR.md`.

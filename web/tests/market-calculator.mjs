@@ -1,0 +1,141 @@
+// Browser acceptance for the V7 Market Analysis Calculator at five widths.
+// Covers published vs hypothetical model sources, perspective reversal, invalid input, missing model data,
+// keyboard use, layout, and that entered market numbers never leave the page (requests, URL, storage).
+import assert from 'node:assert/strict';
+import { readFile, mkdir } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
+import { setTimeout as delay } from 'node:timers/promises';
+import { chromium } from 'playwright';
+import { startAsDeclinedVisitor } from './consent-prompt.mjs';
+import { chooseSection } from './section-navigation.mjs';
+
+const PORT = 4181;
+const base = `http://127.0.0.1:${PORT}/`;
+const report = JSON.parse(await readFile('web/public/season-report.json', 'utf8'));
+const fbs = new Set(report.rankings.map(t => t.team));
+const game = report.predictions.find(p => fbs.has(p.home) && fbs.has(p.away) && !p.neutral_site);
+assert.ok(game, 'need a scheduled FBS-vs-FBS home/away prediction');
+const scheduledNeutral = report.predictions.some(p => p.home === game.home && p.away === game.away && p.neutral_site);
+const evidence = 'docs/evidence/v7-market-calculator';
+await mkdir(evidence, { recursive: true });
+
+// Independent expectations (plain arithmetic, not the app module).
+const fmt = (v, d = 1) => { const r = Number(v.toFixed(d)); return Math.abs(r) < 1e-9 ? (0).toFixed(d) : (r > 0 ? '+' : '') + r.toFixed(d); };
+const SPREAD = '-6.5', PROB = '41.3', LINE = '+137';
+const homeSpreadDiff = fmt(game.home_margin - 6.5);
+const homeProbDiff = fmt(100 * (game.home_win_probability - 0.413));
+const homeLineDiff = fmt(100 * (game.home_win_probability - 100 / 237));
+const awaySpreadDiff = fmt(-game.home_margin + 6.5);
+const awayProbDiff = fmt(100 * ((1 - game.home_win_probability) - 0.587));
+
+async function openCompare(page) {
+  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: 'Teams', exact: true }).click();
+  await chooseSection(page, 'Teams sections', 'Compare & What If');
+}
+
+const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', String(PORT), '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
+let browser;
+try {
+  for (let i = 0; i < 40; i++) { try { if ((await fetch(base)).ok) break; } catch {} await delay(500); }
+  browser = startAsDeclinedVisitor(await chromium.launch());
+
+  for (const width of [375, 390, 430, 768, 1536]) {
+    const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: width === 390 ? 2 : 1 });
+    const outbound = [];
+    page.on('request', r => outbound.push(`${r.url()} ${r.postData() || ''}`));
+    await page.goto(base);
+    await openCompare(page);
+    await page.getByLabel('First school').selectOption(game.home);
+    await page.getByLabel('Second school').selectOption(game.away);
+    await page.getByLabel('Game location').selectOption('home');
+    const calc = page.locator('.market-calculator');
+    await calc.getByRole('heading', { name: 'Market Analysis Calculator' }).waitFor();
+    await calc.getByText('Published forecast', { exact: true }).waitFor();
+    assert.match(await calc.locator('.market-source').textContent(), new RegExp(`Week ${game.week} pregame forecast`));
+
+    // Accessible names, touch targets, keyboard-reachable radios.
+    const spread = calc.getByLabel(`${game.home} point spread`);
+    const prob = calc.getByLabel(`${game.home} prediction-market win probability (%)`);
+    const line = calc.getByLabel(`${game.home} American moneyline`);
+    for (const input of [spread, prob, line]) assert.ok((await input.boundingBox()).height >= 44);
+    assert.equal(await calc.getByRole('group', { name: 'Compare from the perspective of' }).count(), 1);
+
+    await spread.fill(SPREAD); await prob.fill(PROB); await line.fill(LINE);
+    const results = calc.locator('.market-result');
+    await assert.doesNotReject(results.nth(2).waitFor());
+    const text = async i => (await results.nth(i).textContent()).replace(/\s+/g, ' ');
+    assert.ok((await text(0)).includes(`Difference${homeSpreadDiff} points`), await text(0));
+    assert.ok((await text(1)).includes(`Difference${homeProbDiff} percentage points`), await text(1));
+    assert.ok((await text(2)).includes(`Difference${homeLineDiff} percentage points`), await text(2));
+    assert.ok((await text(2)).includes('42.2% raw implied'));
+    assert.equal(await calc.getByText('Market number entered by you; not retrieved or verified by this app.').count(), 3);
+    assert.match(await calc.textContent(), /not removed/);
+    assert.match(await calc.textContent(), /not a forecast of profit or a recommendation to wager/);
+
+    // Switch perspective with the keyboard: spread and probability are re-expressed, moneyline cleared.
+    await calc.getByRole('radio', { name: game.home }).focus();
+    await page.keyboard.press('ArrowRight');
+    assert.ok(await calc.getByRole('radio', { name: game.away }).isChecked());
+    const awaySpread = calc.getByLabel(`${game.away} point spread`);
+    assert.equal(await awaySpread.inputValue(), '+6.5');
+    assert.equal(await calc.getByLabel(`${game.away} prediction-market win probability (%)`).inputValue(), '58.7');
+    assert.equal(await calc.getByLabel(`${game.away} American moneyline`).inputValue(), '');
+    await calc.getByText(`Moneyline cleared: enter ${game.away}'s own moneyline`, { exact: false }).waitFor();
+    assert.ok((await text(0)).includes(`Difference${awaySpreadDiff} points`), await text(0));
+    assert.ok((await text(1)).includes(`Difference${awayProbDiff} percentage points`), await text(1));
+    if (width === 390 || width === 1536) await calc.screenshot({ path: `${evidence}/calculator-${width}.png` });
+
+    // Invalid entries are explained, flagged and produce no comparison.
+    const awayLine = calc.getByLabel(`${game.away} American moneyline`);
+    await awayLine.fill('50');
+    await calc.getByText('American odds must be +100 or higher, or -100 or lower.').waitFor();
+    assert.equal(await awayLine.getAttribute('aria-invalid'), 'true');
+    await calc.getByLabel(`${game.away} prediction-market win probability (%)`).fill('120');
+    await calc.getByText('A probability cannot be more than 100%.').waitFor();
+    assert.equal(await results.count(), 1);
+    await awaySpread.fill('PK');
+    assert.ok((await text(0)).includes('PK (0)'));
+
+    // Layout: no horizontal overflow at any width.
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    assert.ok(overflow <= 1, `horizontal overflow ${overflow}px at ${width}`);
+
+    // Privacy: entered numbers never appear in requests, the URL or storage.
+    const stored = await page.evaluate(() => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }) + location.href);
+    for (const value of ['6.5', '41.3', '58.7', '137', '120']) {
+      assert.ok(!stored.includes(value), `entered value ${value} persisted`);
+      assert.ok(!outbound.some(r => { const [url, body] = r.split(' '); return new URL(url).search.includes(value) || (body || '').includes(value); }), `entered value ${value} transmitted`);
+    }
+
+    // A different venue is not the scheduled game: hypothetical source, entries reset.
+    if (!scheduledNeutral) {
+      await page.getByLabel('Game location').selectOption('neutral');
+      await calc.getByText('Hypothetical matchup', { exact: true }).waitFor();
+      assert.equal(await calc.getByLabel(`${game.home} point spread`).inputValue(), '');
+    }
+    await page.close();
+    console.log(`Market calculator passed at ${width}px`);
+  }
+
+  // Missing model output: remove the scheduled game's published probability. The calculator must say so and never estimate it.
+  const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+  await page.route('**/season-report.json', async route => {
+    const body = JSON.parse(await (await route.fetch()).text());
+    body.predictions = body.predictions.map(p => p.game_id === game.game_id ? { ...p, home_win_probability: null } : p);
+    await route.fulfill({ contentType: 'application/json', body: JSON.stringify(body) });
+  });
+  await page.goto(base);
+  await openCompare(page);
+  await page.getByLabel('First school').selectOption(game.home);
+  await page.getByLabel('Second school').selectOption(game.away);
+  await page.getByLabel('Game location').selectOption('home');
+  const missing = page.locator('.market-calculator');
+  await missing.getByText('Model prediction unavailable for this matchup', { exact: false }).waitFor();
+  assert.equal(await missing.locator('input[inputmode]').count(), 0);
+  console.log('Market calculator shows unavailable (no estimate) when the model output is missing');
+  await page.close();
+  console.log('Market calculator acceptance passed');
+} finally {
+  await browser?.close();
+  try { process.kill(-server.pid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
+}
