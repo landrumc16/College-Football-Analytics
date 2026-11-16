@@ -15,6 +15,14 @@ instruction to start Milestone 2.
 - **Out of scope:** Kalshi (blocked), model-vs-total, intraday movement,
   order-book depth, any UI (M5) and any new model.
 
+> **Implementation amendment (provider policy v2).** The first real backfill stopped at
+> the unchanged 5% disputed threshold. Aggregate diagnostics showed priority-provider
+> sole outliers: 2016 consensus, and DraftKings in 2023–2025. §4 rules 1 and 4 therefore
+> now use a sole-outlier rule and a median dispute test. Publication is limited to
+> current FBS programs, the public file is compact, and small-sample cover sums are
+> withheld identically in full and incremental builds. See `docs/V7-M2-RESULTS.md` §3.
+> The thresholds are unchanged.
+
 ## 1. Existing code and data to reuse
 
 | Need | Reuse | Change |
