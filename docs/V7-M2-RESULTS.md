@@ -2,12 +2,17 @@
 
 **Branch:** `v7-development`. **Baseline:** `main` `ec98f28`, plus the approved V7
 planning documents (`79ebed1`).
-**Verified run:** [43879232428](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43879232428)
-at `35d9d75`. Derived outputs were committed by that run as `07d49e9`.
+**Verified commit:** `814a43291694576cdbaf9efa2fc8cf76dc9844fb` (workflow and code). CI committed
+the derived outputs as `9f9806a` and, after the confirming restore run, as `3cd5b91`; both outputs
+differ from earlier ones only in timestamps and the live 2026 regular-season snapshot.
+**Verified runs:**
+- [43922485394](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43922485394)
+  (push): the first save, to an empty private store.
+- [43923120836](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43923120836)
+  (dispatch, on `9f9806a`): restored the store at the start of the run.
 
-**Determination: BLOCKED on one criterion, durable private snapshot retention
-(§6): integrated and tested; waiting on owner repository and token setup.** Every other Milestone 2 criterion passes. Nothing was merged or deployed;
-the V6 beta is untouched.
+**Determination: CLOSED (2026-11-16). All ten Milestone 2 criteria pass** (§9). Nothing was merged
+or deployed; the V6 beta is untouched. Kalshi remains blocked.
 
 ## 1. What was built
 
@@ -161,82 +166,130 @@ denominator.
 - Attribution ("Data provided by CollegeFootballData.com") and the permission
   note travel with every public file.
 
-## 6. Durable private snapshot retention — **integrated; waiting on owner setup**
+## 6. Durable private snapshot retention — **verified**
 
-The owner approved **Option A**: a dedicated private GitHub repository.
+**Store.** The owner approved Option A: the private GitHub repository
+`landrumc16/cfb-analytics-private-data`, reached with the Actions secret `CFBD_SNAPSHOT_TOKEN`
+(fine-grained, limited to that repository). The CFBD authorization evidence is kept there privately,
+under `licensing/cfbd-betting-lines-authorization/`.
 
-**Built and verified** (`8ac35c3`, [run 43896436085](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43896436085)):
+**How the workflow uses it** (`.github/workflows/v7-market-backfill.yml`):
+1. **Access and visibility.** It calls the GitHub API with the token. The run fails unless the
+   repository is reachable and reports `private: true` with visibility `private`. Raw data is never
+   written to a non-private store.
+2. **Restore.** It clones the store with the token in the clone URL. A plain clone also works on an
+   empty repository. Every snapshot must match both its stored SHA-256 and the public receipt;
+   `--accept-upstream-change` never applies to stored bytes.
+3. **Rebuild and validate.** The full rebuild, byte-identical offline check, incremental check,
+   independent hand-check and licensing tests all run, as in §1.
+4. **Save.** Only after full validation does it commit the snapshots and push them to the store.
+5. **Durable-restore proof.** It clones the store fresh and regenerates the public outputs offline.
+   They must be byte-identical.
+6. **Leak scan.** It checks all 140 public files and the public repository's git index for:
+   - raw multi-provider fields (`formattedSpread`, opening lines, moneylines, provider arrays);
+   - snapshot paths;
+   - credential strings;
+   - any line value without exactly one named provider.
 
-- **Restore:**
-  - The backfill workflow checks out the private store into `private-store/`
-    (gitignored here) and reads `v7-cfbd-lines/` from it with no CFBD download.
-  - Every snapshot must match its stored SHA-256 **and** the committed public
-    receipt. Tampered, corrupt or forged-checksum snapshots are always rejected;
-    `--accept-upstream-change` never applies to stored bytes.
-- **Upstream changes:** `--refresh-upstream` re-downloads history and fails
-  closed when the source changed.
-- **Current season:** always re-fetched. This fixed a latent stale-cache read.
-- **Save:** after a fully validated run, new snapshots are committed and pushed
-  to the private repository.
-- **Durable-restore proof:** a fresh clone of the private repository regenerates
-  the public outputs offline, and they must be byte-identical.
-- **Security:**
-  - The workflow runs only on pushes to `v7-development`, never on
-    `pull_request`, so fork workflows cannot read the token.
-  - Raw data never enters this repository, its artifacts, caches or logs.
-- **Tests:** save → push → fresh clone → offline restore, tamper and
-  forged-checksum rejection, no repeated downloads, upstream-refresh detection
-  and current-season re-fetch. All run against a real local git remote that
-  stands in for the private repository.
-- **Fallback:** without the token, the run uses temporary storage and raises a
-  visible warning. Run 43896436085 confirmed this path is green.
+   Any hit fails the run.
 
-**Owner setup still required.** Claude cannot do these steps: its GitHub access
-is limited to this repository, and it is not permitted to create repositories or
-secrets.
+**Real verification:**
 
-1. Create a **private** repository `landrumc16/cfb-analytics-private-data`, with
-   **Add a README** ticked so it is not empty.
-2. Create a **fine-grained personal access token** limited to that one
-   repository, with **Contents: Read and write**.
-3. In this repository, go to **Settings → Secrets and variables → Actions** and
-   add a secret named `CFBD_SNAPSHOT_TOKEN`.
-4. If you use a different name, also add an Actions **variable**
-   `CFBD_SNAPSHOT_REPO` set to `owner/name`.
+| Check | Run 43922485394 (first save) | Run 43923120836 (restore) |
+| --- | --- | --- |
+| Repository reachable and private | `private=True visibility=private` | same |
+| Restored at start of run | 0 snapshots (new repository) | **22 snapshots**, checksums verified against stored meta and public receipts |
+| Diagnostics step | 57 s (downloaded from CFBD) | 22 s (history read from the store) |
+| Offline regeneration | byte-identical | byte-identical |
+| Incremental equals full | 138 teams | 138 teams |
+| Saved to private store | 22 snapshots, private commit `91fa039` | 22 snapshots, private commit `d4296b0` (live 2026 snapshot refreshed) |
+| Fresh private clone regenerates offline | byte-identical | byte-identical |
+| Leak scan | passed | passed |
 
-After setup, one backfill run, triggered by a push to `v7-development`, saves
-the snapshots, re-clones the store and proves byte-identical offline
-regeneration. **Criterion 7 stays unmet until that run passes.**
+Every historical (2016–2025) SHA-256 in `data/v7-market-receipts.json` was unchanged by these runs.
+Only the live 2026 regular-season snapshot changed, as expected.
+
+**No leakage, verified:**
+- Both full job logs were searched:
+  - the token pattern appears only as script source (`${TOKEN}`), with 16 masked occurrences
+    (`***`) and no token values;
+  - raw field names appear only in script source;
+  - provider names appear only in aggregate diagnostic counter names;
+  - no line values or raw rows are printed.
+- Neither run uploaded artifacts (0 artifacts).
+- The workflow uses no Actions cache.
+- The bot commits touched only:
+  - `data/v7-market-receipts.json`;
+  - `web/public/v7-team-market-history.json`;
+  - `web/public/v7-team-lines/`.
+- `private-store/` and `private-store-verify/` are gitignored, and the leak scan confirms that no
+  snapshot path is tracked.
+- An unauthenticated request for the store returns HTTP 403.
+
+**Security model:**
+- The workflow runs only on `v7-development` pushes and manual dispatch, never on `pull_request`, so
+  fork workflows cannot read the token.
+- Without the token, it falls back to temporary runner storage with a visible warning.
 
 ## 7. Tests
 
 | Suite | Result |
 | --- | --- |
-| `pytest` (full) | **617 passed**: 554 pre-existing plus 63 new in `tests/test_v7_market_archive.py`, including 4 private-store tests (the committed-archive test now runs against the real file) |
-| Real backfill workflow | All steps green (run above) |
-| Frontend `npm run build` | Passes. The app source is unchanged; the new public file is copied into `dist` |
+| `pytest` (full, local at `3cd5b91`) | **628 passed**: 554 pre-existing plus 74 in `tests/test_v7_market_archive.py` |
+| Real backfill workflow | All 19 steps green in both runs above |
+| PR #33 CI at `814a432` | All checks green except `visual`, the V6 protected-path guard, which fails by design because V7 adds files under protected data paths. Not weakened. |
+| `frontend` / `mobile-smoke` | Now passes in CI. "Compare teams" is hidden on prediction cards involving a team the Compare page cannot represent (for example FCS Chattanooga), and the smoke test asserts this, then uses an FBS-vs-FBS card. |
 
-The new tests cover:
+The tests cover:
 - ID matching and duplicates;
 - identity, aliases and score agreement;
 - sign convention, including shared-prefix names;
-- ATS and O/U with pushes, pick'em, neutral games and team-perspective
-  inversion;
+- ATS and O/U with pushes, pick'em, neutral games and team-perspective inversion;
 - missing data and suspicious values;
-- provider determinism and the sole-outlier rule, including the documented 2016
-  cases;
+- provider determinism and the sole-outlier rule, including the documented 2016 cases;
 - dispute detection and sensitivity;
 - coverage thresholds;
 - reproducibility, and incremental equal to full;
 - upstream-change and truncation guards;
 - no future leakage in the current season;
-- the licensing guard, small-sample disclosure and FBS-only publication;
-- six refresh-failure modes that preserve the last good outputs.
+- the licensing guards and FBS-only publication;
+- private-store save, restore, tamper and forged-checksum rejection;
+- refresh-failure modes that preserve the last good outputs.
 
-The 554 existing tests are unchanged and pass. No prediction, simulation, archive
-or V6 behaviour was changed.
+The 554 existing tests are unchanged and pass. No prediction, simulation, archive or V6 behaviour
+was changed.
 
 ## 8. Not in scope (unchanged)
 
 No Kalshi retrieval, storage or code. No model-vs-total comparison, intraday
 movement, order-book depth or UI. M3 has not started.
+
+## 9. Acceptance criteria — final
+
+| # | Criterion | Status | Evidence |
+| --- | --- | --- | --- |
+| 1 | Lines matched to the verified archive | ✅ | 8,633 of 8,635 games (2016–2025); 100% name and score agreement (§2) |
+| 2 | ATS and O/U implemented and independently tested | ✅ | 13 of 13 independent hand-checks; Texas Tech totals reconcile (§4) |
+| 3 | Deterministic, documented provider selection and disputes | ✅ | Policy v2 (§3), regression tests |
+| 4 | Reproducible coverage and quality reports | ✅ | Byte-identical offline regeneration, in both runs and from a fresh private clone |
+| 5 | Derived team statistics correct | ✅ | 138 FBS programs; incremental equals full; sensitivity published (§4) |
+| 6 | No restricted data in public outputs | ✅ | Licensing guards on every build, plus the CI leak scan (§5, §6) |
+| 7 | Durable private snapshot retention | ✅ | Real save → fresh clone → offline restore; the second run restored 22 snapshots (§6) |
+| 8 | Failed refreshes preserve last-good data | ✅ | Failure-mode tests; atomic writes |
+| 9 | Required tests pass | ✅ | 628 Python tests; both backfill runs green; PR #33 green except the by-design `visual` guard |
+| 10 | Committed and ready for review, without deployment | ✅ | `v7-development`, draft PR #33 (NOT FOR MERGE); nothing merged or deployed |
+
+## 10. Next: Milestone 3 (not started)
+
+As defined in `docs/V7-ROADMAP.md` (no new plan), M3 is the **comparison and metrics engine**. It
+builds on this archive and needs no new data source. It covers:
+- home/away/favourite/underdog ATS and O/U splits and cover margins;
+- implied probabilities with quote/fee caveats;
+- model-market differences, only where the model actually produces a supported output;
+- uncertainty and sample-size labelling;
+- explainable N/A states.
+
+It is done when there are independent calculation fixtures, push/void/boundary tests, comparability
+tests, and no unsupported model-margin or total outputs.
+
+M3 starts only on owner instruction. Kalshi stays blocked pending written authorization.
