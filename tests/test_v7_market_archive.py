@@ -388,3 +388,10 @@ def test_incremental_refuses_without_verified_archive_or_after_policy_change(wor
     env["public_path"].write_text(json.dumps(pub))
     with pytest.raises(ArchiveRejected, match="policy"):
         m.run([2026], 2026, "k", None, incremental=True, fetch=fetch, **env)
+
+
+def test_dispute_diagnostics_identify_consensus_as_sole_outlier():
+    diag = m.diagnose_season(2016, DOCUMENTED, results_for(DOCUMENTED))
+    assert diag["spread_disputed"] == 2 and diag["spread_consensus_sole_outlier"] == 2
+    assert diag["spread_consensus_opposite_favourite"] == 2  # WVU: -1 vs +3; ASU: -5 vs +1.5/+1
+    assert "value" not in json.dumps(diag)

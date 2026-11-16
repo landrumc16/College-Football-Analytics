@@ -438,6 +438,36 @@ def validate_season(season, cov, completed_season=True):
             raise ArchiveRejected(f"{season}: {cov[market + '_suspicious']} unexplained suspicious {market} values")
 
 
+def diagnose_season(season, raw_rows, results):
+    """Aggregate dispute diagnostics (counts only; safe for CI logs)."""
+    games, _ = normalize(raw_rows)
+    out = Counter()
+    for gid, result in results.items():
+        if result["season"] != season or gid not in games:
+            continue
+        for market in ("spread", "total"):
+            vals = {p: r[market] for p, r in games[gid]["providers"].items() if isinstance(r[market], float)}
+            if len(vals) < 2:
+                continue
+            out[f"{market}_multi_provider"] += 1
+            spread_of_values = max(vals.values()) - min(vals.values())
+            if spread_of_values < DISPUTE_POINTS:
+                continue
+            out[f"{market}_disputed"] += 1
+            bucket = "3-4" if spread_of_values < 4 else "4-6" if spread_of_values < 6 else "6-10" if spread_of_values < 10 else "10+"
+            out[f"{market}_range_{bucket}"] += 1
+            if "consensus" in vals and len(vals) >= 3:
+                others = [v for p, v in vals.items() if p != "consensus"]
+                if max(others) - min(others) < DISPUTE_POINTS:
+                    out[f"{market}_consensus_sole_outlier"] += 1
+            if "consensus" in vals and len(vals) >= 2:
+                others = sorted(v for p, v in vals.items() if p != "consensus")
+                med = others[len(others) // 2]
+                if abs(vals["consensus"] - med) >= DISPUTE_POINTS and (vals["consensus"] < 0) != (med < 0) and market == "spread":
+                    out["spread_consensus_opposite_favourite"] += 1
+    return dict(sorted(out.items()))
+
+
 # ---------------------------------------------------------------- public output and guard
 PUBLIC_GAME_KEYS = {"spread", "total", "spread_open", "total_open", "home_spread", "home_cover", "cover", "line", "moneyline",
                     "cover_margin", "over_under", "value", "open", "disagreement", "provider", "game_id", "home_score", "away_score"}
@@ -563,6 +593,7 @@ def main():
     p.add_argument("--offline", action="store_true")
     p.add_argument("--check", action="store_true", help="offline full rebuild must reproduce committed outputs byte-for-byte")
     p.add_argument("--accept-upstream-change", action="store_true")
+    p.add_argument("--diagnose", action="store_true", help="print aggregate dispute diagnostics per season and exit (no outputs written)")
     a = p.parse_args()
     incremental = bool(a.season and not a.backfill and not a.check)
     if a.backfill:
@@ -572,6 +603,18 @@ def main():
         seasons = sorted(int(s) for s in json.loads(RECEIPTS.read_text())["seasons"]) if RECEIPTS.exists() else []
     if a.season:
         seasons = sorted(set(seasons) | {a.season})
+    if a.diagnose:
+        lo, hi = (int(x) for x in a.backfill.split("-"))
+        report = {}
+        for season in range(lo, hi + 1):
+            rows = []
+            for st in SEASON_TYPES:
+                r, _ = acquire(season, st, os.environ.get("CFBD_API_KEY", ""), a.cache, None, offline=a.offline)
+                rows += r
+            res = historical_results([season])
+            report[season] = {"matched": sum(1 for g in res if g in normalize(rows)[0]), **diagnose_season(season, rows, res)}
+        print(json.dumps(report, indent=1))
+        return
     if a.check:
         before = (RECEIPTS.read_bytes(), PUBLIC.read_bytes())
         tmp_r, tmp_p = Path(str(RECEIPTS) + ".check"), Path(str(PUBLIC) + ".check")
