@@ -619,7 +619,7 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
 # ---------------------------------------------------------------- authorized per-game lines (CFBD written permission)
 LINES_LICENSE = ("Closing lines: one provider per game, provider named, used with written permission from "
                  "CollegeFootballData.com for display on team and game pages. Not offered as a dataset or data feed.")
-LINE_GAME_KEYS = {"game_id", "season", "week", "season_type", "date", "opponent", "venue", "team_score", "opponent_score",
+LINE_GAME_KEYS = {"game_id", "season", "week", "season_type", "kickoff", "opponent", "venue", "team_score", "opponent_score",
                   "spread", "spread_provider", "spread_status", "total", "total_provider", "total_status", "ats", "ou"}
 
 
@@ -633,7 +633,7 @@ def _line_entry(o, side):
     total_ok = o["total_status"] in ("ok", "disputed")
     letter = (o["home_ats"] if team_side else FLIP[o["home_ats"]]) if spread_ok else None
     return {"game_id": o["game_id"], "season": o["season"], "week": o.get("week"), "season_type": o.get("season_type"),
-            "date": (o["kickoff"] or "")[:10] or None, "opponent": o["away"] if team_side else o["home"],
+            "kickoff": o["kickoff"] or None, "opponent": o["away"] if team_side else o["home"],
             "venue": "neutral" if o["neutral"] else ("home" if team_side else "away"),
             "team_score": o["home_score"] if team_side else o["away_score"],
             "opponent_score": o["away_score"] if team_side else o["home_score"],
@@ -654,7 +654,8 @@ def team_game_lines(outcomes, publish_teams, generated_at, current_season=None, 
                 games[team].append(_line_entry(o, side))
     files = {}
     for team in sorted(publish_teams):
-        rows = sorted(games[team], key=lambda g: (g["date"] or "", g["game_id"]))
+        # Kickoff is the full UTC timestamp so pages can show the local date of night games correctly.
+        rows = sorted(games[team], key=lambda g: (g["kickoff"] or "", g["game_id"]))
         if not rows:
             continue
         files[team_slug(team)] = {"schema_version": SCHEMA_VERSION, "provider_policy_version": POLICY_VERSION, "team": team,

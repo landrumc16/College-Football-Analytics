@@ -571,6 +571,7 @@ def test_documented_texas_tech_games_publish_one_named_closing_line_per_market()
     assert (wvu["spread"], wvu["spread_provider"], wvu["ats"]) == (3, "teamrankings", "L")      # consensus outlier replaced
     assert (wvu["total"], wvu["total_provider"], wvu["ou"]) == (82, "teamrankings", "U")
     assert (wvu["venue"], wvu["opponent"], wvu["team_score"], wvu["opponent_score"]) == ("home", "West Virginia", 17, 48)
+    assert wvu["kickoff"] == "2016-10-15T16:00:00.000Z"                                        # full UTC timestamp, not a UTC date
     asu = games["400869100"]
     assert (asu["spread"], asu["venue"], asu["ats"]) == (-1.5, "away", "L")                    # team perspective of +1.5 home
     sfa = games["400869625"]
