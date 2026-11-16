@@ -76,9 +76,17 @@ jobs:
                   row = next(x for x in rows if str(x["id"]) == gid)
                   # Independent recomputation: priority provider by hand, explicit orientation, plain arithmetic.
                   provs = {l["provider"]: l for l in row["lines"]}
-                  order = [p for p in m.PROVIDER_PRIORITY if p in provs and provs[p].get("spread") is not None] or sorted(p for p in provs if provs[p].get("spread") is not None)
+                  known = [p for p in m.PROVIDER_PRIORITY if p in provs and provs[p].get("spread") is not None]
+                  order = known + sorted(p for p in provs if provs[p].get("spread") is not None and p not in known)
                   if not order:
                       assert o["spread_status"] == "no_line"; checked += 1; continue
+                  # Independent policy-v2 sole-outlier rule: replace the priority choice only if >= 2 others agree
+                  # within 3 points and it is >= 3 points from their median.
+                  vals = [float(provs[p]["spread"]) for p in order]
+                  rest = sorted(vals[1:])
+                  med = (rest[len(rest) // 2] if len(rest) % 2 else (rest[len(rest) // 2 - 1] + rest[len(rest) // 2]) / 2) if rest else None
+                  if len(rest) >= 2 and rest[-1] - rest[0] < 3 and abs(vals[0] - med) >= 3:
+                      order = order[1:]
                   spread = float(provs[order[0]]["spread"])
                   if m.ALIASES.get(row["homeTeam"], row["homeTeam"]) != r["home"]:
                       spread = -spread
