@@ -123,6 +123,9 @@ try {
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
     assert.equal(await nav.getByRole('button', { name: 'Market', exact: true }).getAttribute('aria-current'), 'page');
     assert.ok(page.url().endsWith('#/market'));
+    await page.getByLabel('App menu', { exact: true }).click();
+    await page.locator('details.editorial-menu').getByRole('button', { name: 'Research & Data', exact: true }).waitFor();
+    await page.screenshot({ path: `${evidence}/menu-research-${width}.png` });
     await openDestination(page, 'Research');
     await page.getByRole('region', { name: 'Independent pregame forecast verification', exact: true }).waitFor();
     assert.ok(page.url().endsWith('#/research'));

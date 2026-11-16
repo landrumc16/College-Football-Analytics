@@ -25,6 +25,86 @@ Nothing has been merged or deployed. V6 production and the public beta are uncha
 | Empty, invalid and missing states | Empty inputs show nothing; invalid entries show inline messages; a missing model output shows "Model prediction unavailable" with no estimate |
 | Privacy | No entered value appears in any request, storage or URL, checked at every width |
 
+## Information architecture and Market Analysis experience (2026-11-16 owner direction)
+
+**Navigation:**
+- The bottom bar is **Home | Rankings | Teams | Playoffs | Market**.
+- **Research & Data** is the first item in the top Menu. It opens the unchanged Research destination
+  with all five sections.
+
+**One home for the calculator.** `Market` opens the Market Analysis page, the only place the
+calculator appears. The page is laid out in order:
+1. A **game picker**, pre-selected to the soonest upcoming FBS-vs-FBS game with a published
+   forecast.
+2. The **calculator**, with spread, prediction-market probability and American moneyline. Results
+   update as you type, each with a headline, model value, entered value, difference and sentence.
+3. **Historical ATS and over/under records** for both teams: collapsed, and fetched only when opened.
+
+**Links instead of copies:**
+- **Homepage:** one compact "Market Analysis" card with an **Open calculator** button, visible in the
+  first phone screen.
+- **Game Predictions:** each FBS-vs-FBS card has a **Market analysis** button that opens that game.
+- **Compare & What If:** the embedded calculator is removed and replaced by "Compare this matchup with
+  a market line in Market Analysis". The matchup is carried in memory, either as its scheduled game
+  or, for an unscheduled pairing or venue, as a game labelled "Your matchup (hypothetical)".
+
+**Clear conventions:**
+- Numbered steps: "1. Analyze for" (large team pills), then "2. Type a market number".
+- Spread examples are written in the selected team's name.
+- A **±** button covers phone decimal keypads that have no minus key.
+- Provenance is shown as a "Published forecast" or "Hypothetical matchup" badge.
+
+**URLs and privacy:**
+- Hash routing (`#/market`, `#/compare`, `#/research`, …) gives deep links and browser Back/Forward.
+- Only the view name is in the URL. Matchups and entered numbers are never in URLs, storage, requests
+  or analytics; the analytics allow-list ignores the `market` view.
+
+**Content placement review.** Each substantial feature has one authoritative location:
+
+| Feature | Authoritative location | Elsewhere |
+| --- | --- | --- |
+| Market Analysis calculator and ATS/O-U history | Market | Links from Home, Game Predictions and Compare |
+| Research & Data | Research | Opened from the menu |
+| Team profile, schedule and history | Teams → Team Profiles | — |
+| Poll comparisons | Rankings | — |
+| Playoff projections and scenarios | Playoffs | — |
+
+Compare & What If keeps its collapsed side-by-side report cards and history, which are its purpose
+(comparing two programs) rather than a copy. No unrelated content was moved.
+
+**Evidence:**
+- **`web/tests/market-analysis.mjs`** at 375, 390, 430, 768 and 1536px checks:
+  - the entry card sits in the first screen;
+  - one tap opens a published game;
+  - typing plus ± produces an instant result with a headline;
+  - switching teams reverses the result;
+  - changing games resets entries and re-labels provenance;
+  - history is lazy-loaded and matches the published metrics;
+  - Compare's link and prediction cards transfer the right matchup;
+  - there is no overflow and no entered value leaks.
+
+  At 390 and 1536px it also checks:
+  - the five-item bar and Market `aria-current`;
+  - menu → Research & Data, with the menu closing afterwards;
+  - Back/Back/Forward;
+  - deep links `#/market`, `#/research`, `#/compare`, `#/cfp`, and an unknown hash falling back to
+    Home;
+  - the homepage never embeds the calculator.
+- **`web/tests/market-calculator.mjs`** at six widths now reaches the calculator only through
+  Compare's link. It covers published and hypothetical transfer, Back to Compare with the matchup
+  intact, contrast, focus, invalid input, the missing model and privacy.
+- **Updated tests:** the five V6 browser tests that referenced the old bar (`mobile-smoke`,
+  `editorial-home`, `v6-browser`, `adversarial-reliability`, `editorial-polish`) now assert the new
+  bar and reach Research through the menu.
+  - The before/after parity test still requires every visible metric and behaviour to be identical;
+    only the navigation list differs, and each phase asserts its own.
+  - `adversarial-reliability` now checks recovery on the same view after reload, which deep links
+    preserve, and then on Home.
+- **Screenshots** from the running app are in `docs/evidence/v7-market-analysis/`: the home entry
+  card, the Market page at 390, 768 and 1536px, and the menu with Research & Data.
+- **Guard:** the two reviewed protected-file edits (`Navigation.tsx`, `EditorialHome.tsx`) are pinned
+  in the release manifest by exact SHA-256. Any further edit fails the `visual` guard.
+
 ## Milestone 6: historical validation (frozen, reproducible)
 
 The module is `src/cfb_analytics/v7_validation.py`; its output is

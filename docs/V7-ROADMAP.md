@@ -48,6 +48,14 @@ verification) are unchanged, as are all boundaries above.
 
 Results: `docs/V7-MARKET-CALCULATOR.md`.
 
+**Information architecture (owner decision, 2026-11-16): one feature, one home, links instead of duplication.**
+- The bottom navigation is Home | Rankings | Teams | Playoffs | **Market**.
+- Research & Data remains a full destination, opened from the top menu.
+- The Market Analysis page is the calculator's only location. Compare & What If and the homepage
+  link to it rather than embedding it.
+
+See `docs/V7-RELEASE-ACCEPTANCE.md`.
+
 ## User-facing product
 ### Market Intelligence landing
 Mobile-first overview of upcoming games with available model/market comparisons, timestamp and source, expandable explanations and clear unavailable states. Sections: **This Week**, **Market Watch**, **Team Market History**, **Learn & Research**. No intrusive wagering language or bet-oriented homepage takeover.
