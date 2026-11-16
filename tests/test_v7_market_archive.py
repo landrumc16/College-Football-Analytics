@@ -60,18 +60,30 @@ def statuses(rows):
 
 # ---------------------------------------------------------------- provider policy and documented disputes
 def test_documented_2016_texas_tech_provider_disagreements():
-    by_id, _ = statuses(DOCUMENTED)
-    wvu = by_id["400869627"]
-    assert wvu["spread_provider"] == "consensus" and wvu["spread_status"] == "disputed"
-    games, _ = m.normalize([TTU_WVU])
-    assert m.select_market(games["400869627"], "spread", 1)["disagreement"] == 4.0
-    assert by_id["400869100"]["spread_status"] == "disputed"
-    assert m.select_market(m.normalize([ASU_TTU])[0]["400869100"], "spread", 1)["disagreement"] == 6.5
+    """Policy v2: in both documented 2016 disputes consensus is the sole outlier against two agreeing books."""
+    by_id, cov = statuses(DOCUMENTED)
+    wvu = m.select_market(m.normalize([TTU_WVU])[0]["400869627"], "spread", 1)
+    assert wvu["reason"] == "consensus_outlier_replaced" and wvu["provider"] == "teamrankings"
+    assert wvu["value"] == 3 and wvu["status"] == "ok" and wvu["disagreement"] == 0
+    assert by_id["400869627"]["home_ats"] == "L"            # Texas Tech lost by 31 as a 3-point underdog
+    asu = m.select_market(m.normalize([ASU_TTU])[0]["400869100"], "spread", 1)
+    assert asu["reason"] == "consensus_outlier_replaced" and asu["provider"] == "teamrankings" and asu["disagreement"] == 0.5
+    assert by_id["400869100"]["home_ats"] == "W"            # Arizona State +1.5, won by 13
     latech = m.select_market(m.normalize([TTU_LATECH])[0]["400869359"], "spread", 1)
-    assert latech["status"] == "ok" and latech["disagreement"] == 1.5 and latech["provider"] == "consensus"
+    assert latech["status"] == "ok" and latech["provider"] == "consensus" and latech["disagreement"] == 1.25  # vs median(-11,-10.5)
     sfa_spread = m.select_market(m.normalize([TTU_SFA])[0]["400869625"], "spread", 1)
     assert sfa_spread["status"] == "ok" and sfa_spread["single_provider"]
     assert by_id["400869625"]["total_status"] == "no_line"
+    assert cov["spread_consensus_replaced"] == 2 and cov["spread_disputed"] == 0
+
+
+def test_dispute_flagged_when_no_independent_majority_exists():
+    row = cfbd(30, "A", "B", 24, 20, [line("consensus", -3, 50), line("DraftKings", -7, 50)])
+    sel = m.select_market(m.normalize([row])[0]["30"], "spread", 1)
+    assert sel["provider"] == "consensus" and sel["status"] == "disputed" and sel["disagreement"] == 4
+    row = cfbd(31, "A", "B", 24, 20, [line("consensus", -3, 50), line("DraftKings", -7, 50), line("Bovada", -2, 50)])
+    sel = m.select_market(m.normalize([row])[0]["31"], "spread", 1)
+    assert sel["provider"] == "consensus" and sel["status"] == "ok"   # books disagree (range 5): no replacement; |-3 - (-4.5)| = 1.5
 
 
 def test_totals_selected_independently_with_recorded_fallback():
@@ -212,15 +224,16 @@ def test_disputed_share_above_threshold_stops_for_review():
 
 # ---------------------------------------------------------------- sensitivity
 def test_sensitivity_reports_effect_of_disputed_games_without_changing_primary_denominator():
-    outcomes, _ = m.build_season(2016, DOCUMENTED, results_for(DOCUMENTED))
-    teams = m.team_statistics(outcomes)
-    ttu = teams["Texas Tech"]
-    assert ttu["overall"]["ats"] == {"w": 3, "l": 0, "p": 0}  # LaTech (+2), SFA (+10), Kansas (+8.5); WVU and ASU disputed
-    assert ttu["overall"]["spread_excluded"]["disputed"] == 2
-    sens = ttu["sensitivity_including_disputed"]["ats"]
-    assert sum(sens.values()) == sum(ttu["overall"]["ats"].values()) + 2
-    summary = m.sensitivity_summary(teams)
-    assert summary["ats_games_including_disputed"] - summary["ats_games_primary"] == 2
+    disputed = cfbd(32, "Texas Tech", "Baylor", 54, 35, [line("consensus", 2.5, 83), line("DraftKings", 7, 83)])
+    rows = DOCUMENTED + [disputed]
+    outcomes, cov = m.build_season(2016, rows, results_for(rows))
+    assert cov["spread_disputed"] == 1
+    ttu = m.team_statistics(outcomes)["Texas Tech"]
+    assert ttu["overall"]["ats"] == {"w": 3, "l": 2, "p": 0}        # disputed Baylor game excluded from the primary record
+    assert ttu["overall"]["spread_excluded"]["disputed"] == 1
+    assert ttu["sensitivity_including_disputed"]["ats"] == {"w": 4, "l": 2, "p": 0}   # selected consensus +2.5: won by 19
+    summary = m.sensitivity_summary(m.team_statistics(outcomes))
+    assert summary["ats_games_including_disputed"] - summary["ats_games_primary"] == 1
 
 
 # ---------------------------------------------------------------- licensing guard
@@ -393,5 +406,6 @@ def test_incremental_refuses_without_verified_archive_or_after_policy_change(wor
 def test_dispute_diagnostics_identify_consensus_as_sole_outlier():
     diag = m.diagnose_season(2016, DOCUMENTED, results_for(DOCUMENTED))
     assert diag["spread_disputed"] == 2 and diag["spread_consensus_sole_outlier"] == 2
+    assert diag["policy_v2_spread_disputed"] == 0 and diag["policy_v2_spread_consensus_replaced"] == 2
     assert diag["spread_consensus_opposite_favourite"] == 2  # WVU: -1 vs +3; ASU: -5 vs +1.5/+1
     assert "value" not in json.dumps(diag)

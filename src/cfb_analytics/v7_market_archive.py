@@ -27,7 +27,7 @@ from pathlib import Path
 from .forecast_ledger import ALIASES, aware_utc
 from .refresh import fetch_cfbd_lines
 
-POLICY_VERSION = 1
+POLICY_VERSION = 2
 SCHEMA_VERSION = 1
 DISPUTE_POINTS = 3.0
 MIN_AVG_GAMES = 5
@@ -187,26 +187,45 @@ def _favored_name_conflict(formatted, spread, home, away):
     return (spread < 0) != (named == home)
 
 
+def _median(xs):
+    xs = sorted(xs)
+    n = len(xs)
+    return xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2
+
+
 def select_market(game, market, sign):
-    """Deterministic selection for 'spread' or 'total'. Values are oriented to the archive home team."""
+    """Deterministic selection for 'spread' or 'total' (policy v2). Values are oriented to the archive home team.
+
+    v2 (evidence: 2016 consensus was the sole outlier in 233 of 249 disputed spreads):
+      * consensus outlier rule: when consensus is >= DISPUTE_POINTS from the median of >= 2 independent providers
+        that agree with each other within DISPUTE_POINTS, select the highest-priority independent provider instead;
+      * dispute test: selected value >= DISPUTE_POINTS from the median of the remaining providers (comparison only;
+        medians are never selected or published, and no line is ever averaged into a selection).
+    """
     providers = sorted(game["providers"].items(), key=lambda kv: _priority(kv[0]))
     values = [(p, r[market]) for p, r in providers if r[market] is not None]
     if not values:
         return {"status": "no_line", "provider": None}
-    provider, value = values[0]
-    reason = "priority" if provider == "consensus" else (
-        "fallback_missing_consensus" if "consensus" not in game["providers"] else "fallback_missing_value")
+    if any(v == "invalid" for _, v in values):
+        return {"status": "suspicious", "provider": values[0][0], "flag": "non_numeric", "single_provider": len(values) == 1}
+    independents = [(p, v) for p, v in values if p != "consensus"]
+    consensus = next((v for p, v in values if p == "consensus"), None)
+    replaced = (consensus is not None and len(independents) >= 2
+                and max(v for _, v in independents) - min(v for _, v in independents) < DISPUTE_POINTS
+                and abs(consensus - _median([v for _, v in independents])) >= DISPUTE_POINTS)
+    pool = independents if replaced else values
+    provider, value = pool[0]
+    reason = ("consensus_outlier_replaced" if replaced else "priority" if provider == "consensus"
+              else "fallback_missing_consensus" if "consensus" not in game["providers"] else "fallback_missing_value")
     rec = game["providers"][provider]
     sel = {"provider": provider, "reason": reason, "single_provider": len(values) == 1}
-    if value == "invalid" or any(v == "invalid" for _, v in values):
-        return {**sel, "status": "suspicious", "flag": "non_numeric"}
     if market == "spread":
         if abs(value) > 70 or not _half_point(value) or _favored_name_conflict(rec["formatted_spread"], value, game["home"], game["away"]):
             return {**sel, "status": "suspicious", "flag": "spread_value_or_sign"}
     elif not 20 <= value <= 110 or not _half_point(value):
         return {**sel, "status": "suspicious", "flag": "total_value"}
-    others = [abs(value - v) for _, v in values[1:]]
-    disagreement = max(others) if others else 0.0
+    others = [v for p, v in pool if p != provider]
+    disagreement = abs(value - _median(others)) if others else 0.0
     opening = rec[market + "_open"]
     if opening == "invalid" or (isinstance(opening, float) and abs(opening - value) > 21):
         opening = None
@@ -396,6 +415,8 @@ def build_season(season, raw_rows, results):
         cov["spread_open_available"] += spread.get("open") is not None
         cov["total_open_available"] += total.get("open") is not None
         cov["spread_single_provider"] += bool(spread.get("single_provider"))
+        cov["spread_consensus_replaced"] += spread.get("reason") == "consensus_outlier_replaced"
+        cov["total_consensus_replaced"] += total.get("reason") == "consensus_outlier_replaced"
         if spread.get("provider"):
             providers_spread[spread["provider"]] += 1
         if total.get("provider"):
@@ -407,7 +428,8 @@ def build_season(season, raw_rows, results):
         "archive_games", "matched", "unmatched", "completed", "conflicting_duplicates",
         "spread_ok", "spread_disputed", "spread_no_line", "spread_suspicious",
         "total_ok", "total_disputed", "total_no_line", "total_suspicious",
-        "spread_open_available", "total_open_available", "spread_single_provider")}
+        "spread_open_available", "total_open_available", "spread_single_provider",
+        "spread_consensus_replaced", "total_consensus_replaced")}
     coverage["selected_spread_providers"] = dict(sorted(providers_spread.items()))
     coverage["selected_total_providers"] = dict(sorted(providers_total.items()))
     return outcomes, coverage
@@ -465,6 +487,9 @@ def diagnose_season(season, raw_rows, results):
                 med = others[len(others) // 2]
                 if abs(vals["consensus"] - med) >= DISPUTE_POINTS and (vals["consensus"] < 0) != (med < 0) and market == "spread":
                     out["spread_consensus_opposite_favourite"] += 1
+    _, cov = build_season(season, raw_rows, {g: r for g, r in results.items() if r["season"] == season})
+    for k in ("spread_disputed", "total_disputed", "spread_consensus_replaced", "total_consensus_replaced", "spread_suspicious", "total_suspicious"):
+        out["policy_v2_" + k] = cov[k]
     return dict(sorted(out.items()))
 
 
@@ -511,7 +536,10 @@ def build_public(outcomes, coverage, receipts, current_season=None, prior_teams=
                "source": SOURCE, "attribution": ATTRIBUTION,
                "methodology": {"closing_line": "selected provider's last captured CFBD value; ATS and O/U use closing values only",
                                "provider_priority": list(PROVIDER_PRIORITY) + ["others alphabetically"],
-                               "dispute_threshold_points": DISPUTE_POINTS, "spread_convention": "home spread, negative = home favourite",
+                               "dispute_threshold_points": DISPUTE_POINTS,
+                               "dispute_test": "selected closing value vs median of other providers (comparison only)",
+                               "consensus_outlier_rule": "consensus replaced by highest-priority independent provider when it is the sole outlier vs >= 2 agreeing independent providers",
+                               "spread_convention": "home spread, negative = home favourite",
                                "primary_denominator": "games with a non-disputed, non-suspicious closing value for that market",
                                "avg_cover_margin_min_games": MIN_AVG_GAMES,
                                "limitations": ["Opening lines unavailable before 2021",
