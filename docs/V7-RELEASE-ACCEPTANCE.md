@@ -112,7 +112,7 @@ probability is well calibrated across 9,273 games (M3).
 - All jobs green: `visual`, `frontend`, `pytest`, `python`, `python-tests`, `regression`, both
   `historical`, `dashboard`, both `dashboard-build`, and `backfill`. `refresh-evidence` is skipped,
   as it is on every PR.
-- Backfill run 43955134761:
+- Backfill run 43955128866:
   - checked that the private store is reachable and private;
   - restored 22 snapshots and rebuilt with byte-identical output;
   - confirmed the incremental rebuild equals the full rebuild for 138 teams;
