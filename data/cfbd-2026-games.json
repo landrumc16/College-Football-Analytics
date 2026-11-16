@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-15T17:49:17.187884+00:00",
+  "retrieved_at": "2026-11-16T00:42:43.708875+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3686,
-    "completed": 3473,
-    "pending": 213
+    "completed": 3474,
+    "pending": 212
   },
   "games": [
     {
@@ -38138,9 +38138,9 @@
       "week": 11,
       "home": "Oklahoma",
       "away": "Ole Miss",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 24,
+      "away_score": 17,
       "neutral_site": false,
       "start_date": "2026-11-15T18:00:00.000Z"
     },
@@ -44241,5 +44241,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-15T17:49:17.187884+00:00"
+  "data_changed_at": "2026-11-16T00:42:43.708875+00:00"
 }
