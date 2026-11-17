@@ -75,3 +75,10 @@ Proposed behavior, subject to evidence and normal review:
 - Validate source/provenance, alert expiry and behavior for replacement reversals, byes, injured player returns, and repeated changes. Test that advisory never silently alters model outputs.
 
 No production change authorized by this documentation. Implement only as part of the focused, owner-approved prediction-accuracy work, with tests and PR review before merge.
+
+## Third development pass — advisory prototype (2026-11-17)
+- Added `src/cfb_analytics/lineup_advisory_research.py`: research-only `LineupChange`, `LineupAdvisory`, and `lineup_advisory` with timestamp/source gating, current-lineup confirmation, provisional game-count expiry, and no forecast adjustment.
+- Added `tests/test_lineup_advisory_research.py`: tests for advisory wording, provisional expiry, future/unconfirmed changes, and invalid source/timestamp.
+- Latest branch commit before this handoff update: `ade4caa307e543b5b0398968372b64b60b970c02`.
+- **Not integrated into UI, data feed, or production. Tests not executed.** A source URL format check does not independently verify source credibility. No verified Texas Tech player event has been ingested.
+- Next: run unit tests in CI, determine verified event-source workflow and actual starter-participation data, then integrate a single concise accessible advisory into the matchup's primary UI location behind a tested data contract. Avoid repeated banners across pages.
