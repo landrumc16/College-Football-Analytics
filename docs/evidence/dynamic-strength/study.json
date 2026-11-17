@@ -1,0 +1,567 @@
+{
+ "evaluation": {
+  "heldout_2022_2025": {
+   "exp_halflife_12": {
+    "brier": 0.1753,
+    "calibration_ece": 0.0231,
+    "delta_brier": [
+     -0.0004,
+     [
+      -0.0009,
+      0.0001
+     ]
+    ],
+    "delta_mae": [
+     -0.0101,
+     [
+      -0.0288,
+      0.0074
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5189,
+    "margin_mae": 12.7517,
+    "winner_accuracy": 0.7273
+   },
+   "exp_halflife_4": {
+    "brier": 0.1754,
+    "calibration_ece": 0.0225,
+    "delta_brier": [
+     -0.0003,
+     [
+      -0.0017,
+      0.0011
+     ]
+    ],
+    "delta_mae": [
+     0.0104,
+     [
+      -0.0413,
+      0.0603
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5191,
+    "margin_mae": 12.7722,
+    "winner_accuracy": 0.7276
+   },
+   "form_k0.05": {
+    "brier": 0.175,
+    "calibration_ece": 0.0198,
+    "delta_brier": [
+     -0.0007,
+     [
+      -0.0012,
+      -0.0002
+     ]
+    ],
+    "delta_mae": [
+     -0.0289,
+     [
+      -0.0541,
+      -0.0054
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5183,
+    "margin_mae": 12.7329,
+    "winner_accuracy": 0.7298
+   },
+   "form_k0.1": {
+    "brier": 0.1748,
+    "calibration_ece": 0.0245,
+    "delta_brier": [
+     -0.001,
+     [
+      -0.002,
+      0.0001
+     ]
+    ],
+    "delta_mae": [
+     -0.0414,
+     [
+      -0.0916,
+      0.0054
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5177,
+    "margin_mae": 12.7204,
+    "winner_accuracy": 0.7344
+   },
+   "incumbent": {
+    "brier": 0.1757,
+    "calibration_ece": 0.0235,
+    "delta_brier": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "delta_mae": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5199,
+    "margin_mae": 12.7618,
+    "winner_accuracy": 0.7298
+   },
+   "tiered_r3_m3_1_1.5": {
+    "brier": 0.1754,
+    "calibration_ece": 0.0248,
+    "delta_brier": [
+     -0.0003,
+     [
+      -0.001,
+      0.0003
+     ]
+    ],
+    "delta_mae": [
+     -0.0136,
+     [
+      -0.0426,
+      0.0137
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.519,
+    "margin_mae": 12.7482,
+    "winner_accuracy": 0.7282
+   },
+   "tiered_r3_m3_2_3": {
+    "brier": 0.1755,
+    "calibration_ece": 0.0262,
+    "delta_brier": [
+     -0.0003,
+     [
+      -0.0016,
+      0.001
+     ]
+    ],
+    "delta_mae": [
+     0.0006,
+     [
+      -0.048,
+      0.051
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5192,
+    "margin_mae": 12.7624,
+    "winner_accuracy": 0.727
+   },
+   "tiered_r3_m4_1.25_1.5": {
+    "brier": 0.1754,
+    "calibration_ece": 0.0236,
+    "delta_brier": [
+     -0.0004,
+     [
+      -0.0009,
+      0.0001
+     ]
+    ],
+    "delta_mae": [
+     -0.0081,
+     [
+      -0.0267,
+      0.0095
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.519,
+    "margin_mae": 12.7537,
+    "winner_accuracy": 0.7273
+   },
+   "window_6": {
+    "brier": 0.1763,
+    "calibration_ece": 0.0249,
+    "delta_brier": [
+     0.0006,
+     [
+      -0.0012,
+      0.0025
+     ]
+    ],
+    "delta_mae": [
+     0.0464,
+     [
+      -0.0188,
+      0.116
+     ]
+    ],
+    "games": 3275,
+    "log_loss": 0.5214,
+    "margin_mae": 12.8082,
+    "winner_accuracy": 0.7267
+   }
+  },
+  "season_2026": {
+   "exp_halflife_12": {
+    "brier": 0.1751,
+    "calibration_ece": 0.0353,
+    "delta_brier": [
+     -0.0001,
+     [
+      -0.0007,
+      0.0006
+     ]
+    ],
+    "delta_mae": [
+     -0.0109,
+     [
+      -0.0358,
+      0.013
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5199,
+    "margin_mae": 12.8325,
+    "winner_accuracy": 0.7397
+   },
+   "exp_halflife_4": {
+    "brier": 0.1756,
+    "calibration_ece": 0.0385,
+    "delta_brier": [
+     0.0004,
+     [
+      -0.0015,
+      0.0023
+     ]
+    ],
+    "delta_mae": [
+     0.0033,
+     [
+      -0.05,
+      0.0587
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5209,
+    "margin_mae": 12.8468,
+    "winner_accuracy": 0.732
+   },
+   "form_k0.05": {
+    "brier": 0.1752,
+    "calibration_ece": 0.0435,
+    "delta_brier": [
+     0.0001,
+     [
+      -0.0009,
+      0.001
+     ]
+    ],
+    "delta_mae": [
+     -0.0259,
+     [
+      -0.0582,
+      0.0091
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5205,
+    "margin_mae": 12.8175,
+    "winner_accuracy": 0.7335
+   },
+   "form_k0.1": {
+    "brier": 0.1757,
+    "calibration_ece": 0.0483,
+    "delta_brier": [
+     0.0005,
+     [
+      -0.0014,
+      0.0025
+     ]
+    ],
+    "delta_mae": [
+     -0.0323,
+     [
+      -0.0921,
+      0.0339
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5219,
+    "margin_mae": 12.8111,
+    "winner_accuracy": 0.7443
+   },
+   "incumbent": {
+    "brier": 0.1752,
+    "calibration_ece": 0.0348,
+    "delta_brier": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "delta_mae": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5201,
+    "margin_mae": 12.8434,
+    "winner_accuracy": 0.732
+   },
+   "tiered_r3_m3_1_1.5": {
+    "brier": 0.1756,
+    "calibration_ece": 0.0308,
+    "delta_brier": [
+     0.0004,
+     [
+      -0.0009,
+      0.0015
+     ]
+    ],
+    "delta_mae": [
+     0.0045,
+     [
+      -0.0297,
+      0.0378
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5213,
+    "margin_mae": 12.8479,
+    "winner_accuracy": 0.7381
+   },
+   "tiered_r3_m3_2_3": {
+    "brier": 0.1753,
+    "calibration_ece": 0.0442,
+    "delta_brier": [
+     0.0002,
+     [
+      -0.0011,
+      0.0014
+     ]
+    ],
+    "delta_mae": [
+     -0.0041,
+     [
+      -0.0352,
+      0.0276
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5202,
+    "margin_mae": 12.8393,
+    "winner_accuracy": 0.732
+   },
+   "tiered_r3_m4_1.25_1.5": {
+    "brier": 0.1753,
+    "calibration_ece": 0.0293,
+    "delta_brier": [
+     0.0001,
+     [
+      -0.0005,
+      0.0006
+     ]
+    ],
+    "delta_mae": [
+     -0.0074,
+     [
+      -0.0289,
+      0.0118
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.5204,
+    "margin_mae": 12.836,
+    "winner_accuracy": 0.7335
+   },
+   "window_6": {
+    "brier": 0.1746,
+    "calibration_ece": 0.0476,
+    "delta_brier": [
+     -0.0005,
+     [
+      -0.0018,
+      0.0008
+     ]
+    ],
+    "delta_mae": [
+     -0.005,
+     [
+      -0.031,
+      0.0148
+     ]
+    ],
+    "games": 653,
+    "log_loss": 0.518,
+    "margin_mae": 12.8384,
+    "winner_accuracy": 0.7228
+   }
+  }
+ },
+ "form_k_train_log_loss": {
+  "0.0": 0.498,
+  "0.05": 0.4974,
+  "0.1": 0.4978,
+  "0.15": 0.4992,
+  "0.2": 0.5015,
+  "0.3": 0.509
+ },
+ "momentum": {
+  "next_game_mean_residual": {
+   "slumping_lt_-7": {
+    "mean": -1.76,
+    "n": 2240
+   },
+   "steady": {
+    "mean": 0.22,
+    "n": 5365
+   },
+   "surging_gt_7": {
+    "mean": 1.3,
+    "n": 2395
+   }
+  },
+  "observations": 10000,
+  "slope_next_on_last3": 0.121
+ },
+ "preregistered_tiered": "tiered_r3_m4_1.25_1.5",
+ "prior_shrink": 0.8,
+ "prior_shrink_train_log_loss": {
+  "0.4": 0.5036609019005281,
+  "0.6": 0.4988561656833269,
+  "0.8": 0.49804127453211444,
+  "0.9": 0.49951603819144275,
+  "1.0": 0.5025875953517185
+ },
+ "test_seasons": [
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "texas_tech_2026": [
+  {
+   "actual_tt_margin": 11,
+   "opponent": "Oregon State",
+   "predicted_tt_margin": 22.3,
+   "week": 2
+  },
+  {
+   "actual_tt_margin": 2,
+   "opponent": "Houston",
+   "predicted_tt_margin": 8.3,
+   "week": 3
+  },
+  {
+   "actual_tt_margin": 35,
+   "opponent": "Sam Houston State",
+   "predicted_tt_margin": 26.0,
+   "week": 4
+  },
+  {
+   "actual_tt_margin": 22,
+   "opponent": "Colorado",
+   "predicted_tt_margin": 13.0,
+   "week": 5
+  },
+  {
+   "actual_tt_margin": 28,
+   "opponent": "Arizona State",
+   "predicted_tt_margin": 16.5,
+   "week": 7
+  },
+  {
+   "actual_tt_margin": -13,
+   "opponent": "Cincinnati",
+   "predicted_tt_margin": 11.4,
+   "week": 8
+  },
+  {
+   "actual_tt_margin": 8,
+   "opponent": "Arizona",
+   "predicted_tt_margin": 5.1,
+   "week": 9
+  },
+  {
+   "actual_tt_margin": 5,
+   "opponent": "West Virginia",
+   "predicted_tt_margin": 16.2,
+   "week": 10
+  },
+  {
+   "actual_tt_margin": 25,
+   "opponent": "Oklahoma State",
+   "predicted_tt_margin": 3.2,
+   "week": 11
+  }
+ ],
+ "train_incumbent": {
+  "brier": 0.1665,
+  "calibration_ece": 0.0216,
+  "games": 3180,
+  "log_loss": 0.498,
+  "margin_mae": 13.2602,
+  "winner_accuracy": 0.7465
+ },
+ "train_seasons": [
+  2017,
+  2018,
+  2019,
+  2021
+ ],
+ "train_top10_by_log_loss": [
+  [
+   0.4977,
+   13.238,
+   "tiered_r3_m4_1.25_1.5"
+  ],
+  [
+   0.4977,
+   13.24,
+   "tiered_r3_m3_1_1.25"
+  ],
+  [
+   0.4977,
+   13.24,
+   "tiered_r3_m4_1_1.25"
+  ],
+  [
+   0.4978,
+   13.227,
+   "tiered_r3_m3_1_1.5"
+  ],
+  [
+   0.4978,
+   13.227,
+   "tiered_r3_m4_1_1.5"
+  ],
+  [
+   0.4978,
+   13.23,
+   "tiered_r3_m4_1.5_2"
+  ],
+  [
+   0.4979,
+   13.243,
+   "exp_halflife_12"
+  ],
+  [
+   0.4979,
+   13.252,
+   "tiered_r3_m4_1.5_1.5"
+  ],
+  [
+   0.4979,
+   13.255,
+   "tiered_r3_m4_1.25_1.25"
+  ],
+  [
+   0.498,
+   13.221,
+   "tiered_r3_m4_1.25_2"
+  ]
+ ]
+}
