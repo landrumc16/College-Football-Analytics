@@ -147,6 +147,36 @@ try {
     await page.goBack();
     assert.equal(await field(page, 'Second school').inputValue(), 'TCU', 'Back keeps the Compare selection');
 
+    // Report Card pickers (Hype Index, Program Trajectory) use the same search.
+    const pickIn = async (label, query, team, scope = page) => {
+      const f = scope.getByLabel(label, { exact: true }).locator('visible=true').first();
+      await f.scrollIntoViewIfNeeded(); await f.focus(); await f.pressSequentially(query);
+      const l = await listFor(page, f);
+      await assertListVisible(page, l, `${label} at ${width}`);
+      await pick(l.getByRole('option', { name: team, exact: true }));
+      assert.equal(await f.inputValue(), team, `${label} selection`);
+    };
+    await openDestination(page, 'Teams');
+    await chooseSection(page, 'Teams sections', 'Hype Index');
+    await pickIn('Choose historical program', 'TTU', 'Texas Tech');
+    await page.getByRole('region', { name: 'CFA Program Report Card for Texas Tech', exact: true }).waitFor();
+    await chooseSection(page, 'Teams sections', 'Program Trajectory');
+    await pickIn('Choose historical program', 'lsu', 'LSU');
+    await page.getByRole('region', { name: 'CFA Program Report Card for LSU', exact: true }).waitFor();
+    // The strength-history chart pickers render only when v4-program-intelligence.json is published (it fails closed, as before).
+    await assertNoOverflow(page, `Program Intelligence at ${width}`);
+
+    // Game Predictions keeps its own search, now ranked the same way.
+    await openDestination(page, 'Home');
+    await page.getByRole('button', { name: 'All games', exact: false }).click();
+    await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
+    const predictions = page.getByLabel('Search teams', { exact: true });
+    await predictions.fill('TTU');
+    const predicted = page.locator('#team-search-suggestions').getByRole('option');
+    assert.equal(await predicted.first().innerText(), 'Texas Tech', 'Game Predictions abbreviation ranking');
+    await pick(predicted.first());
+    assert.equal(await predictions.inputValue(), 'Texas Tech');
+
     // Favorites: find with the same search (abbreviation + touch), save, survive reload, remove.
     await openDestination(page, 'Home');
     await page.evaluate(() => localStorage.removeItem('cfba-favorites-v1'));
