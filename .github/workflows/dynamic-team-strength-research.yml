@@ -6,7 +6,7 @@ on:
       - 'src/cfb_analytics/recency*'
       - 'src/cfb_analytics/lineup_advisory_research.py'
       - 'scripts/run_recency_historical_screen.py'
-      - 'scripts/strength_blend_research.py'
+      - 'scripts/strength_blend_research.py'\n      - 'scripts/run_strength_blend_historical_screen.py'
       - 'tests/test_strength_blend_research.py'
       - 'tests/test_recency*'
       - 'tests/test_lineup_advisory_research.py'
@@ -53,4 +53,23 @@ jobs:
         with:
           name: recency-2022-2025-neutral-prior-replay
           path: research-output/recency-2022-2025.json
+          if-no-files-found: warn
+
+  strength-blend-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install model
+        run: python -m pip install -e .
+      - name: Replay 2022-2025 3/4-game and weight grid (research only)
+        run: python -m scripts.run_strength_blend_historical_screen --output research-output/strength-blend-2022-2025.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: strength-blend-2022-2025-neutral-prior-replay
+          path: research-output/strength-blend-2022-2025.json
           if-no-files-found: warn
