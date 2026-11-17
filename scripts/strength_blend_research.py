@@ -62,3 +62,52 @@ def momentum_window(completed_games: list, *, window: int = 3) -> list:
     if window not in (3, 4):
         raise ValueError("momentum window must be 3 or 4")
     return completed_games[-window:]
+
+
+def calculate_strength_components(teams, chronological_games, *,
+                                  window: int = 3,
+                                  momentum_weight: float = 0.35,
+                                  settings=None):
+    """As-of opponent-adjusted season and short-window momentum ratings.
+
+    The opponent benchmark is estimated from the full *as-of* season history,
+    but a team's momentum numerator uses ONLY its last 3 or 4 games.
+    Games must be completed, ordered by kickoff, and available before the
+    forecast timestamp. Do not pass future games or use this in production.
+    """
+    from cfb_analytics.ratings import calculate_ratings
+    from cfb_analytics.model import ModelSettings, adjusted_home_margin
+
+    if window not in (3, 4):
+        raise ValueError("momentum window must be 3 or 4")
+    if settings is None:
+        settings = ModelSettings()
+    ratings = calculate_ratings(teams, chronological_games, settings)
+    output = {}
+    for team in teams:
+        played = [game for game in chronological_games
+                  if team.name in (game.home, game.away)]
+        season = ratings[team.name].adaptive_rating
+        if len(played) < window:
+            output[team.name] = blend_strength(
+                season, None, momentum_games=len(played),
+                momentum_weight=momentum_weight)
+            continue
+        recent = played[-window:]
+        observations = []
+        for game in recent:
+            home = game.home == team.name
+            opponent = game.away if home else game.home
+            opponent_strength = (ratings[opponent].adaptive_rating
+                                 if opponent in ratings else settings.fcs_opponent_rating)
+            adjusted = adjusted_home_margin(
+                game.home_score, game.away_score, settings)
+            observations.append(opponent_strength + (adjusted if home else -adjusted))
+        # Ridge toward the season rating to avoid overreacting to a tiny sample.
+        # Both components remain in the same margin-based rating units.
+        momentum = ((sum(observations) + settings.ridge_strength * season)
+                    / (len(observations) + settings.ridge_strength))
+        output[team.name] = blend_strength(
+            season, momentum, momentum_games=len(recent),
+            momentum_weight=momentum_weight)
+    return output
