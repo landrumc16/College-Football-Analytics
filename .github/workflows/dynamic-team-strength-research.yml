@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/cfb_analytics/recency*'
       - 'src/cfb_analytics/lineup_advisory_research.py'
+      - 'scripts/run_recency_historical_screen.py'
       - 'tests/test_recency*'
       - 'tests/test_lineup_advisory_research.py'
       - '.github/workflows/dynamic-team-strength-research.yml'
@@ -32,3 +33,22 @@ jobs:
         run: npm install --prefix web --no-package-lock
       - name: Build frontend with TypeScript checks
         run: npm run build --prefix web
+
+  historical-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install model
+        run: python -m pip install -e .
+      - name: Replay verified 2022-2025 final scores (neutral-prior proxy)
+        run: python -m scripts.run_recency_historical_screen --output research-output/recency-2022-2025.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recency-2022-2025-neutral-prior-replay
+          path: research-output/recency-2022-2025.json
+          if-no-files-found: warn
