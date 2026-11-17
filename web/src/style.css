@@ -323,3 +323,12 @@ a:hover{color:#fff1dd}
 .market-custom{background:transparent;border:1px solid #8aa4bd;color:#e3ecf6}
 .menu-research{display:flex;align-items:center;width:100%;min-height:44px;margin-bottom:8px;background:#751d32;color:#fff;border:1px solid #751d32;border-radius:8px;justify-content:center}.menu-research:focus-visible,.market-link button:focus-visible{outline:3px solid #8be5c8;outline-offset:2px}
 .market-link{margin:14px 0 0}.market-link button{min-height:44px;background:transparent;border:1px solid #8aa4bd;color:#e3ecf6;border-radius:8px;padding:10px 14px;text-align:left}
+/* Market Analysis: find a game by team name */
+.market-game-row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label label" "search custom" "results results";align-items:center}
+.market-game-row>label{grid-area:label}.market-game-row>input[type=search]{grid-area:search;min-height:44px;font-size:16px;width:100%;min-width:0;padding:8px 12px;border-radius:8px;border:1px solid #5b7a95;background:#0c1726;color:#f5f0e6}
+.market-game-row>input[type=search]:focus-visible{outline:3px solid #8be5c8;outline-offset:2px}.market-game-row>.market-custom{grid-area:custom}
+.market-game-results,.market-selected-game{grid-area:results;margin:0}.market-game-results{display:flex;flex-direction:column;gap:6px}
+.market-game-results button{min-height:44px;text-align:left;background:#192d40;border:1px solid #4e6d88;color:#e3ecf6;border-radius:8px;padding:10px 12px}
+.market-game-results button[aria-current="true"]{border-color:#8be5c8}.market-game-results button:focus-visible{outline:3px solid #8be5c8;outline-offset:2px}
+.market-game-results p,.market-selected-game{color:#cbd8e6}
+@media(max-width:600px){.market-game-row{grid-template-columns:1fr;grid-template-areas:"label" "search" "results" "custom"}}

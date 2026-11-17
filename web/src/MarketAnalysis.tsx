@@ -9,7 +9,10 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
   const game = games.find(g => g.game_id === selectedId) ?? games[0]
   const [historyOpen, setHistoryOpen] = useState(false)
   const [teamQuery, setTeamQuery] = useState('')
-  const matches = teamQuery.trim() ? games.filter(g => `${g.home} ${g.away}`.toLowerCase().includes(teamQuery.trim().toLowerCase())) : []
+  // Match either team's own name (case-insensitive, partial), never text spanning both names.
+  const query = teamQuery.trim().toLowerCase()
+  const matches = query ? games.filter(g => g.home.toLowerCase().includes(query) || g.away.toLowerCase().includes(query)) : []
+  const choose = (id: number) => { onSelect(id); setTeamQuery('') }
   return <section className="market-analysis" aria-labelledby="market-analysis-title">
     <h2 id="market-analysis-title">Market Analysis</h2>
     <p className="page-deck">Pick a game, type the spread, probability or moneyline you see, and compare it with our model instantly. Educational only: not betting advice.</p>
@@ -17,15 +20,17 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
       <div className="market-game-row">
         <label htmlFor="market-team-search">Find a game by team name</label>
         <input id="market-team-search" type="search" autoComplete="off" value={teamQuery}
-          placeholder="Search Texas Tech, Baylor, TCU…" onChange={e => setTeamQuery(e.target.value)} />
-        {teamQuery.trim() ? <div className="market-game-results" aria-label="Matching games">
+          placeholder="Search Texas Tech, Baylor, TCU…" aria-describedby="market-team-search-status" onChange={e => setTeamQuery(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && matches.length) { e.preventDefault(); choose(matches[0].game_id) } else if (e.key === 'Escape') setTeamQuery('') }} />
+        <p id="market-team-search-status" className="visually-hidden" role="status">{query ? (matches.length ? `${matches.length} matching game${matches.length === 1 ? '' : 's'}. Press Enter to choose the first.` : 'No matching games.') : ''}</p>
+        {query ? <div className="market-game-results" role="group" aria-label="Matching games">
           {matches.length ? matches.slice(0, 12).map(g => <button key={g.game_id} type="button"
             aria-current={game.game_id === g.game_id ? 'true' : undefined}
-            onClick={() => { onSelect(g.game_id); setTeamQuery('') }}>
+            onClick={() => choose(g.game_id)}>
             {g.game_id < 0 ? 'Your matchup' : `Week ${g.week}`} · {g.away} {g.neutral_site ? 'vs.' : 'at'} {g.home}
-          </button>) : <p role="status">No matching games. Try another team name.</p>}
+          </button>) : <p>No matching games. Try another team name.</p>}
           {matches.length > 12 && <p>{matches.length} matches. Type more of the team name to narrow the list.</p>}
-        </div> : <p className="market-selected-game">Selected game: {game.away} {game.neutral_site ? 'vs.' : 'at'} {game.home} (Week {game.week})</p>}
+        </div> : <p className="market-selected-game">Selected game: {game.away} {game.neutral_site ? 'vs.' : 'at'} {game.home} ({game.game_id < 0 ? 'your hypothetical matchup' : `Week ${game.week}`})</p>}
         <button type="button" className="market-custom" onClick={onCustom}>Other matchup</button>
       </div>
       <MarketCalculator key={`${game.game_id}|${game.home}|${game.away}`} headingLevel="h3" home={game.home} away={game.away}

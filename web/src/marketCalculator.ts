@@ -130,44 +130,50 @@ export function headlineProbability(team: string, model: number, market: number)
   return `Model gives ${team} ${Math.abs(d).toFixed(1)} percentage points ${d > 0 ? 'more' : 'less'} win chance`
 }
 
-export const spreadExample = (team: string) => `Example: ${team} −7 means ${team} is favoured by 7; ${team} +3.5 means ${team} is a 3.5-point underdog.`
+export const spreadExample = (team: string) => `Example: ${team} −7 means ${team} is favored by 7; ${team} +3.5 means ${team} is a 3.5-point underdog.`
 
-/** Plain-language spread comparison; keeps the signed arithmetic unchanged. */
-export function spreadStory(team: string, opponent: string, margin: number, spread: number) {
-  const modelWinner = Math.abs(margin) < 0.05 ? null : margin > 0 ? team : opponent
-  const lineFavorite = Math.abs(spread) < 0.05 ? null : spread < 0 ? team : opponent
-  const modelSize = Math.abs(margin)
-  const lineSize = Math.abs(spread)
-  const modelText = modelWinner ? `Our model predicts ${modelWinner} will win by approximately ${points(modelSize)}.` : 'Our model predicts an even game.'
-  const lineText = lineFavorite ? `The betting line you entered has ${lineFavorite} favored by ${points(lineSize)}.` : 'The betting line you entered has neither team favored (pick’em).'
-  const gap = Math.abs(margin + spread)
-  if (gap < 1.5) return {
-    title: 'Our model and the spread are close',
-    modelText, lineText,
-    meaning: 'Our model and the entered betting line tell a similar story about this matchup.',
-    take: 'There is no major disagreement between our prediction and the spread you entered.',
-  }
-  if (modelWinner && lineFavorite && modelWinner !== lineFavorite) return {
-    title: 'Our model and the spread disagree',
-    modelText, lineText,
-    meaning: 'Our model predicts a different winner from the team favored by the entered betting line.',
-    take: 'This is a significant disagreement. Look more closely at the matchup before drawing conclusions from the spread.',
-  }
-  if (!lineFavorite || !modelWinner) return {
-    title: 'Our model and the spread differ', modelText, lineText,
-    meaning: 'The entered spread and our model suggest different winning margins for this matchup.',
-    take: 'Consider the full matchup context before interpreting this difference.',
-  }
-  const closer = modelSize < lineSize
-  const qualifier = gap >= 4 ? 'much ' : ''
-  const meaning = closer
-    ? `Both point toward ${lineFavorite ?? modelWinner}, but our model expects a ${qualifier}closer game than the spread suggests.`
-    : `Both point toward ${modelWinner ?? lineFavorite}, but our model expects a ${qualifier}bigger win than the spread suggests.`
-  return {
-    title: closer ? 'Our model expects a closer game' : 'Our model expects a bigger win',
-    modelText, lineText, meaning,
-    take: closer && lineFavorite
-      ? `Be cautious about ${lineFavorite} covering this spread. Our model expects ${lineFavorite === team ? opponent : team} to keep the game more competitive.`
-      : 'Our model expects a larger winning margin than the entered spread suggests. That difference is worth examining, not a guarantee of a result.',
-  }
+/** Spread sizes as written on a betting line: half points kept, whole numbers without ".0". */
+const lineSize = (n: number) => { const v = Math.abs(n); return `${v % 1 ? v.toFixed(1) : v} point${v === 1 ? '' : 's'}` }
+/** Compound form before a noun: "the 6.5-point spread". */
+const spreadAdj = (n: number) => { const v = Math.abs(n); return `${v % 1 ? v.toFixed(1) : v}-point` }
+/** Model margins rounded to the nearest half point for conversational text ("approximately 1 point"). */
+const approxSize = (n: number) => lineSize(Math.round(Math.abs(n) * 2) / 2)
+
+export type SpreadStory = { title: string; modelText: string; lineText: string; meaning: string; take: string }
+
+/**
+ * Four-part, plain-language comparison of the model's margin with a user-entered spread.
+ * Inputs use the selected team's perspective (margin > 0 = team wins; spread < 0 = team favored), but the
+ * story names teams explicitly, so it reads the same from either side. Calculations are unchanged.
+ */
+export function spreadStory(team: string, opponent: string, margin: number, spread: number): SpreadStory {
+  const winner = Math.round(Math.abs(margin) * 2) / 2 < 0.5 ? null : margin > 0 ? team : opponent
+  const favorite = spread === 0 ? null : spread < 0 ? team : opponent
+  const other = (t: string) => t === team ? opponent : team
+  const gap = Math.abs(spreadDifference(margin, spread))
+  const much = gap >= 4 ? 'much ' : ''
+  const modelText = winner ? `${winner} wins by approximately ${approxSize(margin)}.` : 'This looks like an even game: our model does not clearly favor either team.'
+  const lineText = favorite ? `${favorite} is favored by ${lineSize(spread)}.` : 'Neither team is favored (pick’em).'
+  const story = (title: string, meaning: string, take: string) => ({ title, modelText, lineText, meaning, take })
+  if (!winner && !favorite) return story('Our model and the betting line agree',
+    'Both our model and the betting line see this as an even game.',
+    'There is no meaningful disagreement between our prediction and the line you entered.')
+  if (gap < 1.5) return story('Our model and the betting line agree',
+    winner && favorite && winner === favorite ? `Both our model and the betting line favor ${favorite} by a similar margin.` : 'Both our model and the betting line expect a close game.',
+    'There is no major disagreement between our prediction and the line you entered.')
+  if (winner && favorite && winner !== favorite) return story('Our model and the betting line disagree on the winner',
+    `The betting line favors ${favorite}, but our model expects ${winner} to win.`,
+    `This is a significant disagreement. Be cautious about ${favorite} covering the ${spreadAdj(spread)} spread. Our model expects ${winner} to win the game outright.`)
+  if (!favorite) return story('Our model favors one team',
+    `The betting line treats this game as a toss-up, but our model favors ${winner} by approximately ${approxSize(margin)}.`,
+    `Our model leans toward ${winner} in a game the betting line treats as even.`)
+  if (!winner) return story('Our model expects a closer game',
+    `The betting line favors ${favorite}, but our model sees this as an even game.`,
+    `Be cautious about ${favorite} covering the ${spreadAdj(spread)} spread. Our model expects ${other(favorite)} to keep this game competitive.`)
+  if (Math.abs(margin) < Math.abs(spread)) return story('Our model expects a closer game',
+    `Both our model and the betting line favor ${favorite}, but our model expects a ${much}closer game than the spread suggests.`,
+    `Be cautious about ${favorite} covering the ${spreadAdj(spread)} spread. Our model expects ${other(favorite)} to keep this game competitive.`)
+  return story('Our model expects a bigger win',
+    `Both our model and the betting line favor ${favorite}, but our model expects a ${much}bigger win than the spread suggests.`,
+    `Our model expects ${favorite} to win by more than the ${spreadAdj(spread)} spread. That difference is worth a closer look, not a guarantee of the result.`)
 }
