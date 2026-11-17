@@ -49,3 +49,15 @@ Inspected current `src/cfb_analytics/ratings.py`, `pipeline.py`, `model.py` and 
 - **Test execution blocked:** attempted to clone the branch into the local execution container, but the container could not resolve `github.com` (DNS). Tests are committed but unverified; GitHub CI or a connected execution environment must run them.
 - **Chronology warning:** `ingestion.normalize_cfbd_games` currently sorts by `(week, game_id)`, while `IngestedGame` includes `start_date`. Before replay, establish chronological ordering using valid kickoff timestamps and conservative completed-game cutoffs. Do not mistake `game_id` for kickoff ordering. Preserve incumbent pipeline untouched.
 - Next highest-value step: build an as-of chronological replay using verified 2026 inputs; run baseline-parity and leakage tests; compare paired pregame predictions. Do not use current full-season results for past-week features.
+
+## Owner amendment — player availability is secondary (2026-11-17)
+Owner decision: prioritize **verified recent team performance** over speculative player-level production losses. Do not assume an unknown backup is substantially worse; Texas Tech's quarterback transition is the motivating example. The latest three completed games remain equally weighted within the rolling current-form tier. Preserve opponent adjustment and earlier-game stability.
+
+Research design constraints:
+1. Default to the team-performance model with **no discretionary player-specific point penalty**. A verified absence may justify only a **small, empirically calibrated** adjustment if independent pregame-available evidence supports predictive improvement. No hard-coded universal QB/injury deduction.
+2. Never project a backup's unobserved production as if it were known. Distinguish *availability known* from *replacement performance unknown*; surface uncertainty rather than fabricated certainty.
+3. Prevent double counting: once post-change games enter the recent-form window, any independent availability adjustment should shrink or expire unless held-out evidence proves incremental value.
+4. Compare three paired, leakage-safe ablations: incumbent; rolling team form alone; rolling team form plus modest verified availability signal. Require a measurable incremental improvement for the third before adopting it.
+5. Handle major injuries and returns symmetrically in research; report sparse-data and missing-status limitations. Preserve current production until all established promotion gates and explicit owner approval are satisfied.
+
+This amendment supersedes any earlier suggestion to give major roster changes large automatic rating or spread adjustments. No code change is needed solely to record this research priority.
