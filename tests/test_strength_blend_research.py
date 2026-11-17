@@ -42,3 +42,32 @@ def test_reject_missing_full_window():
 def test_reject_invalid_window():
     with pytest.raises(ValueError):
         momentum_window([1, 2, 3], window=5)
+
+
+def test_opponent_adjusted_components_use_only_latest_three():
+    from cfb_analytics.ratings import Team, Game
+    from scripts.strength_blend_research import calculate_strength_components
+    teams = [Team("A", "X", 0), Team("B", "X", 0)]
+    games = [
+        Game("A", "B", 10, 20, 1),
+        Game("A", "B", 10, 20, 2),
+        Game("A", "B", 30, 10, 3),
+        Game("A", "B", 30, 10, 4),
+        Game("A", "B", 30, 10, 5),
+    ]
+    values = calculate_strength_components(teams, games)
+    assert values["A"].momentum_games == 3
+    assert values["A"].recent_momentum > values["A"].season_strength
+    assert values["A"].combined_strength > values["A"].season_strength
+    assert values["B"].recent_momentum < values["B"].season_strength
+
+
+def test_four_game_window_requires_four_completed_games():
+    from cfb_analytics.ratings import Team, Game
+    from scripts.strength_blend_research import calculate_strength_components
+    teams = [Team("A", "X", 0), Team("B", "X", 0)]
+    games = [Game("A", "B", 21, 10, i) for i in (1, 2, 3)]
+    values = calculate_strength_components(teams, games, window=4)
+    assert values["A"].momentum_games == 3
+    assert values["A"].recent_momentum is None
+    assert values["A"].combined_strength == values["A"].season_strength
