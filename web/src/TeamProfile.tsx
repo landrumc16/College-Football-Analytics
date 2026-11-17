@@ -1,3 +1,4 @@
+import { LineupAdvisoryNotice } from './LineupAdvisory'
 import ProgramContext from './ProgramContext'
 import ProgramReportCard, { useReportCards } from './ProgramReportCard'
 import HistoricalResults from './HistoricalResults'
@@ -47,11 +48,12 @@ const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: 
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare, lineupAdvisories, advisoryAsOf }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
   section: ProfileSection; onSection: (section: ProfileSection) => void; scheduleContent: ReactNode;
+  lineupAdvisories?: Record<string, unknown>; advisoryAsOf?: string;
   onChoose: (team: string) => void; onCompare: (team: string) => void;
 }) {
   const reportCards = useReportCards()
@@ -132,7 +134,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch and results versus forecast</summary><p>The approved Team Stock Watch requires a verified 0–100 time-aware index and a four-week change. Neither is inferred from season-total wins above expectation. Results versus Forecast separately compares actual wins with the published model’s expected wins for games with forecasts; at least three forecasted games are required. It is descriptive, not a validated trajectory signal.</p></details>
     </>}
-    {section === 'schedule' && <>{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
+    {section === 'schedule' && <>{advisoryAsOf && lineupAdvisories?.[team] && <LineupAdvisoryNotice advisory={lineupAdvisories[team]} team={team} asOf={advisoryAsOf} />}{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Upcoming prediction explanations</summary><p>Forecast movement: unavailable. Comparable, independently publication-verified pregame snapshots for these upcoming games have not been established; today’s recomputation is not treated as an older forecast.</p>
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching and roster context in Historical Intelligence is descriptive and does not change these probabilities. A current rating gap is not proof of a player- or coaching-level cause.</p>
       <div className="table-wrap"><table><thead><tr><th scope="col">Week</th><th scope="col">Matchup</th><th scope="col">Team win probability</th><th scope="col">Current rating gap</th><th scope="col">Forecast</th></tr></thead><tbody>{upcoming.map(g => {
