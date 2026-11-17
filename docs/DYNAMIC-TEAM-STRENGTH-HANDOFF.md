@@ -95,3 +95,10 @@ No production change authorized by this documentation. Implement only as part of
 - Immediately queried workflow runs for that commit; none were returned at that point. **Do not claim tests passed.** Inspect the PR checks and run logs when GitHub processes the new workflow.
 - GitHub repository cloning from the available local container is blocked by DNS resolution; the GitHub connector remains functional for file commits.
 - Keep PR #38 draft; no merge or production changes. Next: inspect CI failures and correct them, then run the chronological replay on source-verified, season-specific eligible inputs. UI integration is still outstanding.
+
+## Sixth pass — verified tests and optional schedule UI
+- Confirmed GitHub Actions run `44122360642` completed successfully: focused research tests and incumbent pipeline regression test steps both passed. Python model tests on same prior SHA also passed (run `44122360793`).
+- Added `web/src/LineupAdvisory.tsx` with runtime validation for team match, timezone-bearing timestamps, nonfuture effective/verified dates, HTTPS source, current-lineup confirmation, and provisional observed-game count. Advisory text states forecast *may* be less reliable; no score adjustment.
+- Added optional `lineupAdvisories` and `advisoryAsOf` props to `TeamProfile`, displaying a single advisory on the Schedule & Predictions section only when provided and validated. **No verified live event feed has been connected; production/default view will show no advisory.** No player facts have been fabricated.
+- UI commits `01a5621` and `76e54f1`. Frontend build/test result for these UI changes remains to be checked.
+- Remaining before promotion: verified event ingestion and starter-participation records, real historically eligible paired replay, passing full UI/build checks, owner review. PR #38 remains draft and unmerged.
