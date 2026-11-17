@@ -102,3 +102,10 @@ No production change authorized by this documentation. Implement only as part of
 - Added optional `lineupAdvisories` and `advisoryAsOf` props to `TeamProfile`, displaying a single advisory on the Schedule & Predictions section only when provided and validated. **No verified live event feed has been connected; production/default view will show no advisory.** No player facts have been fabricated.
 - UI commits `01a5621` and `76e54f1`. Frontend build/test result for these UI changes remains to be checked.
 - Remaining before promotion: verified event ingestion and starter-participation records, real historically eligible paired replay, passing full UI/build checks, owner review. PR #38 remains draft and unmerged.
+
+## Seventh pass — CI diagnosis and protection gate (2026-11-17)
+- GitHub Actions run `44123973953` shows **15 research tests passed** and **21 pipeline tests passed**. Its failure was in `actions/setup-node@v4` because `web/package-lock.json` did not exist at the configured path.
+- Removed the invalid npm cache path and changed frontend dependency install from `npm ci` to `npm install --prefix web --no-package-lock` (latest fix `dfe6e29`). Await a fresh run before claiming frontend build success.
+- Existing V6 editorial release-protection workflow failed in run `44123079165`: the protected-path guard rejected the four new `src/cfb_analytics/*research.py` files because PR #38 has no reviewed, branch-specific release manifest. **This is an intentional release gate, not a model-test failure.** Do not weaken or bypass it.
+- `tests/test_protected_guard.py` explicitly expects only the V7 manifest and strict behavior for other branches. Any exception must be reviewed, branch-scoped, and reconciled with those tests; alternatively relocate research-only modules to an approved nonprotected area without compromising import/test behavior. No exception approved yet.
+- Historical accuracy promotion is still blocked on actual eligible data and verified season-specific pregame priors. No improvement claim or merge approval.
