@@ -61,3 +61,17 @@ Research design constraints:
 5. Handle major injuries and returns symmetrically in research; report sparse-data and missing-status limitations. Preserve current production until all established promotion gates and explicit owner approval are satisfied.
 
 This amendment supersedes any earlier suggestion to give major roster changes large automatic rating or spread adjustments. No code change is needed solely to record this research priority.
+
+## Owner amendment — Lineup Change Advisory (2026-11-17)
+When a verified significant injury, replacement, or return at a key position creates a material unknown about team performance, **display a concise user-facing uncertainty advisory**, rather than imposing a speculative spread/score penalty. The published forecast remains available; say it *may be less reliable* while the new lineup's track record is limited, not that the numbers are known to be inaccurate.
+
+Proposed behavior, subject to evidence and normal review:
+- Trigger only from a verified, timestamped source (position, effective game/date, change type, source and last-checked time). No inferred or invented injuries, starters, statuses or performance claims.
+- Show the advisory in the matchup/prediction's primary home, and optionally link to it from other surfaces; avoid duplicated full warnings across pages. Make it accessible and understandable to ordinary fans.
+- Track completed games *with the changed lineup*, not elapsed weeks or total team games. A provisional three-game observation window is a design hypothesis, **not** a guaranteed clearance threshold; reassess sooner/later according to data availability and whether the same starter actually played.
+- Use plain-language copy such as: "Recent starting-quarterback change. The forecast may be less reliable until more games show how the current lineup performs." Distinguish verified fact from model uncertainty. If a status is unverified or stale, do not assert it.
+- The recency-weighted model remains driven by opponent-adjusted actual performance; no automatic player-based points deduction. Avoid double counting. An advisory is metadata/communication, not an independent prediction engine.
+- Prefer a small maintainable event record and explicit no-advisory state; avoid live scraping, speculative detection, or a broad roster-management system without reliable feeds.
+- Validate source/provenance, alert expiry and behavior for replacement reversals, byes, injured player returns, and repeated changes. Test that advisory never silently alters model outputs.
+
+No production change authorized by this documentation. Implement only as part of the focused, owner-approved prediction-accuracy work, with tests and PR review before merge.
