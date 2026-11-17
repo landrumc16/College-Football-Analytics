@@ -105,6 +105,53 @@ Compare & What If keeps its collapsed side-by-side report cards and history, whi
 - **Guard:** the two reviewed protected-file edits (`Navigation.tsx`, `EditorialHome.tsx`) are pinned
   in the release manifest by exact SHA-256. Any further edit fails the `visual` guard.
 
+## PR #34 production verification and V7 integration (2026-11-17)
+
+**PR #34 in production:**
+- **Merge:** commit `efecd970daf60cd2c53b368faca3c7aa2d1689d4`.
+- **Deploy:** run [43984190997](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43984190997)
+  succeeded, including every post-deploy production step:
+  - the Pages smoke test;
+  - `mobile-smoke.mjs` against the live URL at 375, 390, 430, 768 and 1536px;
+  - Android Chrome-emulated install, update, offline and recovery;
+  - PostHog live verification.
+- **Live bundle:** `assets/index-DX_JGHT2.js` contains Poll Rankings and the FCS Compare guard. It has
+  no "Coaches Poll" tab and no V7 code.
+- **Independent live check** (Chromium through the session proxy, TLS verified), at five widths:
+  - Poll Rankings shows all 25 union teams;
+  - the AP header sets `aria-sort="ascending"` with ▲;
+  - in Team Stock Watch, the Texas Tech selection renders directly below the filters while the list
+    stays visible;
+  - no overflow and no page errors.
+- **Not visible live:** this week's AP and Coaches polls contain identical teams with no ties, so
+  T-n and NR rows cannot appear in production right now. They are covered by the fixture test
+  `poll-rankings.mjs`, which passed in CI.
+- **Screenshots:** `docs/evidence/pr34-production/`.
+- **Earlier deploy failures:** the refresh-triggered dashboard deploys that failed on 2026-11-16 all
+  stopped at the FCS "Prediction-to-Compare" smoke assertion that PR #34 fixed. The first deploy after
+  the merge passed.
+
+**Integration.** `main` (`efecd97`) was merged into `v7-development`:
+- The seven rehearsed hunks were resolved as documented.
+- The per-release guard script and workflow step were taken from `main`.
+- V7's `Navigation.tsx` pin was re-set to `8aa30905d3278b171123af2e4fb683660d18cb34e6a609d4bb258654a044991a`,
+  verified against the merged file.
+- PR #34's superseded manifest and its manifest-specific test were removed. Only the V7 manifest
+  remains, and it is to be removed after the V7 merge.
+
+**Release-candidate acceptance (local):**
+
+| Check | Result |
+| --- | --- |
+| `pytest` | 698 passed |
+| V7 metrics and validation `--check` | Byte-identical |
+| Production build and bundle check | Pass |
+| Calculator and privacy unit tests, `historical-publication`, `v6-scenarios` | Pass |
+| `poll-rankings`, `market-analysis`, `market-calculator`, `editorial-home`, `v6-browser` | Pass |
+| `adversarial-reliability` | Pass, 0 failures |
+| `mobile-smoke`, including the Android PWA | Pass |
+| Before/after editorial parity | Pass |
+
 ## Milestone 6: historical validation (frozen, reproducible)
 
 The module is `src/cfb_analytics/v7_validation.py`; its output is
