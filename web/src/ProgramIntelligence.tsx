@@ -99,8 +99,11 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
   const morePrograms = programs.length > 25
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))
   if (view === 'overview' || view === 'stock' || view === 'contenders') {
+    // An exact school name is a selection: show its details under the controls and keep the full list below.
+    // Partial text remains a search that filters the list.
+    const selected = currentRankings.some(r => r.team === query.trim()) ? query.trim() : ''
     const current = currentRankings.filter(team => Number.isFinite(team.rank) && team.rank > 0)
-      .filter(team => team.team.toLowerCase().includes(query.trim().toLowerCase()))
+      .filter(team => selected || team.team.toLowerCase().includes(query.trim().toLowerCase()))
       .filter(team => conference === 'all' || (conferenceTeams[conference] || []).includes(team.team))
       .sort((a, b) => {
         if (overviewOrder === 'recent') {
@@ -113,16 +116,19 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
       })
     const visible = showAll ? current : current.slice(0, 10)
     return <section className="notice">
-      <h2>{view === 'stock' ? 'Team Stock Watch' : view === 'contenders' ? 'Contenders & Pretenders' : 'Program Intelligence'}</h2>{query.trim() && currentRankings.some(r => r.team === query.trim()) ? <><ProgramReportCard team={query.trim()} /><ProgramContext team={query.trim()} /></> : null}
+      <h2>{view === 'stock' ? 'Team Stock Watch' : view === 'contenders' ? 'Contenders & Pretenders' : 'Program Intelligence'}</h2>
       <p>See where teams stand, how recent results compare with expectations, and what the verified history shows. Current strength comes from our published model. Momentum and historical expectations appear only where the records support them.</p>
       <details className="accuracy-summary"><summary>How to read these comparisons</summary>
         <p><strong>Strength:</strong> current published model ranking and rating, not a historical program ranking or a guarantee of future wins.</p>
         <p><strong>Recent form:</strong> wins and losses across the last five completed games with scores. Season trend compares wins in the most recent four scored games against the preceding four; a two-win difference indicates improving or declining form. It requires eight games and is not a change in team strength or a multi-season trajectory.</p>
         <p><strong>Expectations:</strong> verified current AP/Coaches Poll rank can be compared with the model. Disagreement is not proof that either ranking is wrong.</p>
       </details>
-      <label>Find a program <input aria-label="Find a program" list="program-intelligence-teams" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /><datalist id="program-intelligence-teams">{currentRankings.map(team => <option key={team.team} value={team.team} />)}</datalist></label>
-      <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
-      <label>Sort by <select aria-label="Sort program intelligence" value={overviewOrder} onChange={e => setOverviewOrder(e.target.value as typeof overviewOrder)}><option value="rank">Model ranking</option><option value="recent">Recent win rate</option><option value="expectations">Wins above tracked forecasts</option><option value="cfp">CFP probability</option></select></label>
+      <div className="program-filters">
+        <label>Find a program <input aria-label="Find a program" list="program-intelligence-teams" placeholder="Search programs…" value={query} onChange={e => setQuery(e.target.value)} /><datalist id="program-intelligence-teams">{currentRankings.map(team => <option key={team.team} value={team.team} />)}</datalist></label>
+        <label>Conference <select aria-label="Filter programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}</select></label>
+        <label>Sort by <select aria-label="Sort program intelligence" value={overviewOrder} onChange={e => setOverviewOrder(e.target.value as typeof overviewOrder)}><option value="rank">Model ranking</option><option value="recent">Recent win rate</option><option value="expectations">Wins above tracked forecasts</option><option value="cfp">CFP probability</option></select></label>
+      </div>
+      {selected && <div className="selected-program" aria-label={`Selected program: ${selected}`} role="region"><ProgramReportCard team={selected} /><ProgramContext team={selected} /></div>}
       <div className="table-wrap program-intelligence-table"><table><thead><tr><th>Program</th><th>Model rank</th><th>Rating</th><th>Record</th><th>Conf. record</th><th>Top 25 wins</th><th>Last 5</th><th>Season trend</th><th>Vs forecast</th><th>AP Poll</th><th>Coaches Poll</th><th>CFP chance</th>{data && <th>3-year direction</th>}<th>Team</th></tr></thead><tbody>{visible.map(team => {
         const ap = currentPoll && currentPoll.season === currentSeason ? currentPoll.ap_top25.find(p => p.team === team.team)?.rank : undefined
         const coaches = currentPoll && currentPoll.season === currentSeason ? currentPoll.coaches_top25.find(p => p.team === team.team)?.rank : undefined
@@ -132,7 +138,7 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
         const forecastGap = trackedWinsAboveExpected(performance[team.team])
         const odds = postseason.find(p => p.team === team.team)?.cfp_field
         const direction = data?.programs.find(p => p.team === team.team)?.trajectory?.recent?.classification
-        return <tr key={team.team}><td>{team.team}</td><td>#{team.rank}</td><td>{team.rating != null && Number.isFinite(team.rating) ? team.rating.toFixed(1) : '—'}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{standing && Number.isFinite(standing.conference_wins) && Number.isFinite(standing.conference_losses) ? `${standing.conference_wins}–${standing.conference_losses}` : '—'}</td><td>{schedule.some(g => g.completed && (g.home === team.team || g.away === team.team) && g.home_score != null && g.away_score != null) ? winsVsCurrentTop25(schedule, team.team, currentRankings) : '—'}</td><td>{form.count ? `${form.wins}–${form.losses} (${form.count} games)` : '—'}</td><td>{seasonTrend ?? '—'}</td><td>{forecastGap != null ? `${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(1)} wins` : '—'}</td><td>{ap == null ? '—' : `#${ap}`}</td><td>{coaches == null ? '—' : `#${coaches}`}</td><td>{odds != null && Number.isFinite(odds) && odds >= 0 && odds <= 1 ? `${(odds * 100).toFixed(0)}%` : '—'}</td>{data && <td>{direction && direction !== 'insufficient_data' ? direction.replaceAll('_', ' ') : '—'}</td>}<td><button type="button" onClick={() => onTeam(team.team)}>View team</button>{onCompare && <> <button type="button" onClick={() => onCompare(team.team)} aria-label={`Compare ${team.team} with another school`}>Compare</button></>}</td></tr>
+        return <tr key={team.team} className={team.team === selected ? 'selected-row' : undefined} aria-current={team.team === selected ? 'true' : undefined}><td>{team.team}</td><td>#{team.rank}</td><td>{team.rating != null && Number.isFinite(team.rating) ? team.rating.toFixed(1) : '—'}</td><td>{team.wins != null && team.losses != null ? `${team.wins}–${team.losses}` : '—'}</td><td>{standing && Number.isFinite(standing.conference_wins) && Number.isFinite(standing.conference_losses) ? `${standing.conference_wins}–${standing.conference_losses}` : '—'}</td><td>{schedule.some(g => g.completed && (g.home === team.team || g.away === team.team) && g.home_score != null && g.away_score != null) ? winsVsCurrentTop25(schedule, team.team, currentRankings) : '—'}</td><td>{form.count ? `${form.wins}–${form.losses} (${form.count} games)` : '—'}</td><td>{seasonTrend ?? '—'}</td><td>{forecastGap != null ? `${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(1)} wins` : '—'}</td><td>{ap == null ? '—' : `#${ap}`}</td><td>{coaches == null ? '—' : `#${coaches}`}</td><td>{odds != null && Number.isFinite(odds) && odds >= 0 && odds <= 1 ? `${(odds * 100).toFixed(0)}%` : '—'}</td>{data && <td>{direction && direction !== 'insufficient_data' ? direction.replaceAll('_', ' ') : '—'}</td>}<td><button type="button" onClick={() => onTeam(team.team)}>View team</button>{onCompare && <> <button type="button" onClick={() => onCompare(team.team)} aria-label={`Compare ${team.team} with another school`}>Compare</button></>}</td></tr>
       })}</tbody></table></div>
       {data && <details className="accuracy-summary">
         <summary>Verified historical program development</summary>

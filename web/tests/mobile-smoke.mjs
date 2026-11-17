@@ -51,7 +51,7 @@ async function waitForPreview() {
 
 const sections = {
   home: ['Home', 'This Week'], predictions: ['Home', 'Game Predictions'],
-  rankings: ['Rankings', 'Model Rankings'], ap: ['Rankings', 'AP Poll'], coaches: ['Rankings', 'Coaches Poll'], stock: ['Rankings', 'Team Stock Watch'],
+  rankings: ['Rankings', 'Model Rankings'], ap: ['Rankings', 'Poll Rankings'], stock: ['Rankings', 'Team Stock Watch'],
   profile: ['Teams', 'Team Profiles'], compare: ['Teams', 'Compare & What If'], programs: ['Teams', 'Program Directory'], hype: ['Teams', 'Hype Index'], trajectory: ['Teams', 'Program Trajectory'],
   cfp: ['Playoffs', 'CFP Projections'], conferences: ['Playoffs', 'Conference Races'], contenders: ['Playoffs', 'Contenders & Pretenders'],
   research: ['Research', 'Prediction Accuracy'], history: ['Research', 'Historical Research'], methods: ['Research', 'Methodology'], sources: ['Research', 'Data Sources'], validation: ['Research', 'Model Validation'],
@@ -105,13 +105,13 @@ try {
     const picker = page.getByRole('combobox', { name: 'Rankings sections', exact: true });
     if (await picker.isVisible()) {
       await picker.focus(); await picker.press('ArrowDown');
-      await assertSection(page, 'Rankings sections', 'AP Poll');
+      await assertSection(page, 'Rankings sections', 'Poll Rankings');
       await picker.press('End'); await assertSection(page, 'Rankings sections', 'Team Stock Watch');
       await picker.press('Home'); await assertSection(page, 'Rankings sections', 'Model Rankings');
     } else {
       const modelTab = page.getByRole('tab', { name: 'Model Rankings', exact: true });
-      await modelTab.press('ArrowRight'); await assertSection(page, 'Rankings sections', 'AP Poll');
-      await page.getByRole('tab', { name: 'AP Poll', exact: true }).press('End');
+      await modelTab.press('ArrowRight'); await assertSection(page, 'Rankings sections', 'Poll Rankings');
+      await page.getByRole('tab', { name: 'Poll Rankings', exact: true }).press('End');
       await assertSection(page, 'Rankings sections', 'Team Stock Watch');
       await page.getByRole('tab', { name: 'Team Stock Watch', exact: true }).press('Home');
       await assertSection(page, 'Rankings sections', 'Model Rankings');
@@ -201,22 +201,35 @@ try {
       throw new Error('Direct Team Profile navigation did not select the first available school');
     }
     await navigate(page, 'home');
-    for (const section of ['rankings', 'ap', 'coaches', 'predictions', 'conferences', 'cfp', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile', 'history', 'methods', 'sources', 'validation']) {
+    for (const section of ['rankings', 'ap', 'predictions', 'conferences', 'cfp', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile', 'history', 'methods', 'sources', 'validation']) {
       await navigate(page, section);
-      if (section === 'ap' || section === 'coaches') {
-        await page.getByRole('heading', { name: 'Poll Comparison', exact: true }).waitFor();
+      if (section === 'ap') {
+        // Consolidated AP + Coaches poll view: sortable, accessible headings, NR for unranked, mobile fit.
+        await page.getByRole('heading', { name: 'Poll Rankings', exact: true }).waitFor();
         const unavailable = await page.getByText('Verified AP and Coaches Poll data is unavailable.', { exact: false }).count();
         if (!unavailable) {
-          for (const label of ['Our Model', 'AP', 'Coaches', 'CFP']) {
-            const button = page.getByRole('button', { name: `Sort by ${label} ranking` });
-            await button.click();
-            if (await button.getAttribute('aria-pressed') !== 'true') throw new Error(`Poll sort did not select ${label}`);
-            const key = { 'Our Model': 1, AP: 2, Coaches: 3, CFP: 4 }[label];
-            const values = await page.locator('section.notice table tbody tr').evaluateAll((rows, index) => rows.map(row => row.querySelectorAll('td')[index]?.textContent?.trim() || '—'), key);
-            const ranked = values.filter(value => /^\d+$/.test(value)).map(Number);
-            if (ranked.some((rank, i) => i > 0 && rank < ranked[i - 1])) throw new Error(`${label} poll is not sorted numerically`);
-            if (values.length > 30) throw new Error('Poll comparison exceeded 30 rows');
+          const pollTable = page.locator('.poll-rankings-table table');
+          const headers = await pollTable.locator('thead th').allTextContents();
+          if (headers.map(h => h.replace(/[▲\s]/g, '')).join('|') !== 'Team|AP|Coaches') throw new Error(`Unexpected poll columns: ${headers}`);
+          for (const [label, column] of [['Coaches', 2], ['AP', 1]]) {
+            const button = page.getByRole('button', { name: `Sort by ${label} Poll ranking`, exact: true });
+            await button.focus(); await page.keyboard.press('Enter');
+            if (await button.locator('xpath=..').getAttribute('aria-sort') !== 'ascending') throw new Error(`Poll sort did not select ${label}`);
+            const values = await pollTable.locator('tbody tr').evaluateAll((rows, index) => rows.map(row => row.children[index]?.textContent?.trim() || ''), column);
+            const ranks = values.map(v => v === 'NR' ? Infinity : Number(v.replace('T-', '')));
+            if (ranks.some(Number.isNaN) || ranks.some((rank, i) => i > 0 && rank < ranks[i - 1])) throw new Error(`${label} poll is not sorted (NR last)`);
+            // NR and tie rendering are verified deterministically in web/tests/poll-rankings.mjs (real weeks may have neither).
           }
+          const fitsPoll = await page.locator('.poll-rankings-table').evaluate(el => el.scrollWidth <= el.clientWidth + 1 && el.getBoundingClientRect().right <= document.documentElement.clientWidth + 1);
+          if (!fitsPoll) throw new Error('Poll rankings table requires horizontal scrolling');
+          const allRows = await pollTable.locator('tbody tr').count();
+          await page.getByLabel('Filter polls by conference').selectOption('SEC');
+          const secRows = await pollTable.locator('tbody th').allTextContents();
+          if (!secRows.length || secRows.length >= allRows) throw new Error('Poll conference filter did not narrow the table');
+          await page.getByLabel('Search poll teams').fill(secRows[0]);
+          if ((await pollTable.locator('tbody th').allTextContents()).some(t => !t.toLowerCase().includes(secRows[0].toLowerCase()))) throw new Error('Poll team search failed');
+          await page.getByLabel('Search poll teams').fill('');
+          await page.getByLabel('Filter polls by conference').selectOption('all');
         }
       }
       if (section === 'predictions') {
@@ -225,7 +238,16 @@ try {
         await page.getByRole('listbox', { name: 'Suggested schools' }).getByRole('option', { name: 'Georgia', exact: true }).click();
         if (!(await page.locator('.prediction-card').count()) || (await page.locator('.prediction-matchup').allTextContents()).some(name => !name.includes('Georgia'))) throw new Error('Prediction autocomplete failed');
         await page.getByLabel('Search teams').fill('');
-        const firstCard = page.locator('.prediction-card').first();
+        // Compare is offered only when both schools are rated FBS programs; use the first such card.
+        const fbsNames = new Set(report.rankings.map(t => t.team));
+        const cardTexts = await page.locator('.prediction-matchup').allInnerTexts();
+        const comparable = cardTexts.map(t => t.split('@').every(part => fbsNames.has(part.trim())));
+        for (const [i, ok] of comparable.entries()) {
+          const offered = await page.locator('.prediction-card').nth(i).getByRole('button', { name: 'Compare teams' }).count();
+          if (offered !== (ok ? 1 : 0)) throw new Error(`Compare action must appear only for FBS-vs-FBS cards (card ${i})`);
+        }
+        if (!comparable.includes(true)) throw new Error('No FBS-vs-FBS prediction card available to verify Compare');
+        const firstCard = page.locator('.prediction-card').nth(comparable.indexOf(true));
         const matchup = (await firstCard.locator('.prediction-matchup').innerText()).split('@').map(part => part.trim());
         if (matchup.length !== 2 || !matchup.every(Boolean)) throw new Error('Prediction card lacks a valid matchup');
         await firstCard.getByRole('button', { name: 'Compare teams' }).click();
@@ -292,8 +314,21 @@ try {
         await page.getByLabel('Sort program intelligence').selectOption('recent');
         await page.getByLabel('Sort program intelligence').selectOption('rank');
         await page.getByLabel('Filter programs by conference').selectOption('all');
+        const scrollBefore = await page.evaluate(() => window.scrollY);
         await page.getByLabel('Find a program').fill(firstTeam);
         await assertReportCard(page, firstTeam);
+        // Selected team appears directly below the controls and above the full rankings list, without a scroll jump.
+        const order = await page.evaluate(() => {
+          const top = (selector) => document.querySelector(selector)?.getBoundingClientRect().top ?? NaN;
+          return { filters: top('.program-filters'), selected: top('.selected-program'), table: top('.program-intelligence-table') };
+        });
+        if (!(order.filters < order.selected && order.selected < order.table)) throw new Error(`Selected program is not between controls and list: ${JSON.stringify(order)}`);
+        if (Math.abs((await page.evaluate(() => window.scrollY)) - scrollBefore) > 1) throw new Error('Selecting a program scrolled the page');
+        const overlaps = await page.locator('.program-filters label').evaluateAll(labels => labels.some((a, i) => labels.some((b, j) => {
+          if (i >= j) return false; const x = a.getBoundingClientRect(), y = b.getBoundingClientRect();
+          return x.left < y.right && y.left < x.right && x.top < y.bottom && y.top < x.bottom; })));
+        if (overlaps) throw new Error('Program filter controls overlap');
+        if (await page.locator('.program-intelligence-table tbody tr').count() < 2) throw new Error('Full rankings list must remain below the selected team');
         const row = page.getByRole('row').filter({ hasText: firstTeam }).first();
         const overviewTrend = (await row.locator('td').nth(7).textContent() || '').trim();
         await row.getByRole('button', { name: `Compare ${firstTeam} with another school` }).click();
