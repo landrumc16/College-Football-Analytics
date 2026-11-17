@@ -1,0 +1,1223 @@
+{
+  "candidates": [
+    {
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.0,
+      "paired_games": 3174,
+      "relative_brier_improvement": 0.0,
+      "relative_log_loss_regression": 0.0,
+      "seasons_improved": 0,
+      "window": 3
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20569494658614526,
+            "log_loss": 0.5970756979868171,
+            "margin_mae": 13.665655287025393,
+            "winner_accuracy": 0.6945876288659794
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19618457579120474,
+            "log_loss": 0.576925018251979,
+            "margin_mae": 13.874829351503902,
+            "winner_accuracy": 0.7297979797979798
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.19918153634694938,
+            "log_loss": 0.5800293131318304,
+            "margin_mae": 13.64591772466358,
+            "winner_accuracy": 0.6854636591478697
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1935563485468879,
+            "log_loss": 0.5667347047786999,
+            "margin_mae": 13.65952297660803,
+            "winner_accuracy": 0.7029702970297029
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.002227217555476214,
+        "ci95_upper": 0.0011153512529405419,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": -0.0006055607533422857,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": true,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19859415822565657,
+          "log_loss": 0.580037929878301,
+          "margin_mae": 13.711326483460498,
+          "winner_accuracy": 0.7032136105860114
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.2,
+      "paired_games": 3174,
+      "relative_brier_improvement": 0.00304,
+      "relative_log_loss_regression": -0.00246,
+      "seasons_improved": 3,
+      "window": 3
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20674709872469618,
+            "log_loss": 0.6000963372228018,
+            "margin_mae": 13.72498317244262,
+            "winner_accuracy": 0.6907216494845361
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.1976401194078137,
+            "log_loss": 0.5813533862802598,
+            "margin_mae": 13.928490119523122,
+            "winner_accuracy": 0.7297979797979798
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.19945996582470768,
+            "log_loss": 0.580910166106069,
+            "margin_mae": 13.643850242508373,
+            "winner_accuracy": 0.6917293233082706
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1944631668137444,
+            "log_loss": 0.568885636657994,
+            "margin_mae": 13.657866093284373,
+            "winner_accuracy": 0.7004950495049505
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0020084827130606962,
+        "ci95_upper": 0.002817075231788675,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0003157235840052175,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19951544256300408,
+          "log_loss": 0.582650455762811,
+          "margin_mae": 13.738279588334352,
+          "winner_accuracy": 0.7032136105860114
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.3,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.00158,
+      "relative_log_loss_regression": 0.00203,
+      "seasons_improved": 1,
+      "window": 3
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20750818307987615,
+            "log_loss": 0.6023572106899757,
+            "margin_mae": 13.763107569710488,
+            "winner_accuracy": 0.6881443298969072
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19858845721830298,
+            "log_loss": 0.5843807814331584,
+            "margin_mae": 13.977746179174009,
+            "winner_accuracy": 0.7323232323232324
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.19988564821111876,
+            "log_loss": 0.5821398276631135,
+            "margin_mae": 13.659677982338666,
+            "winner_accuracy": 0.6842105263157895
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.19514286531848943,
+            "log_loss": 0.5706309762182581,
+            "margin_mae": 13.667742690163081,
+            "winner_accuracy": 0.6967821782178217
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0016439380204595546,
+        "ci95_upper": 0.0038740993712404912,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0010184885309860567,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.2002182075099849,
+          "log_loss": 0.5847120937775676,
+          "margin_mae": 13.766384868166094,
+          "winner_accuracy": 0.7003780718336484
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.35,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.00511,
+      "relative_log_loss_regression": 0.00558,
+      "seasons_improved": 1,
+      "window": 3
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20840126611460486,
+            "log_loss": 0.6050885664960001,
+            "margin_mae": 13.810582417193581,
+            "winner_accuracy": 0.6894329896907216
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.1996562550392591,
+            "log_loss": 0.5879172660782288,
+            "margin_mae": 14.030690159682225,
+            "winner_accuracy": 0.7310606060606061
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20048126785145212,
+            "log_loss": 0.5838673379575503,
+            "margin_mae": 13.685391525642281,
+            "winner_accuracy": 0.6804511278195489
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1959533427721809,
+            "log_loss": 0.5727970476460222,
+            "margin_mae": 13.688348332616975,
+            "winner_accuracy": 0.6955445544554455
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0011479603041017333,
+        "ci95_upper": 0.0050992950409113206,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0018593513428056853,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.20105907032180453,
+          "log_loss": 0.5872480631767374,
+          "margin_mae": 13.802913186020037,
+          "winner_accuracy": 0.6991178323881537
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.4,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.00933,
+      "relative_log_loss_regression": 0.00994,
+      "seasons_improved": 1,
+      "window": 3
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.21051566108120406,
+            "log_loss": 0.6118753887864016,
+            "margin_mae": 13.933527250811654,
+            "winner_accuracy": 0.6868556701030928
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.2020777506122192,
+            "log_loss": 0.5964204883002674,
+            "margin_mae": 14.150600626588735,
+            "winner_accuracy": 0.7272727272727273
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.2021198154532655,
+            "log_loss": 0.5887319938568475,
+            "margin_mae": 13.774895505967303,
+            "winner_accuracy": 0.6804511278195489
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1979100488948149,
+            "log_loss": 0.5783160961210525,
+            "margin_mae": 13.760285682849526,
+            "winner_accuracy": 0.6918316831683168
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": 0.0003195104576692871,
+        "ci95_upper": 0.007734396473269381,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0038905972537069742,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": false
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.20309031623270582,
+          "log_loss": 0.5936571723993807,
+          "margin_mae": 13.903708345429253,
+          "winner_accuracy": 0.6965973534971645
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.5,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.01953,
+      "relative_log_loss_regression": 0.02096,
+      "seasons_improved": 0,
+      "window": 3
+    },
+    {
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.0,
+      "paired_games": 3174,
+      "relative_brier_improvement": 0.0,
+      "relative_log_loss_regression": 0.0,
+      "seasons_improved": 0,
+      "window": 4
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.2059622189091556,
+            "log_loss": 0.5978102059931236,
+            "margin_mae": 13.638658569413765,
+            "winner_accuracy": 0.6971649484536082
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19496899862995243,
+            "log_loss": 0.5735255141715462,
+            "margin_mae": 13.851852522591388,
+            "winner_accuracy": 0.7272727272727273
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.1999413697083881,
+            "log_loss": 0.5818343502670167,
+            "margin_mae": 13.698236228885662,
+            "winner_accuracy": 0.6904761904761905
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.19382363487311124,
+            "log_loss": 0.5673947234637134,
+            "margin_mae": 13.690122808998291,
+            "winner_accuracy": 0.7141089108910891
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0017443319644484757,
+        "ci95_upper": 0.0007699692053098082,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": -0.0005844578595298321,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": true,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19861526111946903,
+          "log_loss": 0.5799910759755161,
+          "margin_mae": 13.719936354152123,
+          "winner_accuracy": 0.707309388783869
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.2,
+      "paired_games": 3174,
+      "relative_brier_improvement": 0.00293,
+      "relative_log_loss_regression": -0.00254,
+      "seasons_improved": 4,
+      "window": 4
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20665371338141114,
+            "log_loss": 0.5999472297641321,
+            "margin_mae": 13.6575591771472,
+            "winner_accuracy": 0.6997422680412371
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19537623142059826,
+            "log_loss": 0.5748809444803544,
+            "margin_mae": 13.875866017115273,
+            "winner_accuracy": 0.7285353535353535
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20001531659957186,
+            "log_loss": 0.5822636010596963,
+            "margin_mae": 13.689627662076683,
+            "winner_accuracy": 0.6867167919799498
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1944080241106256,
+            "log_loss": 0.5687542376720731,
+            "margin_mae": 13.686003608380005,
+            "winner_accuracy": 0.7141089108910891
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0018416418615283508,
+        "ci95_upper": 0.0018106692978376111,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": -0.00014642250863567457,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19905329647036318,
+          "log_loss": 0.581305776940794,
+          "margin_mae": 13.727336356940693,
+          "winner_accuracy": 0.707309388783869
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.3,
+      "paired_games": 3174,
+      "relative_brier_improvement": 0.00074,
+      "relative_log_loss_regression": -0.00028,
+      "seasons_improved": 2,
+      "window": 4
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20714159603239837,
+            "log_loss": 0.601488054573908,
+            "margin_mae": 13.6751205029284,
+            "winner_accuracy": 0.6984536082474226
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19572520663000698,
+            "log_loss": 0.5760659128760225,
+            "margin_mae": 13.897475116450371,
+            "winner_accuracy": 0.7297979797979798
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.2002143873218456,
+            "log_loss": 0.5829635175506123,
+            "margin_mae": 13.701805184432587,
+            "winner_accuracy": 0.6854636591478697
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1948383590408132,
+            "log_loss": 0.56985637142365,
+            "margin_mae": 13.690219445941601,
+            "winner_accuracy": 0.7178217821782178
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0017311764085132448,
+        "ci95_upper": 0.002438529399760651,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0002195366479439771,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19941925562694282,
+          "log_loss": 0.5824347096606365,
+          "margin_mae": 13.741156790169864,
+          "winner_accuracy": 0.7079395085066162
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.35,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.0011,
+      "relative_log_loss_regression": 0.00166,
+      "seasons_improved": 1,
+      "window": 4
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.20771101596650762,
+            "log_loss": 0.6033271589926289,
+            "margin_mae": 13.702549685817852,
+            "winner_accuracy": 0.6945876288659794
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.19615612124211465,
+            "log_loss": 0.5775705860662746,
+            "margin_mae": 13.928809755905174,
+            "winner_accuracy": 0.7310606060606061
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20050958444464156,
+            "log_loss": 0.5839719021625993,
+            "margin_mae": 13.722427161730915,
+            "winner_accuracy": 0.6854636591478697
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.1953505108699886,
+            "log_loss": 0.5712267726214175,
+            "margin_mae": 13.696802989462418,
+            "winner_accuracy": 0.7103960396039604
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0015537317971366545,
+        "ci95_upper": 0.0031744460685711223,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0006708725722108248,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.19987059155120965,
+          "log_loss": 0.5838621895862095,
+          "margin_mae": 13.762542398682562,
+          "winner_accuracy": 0.705419029615627
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.4,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.00337,
+      "relative_log_loss_regression": 0.00412,
+      "seasons_improved": 1,
+      "window": 4
+    },
+    {
+      "all_gates_pass": false,
+      "by_season": {
+        "2022": {
+          "challenger": {
+            "brier": 0.2090587621210076,
+            "log_loss": 0.6078518517308811,
+            "margin_mae": 13.784094579345926,
+            "winner_accuracy": 0.6907216494845361
+          },
+          "games": 776,
+          "incumbent": {
+            "brier": 0.2060181625114332,
+            "log_loss": 0.5976667535287468,
+            "margin_mae": 13.655367946149529,
+            "winner_accuracy": 0.6804123711340206
+          }
+        },
+        "2023": {
+          "challenger": {
+            "brier": 0.1972249489297715,
+            "log_loss": 0.5814849473409668,
+            "margin_mae": 14.004250808525585,
+            "winner_accuracy": 0.7323232323232324
+          },
+          "games": 792,
+          "incumbent": {
+            "brier": 0.19567491720179,
+            "log_loss": 0.5752588392137504,
+            "margin_mae": 13.893309143462305,
+            "winner_accuracy": 0.726010101010101
+          }
+        },
+        "2024": {
+          "challenger": {
+            "brier": 0.20135403094199375,
+            "log_loss": 0.5868692635307544,
+            "margin_mae": 13.782257378050597,
+            "winner_accuracy": 0.6867167919799498
+          },
+          "games": 798,
+          "incumbent": {
+            "brier": 0.20134362475502715,
+            "log_loss": 0.5851716798172556,
+            "margin_mae": 13.801772543499363,
+            "winner_accuracy": 0.681704260651629
+          }
+        },
+        "2025": {
+          "challenger": {
+            "brier": 0.19659111729480666,
+            "log_loss": 0.5747335071883477,
+            "margin_mae": 13.733879168178563,
+            "winner_accuracy": 0.7004950495049505
+          },
+          "games": 808,
+          "incumbent": {
+            "brier": 0.19398894424769902,
+            "log_loss": 0.568341899326235,
+            "margin_mae": 13.759390110374374,
+            "winner_accuracy": 0.7141089108910891
+          }
+        }
+      },
+      "clustered_brier_interval": {
+        "ci95_lower": -0.0008906449669159501,
+        "ci95_upper": 0.0048481942958438825,
+        "ci_method": "paired game-week cluster bootstrap percentile",
+        "clusters": 66,
+        "draws": 2000,
+        "games": 3174,
+        "paired_brier_difference": 0.0017952080607603492,
+        "seed": 2026,
+        "supports_improvement": false
+      },
+      "gates": {
+        "brier_improvement_ge_5pct": false,
+        "improves_in_3_of_4_seasons": false,
+        "interval_favourable": false,
+        "log_loss_regression_le_2pct": true
+      },
+      "metrics": {
+        "challenger": {
+          "brier": 0.2009949270397592,
+          "log_loss": 0.5875663079215301,
+          "margin_mae": 13.825784432733887,
+          "winner_accuracy": 0.702583490863264
+        },
+        "games": 3174,
+        "incumbent": {
+          "brier": 0.19919971897899885,
+          "log_loss": 0.5814687008649545,
+          "margin_mae": 13.778030266770374,
+          "winner_accuracy": 0.700693131695022
+        }
+      },
+      "momentum_weight": 0.5,
+      "paired_games": 3174,
+      "relative_brier_improvement": -0.00901,
+      "relative_log_loss_regression": 0.01049,
+      "seasons_improved": 0,
+      "window": 4
+    }
+  ],
+  "gates": {
+    "max_log_loss_regression": 0.02,
+    "min_brier_improvement": 0.05,
+    "min_improving_seasons": 3
+  },
+  "limitations": [
+    "Synthetic neutral priors/conference; not archived incumbent forecasts.",
+    "FBS-vs-FBS games only; FCS games excluded from both arms.",
+    "Final score eligibility assumes kickoff + four hours; publication time not verified.",
+    "Candidate selection on 2022-2025 is exploratory; independent held-out validation required.",
+    "No automatic model promotion, production ranking or forecast change."
+  ],
+  "season_counts": {
+    "2022": 776,
+    "2023": 792,
+    "2024": 798,
+    "2025": 808
+  },
+  "status": "retrospective_neutral_prior_proxy_not_promotion_eligible"
+}

@@ -1,3 +1,5 @@
+import { LineupAdvisoryNotice } from './LineupAdvisory'
+import { MOMENTUM_GAMES, MOMENTUM_WEIGHT, rankedStrength } from './strengthScores'
 import ProgramContext from './ProgramContext'
 import ProgramReportCard, { useReportCards } from './ProgramReportCard'
 import HistoricalResults from './HistoricalResults'
@@ -7,7 +9,7 @@ import { SectionTabs } from './Navigation'
 export type ProfileSection = 'overview' | 'schedule' | 'history' | 'card'
 const profileSections = [{ id: 'overview', label: 'Overview' }, { id: 'schedule', label: 'Schedule & Predictions' }, { id: 'history', label: 'Historical Intelligence' }, { id: 'card', label: 'Program Report Card' }] as const
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
-import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
+import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25 } from './programMetrics'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -47,11 +49,12 @@ const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: 
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare, lineupAdvisories, advisoryAsOf }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
   section: ProfileSection; onSection: (section: ProfileSection) => void; scheduleContent: ReactNode;
+  lineupAdvisories?: Record<string, unknown>; advisoryAsOf?: string;
   onChoose: (team: string) => void; onCompare: (team: string) => void;
 }) {
   const reportCards = useReportCards()
@@ -77,7 +80,6 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
   const lastFive = recentForm(schedule, team)
-  const seasonTrend = seasonFormTrend(schedule, team)
   const winsAgainstCurrentTop25 = winsVsCurrentTop25(schedule, team, rankings)
   const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
@@ -107,10 +109,9 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
-    </div><details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
+    </div>{current && <StrengthBreakdown team={team} rankings={rankings} schedule={schedule} />}<details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
       {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
-      {tile('Current-Season Form Trend', seasonTrend ?? 'Requires 8 scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}
       {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
       {tile('Results vs Forecast', resultsVsForecast)}
@@ -122,17 +123,17 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Recruiting Development', recruitingRecord ? recruitingRecord.average_wins_above_recruiting_baseline.toFixed(2) + ' wins vs talent baseline' : 'Insufficient research')}
       {tile('CFP Field Odds', playoff ? (playoff.cfp_field * 100).toFixed(1) + '%' : 'Unavailable')}
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
-    </div></details>
-    <section className="accuracy-summary recent-form"><h3>Recent form</h3>
-      <p className="section-deck">Last five: <strong>{lastFive.count ? `${lastFive.wins}–${lastFive.losses}` : 'No scored games'}</strong> · Season trend: <strong>{seasonTrend ?? 'Not enough games'}</strong>.</p>
-      <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
-      <details><summary>How to read form and forecasts</summary><p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form compares two non-overlapping four-game windows and requires a two-win difference to classify a change. This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p></details>
-    </section>
+    </div>
+      <div className="profile-more-form"><h4>Form and forecasts</h4>
+        <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
+        <details><summary>How to read form and forecasts</summary><p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p></details>
+      </div>
+    </details>
     <details><summary>Coaching, roster and matchup data availability</summary><p>Derived dominant head-coach continuity, recruiting classes and roster membership context are available in Historical Intelligence. Exact staff effective dates, coordinators, transfer-only histories, returning playing production and offense-versus-defense matchup factors remain unavailable. They are not silently estimated or treated as inputs to the incumbent prediction engine.</p></details>
     <details><summary>CFP outlook and confidence methodology</summary><p>Current CFP Outlook reflects published CFP simulation probabilities, not a separately verified Contenders & Pretenders assessment. That feature remains unavailable pending its approved evidence-backed classification. Upcoming confidence is the highest favored-side win probability among available future-game forecasts; it does not imply calibration or guarantee outcomes.</p></details>
     <details><summary>Stock Watch and results versus forecast</summary><p>The approved Team Stock Watch requires a verified 0–100 time-aware index and a four-week change. Neither is inferred from season-total wins above expectation. Results versus Forecast separately compares actual wins with the published model’s expected wins for games with forecasts; at least three forecasted games are required. It is descriptive, not a validated trajectory signal.</p></details>
     </>}
-    {section === 'schedule' && <>{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
+    {section === 'schedule' && <>{advisoryAsOf && lineupAdvisories?.[team] && <LineupAdvisoryNotice advisory={lineupAdvisories[team]} team={team} asOf={advisoryAsOf} />}{scheduleContent}    <details><summary>Remaining opponent strength</summary><p>Upcoming opponents are ordered by the current model ranking. This is a schedule-context indicator, not a verified historical strength-of-schedule adjustment.</p><ol>{rankedOpponents.map(g => <li key={g.opponent}>#{g.rank} {g.opponent}</li>)}</ol></details>
     <details><summary>Upcoming prediction explanations</summary><p>Forecast movement: unavailable. Comparable, independently publication-verified pregame snapshots for these upcoming games have not been established; today’s recomputation is not treated as an older forecast.</p>
       <p>Published model probabilities are shown alongside the current rating comparison. Ratings and home-field advantage provide context, not an audited feature-level attribution. Coaching and roster context in Historical Intelligence is descriptive and does not change these probabilities. A current rating gap is not proof of a player- or coaching-level cause.</p>
       <div className="table-wrap"><table><thead><tr><th scope="col">Week</th><th scope="col">Matchup</th><th scope="col">Team win probability</th><th scope="col">Current rating gap</th><th scope="col">Forecast</th></tr></thead><tbody>{upcoming.map(g => {
@@ -161,5 +162,31 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
 </div></>}
     <p>Historical rankings, trajectory, and poll expectations are descriptive only. Missing verified seasons are not estimated. Poll status may be unavailable when no current snapshot is published.</p>
     </div></>}
+  </section>
+}
+
+/** Recent form headline (one trend label for the page) with the three-score breakdown behind Details. Descriptive only. */
+function StrengthBreakdown({ team, rankings, schedule }: { team: string; rankings: { team: string; rating: number }[]; schedule: ScheduleGame[] }) {
+  const s = rankedStrength(rankings, schedule)[team]
+  if (!s) return null
+  const pct = Math.round(MOMENTUM_WEIGHT * 100)
+  const badge = { rising: ['▲', 'Rising'], steady: ['●', 'Steady'], declining: ['▼', 'Declining'], insufficient_data: ['', ''] }[s.direction]
+  const headline = s.momentumRank === null
+    ? `Recent form appears after ${MOMENTUM_GAMES} completed games (${s.momentumGames} so far). Season strength: #${s.seasonRank} of ${s.teams}.`
+    : `${s.direction === 'rising' ? 'Playing better lately' : s.direction === 'declining' ? 'Playing worse lately' : 'Playing at its season level'}: last ${MOMENTUM_GAMES} games rank #${s.momentumRank} of ${s.teams}, season #${s.seasonRank}.`
+  return <section className="strength-scores" aria-labelledby="strength-scores-title">
+    <h4 id="strength-scores-title">Strength breakdown</h4>
+    <p className="strength-headline">{badge[0] && <span className={`trend-badge ${s.direction}`}><span aria-hidden="true">{badge[0]}</span> {badge[1]}</span>} <span>{headline}</span></p>
+    <details className="strength-details"><summary>Show the three strength scores</summary>
+      <div className="strength-grid">
+        <div className="strength-tile"><small>Season Strength</small><strong>#{s.seasonRank}</strong><span>All completed games, adjusted for opponents. Rating {s.season.toFixed(1)} (the Current Strength above).</span></div>
+        <div className="strength-tile"><small>Recent Momentum</small><strong>{s.momentumRank === null ? 'Not yet' : `#${s.momentumRank}`}</strong>
+          <span>{s.momentum === null ? `Needs ${MOMENTUM_GAMES} completed games.` : `Last ${MOMENTUM_GAMES} games, adjusted for opponents. Rating ${s.momentum.toFixed(1)}.`}</span></div>
+        <div className="strength-tile"><small>Combined Strength</small><strong>#{s.combinedRank}</strong>
+          <span>{s.momentum === null ? `Equals Season Strength until momentum is available. Rating ${s.combined.toFixed(1)}.` : `${100 - pct}% season, ${pct}% recent momentum. Rating ${s.combined.toFixed(1)}.`}</span></div>
+      </div>
+      <p className="strength-note">Ranks order all {s.teams} FBS teams by these ratings alone (Current Model Rank also weighs projected wins). Rising or declining means the last {MOMENTUM_GAMES} games differ from the season level by more than 7 rating points.</p>
+    </details>
+    <p className="strength-note official">Descriptive only: official predictions, rankings and playoff odds use Season Strength.</p>
   </section>
 }

@@ -1,0 +1,78 @@
+name: Dynamic Team Strength Research Checks
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/recency*'
+      - 'scripts/lineup_advisory_research.py'
+      - 'scripts/run_recency_historical_screen.py'
+      - 'scripts/strength_blend_research.py'
+      - 'scripts/run_strength_blend_historical_screen.py'
+      - 'web/src/TeamProfile.tsx'
+      - 'web/src/StrengthScores.tsx'
+      - 'tests/test_strength_blend_research.py'
+      - 'tests/test_recency*'
+      - 'tests/test_lineup_advisory_research.py'
+      - '.github/workflows/dynamic-team-strength-research.yml'
+  workflow_dispatch:
+
+jobs:
+  research-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package and pytest
+        run: python -m pip install -e '.[dev]'
+      - name: Run focused research tests
+        run: python -m pytest -q tests/test_recency_research.py tests/test_recency_rating_research.py tests/test_recency_replay_research.py tests/test_lineup_advisory_research.py tests/test_strength_blend_research.py
+      - name: Run existing rating and pipeline regression tests
+        run: python -m pytest -q tests/test_pipeline.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install frontend dependencies
+        run: npm install --prefix web --no-package-lock
+      - name: Build frontend with TypeScript checks
+        run: npm run build --prefix web
+
+  historical-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install model
+        run: python -m pip install -e .
+      - name: Replay verified 2022-2025 final scores (neutral-prior proxy)
+        run: python -m scripts.run_recency_historical_screen --output research-output/recency-2022-2025.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recency-2022-2025-neutral-prior-replay
+          path: research-output/recency-2022-2025.json
+          if-no-files-found: warn
+
+  strength-blend-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install model
+        run: python -m pip install -e .
+      - name: Replay 2022-2025 3/4-game and weight grid (research only)
+        run: python -m scripts.run_strength_blend_historical_screen --output research-output/strength-blend-2022-2025.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: strength-blend-2022-2025-neutral-prior-replay
+          path: research-output/strength-blend-2022-2025.json
+          if-no-files-found: warn
