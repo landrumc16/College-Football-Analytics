@@ -82,7 +82,8 @@ def calculate_strength_components(teams, chronological_games, *,
         raise ValueError("momentum window must be 3 or 4")
     if settings is None:
         settings = ModelSettings()
-    ratings = (season_ratings if season_ratings is not None else\n               calculate_ratings(teams, chronological_games, settings))
+    ratings = (season_ratings if season_ratings is not None else
+               calculate_ratings(teams, chronological_games, settings))
     output = {}
     for team in teams:
         played = [game for game in chronological_games
