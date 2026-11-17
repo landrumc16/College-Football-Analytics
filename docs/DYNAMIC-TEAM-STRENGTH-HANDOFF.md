@@ -115,3 +115,30 @@ No production change authorized by this documentation. Implement only as part of
 - Both arms use **neutral zero priors and one research conference pool** because historically eligible season-specific incumbent priors are not available. This is an explicitly labelled **neutral-prior proxy comparison**, NOT a true incumbent-versus-challenger validation, NOT archived pregame predictions, and NOT promotion authority.
 - Workflow now has a separate 45-minute historical-replay job with an artifact `recency-2022-2025-neutral-prior-replay` (commit `102e086`). Reports pooled and season metrics and paired game/week cluster CI.
 - Await actual Actions result and examine failures; do not invent historical results or accuracy improvement. Even if proxy improves, the established genuine-incumbent and provenance promotion gates remain unmet.
+
+
+## Finish-line handoff — 2026-11-17 (owner-approved three-score design)
+
+Owner-approved terminology and calculation:
+- **Season Strength**: opponent-adjusted rating using all completed current-season games.
+- **Recent Momentum**: opponent-adjusted current performance using ONLY the latest three completed games; test a four-game alternative. The opponent benchmark may use as-of season history, but earlier games do not enter the momentum performance sample.
+- **Combined Strength**: a same-scale blend, initial hypothesis 65% Season Strength / 35% Recent Momentum; compare 0/20/30/35/40/50% momentum weights. Do not declare the 65/35 weight optimal without evidence.
+- Before the full window exists, show no independent momentum signal and use Season Strength for the combined rating. Display rising/steady/declining as a comparison, not a validated future trend.
+- The official prediction engine stays untouched unless predeclared model promotion gates pass and owner explicitly approves a merge.
+
+Current branch research implementation:
+- `scripts/strength_blend_research.py`: `blend_strength`, `momentum_window`, `calculate_strength_components` with opponent-adjusted as-of season ratings and short recent-only performance window.
+- `tests/test_strength_blend_research.py`: initial blend, rising/declining, early-season fallback, last-3/4 selection, opponent-adjustment smoke tests.
+- `scripts/run_strength_blend_historical_screen.py`: neutral-prior 2022–2025 proxy replay for 12 candidates, paired metrics by season. This is **not** a reconstruction of archived incumbent predictions. The workflow `.github/workflows/dynamic-team-strength-research.yml` has a separate `strength-blend-screen` job and artifact.
+- Last fix commit: `cc0748a83610461e92d841306a887a1069a780bd` corrected a literal escaped newline that broke Python test collection. At the time of this handoff Python model tests, V3 research validation, V3.4.2 validation, V2 historical checks and V3 historical research passed. V5 acceptance still running. V6 editorial guard still failing; inspect exact guard rather than bypassing it.
+- Earlier recency-tier challenger replay: 3174 neutral-prior proxy games; ~0.098% relative Brier gain, CI crossing zero, failed the >=5% promotion threshold. Do not present as a validated accuracy improvement.
+
+**Highest-priority next execution pass for Claude Code**
+1. Inspect actual PR #38 head and CI, especially the `strength-blend-screen` job. Check whether it ran, completed, timed out, or is absent because workflow event filters require manual dispatch. Run it if needed. Capture its actual artifact and results; do not invent a winning weighting.
+2. Inspect `scripts/run_strength_blend_historical_screen.py` for runtime and statistical correctness before relying on output. It performs many expensive as-of rating solves; optimize only if necessary, preserving as-of cutoffs and reproducibility. Confirm that neutral-site and FCS handling match the reference model and avoid a look-ahead leak.
+3. Review tests for the 3/4-game momentum window, prior seasons excluded, future games excluded, early-season behavior, calibration and prediction parity when weight=0. Add focused tests as needed.
+4. Identify the exact V6 editorial guard failure; respect protected-file/release-manifest policy and do not bypass.
+5. Integrate the three-score display into the Team Profile's single appropriate location with concise fan-friendly copy and mobile verification, **without** silently changing the official forecast, rankings, playoff odds or calculator. Keep lineup advisory gated on verified event data.
+6. Finish required tests, artifact/report, evidence, release-readiness summary, and PR #38 review package. No production merge without owner approval.
+
+**Important constraints**: The existing verified 2022–2025 archive has neutral zero priors and one synthetic conference in proxy replay; season-specific archived priors/pregame forecasts are missing. Therefore proxy replay cannot satisfy incumbent promotion gates, regardless of candidate result. Separate a descriptive three-score UI release from any prediction-engine promotion. No new version, no broad refactor, no speculative personnel deductions.
