@@ -29,6 +29,6 @@ jobs:
         with:
           node-version: '20'
       - name: Install frontend dependencies
-        run: npm ci --prefix web
+        run: npm install --prefix web --no-package-lock
       - name: Build frontend with TypeScript checks
         run: npm run build --prefix web
