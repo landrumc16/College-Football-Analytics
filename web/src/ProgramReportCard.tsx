@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import SchoolSearch from './SchoolSearch'
 
 type Category = { score: number | null; grade: string | null }
 type Hype = { seasons: number; preseason_top25: number; retained_top25: number; dropped_out: number; entered_top25: number; ranked_to_ranked_movement: number }
@@ -75,7 +76,7 @@ export function ReportCardExplorer({ report, onTeam, conferenceTeams, view }: { 
     <label>Search <input aria-label="Search historical programs" value={query} onChange={e => setQuery(e.target.value)} /></label>
     <label>Conference <select aria-label="Filter historical programs by conference" value={conference} onChange={e => setConference(e.target.value)}><option value="all">All conferences</option>{Object.keys(conferenceTeams).sort().map(c => <option key={c}>{c}</option>)}</select></label>
     {view === 'hype' && <label>Poll <select aria-label="Historical expectations poll" value={poll} onChange={e => setPoll(e.target.value)}><option>AP</option><option>Coaches</option></select></label>}
-    <label>Program <select aria-label="Choose historical program" value={selected} onChange={e => setSelected(e.target.value)}><option value="">Select a program</option>{report.programs.map(p => <option key={p.team}>{p.team}</option>)}</select></label>
+    <SchoolSearch label="Choose historical program" value={selected} onChange={setSelected} schools={report.programs.map(p => p.team)} />
     {selected && <Card team={selected} report={report} />}
     <div className="table-wrap"><table><thead><tr><th>Program</th><th>{view === 'hype' ? 'Hype grade' : 'Trajectory grade'}</th>{view === 'hype' ? <><th>Preseason Top 25</th><th>Retained</th><th>Dropped out</th><th>New entrants</th></> : <><th>3-year win %</th><th>5-year win %</th><th>10-year win %</th><th>Direction</th></>}</tr></thead><tbody>{(all ? rows : rows.slice(0, 25)).map(p => <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{display(p.categories[category])}</td>{view === 'hype' ? <><td>{p.hype?.[poll]?.preseason_top25 ?? 'N/A'}</td><td>{p.hype?.[poll]?.retained_top25 ?? 'N/A'}</td><td>{p.hype?.[poll]?.dropped_out ?? 'N/A'}</td><td>{p.hype?.[poll]?.entered_top25 ?? 'N/A'}</td></> : <><td>{percentage(p.trajectory?.windows['3'])}</td><td>{percentage(p.trajectory?.windows['5'])}</td><td>{percentage(p.trajectory?.windows['10'])}</td><td>{p.trajectory?.direction ?? 'N/A'}</td></>}</tr>)}</tbody></table></div>
     {rows.length > 25 && <button type="button" onClick={() => setAll(!all)}>{all ? 'Show first 25 programs' : `Show all ${rows.length} programs`}</button>}

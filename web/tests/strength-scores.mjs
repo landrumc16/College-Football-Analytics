@@ -7,7 +7,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import { chromium } from 'playwright';
 import { startAsDeclinedVisitor } from './consent-prompt.mjs';
-import { chooseSection, openDestination } from './section-navigation.mjs';
+import { chooseSection, openDestination, chooseSchool } from './section-navigation.mjs';
 
 const PORT = 4184, base = `http://127.0.0.1:${PORT}/`, TEAM = 'Texas Tech';
 const report = JSON.parse(await readFile('web/public/season-report.json', 'utf8'));
@@ -28,7 +28,7 @@ try {
     await page.goto(base, { waitUntil: 'networkidle' });
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await page.getByLabel('Choose school').selectOption(TEAM);
+    await chooseSchool(page, 'Choose school', TEAM);
     const panel = page.getByRole('region', { name: 'Strength breakdown', exact: true });
     await panel.waitFor();
     // Headline: one badge + plain sentence with FBS ranks; details closed by default (compact on phones).

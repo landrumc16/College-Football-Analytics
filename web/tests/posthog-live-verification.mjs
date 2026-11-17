@@ -4,7 +4,7 @@ import {mkdir,writeFile} from 'node:fs/promises'
 import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
-import {chooseSection} from './section-navigation.mjs'
+import {chooseSection,chooseSchool} from './section-navigation.mjs'
 import {captureAcknowledgment} from './posthog-capture-response.mjs'
 import {answerConsentPrompt} from './consent-prompt.mjs'
 const liveUrl=process.env.DASHBOARD_URL
@@ -49,8 +49,8 @@ try{
  if(observed)fail('capture_before_consent')
  await answerConsentPrompt(page,true);await delay(600)
  await nav('Rankings');await delay(600)
- await nav('Teams');await page.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(page,'Team Profile sections','Schedule & Predictions');await delay(600)
- await chooseSection(page,'Teams sections','Compare & What If');await page.getByLabel('First school',{exact:true}).selectOption('Texas Tech');await page.getByLabel('Second school',{exact:true}).selectOption('Georgia');await delay(600)
+ await nav('Teams');await chooseSchool(page, 'Choose school', 'Texas Tech');await chooseSection(page,'Team Profile sections','Schedule & Predictions');await delay(600)
+ await chooseSection(page,'Teams sections','Compare & What If');await chooseSchool(page, 'First school', 'Texas Tech');await chooseSchool(page, 'Second school', 'Georgia');await delay(600)
  await nav('Home');await page.getByRole('button',{name:/All games/}).click();await delay(600)
  await nav('Playoffs');await page.getByRole('button',{name:'Explore scenarios',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
  await page.evaluate(()=>window.dispatchEvent(new Event('error')))

@@ -6,7 +6,7 @@ import {resolve,extname} from 'node:path'
 import {performance} from 'node:perf_hooks'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
-import {chooseSection,openDestination,PRIMARY} from './section-navigation.mjs'
+import {chooseSection,openDestination,PRIMARY,chooseSchool} from './section-navigation.mjs'
 const root=resolve('web/dist'),out='web/adversarial-evidence',url='http://127.0.0.1:4190/'
 assert.equal(new URL(url).hostname,'127.0.0.1')
 await mkdir(out,{recursive:true})
@@ -42,8 +42,8 @@ try{
   for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search teams',{exact:true}).fill(text);await healthy(p)}
   await p.getByLabel('Search teams',{exact:true}).fill('')
   await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles')
-  for(let i=0;i<30;i++)await p.getByLabel('Choose school').selectOption(['Texas Tech','Georgia','Texas A&M',''][i%4])
-  await p.getByLabel('Choose school').selectOption('Texas Tech')
+  for(let i=0;i<30;i++)await chooseSchool(p, 'Choose school', ['Texas Tech','Georgia','Texas A&M',''][i%4])
+  await chooseSchool(p, 'Choose school', 'Texas Tech')
   for(let i=0;i<16;i++)await chooseSection(p,'Team Profile sections',['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card'][i%4])
   await healthy(p);return {destinationChanges:100,schoolChanges:31,profileChanges:16,searchInputs:9}
  }))
@@ -68,8 +68,8 @@ try{
  })
  await run('comparison-empty-same-and-repeated',()=>withPage(async p=>{
   await home(p);await nav(p,'Teams');await chooseSection(p,'Teams sections','Compare & What If')
-  for(let i=0;i<30;i++){await p.getByLabel('First school',{exact:true}).selectOption(['','Texas Tech','Georgia'][i%3]);await p.getByLabel('Second school',{exact:true}).selectOption(['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
-  await p.getByLabel('First school',{exact:true}).selectOption('Texas Tech');await p.getByLabel('Second school',{exact:true}).selectOption('Texas A&M');await p.locator('.matchup-result').waitFor();await healthy(p)
+  for(let i=0;i<30;i++){await chooseSchool(p, 'First school', ['','Texas Tech','Georgia'][i%3]);await chooseSchool(p, 'Second school', ['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
+  await chooseSchool(p, 'First school', 'Texas Tech');await chooseSchool(p, 'Second school', 'Texas A&M');await p.locator('.matchup-result').waitFor();await healthy(p)
  }))
  await run('predictions-unusual-search-reload',()=>withPage(async p=>{await home(p);await p.getByRole('button',{name:/All games/}).click();for(const s of ['Texas Tech','unknown',"' OR 1=1 --",'🦅'.repeat(300),'']){await p.getByLabel('Search teams',{exact:true}).fill(s);await healthy(p)}await p.reload({waitUntil:'networkidle'});await healthy(p)}))
  await run('scenario-races-unmount-reset',()=>withPage(async p=>{
@@ -106,7 +106,7 @@ try{
   const response=p.waitForResponse(r=>r.url().endsWith('/'+f.path),{timeout:10000})
   let intercept=true;await p.route('**/'+f.path,route=>intercept?route.fulfill({status:f.status||200,contentType:'application/json',body:f.body}):route.continue())
   await p.goto(url,{waitUntil:'networkidle'});await delay(100)
-  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
+  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose school', 'Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
   if(f.research){await nav(p,'Research');await p.waitForLoadState('networkidle')}
   if(f.poll){await nav(p,'Rankings');await p.waitForLoadState('networkidle')}
   if(f.scenario)await nav(p,'Playoffs')
@@ -138,7 +138,7 @@ try{
  for(const count of [1,10,25,50])await run('concurrent-visitors-'+count,async()=>{
   const start=performance.now(),begin=requests.length;const sessions=[]
   try{await Promise.all(Array.from({length:count},async(_,i)=>{
-   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await p.getByLabel('Choose school').selectOption('Texas Tech');await healthy(p)
+   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose school', 'Texas Tech');await healthy(p)
    if(i%10===0){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false,{},{timeout:60000});await healthy(p)}
   }));return {visitors:count,elapsedMs:performance.now()-start,servedRequests:requests.length-begin,conditions:'one Chromium process, independent browser contexts, 10% run 2000-draw scenarios; isolated static server, no public traffic'}}finally{await Promise.all(sessions.map(c=>c.close()))}
  })

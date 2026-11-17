@@ -1,4 +1,4 @@
-import { chooseSection, assertSection, openDestination, PRIMARY } from './section-navigation.mjs';
+import { chooseSection, assertSection, openDestination, PRIMARY, chooseSchool } from './section-navigation.mjs';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { startAsDeclinedVisitor } from './consent-prompt.mjs';
@@ -271,7 +271,7 @@ try {
       }
       if (section === 'hype' || section === 'trajectory') {
         await page.getByRole('region', { name: 'Verified national historical intelligence' }).waitFor();
-        await page.getByLabel('Choose historical program').selectOption(firstTeam);
+        await chooseSchool(page, 'Choose historical program', firstTeam);
         await assertReportCard(page, firstTeam);
         await page.getByLabel('Search historical programs').fill(firstTeam);
         const historical = page.getByRole('region', { name: 'Verified national historical intelligence' });
@@ -355,7 +355,7 @@ try {
       }
       if (section === 'profile') {
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
-        await page.getByLabel('Choose school').selectOption(firstTeam);
+        await chooseSchool(page, 'Choose school', firstTeam);
         if (width <= 390) {
           await page.evaluate(() => window.scrollTo(0, 0));
           const metric = page.locator('.team-profile-tile').filter({ has: page.getByText('Current Model Rank', { exact: true }) });
@@ -400,8 +400,8 @@ try {
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         const secondTeam = report.rankings.find(team => team.team !== firstTeam)?.team;
         if (!secondTeam) throw new Error('Need two distinct teams for comparison');
-        await page.getByLabel('First school').selectOption(firstTeam);
-        await page.getByLabel('Second school').selectOption(secondTeam);
+        await chooseSchool(page, 'First school', firstTeam);
+        await chooseSchool(page, 'Second school', secondTeam);
         await page.getByText('Program histories and report cards', { exact: true }).click();
         await assertReportCard(page, firstTeam);
         await assertReportCard(page, secondTeam);
@@ -487,7 +487,7 @@ try {
       try {
         await guardPage.goto(baseUrl, { waitUntil: 'networkidle' });
         await navigate(guardPage, 'profile');
-        await guardPage.getByLabel('Choose school').selectOption(firstTeam);
+        await chooseSchool(guardPage, 'Choose school', firstTeam);
         await profileTab(guardPage, 'Schedule & Predictions');
         const scheduleRows = guardPage.locator('.matchup-panel tbody tr');
         const completedOpponent = completed.home === firstTeam ? completed.away : completed.home;

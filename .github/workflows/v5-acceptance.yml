@@ -64,6 +64,8 @@ jobs:
         run: node web/tests/market-calculator-unit.mjs
       - name: Team strength three-score fixtures and TypeScript/Python parity on the published report
         run: node web/tests/strength-scores-unit.mjs
+      - name: School search ranking fixtures (exact, abbreviation, prefix, partial, accents, every FBS school)
+        run: node web/tests/school-search-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -83,6 +85,8 @@ jobs:
         run: node web/tests/market-analysis.mjs
       - name: Verify Team Profile strength breakdown (five widths, official outputs unchanged)
         run: node web/tests/strength-scores.mjs
+      - name: Verify shared school search (five widths, touch, keyboard, ARIA, clipping, Compare, Market, Favorites)
+        run: node web/tests/school-search.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

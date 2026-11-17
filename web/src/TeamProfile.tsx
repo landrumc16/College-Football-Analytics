@@ -1,4 +1,5 @@
 import { LineupAdvisoryNotice } from './LineupAdvisory'
+import SchoolSearch from './SchoolSearch'
 import { MOMENTUM_GAMES, MOMENTUM_WEIGHT, rankedStrength } from './strengthScores'
 import ProgramContext from './ProgramContext'
 import ProgramReportCard, { useReportCards } from './ProgramReportCard'
@@ -95,9 +96,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice team-profile">
-    <h2>Team Profile</h2><div className="profile-tools"><label>Choose school <select value={team} onChange={e => onChoose(e.target.value)}>
-      <option value="">Select a program</option>{rankings.map(r => <option key={r.team} value={r.team}>{r.team}</option>)}
-    </select></label><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button></div>
+    <h2>Team Profile</h2><div className="profile-tools"><SchoolSearch label="Choose school" value={team} onChange={onChoose} schools={rankings.map(r => r.team).sort((a, b) => a.localeCompare(b))} /><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button></div>
     {team && <><h3>{team}</h3>
     <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" onDropdownChange={setSectionDropdown} />
     <div id="profile-panel" role={sectionDropdown ? "region" : "tabpanel"} aria-labelledby={sectionDropdown ? "profile-panel-selection" : `profile-panel-${section}`}>

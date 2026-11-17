@@ -5,7 +5,7 @@ import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 import {startAsDeclinedVisitor} from './consent-prompt.mjs'
 import ts from 'typescript'
-import {chooseSection,assertNavigationFits,openDestination} from './section-navigation.mjs'
+import {chooseSection,assertNavigationFits,openDestination,chooseSchool} from './section-navigation.mjs'
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4180','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
 const url='http://127.0.0.1:4180/'
 let browser,page
@@ -25,7 +25,7 @@ try {
   const nav=page.getByRole('navigation',{name:'Main navigation',exact:true})
   await nav.getByRole('button',{name:'Teams',exact:true}).click()
   await chooseSection(page,'Teams sections','Team Profiles')
-  await page.getByLabel('Choose school').selectOption('Texas Tech')
+  await chooseSchool(page, 'Choose school', 'Texas Tech')
   await chooseSection(page,'Team Profile sections','Historical Intelligence')
   const program=()=>page.getByRole('region',{name:'Program context for Texas Tech',exact:true})
   await program().getByText('FBS win-rate change',{exact:true}).waitFor()
@@ -39,8 +39,8 @@ try {
   await program().getByText('FBS win-rate change',{exact:true}).waitFor()
   assert.deepEqual(await program().locator('.team-profile-tile strong').allTextContents(),metrics)
   await chooseSection(page,'Teams sections','Compare & What If')
-  await page.getByLabel('First school',{exact:true}).selectOption('Texas Tech')
-  await page.getByLabel('Second school',{exact:true}).selectOption('Texas A&M')
+  await chooseSchool(page, 'First school', 'Texas Tech')
+  await chooseSchool(page, 'Second school', 'Texas A&M')
   await program().getByText('FBS win-rate change',{exact:true}).waitFor()
   assert.deepEqual(await program().locator('.team-profile-tile strong').allTextContents(),metrics)
   await openDestination(page,'Research')

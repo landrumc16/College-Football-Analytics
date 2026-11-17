@@ -3,7 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises'
 import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
-import {chooseSection} from './section-navigation.mjs'
+import {chooseSection,chooseSchool} from './section-navigation.mjs'
 import {answerConsentPrompt,consentDialog,CHOICE_KEY} from './consent-prompt.mjs'
 const url='http://127.0.0.1:4189/',out='web/analytics-evidence'
 await mkdir(out,{recursive:true})
@@ -31,8 +31,8 @@ try{
   const es=()=>packets.flatMap(p=>p.batch)
   assert.equal(es().filter(e=>e.event==='cfa_visit_started').length,1);assert.equal(es().filter(e=>e.event==='cfa_page_view').length,1)
   await nav(p,'Rankings');await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill('private@example.com');await delay(600);assert.equal(es().filter(e=>e.event==='cfa_rankings_viewed').length,1)
-  await nav(p,'Teams');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Schedule & Predictions');await chooseSection(p,'Team Profile sections','Historical Intelligence');await p.getByRole('region',{name:'Program context for Texas Tech',exact:true}).getByText('FBS win-rate change',{exact:true}).waitFor();await fits(p)
-  await chooseSection(p,'Teams sections','Compare & What If');await p.getByLabel('First school',{exact:true}).selectOption('Texas Tech');await p.getByLabel('Second school',{exact:true}).selectOption('Georgia');await p.getByLabel('Game location',{exact:true}).selectOption('neutral');await delay(600)
+  await nav(p,'Teams');await chooseSchool(p, 'Choose school', 'Texas Tech');await chooseSection(p,'Team Profile sections','Schedule & Predictions');await chooseSection(p,'Team Profile sections','Historical Intelligence');await p.getByRole('region',{name:'Program context for Texas Tech',exact:true}).getByText('FBS win-rate change',{exact:true}).waitFor();await fits(p)
+  await chooseSection(p,'Teams sections','Compare & What If');await chooseSchool(p, 'First school', 'Texas Tech');await chooseSchool(p, 'Second school', 'Georgia');await p.getByLabel('Game location',{exact:true}).selectOption('neutral');await delay(600)
   assert.ok(es().some(e=>e.event==='cfa_comparison_viewed'&&e.properties.team==='Texas Tech'&&e.properties.opponent==='Georgia'))
   await nav(p,'Home');await p.getByRole('button',{name:/All games/}).click();await p.locator('.prediction-card').first().waitFor();await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
   await delay(600);const starts=es().filter(e=>e.event==='cfa_scenario_started'),completed=es().filter(e=>e.event==='cfa_scenario_completed');assert.equal(starts.length,1);assert.equal(completed.length,1);assert.equal(starts[0].properties.run_id,completed[0].properties.run_id)

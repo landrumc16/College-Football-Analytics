@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright';
 import { startAsDeclinedVisitor } from './consent-prompt.mjs';
-import { chooseSection } from './section-navigation.mjs';
+import { chooseSection, chooseSchool } from './section-navigation.mjs';
 
 const PORT = 4181;
 const base = `http://127.0.0.1:${PORT}/`;
@@ -43,8 +43,8 @@ try {
     page.on('request', r => outbound.push(`${r.url()} ${r.postData() || ''}`));
     await page.goto(base);
     await openCompare(page);
-    await page.getByLabel('First school').selectOption(game.home);
-    await page.getByLabel('Second school').selectOption(game.away);
+    await chooseSchool(page, 'First school', game.home);
+    await chooseSchool(page, 'Second school', game.away);
     await page.getByLabel('Game location').selectOption('home');
     // Compare holds no calculator: it links to the one Market Analysis page and carries the matchup in memory.
     assert.equal(await page.locator('.market-calculator').count(), 0, 'calculator must live only on Market Analysis');
@@ -149,8 +149,8 @@ try {
   });
   await page.goto(base);
   await openCompare(page);
-  await page.getByLabel('First school').selectOption(game.home);
-  await page.getByLabel('Second school').selectOption(game.away);
+  await chooseSchool(page, 'First school', game.home);
+  await chooseSchool(page, 'Second school', game.away);
   await page.getByLabel('Game location').selectOption('home');
   await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
   const missing = page.locator('.market-calculator');

@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {createHash} from 'node:crypto'
 import {chromium} from 'playwright'
-import {chooseSection,assertNavigationFits,openDestination,PRIMARY} from './section-navigation.mjs'
+import {chooseSection,assertNavigationFits,openDestination,PRIMARY,chooseSchool} from './section-navigation.mjs'
 const phase=process.env.EDITORIAL_PHASE
 assert.ok(['before','after'].includes(phase))
 const directory=`web/polish-evidence/${phase}`
@@ -48,7 +48,7 @@ try {
   await capture('rankings')
   await nav.getByRole('button',{name:'Teams',exact:true}).click()
   await chooseSection(page,'Teams sections','Team Profiles')
-  await page.getByLabel('Choose school').selectOption('Texas Tech')
+  await chooseSchool(page, 'Choose school', 'Texas Tech')
   proof.profile=await page.locator('#profile-panel > .team-profile-grid .team-profile-tile strong').allTextContents()
   assert.equal(proof.profile.length,6)
   await capture('profile')
@@ -63,8 +63,8 @@ try {
   await program.getByText('Roster retention is returning observed members',{exact:false}).waitFor()
   await program.getByRole('link').first().waitFor()
   await chooseSection(page,'Teams sections','Compare & What If')
-  await page.getByLabel('First school').selectOption('Texas Tech')
-  await page.getByLabel('Second school').selectOption('Texas A&M')
+  await chooseSchool(page, 'First school', 'Texas Tech')
+  await chooseSchool(page, 'Second school', 'Texas A&M')
   await page.locator('.matchup-result').waitFor()
   proof.matchup=await page.locator('.matchup-result').textContent()
   await capture('compare',{full:true})
