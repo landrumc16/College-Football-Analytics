@@ -199,3 +199,29 @@ Current branch research implementation:
 across 138 teams; the browser test passes at five widths; Market Analysis, Poll Rankings,
 editorial-home, adversarial-reliability, mobile-smoke with the Android PWA, and the before/after
 parity test all pass.
+
+## Eleventh pass — mobile consolidation (2026-11-18)
+
+**What moved.** The separate "Recent form" card moved inside the collapsed "Form, conference and
+postseason details" section, as "Form and forecasts". It keeps:
+- the "Against forecasts" line with its tracked-games detail;
+- the "How to read form and forecasts" explainer, with its missing-data text.
+
+The last-five record stays as the existing tile in that section, so the duplicated sentence was
+dropped.
+
+**Height.** The default page is 205 px shorter at every width:
+
+| Width | Before | After | Reduction |
+| --- | --- | --- | --- |
+| 375–430 | — | — | 12% |
+| 390 | 1709 px | 1504 px | 205 px |
+| 768–1536 | — | — | 14–15% |
+
+The profile panel at 390 px went from 1086 to 880 px.
+
+**Test.** `strength-scores.mjs` now checks:
+- there is no separate card;
+- the details are collapsed by default and open/close with Enter;
+- Form and forecasts, the last-five tile and the explainer are reachable;
+- the bottom navigation does not cover the control.

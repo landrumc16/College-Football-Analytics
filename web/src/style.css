@@ -343,3 +343,5 @@ a:hover{color:#fff1dd}
 .strength-details{margin-top:10px}.strength-details summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700;color:#e3ecf6}.strength-details summary:focus-visible{outline:3px solid #8be5c8;outline-offset:2px}
 .strength-note.official{color:#e3ecf6;font-weight:600}
 .strength-details summary{display:list-item;padding:10px 0}.strength-details summary::marker{color:#8be5c8}
+/* Team Profile: form and forecast notes inside the collapsed details (moved from a separate Recent form card) */
+.profile-more-form{margin-top:14px;padding-top:12px;border-top:1px solid #344963}.profile-more-form h4{margin:0 0 8px;font-size:16px;color:#f5f0e6}.profile-more-form p{color:#cbd8e6}

@@ -57,6 +57,27 @@ try {
     const official = await page.locator('#profile-panel > .team-profile-grid .team-profile-tile').filter({ hasText: 'Current Strength' }).locator('strong').textContent();
     assert.equal(official, report.rankings.find(t => t.team === TEAM).rating.toFixed(1));
     assert.equal(await page.locator('#profile-panel > .team-profile-grid .team-profile-tile').count(), 6, 'released overview grid unchanged');
+    // Recent form consolidated: no separate card in the default flow; everything reachable inside the collapsed details.
+    assert.equal(await page.locator('#profile-panel .recent-form').count(), 0, 'no separate Recent form card');
+    const more = page.locator('#profile-panel details.profile-more');
+    assert.equal(await more.evaluate(d => d.open), false, 'Form, conference and postseason details collapsed by default');
+    assert.equal(await more.locator('.profile-more-form').isVisible(), false);
+    const summary = more.locator('summary').first();
+    await summary.scrollIntoViewIfNeeded();
+    const nav = await page.getByRole('navigation', { name: 'Main navigation', exact: true }).boundingBox();
+    const sum = await summary.boundingBox();
+    if (width < 768) assert.ok(sum.y + sum.height <= nav.y + 1, 'bottom navigation does not cover the details control');
+    await summary.focus(); await page.keyboard.press('Enter');                       // keyboard opens it
+    assert.equal(await more.evaluate(d => d.open), true);
+    const form = more.locator('.profile-more-form');
+    await form.getByRole('heading', { name: 'Form and forecasts' }).waitFor();
+    assert.match(await form.innerText(), /Against forecasts:/);
+    assert.equal(await more.locator('.team-profile-tile').filter({ hasText: 'Last Five Completed Games' }).count(), 1, 'last-five record remains available');
+    const howTo = form.locator('details').filter({ hasText: 'How to read form and forecasts' });
+    await howTo.locator('summary').click();
+    assert.match(await howTo.innerText(), /Last five completed games:/);
+    await summary.focus(); await page.keyboard.press('Enter');                       // and closes it
+    assert.equal(await more.evaluate(d => d.open), false);
     const contrast = await panel.evaluate(root => {
       const rgb = c => (c.match(/[\d.]+/g) || []).map(Number);
       const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
