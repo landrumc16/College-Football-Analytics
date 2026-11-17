@@ -6,6 +6,8 @@ on:
       - 'src/cfb_analytics/recency*'
       - 'src/cfb_analytics/lineup_advisory_research.py'
       - 'scripts/run_recency_historical_screen.py'
+      - 'scripts/strength_blend_research.py'
+      - 'tests/test_strength_blend_research.py'
       - 'tests/test_recency*'
       - 'tests/test_lineup_advisory_research.py'
       - '.github/workflows/dynamic-team-strength-research.yml'
@@ -23,7 +25,7 @@ jobs:
       - name: Install package and pytest
         run: python -m pip install -e '.[dev]'
       - name: Run focused research tests
-        run: python -m pytest -q tests/test_recency_research.py tests/test_recency_rating_research.py tests/test_recency_replay_research.py tests/test_lineup_advisory_research.py
+        run: python -m pytest -q tests/test_recency_research.py tests/test_recency_rating_research.py tests/test_recency_replay_research.py tests/test_lineup_advisory_research.py tests/test_strength_blend_research.py
       - name: Run existing rating and pipeline regression tests
         run: python -m pytest -q tests/test_pipeline.py
       - uses: actions/setup-node@v4
