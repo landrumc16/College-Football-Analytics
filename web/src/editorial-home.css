@@ -38,7 +38,7 @@
 .editorial-team-numbers{display:flex;flex-direction:column;gap:4px;margin-left:auto;text-align:right;flex:none}
 .editorial-team-numbers strong{font-size:12px}
 .editorial-row-arrow{color:#bd9866;font-size:22px}
-.editorial-favorite-editor>div{position:absolute;top:35px;right:0;width:min(500px,88vw);z-index:7;background:#15263c;border:1px solid #59677a;border-radius:8px;padding:8px;box-shadow:0 12px 28px #0008}
+.editorial-favorite-editor>div{position:absolute;top:35px;right:0;width:min(500px,88vw,100%);z-index:7;background:#15263c;border:1px solid #59677a;border-radius:8px;padding:8px;box-shadow:0 12px 28px #0008}
 .editorial-favorite-editor .favorite-panel{margin:0}
 .editorial-favorite-editor .favorite-grid{display:grid;grid-template-columns:minmax(0,1fr)}
 .editorial-favorite-editor .favorite-card,.editorial-favorite-editor .favorite-add{width:100%;min-height:0}

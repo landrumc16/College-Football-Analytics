@@ -81,3 +81,12 @@ not a thousands-of-concurrent-users load-test claim. Start with the approved
 **No beta readiness blockers remain. Readiness verification is formally closed.**
 No new feature, redesign, Version 7 or additional development cycle was begun.
 Only closeout documentation changed after the deployed application commit above.
+
+## JavaScript bundle-size baseline update (2026-11-17, PR #39)
+
+The beta analytics workflow allows at most 10,240 gzipped JavaScript bytes of growth over a fixed
+production baseline. The original baseline, `451f610` (pre-analytics), had been consumed by released
+V7 work: production `474c72d` already measured 11,046 bytes over it, so every new PR failed regardless
+of its own size. The baseline is now the verified GitHub Pages deployment `474c72d` (PR #38, deployed
+2026-11-17), which PR #39 branches from. The 10,240-byte allowance is unchanged and is cumulative from
+that release. The PR #39 school search adds 1,454 bytes.

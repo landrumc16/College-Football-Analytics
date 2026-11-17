@@ -3,7 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises'
 import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
-import {chooseSection} from './section-navigation.mjs'
+import {chooseSection,chooseSchool} from './section-navigation.mjs'
 import {answerConsentPrompt,consentDialog,CHOICE_KEY} from './consent-prompt.mjs'
 const url='http://127.0.0.1:4189/',out='web/analytics-evidence'
 await mkdir(out,{recursive:true})
@@ -31,8 +31,8 @@ try{
   const es=()=>packets.flatMap(p=>p.batch)
   assert.equal(es().filter(e=>e.event==='cfa_visit_started').length,1);assert.equal(es().filter(e=>e.event==='cfa_page_view').length,1)
   await nav(p,'Rankings');await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill('private@example.com');await delay(600);assert.equal(es().filter(e=>e.event==='cfa_rankings_viewed').length,1)
-  await nav(p,'Teams');await p.getByLabel('Choose school').selectOption('Texas Tech');await chooseSection(p,'Team Profile sections','Schedule & Predictions');await chooseSection(p,'Team Profile sections','Historical Intelligence');await p.getByRole('region',{name:'Program context for Texas Tech',exact:true}).getByText('FBS win-rate change',{exact:true}).waitFor();await fits(p)
-  await chooseSection(p,'Teams sections','Compare & What If');await p.getByLabel('First school',{exact:true}).selectOption('Texas Tech');await p.getByLabel('Second school',{exact:true}).selectOption('Georgia');await p.getByLabel('Game location',{exact:true}).selectOption('neutral');await delay(600)
+  await nav(p,'Teams');await chooseSchool(p, 'Choose school', 'Texas Tech');await chooseSection(p,'Team Profile sections','Schedule & Predictions');await chooseSection(p,'Team Profile sections','Historical Intelligence');await p.getByRole('region',{name:'Program context for Texas Tech',exact:true}).getByText('FBS win-rate change',{exact:true}).waitFor();await fits(p)
+  await chooseSection(p,'Teams sections','Compare & What If');await chooseSchool(p, 'First school', 'Texas Tech');await chooseSchool(p, 'Second school', 'Georgia');await p.getByLabel('Game location',{exact:true}).selectOption('neutral');await delay(600)
   assert.ok(es().some(e=>e.event==='cfa_comparison_viewed'&&e.properties.team==='Texas Tech'&&e.properties.opponent==='Georgia'))
   await nav(p,'Home');await p.getByRole('button',{name:/All games/}).click();await p.locator('.prediction-card').first().waitFor();await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
   await delay(600);const starts=es().filter(e=>e.event==='cfa_scenario_started'),completed=es().filter(e=>e.event==='cfa_scenario_completed');assert.equal(starts.length,1);assert.equal(completed.length,1);assert.equal(starts[0].properties.run_id,completed[0].properties.run_id)
@@ -52,7 +52,8 @@ try{
  // Decline: no capture, choice remembered across reloads and new tabs, reflected in the menu.
  {const c=await browser.newContext({viewport:{width:375,height:844},serviceWorkers:'block'}),packets=[];await c.route(endpoint,r=>{packets.push(r.request().postData());return r.abort()});const p=await c.newPage()
   await p.goto(url,{waitUntil:'networkidle'});await answerConsentPrompt(p,false);await nav(p,'Rankings');await nav(p,'Teams');await delay(700);assert.equal(packets.length,0,'Events after declining')
-  assert.equal(await p.evaluate(k=>localStorage.getItem(k),CHOICE_KEY),'"off"');await p.reload({waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await delay(400);assert.equal(await consentDialog(p).count(),0,'Declined visitor re-prompted after reload')
+  // The app restores the current view from the URL (#/teams) on reload, so wait for Teams, not the homepage.
+  assert.equal(await p.evaluate(k=>localStorage.getItem(k),CHOICE_KEY),'"off"');await p.reload({waitUntil:'networkidle'});await p.getByRole('navigation',{name:'Main navigation',exact:true}).locator('button[aria-current="page"]',{hasText:'Teams'}).waitFor();await delay(400);assert.equal(await consentDialog(p).count(),0,'Declined visitor re-prompted after reload')
   const tab=await c.newPage();await tab.goto(url,{waitUntil:'networkidle'});await delay(400);assert.equal(await consentDialog(tab).count(),0,'Declined visitor re-prompted in new tab');await settings(tab);assert.ok(await tab.getByText('Usage analytics: off',{exact:true}).isVisible())
   await nav(tab,'Rankings');await delay(600);assert.equal(packets.length,0);results.push({consent:'decline, reload, new tab',status:'PASS',events:0});await c.close()}
  // Accept: same-tab reload keeps the visit consent without re-prompting; a later visit (new tab) is not re-prompted and is not tracked.
