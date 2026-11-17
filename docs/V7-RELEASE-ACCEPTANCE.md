@@ -152,6 +152,20 @@ Compare & What If keeps its collapsed side-by-side report cards and history, whi
 | `mobile-smoke`, including the Android PWA | Pass |
 | Before/after editorial parity | Pass |
 
+**CI on the integrated code** (`4d53090`):
+- Every check is green, including `visual`. The guard approved only the two pinned files and the
+  listed V7 additions.
+- Dispatched backfill [43986080441](https://github.com/landrumc16/College-Football-Analytics/actions/runs/43986080441):
+  - private store confirmed private, 22 snapshots restored;
+  - byte-identical rebuild, and incremental equals full for 138 teams;
+  - metrics and validation byte-identical, with 126 licensing and output tests passing;
+  - re-saved, and a fresh private clone rebuilt identically;
+  - leak scan passed on 279 public files.
+- Its bot commit `30d7382` changed only timestamps, the two input fingerprints and the live 2026
+  snapshot's receipt hash.
+
+**The release candidate is this document's commit,** verified by its own CI run.
+
 ## Milestone 6: historical validation (frozen, reproducible)
 
 The module is `src/cfb_analytics/v7_validation.py`; its output is
