@@ -62,6 +62,8 @@ jobs:
           node web/tests/v6-scenarios.mjs
       - name: Market Analysis Calculator math fixtures (moneyline, spread, probability, perspective)
         run: node web/tests/market-calculator-unit.mjs
+      - name: Team strength three-score fixtures and TypeScript/Python parity on the published report
+        run: node web/tests/strength-scores-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -79,6 +81,8 @@ jobs:
         run: node web/tests/market-calculator.mjs
       - name: Verify Market Analysis page (entry point, matchup transfer, deep links, Back/Forward, privacy)
         run: node web/tests/market-analysis.mjs
+      - name: Verify Team Profile strength breakdown (five widths, official outputs unchanged)
+        run: node web/tests/strength-scores.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

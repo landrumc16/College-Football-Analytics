@@ -71,3 +71,28 @@ def test_four_game_window_requires_four_completed_games():
     assert values["A"].momentum_games == 3
     assert values["A"].recent_momentum is None
     assert values["A"].combined_strength == values["A"].season_strength
+
+
+def test_momentum_is_plain_mean_of_latest_window_with_as_of_opponent_benchmark():
+    from types import SimpleNamespace
+    from cfb_analytics.ratings import Team, Game
+    from scripts.strength_blend_research import calculate_strength_components
+    teams = [Team("A", "X", 0), Team("B", "X", 0), Team("C", "X", 0)]
+    ratings = {"A": SimpleNamespace(adaptive_rating=6.0), "B": SimpleNamespace(adaptive_rating=2.0),
+               "C": SimpleNamespace(adaptive_rating=-4.0)}
+    games = [Game("A", "B", 0, 50, 1), Game("C", "A", 10, 20, 2), Game("A", "FCS U", 40, 10, 3), Game("A", "B", 24, 21, 4)]
+    a = calculate_strength_components(teams, games, window=3, momentum_weight=0.2, season_ratings=ratings)["A"]
+    # away at C: -(10-20-3)=13 + (-4) = 9; home vs FCS: 27 + (-26) = 1; home vs B: 0 + 2 = 2 (week 1 excluded)
+    assert a.recent_momentum == pytest.approx((9 + 1 + 2) / 3)
+    assert a.combined_strength == pytest.approx(0.8 * 6 + 0.2 * 4)
+    assert a.direction == "declining"
+    changed = [Game("A", "B", 70, 0, 1)] + games[1:]           # a different pre-window result
+    b = calculate_strength_components(teams, changed, window=3, momentum_weight=0.2, season_ratings=ratings)["A"]
+    assert b.recent_momentum == pytest.approx(a.recent_momentum)
+
+
+def test_steady_band_and_zero_weight_parity():
+    assert blend_strength(10.0, 10.9, momentum_games=3).direction == "steady"
+    assert blend_strength(10.0, 11.1, momentum_games=3).direction == "rising"
+    assert blend_strength(10.0, 8.9, momentum_games=3).direction == "declining"
+    assert blend_strength(10.0, 30.0, momentum_games=3, momentum_weight=0.0).combined_strength == 10.0

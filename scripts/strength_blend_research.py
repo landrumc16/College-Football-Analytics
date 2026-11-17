@@ -25,6 +25,7 @@ def blend_strength(
     momentum_games: int,
     momentum_weight: float = 0.35,
     minimum_games: int = 3,
+    steady_band: float = 1.0,
 ) -> StrengthBlend:
     """Blend comparable ratings; avoid fabricated momentum on thin samples.
 
@@ -48,7 +49,7 @@ def blend_strength(
     combined = ((1 - momentum_weight) * season_strength
                 + momentum_weight * recent_momentum)
     delta = recent_momentum - season_strength
-    direction = "rising" if delta > 0 else "declining" if delta < 0 else "steady"
+    direction = "rising" if delta > steady_band else "declining" if delta < -steady_band else "steady"
     return StrengthBlend(season_strength, recent_momentum, combined,
                          1 - momentum_weight, momentum_weight,
                          momentum_games, direction)
@@ -104,10 +105,9 @@ def calculate_strength_components(teams, chronological_games, *,
             adjusted = adjusted_home_margin(
                 game.home_score, game.away_score, settings)
             observations.append(opponent_strength + (adjusted if home else -adjusted))
-        # Ridge toward the season rating to avoid overreacting to a tiny sample.
-        # Both components remain in the same margin-based rating units.
-        momentum = ((sum(observations) + settings.ridge_strength * season)
-                    / (len(observations) + settings.ridge_strength))
+        # Momentum is the plain mean of the latest-window opponent-adjusted results, so no earlier game enters
+        # it; the blend weight (not a hidden ridge) controls how much it moves Combined Strength.
+        momentum = sum(observations) / len(observations)
         output[team.name] = blend_strength(
             season, momentum, momentum_games=len(recent),
             momentum_weight=momentum_weight, minimum_games=window)
