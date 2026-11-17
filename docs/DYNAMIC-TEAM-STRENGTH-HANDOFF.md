@@ -89,3 +89,9 @@ No production change authorized by this documentation. Implement only as part of
 - Latest implementation commit: `25d2f7b4e9919797f5be5c86b77be923195010b9`.
 - Important: **No real historical replay metrics have been produced**, and none of the new tests have yet been executed. Season-specific historically available priors and source publication provenance must be verified before making historical accuracy claims. Do not mistake a replay for a published archived forecast.
 - Next finish-first work: execute tests in GitHub Actions or another actual runtime; use a verified season-specific dataset to produce paired scorecard; fix any failures; wire a single accessible UI advisory to a source-verified event feed; keep draft PR #38 unmerged.
+
+## Fifth development pass — repeatable CI gate
+- Added `.github/workflows/dynamic-team-strength-research.yml` on branch, commit `bf7ee1cb9042949302aa088fc0a8d829efc3a37c`, to execute four research test modules plus incumbent pipeline regression tests on PR changes and manual dispatch.
+- Immediately queried workflow runs for that commit; none were returned at that point. **Do not claim tests passed.** Inspect the PR checks and run logs when GitHub processes the new workflow.
+- GitHub repository cloning from the available local container is blocked by DNS resolution; the GitHub connector remains functional for file commits.
+- Keep PR #38 draft; no merge or production changes. Next: inspect CI failures and correct them, then run the chronological replay on source-verified, season-specific eligible inputs. UI integration is still outstanding.
