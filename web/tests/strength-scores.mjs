@@ -14,7 +14,7 @@ const report = JSON.parse(await readFile('web/public/season-report.json', 'utf8'
 const mod = { exports: {} };
 vm.runInNewContext(ts.transpileModule(await readFile('web/src/strengthScores.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, { exports: mod.exports, Number, Math, Object });
 const ratings = Object.fromEntries(report.rankings.map(t => [t.team, t.rating]));
-const expected = mod.exports.strengthScores(TEAM, ratings[TEAM], ratings, report.schedule);
+const expected = mod.exports.rankedStrength(report.rankings, report.schedule)[TEAM];
 const evidence = 'docs/evidence/dynamic-strength';
 await mkdir(evidence, { recursive: true });
 const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', String(PORT), '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
@@ -31,14 +31,28 @@ try {
     await page.getByLabel('Choose school').selectOption(TEAM);
     const panel = page.getByRole('region', { name: 'Strength breakdown', exact: true });
     await panel.waitFor();
+    // Headline: one badge + plain sentence with FBS ranks; details closed by default (compact on phones).
+    const word = { rising: 'Rising', steady: 'Steady', declining: 'Declining' }[expected.direction];
+    const headline = (await panel.locator('.strength-headline').innerText()).replace(/\s+/g, ' ');
+    assert.ok(headline.includes(word), headline);
+    assert.ok(headline.includes(`last 3 games rank #${expected.momentumRank} of ${expected.teams}, season #${expected.seasonRank}`), headline);
+    assert.equal(await panel.locator(`.trend-badge.${expected.direction}`).count(), 1);
+    const details = panel.locator('details.strength-details');
+    assert.equal(await details.evaluate(d => d.open), false, 'breakdown collapsed by default');
+    const closedHeight = (await panel.boundingBox()).height;
+    if (width < 768) assert.ok(closedHeight <= 260, `compact on phones: ${closedHeight}px`);
+    await details.locator('summary').click();
     const values = await panel.locator('.strength-tile strong').allTextContents();
-    assert.deepEqual(values, [expected.season.toFixed(1), expected.momentum === null ? 'Not yet' : expected.momentum.toFixed(1), expected.combined.toFixed(1)]);
+    assert.deepEqual(values, [`#${expected.seasonRank}`, `#${expected.momentumRank}`, `#${expected.combinedRank}`]);
     const labels = await panel.locator('.strength-tile small').allTextContents();
     assert.deepEqual(labels, ['Season Strength', 'Recent Momentum', 'Combined Strength']);
     const text = await panel.innerText();
-    assert.match(text, /Official predictions, rankings and playoff odds use Season Strength/);
+    assert.match(text, /official predictions, rankings and playoff odds use Season Strength/);
     assert.match(text, /80% season, 20% recent momentum/);
-    assert.match(text, new RegExp(`${{ rising: 'Rising', steady: 'Steady', declining: 'Declining' }[expected.direction] ?? 'Needs'}`));
+    assert.ok(text.includes(`Rating ${expected.season.toFixed(1)} (the Current Strength above)`), 'season value referenced, not repeated as a headline number');
+    // One trend label on the page: the older win-based trend is no longer shown on the Team Profile.
+    assert.equal(await page.locator('#profile-panel').getByText('Season trend:', { exact: false }).count(), 0);
+    assert.equal(await page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' }).count(), 0);
     // The official Current Strength tile is unchanged and equals Season Strength.
     const official = await page.locator('#profile-panel > .team-profile-grid .team-profile-tile').filter({ hasText: 'Current Strength' }).locator('strong').textContent();
     assert.equal(official, report.rankings.find(t => t.team === TEAM).rating.toFixed(1));
@@ -56,7 +70,7 @@ try {
     await page.close();
     console.log(`Strength breakdown passed at ${width}px`);
   }
-  console.log(`Strength breakdown acceptance passed (${TEAM}: season ${expected.season.toFixed(1)}, momentum ${expected.momentum?.toFixed(1)}, combined ${expected.combined.toFixed(1)}, ${expected.direction})`);
+  console.log(`Strength breakdown acceptance passed (${TEAM}: ${expected.direction}, recent #${expected.momentumRank}, season #${expected.seasonRank}, combined #${expected.combinedRank} of ${expected.teams})`);
 } finally {
   await browser?.close();
   try { process.kill(-server.pid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }

@@ -22,7 +22,7 @@ check('momentum = mean of the latest three opponent-adjusted results only', () =
   const sched = [g(1, 'A', 'B', 0, 50), g(2, 'C', 'A', 10, 20), g(3, 'A', 'FCS U', 40, 10), g(4, 'A', 'B', 24, 21)]
   const r = s.strengthScores('A', 6, { B: 2, C: -4 }, sched)
   // week 2 away at C: -(10-20-3)=13 + (-4) = 9; week 3 home vs FCS: (27) + (-26) = 1; week 4 home vs B: 0 + 2 = 2
-  close(r.momentum, (9 + 1 + 2) / 3); close(r.combined, 0.8 * 6 + 0.2 * 4); assert.equal(r.direction, 'declining')
+  close(r.momentum, (9 + 1 + 2) / 3); close(r.combined, 0.8 * 6 + 0.2 * 4); assert.equal(r.direction, 'steady')   // -2 is within the +/-7 band
   assert.equal(r.momentumGames, 3)
 })
 check('fewer than three games: no momentum, combined = season', () => {
@@ -36,6 +36,23 @@ check('steady band, unplayed games ignored, weight 0 equals season', () => {
   close(s.strengthScores('A', 0.5, { B: 0 }, sched, 3, 0).combined, 0.5)
 })
 
+check('steady band is +/-7 rating points (about 1 SD of recent vs season)', () => {
+  const three = obs => [g(1, 'A', 'B', obs + 3, 0), g(2, 'A', 'B', obs + 3, 0), g(3, 'A', 'B', obs + 3, 0)]   // each observation = obs
+  assert.equal(s.STEADY_BAND, 7)
+  assert.equal(s.strengthScores('A', 10, { B: 0 }, three(17)).direction, 'steady')
+  assert.equal(s.strengthScores('A', 9.5, { B: 0 }, three(17)).direction, 'rising')
+  assert.equal(s.strengthScores('A', 24.5, { B: 0 }, three(17)).direction, 'declining')
+})
+check('strength ranks give each score a familiar FBS scale', () => {
+  const rankings = [{ team: 'A', rating: 10 }, { team: 'B', rating: 5 }, { team: 'C', rating: -2 }, { team: 'D', rating: 0 }]
+  const sched = [g(1, 'C', 'B', 40, 0), g(2, 'C', 'A', 40, 0), g(3, 'C', 'B', 40, 0), g(1, 'A', 'B', 3, 0), g(3, 'A', 'B', 3, 0), g(4, 'D', 'B', 10, 7)]
+  const r = s.rankedStrength(rankings, sched)
+  assert.deepEqual([r.A.seasonRank, r.B.seasonRank, r.D.seasonRank, r.C.seasonRank], [1, 2, 3, 4])
+  assert.equal(r.C.momentumRank, 1)                       // C won its last three by 40: best recent form despite the lowest season rating
+  assert.equal(r.D.momentumRank, null)                    // one game: no momentum rank
+  assert.deepEqual(new Set([r.A.momentumRank, r.B.momentumRank, r.C.momentumRank]), new Set([1, 2, 3]))
+  assert.equal(r.C.teams, 4)
+})
 check('TypeScript matches the Python research function for every FBS team on the published report', () => {
   const py = spawnSync('python3', ['-c', `
 import json, sys

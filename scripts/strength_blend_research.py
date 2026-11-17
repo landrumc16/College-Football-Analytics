@@ -25,7 +25,7 @@ def blend_strength(
     momentum_games: int,
     momentum_weight: float = 0.35,
     minimum_games: int = 3,
-    steady_band: float = 1.0,
+    steady_band: float = 7.0,
 ) -> StrengthBlend:
     """Blend comparable ratings; avoid fabricated momentum on thin samples.
 

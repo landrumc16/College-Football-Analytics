@@ -1,5 +1,5 @@
 import { LineupAdvisoryNotice } from './LineupAdvisory'
-import { MOMENTUM_GAMES, MOMENTUM_WEIGHT, strengthScores } from './strengthScores'
+import { MOMENTUM_GAMES, MOMENTUM_WEIGHT, rankedStrength } from './strengthScores'
 import ProgramContext from './ProgramContext'
 import ProgramReportCard, { useReportCards } from './ProgramReportCard'
 import HistoricalResults from './HistoricalResults'
@@ -9,7 +9,7 @@ import { SectionTabs } from './Navigation'
 export type ProfileSection = 'overview' | 'schedule' | 'history' | 'card'
 const profileSections = [{ id: 'overview', label: 'Overview' }, { id: 'schedule', label: 'Schedule & Predictions' }, { id: 'history', label: 'Historical Intelligence' }, { id: 'card', label: 'Program Report Card' }] as const
 import { isPublishedHistoricalIntelligence } from './historicalPublication'
-import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25, seasonFormTrend } from './programMetrics'
+import { recentForm, trackedWinsAboveExpected, winsVsCurrentTop25 } from './programMetrics'
 
 type WindowScore = { rank: number | null; strength: number | null; seasons_available: number; seasons_required: number; years?: number[]; sources?: { season: number; source: string }[] }
 type History = { team: string; program_rankings: Record<string, WindowScore> | null; trajectory: { long_term: { classification: string }; medium_term?: { classification: string }; recent: { classification: string } } | null; hype: Record<string, { historical_tendency: string; dropped_out: number; entered_top25: number }> }
@@ -80,7 +80,6 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const recruitingRecord = recruiting.find(r => r.team === team)
   const performanceRecord = performance[team]
   const lastFive = recentForm(schedule, team)
-  const seasonTrend = seasonFormTrend(schedule, team)
   const winsAgainstCurrentTop25 = winsVsCurrentTop25(schedule, team, rankings)
   const forecastGap = trackedWinsAboveExpected(performanceRecord)
   const conference = Object.entries(conferences).find(([, rows]) => rows.some(row => row.team === team))
@@ -110,10 +109,9 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
-    </div>{current && <StrengthBreakdown team={team} season={current.rating} rankings={rankings} schedule={schedule} />}<details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
+    </div>{current && <StrengthBreakdown team={team} rankings={rankings} schedule={schedule} />}<details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
       {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
-      {tile('Current-Season Form Trend', seasonTrend ?? 'Requires 8 scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}
       {tile('Conference Record', conferenceTeam ? `${conferenceTeam.conference_wins}–${conferenceTeam.conference_losses}` : 'Unavailable')}
       {tile('Results vs Forecast', resultsVsForecast)}
@@ -127,7 +125,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
       {tile('National Title Odds', playoff ? (playoff.national_title * 100).toFixed(1) + '%' : 'Unavailable')}
     </div></details>
     <section className="accuracy-summary recent-form"><h3>Recent form</h3>
-      <p className="section-deck">Last five: <strong>{lastFive.count ? `${lastFive.wins}–${lastFive.losses}` : 'No scored games'}</strong> · Season trend: <strong>{seasonTrend ?? 'Not enough games'}</strong>.</p>
+      <p className="section-deck">Last five: <strong>{lastFive.count ? `${lastFive.wins}–${lastFive.losses}` : 'No scored games'}</strong>. See the strength breakdown above for how {team} is trending.</p>
       <p><strong>Against forecasts:</strong> {resultsVsForecast}{forecastGap == null ? '.' : ` (${forecastGap > 0 ? '+' : ''}${forecastGap.toFixed(2)} wins across ${performanceRecord?.games_with_forecasts ?? 0} tracked games).`}</p>
       <details><summary>How to read form and forecasts</summary><p>Last five completed games: {lastFive.count ? `${lastFive.wins} wins, ${lastFive.losses} losses across ${lastFive.count} games` : 'No completed scored games available'}. Current-season form compares two non-overlapping four-game windows and requires a two-win difference to classify a change. This describes results, not a measured change in team strength. Wins against the current model Top 25 use today's opponent rankings, not their ranking at kickoff.</p></details>
     </section>
@@ -167,22 +165,28 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   </section>
 }
 
-/** Season Strength, Recent Momentum and Combined Strength: descriptive only; official forecasts use Season Strength. */
-function StrengthBreakdown({ team, season, rankings, schedule }: { team: string; season: number; rankings: { team: string; rating: number }[]; schedule: ScheduleGame[] }) {
-  const ratings = Object.fromEntries(rankings.map(r => [r.team, r.rating]))
-  const s = strengthScores(team, season, ratings, schedule)
+/** Recent form headline (one trend label for the page) with the three-score breakdown behind Details. Descriptive only. */
+function StrengthBreakdown({ team, rankings, schedule }: { team: string; rankings: { team: string; rating: number }[]; schedule: ScheduleGame[] }) {
+  const s = rankedStrength(rankings, schedule)[team]
   if (!s) return null
-  const label = { rising: 'Rising', steady: 'Steady', declining: 'Declining', insufficient_data: '' }[s.direction]
   const pct = Math.round(MOMENTUM_WEIGHT * 100)
+  const badge = { rising: ['▲', 'Rising'], steady: ['●', 'Steady'], declining: ['▼', 'Declining'], insufficient_data: ['', ''] }[s.direction]
+  const headline = s.momentumRank === null
+    ? `Recent form appears after ${MOMENTUM_GAMES} completed games (${s.momentumGames} so far). Season strength: #${s.seasonRank} of ${s.teams}.`
+    : `${s.direction === 'rising' ? 'Playing better lately' : s.direction === 'declining' ? 'Playing worse lately' : 'Playing at its season level'}: last ${MOMENTUM_GAMES} games rank #${s.momentumRank} of ${s.teams}, season #${s.seasonRank}.`
   return <section className="strength-scores" aria-labelledby="strength-scores-title">
     <h4 id="strength-scores-title">Strength breakdown</h4>
-    <div className="strength-grid">
-      <div className="strength-tile"><small>Season Strength</small><strong>{s.season.toFixed(1)}</strong><span>All completed games, adjusted for opponents.</span></div>
-      <div className="strength-tile"><small>Recent Momentum</small><strong>{s.momentum === null ? 'Not yet' : s.momentum.toFixed(1)}</strong>
-        <span>{s.momentum === null ? `Needs ${MOMENTUM_GAMES} completed games (${s.momentumGames} so far).` : `Last ${MOMENTUM_GAMES} games, adjusted for opponents. ${label} compared with the season.`}</span></div>
-      <div className="strength-tile"><small>Combined Strength</small><strong>{s.combined.toFixed(1)}</strong>
-        <span>{s.momentum === null ? 'Equals Season Strength until momentum is available.' : `${100 - pct}% season, ${pct}% recent momentum.`}</span></div>
-    </div>
-    <p className="strength-note">Recent Momentum describes how {team} has played lately, not a guaranteed trend. Official predictions, rankings and playoff odds use Season Strength.</p>
+    <p className="strength-headline">{badge[0] && <span className={`trend-badge ${s.direction}`}><span aria-hidden="true">{badge[0]}</span> {badge[1]}</span>} <span>{headline}</span></p>
+    <details className="strength-details"><summary>Show the three strength scores</summary>
+      <div className="strength-grid">
+        <div className="strength-tile"><small>Season Strength</small><strong>#{s.seasonRank}</strong><span>All completed games, adjusted for opponents. Rating {s.season.toFixed(1)} (the Current Strength above).</span></div>
+        <div className="strength-tile"><small>Recent Momentum</small><strong>{s.momentumRank === null ? 'Not yet' : `#${s.momentumRank}`}</strong>
+          <span>{s.momentum === null ? `Needs ${MOMENTUM_GAMES} completed games.` : `Last ${MOMENTUM_GAMES} games, adjusted for opponents. Rating ${s.momentum.toFixed(1)}.`}</span></div>
+        <div className="strength-tile"><small>Combined Strength</small><strong>#{s.combinedRank}</strong>
+          <span>{s.momentum === null ? `Equals Season Strength until momentum is available. Rating ${s.combined.toFixed(1)}.` : `${100 - pct}% season, ${pct}% recent momentum. Rating ${s.combined.toFixed(1)}.`}</span></div>
+      </div>
+      <p className="strength-note">Ranks order all {s.teams} FBS teams by these ratings alone (Current Model Rank also weighs projected wins). Rising or declining means the last {MOMENTUM_GAMES} games differ from the season level by more than 7 rating points.</p>
+    </details>
+    <p className="strength-note official">Descriptive only: official predictions, rankings and playoff odds use Season Strength.</p>
   </section>
 }

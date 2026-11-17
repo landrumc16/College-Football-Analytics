@@ -85,14 +85,15 @@ def test_momentum_is_plain_mean_of_latest_window_with_as_of_opponent_benchmark()
     # away at C: -(10-20-3)=13 + (-4) = 9; home vs FCS: 27 + (-26) = 1; home vs B: 0 + 2 = 2 (week 1 excluded)
     assert a.recent_momentum == pytest.approx((9 + 1 + 2) / 3)
     assert a.combined_strength == pytest.approx(0.8 * 6 + 0.2 * 4)
-    assert a.direction == "declining"
+    assert a.direction == "steady"                              # -2 points is within the +/-7 steady band
     changed = [Game("A", "B", 70, 0, 1)] + games[1:]           # a different pre-window result
     b = calculate_strength_components(teams, changed, window=3, momentum_weight=0.2, season_ratings=ratings)["A"]
     assert b.recent_momentum == pytest.approx(a.recent_momentum)
 
 
 def test_steady_band_and_zero_weight_parity():
-    assert blend_strength(10.0, 10.9, momentum_games=3).direction == "steady"
-    assert blend_strength(10.0, 11.1, momentum_games=3).direction == "rising"
-    assert blend_strength(10.0, 8.9, momentum_games=3).direction == "declining"
+    assert blend_strength(10.0, 16.9, momentum_games=3).direction == "steady"      # +/-7: about 1 SD of recent-vs-season
+    assert blend_strength(10.0, 17.1, momentum_games=3).direction == "rising"
+    assert blend_strength(10.0, 2.9, momentum_games=3).direction == "declining"
+    assert blend_strength(10.0, 3.1, momentum_games=3).direction == "steady"
     assert blend_strength(10.0, 30.0, momentum_games=3, momentum_weight=0.0).combined_strength == 10.0

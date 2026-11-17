@@ -341,11 +341,12 @@ try {
         await page.getByRole('row').filter({ hasText: firstTeam }).first().getByRole('button', { name: 'View team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByText('Form, conference and postseason details', { exact: true }).click();
-        const profileTrend = page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' });
-        await profileTrend.waitFor();
-        const profileTrendValue = (await profileTrend.locator('strong').textContent() || '').trim();
-        if (profileTrendValue !== (overviewTrend === '—' ? 'Requires 8 scored games' : overviewTrend)) {
-          throw new Error(`Team Profile and Program Intelligence disagree on current-season form trend for ${firstTeam}: overview=${JSON.stringify(overviewTrend)}, profile=${JSON.stringify(profileTrendValue)}`);
+        // Owner-approved (PR #38): the Team Profile shows ONE trend label, the opponent-adjusted strength indicator.
+        // The win-based season trend remains on Program Intelligence (checked above via overviewTrend).
+        if (!overviewTrend) throw new Error(`Program Intelligence season trend missing for ${firstTeam}`);
+        await page.getByRole('region', { name: 'Strength breakdown', exact: true }).locator('.strength-headline').waitFor();
+        if (await page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' }).count() !== 0) {
+          throw new Error('Team Profile must not show a second, win-based trend label');
         }
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) {
           throw new Error(`Program Intelligence did not preserve selected team for ${section}`);

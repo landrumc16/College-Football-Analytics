@@ -176,3 +176,26 @@ Current branch research implementation:
 **Still open:**
 - **Lineup advisory:** stays gated. No verified event feed has been connected, so no advisory shows.
 - **Promotion evidence:** season-specific archived priors and pregame forecasts don't exist, so a genuine incumbent promotion test remains impossible.
+
+## Tenth pass — owner-approved design refinements 1–4 (2026-11-18)
+
+1. **One trend label.**
+   - The Team Profile no longer shows the win-based "Season trend" (Recent form card and the
+     "Current-Season Form Trend" tile). It remains on Program Intelligence.
+   - The Season Strength value is referenced ("Rating 17.9, the Current Strength above"), not
+     repeated as a headline number.
+   - `mobile-smoke` now checks this approved behaviour instead of cross-page equality.
+2. **Meaningful indicator.**
+   - The steady band is ±7 rating points, about one standard deviation of recent-vs-season across
+     FBS (7.2).
+   - Distribution: 24 rising, 89 steady and 25 declining, against 63/12/63 at ±1.
+   - Shown as a ▲/▼/● badge with colour and text. Python `blend_strength` uses the same band.
+3. **Familiar scale.** Each score shows its FBS strength rank, for example "last 3 games rank #13 of
+   138, season #14", with the rating in the caption. A note explains that ranks order by rating alone.
+4. **Compact on phones.** A one-line headline (badge plus sentence), with the three scores behind
+   "Show the three strength scores". The closed block is ≤260 px at phone widths, which is tested.
+
+**Tests:** Python 725 passed; strength unit tests 8/8, including ±7 boundaries, ranks and parity
+across 138 teams; the browser test passes at five widths; Market Analysis, Poll Rankings,
+editorial-home, adversarial-reliability, mobile-smoke with the Android PWA, and the before/after
+parity test all pass.

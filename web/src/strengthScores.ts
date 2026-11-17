@@ -5,7 +5,7 @@
  */
 export const MOMENTUM_GAMES = 3
 export const MOMENTUM_WEIGHT = 0.2        // best tested weight (2022-2025 replay); 65/35 performed worse
-export const STEADY_BAND = 1.0            // rating points; smaller differences read as "steady"
+export const STEADY_BAND = 7.0            // ~1 SD of (recent - season) across FBS: only clear shifts read as rising/declining
 const HOME_EDGE = 3, MARGIN_CAP = 45, FCS_RATING = -26
 
 export type ScoreGame = { week: number; home: string; away: string; completed: boolean; home_score: number | null; away_score: number | null; game_id?: number }
@@ -36,4 +36,20 @@ export function strengthScores(team: string, seasonRating: number, ratings: Reco
     season: seasonRating, momentum, combined: (1 - weight) * seasonRating + weight * momentum, momentumGames: window,
     direction: delta > STEADY_BAND ? 'rising' : delta < -STEADY_BAND ? 'declining' : 'steady',
   }
+}
+
+export type RankedStrength = StrengthScores & { seasonRank: number; momentumRank: number | null; combinedRank: number; teams: number }
+
+/** Strength ranks (1 = strongest) across all published FBS teams, so each score has a familiar scale. */
+export function rankedStrength(rankings: { team: string; rating: number }[], schedule: ScoreGame[]): Record<string, RankedStrength> {
+  const ratings = Object.fromEntries(rankings.map(r => [r.team, r.rating]))
+  const scores = rankings.map(r => ({ team: r.team, s: strengthScores(r.team, r.rating, ratings, schedule) }))
+    .filter((x): x is { team: string; s: StrengthScores } => x.s !== null)
+  const rank = (pick: (s: StrengthScores) => number | null) => {
+    const ordered = scores.filter(x => pick(x.s) !== null).sort((a, b) => (pick(b.s) as number) - (pick(a.s) as number))
+    return new Map(ordered.map((x, i) => [x.team, i + 1]))
+  }
+  const season = rank(s => s.season), momentum = rank(s => s.momentum), combined = rank(s => s.combined)
+  return Object.fromEntries(scores.map(({ team, s }) => [team, { ...s, seasonRank: season.get(team)!, momentumRank: momentum.get(team) ?? null,
+    combinedRank: combined.get(team)!, teams: scores.length }]))
 }
