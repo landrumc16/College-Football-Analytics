@@ -22,10 +22,8 @@ await mkdir(evidence, { recursive: true });
 // Independent expectations (plain arithmetic, not the app module).
 const fmt = (v, d = 1) => { const r = Number(v.toFixed(d)); return Math.abs(r) < 1e-9 ? (0).toFixed(d) : (r > 0 ? '+' : '') + r.toFixed(d); };
 const SPREAD = '-6.5', PROB = '41.3', LINE = '+137';
-const homeSpreadDiff = fmt(game.home_margin - 6.5);
 const homeProbDiff = fmt(100 * (game.home_win_probability - 0.413));
 const homeLineDiff = fmt(100 * (game.home_win_probability - 100 / 237));
-const awaySpreadDiff = fmt(-game.home_margin + 6.5);
 const awayProbDiff = fmt(100 * ((1 - game.home_win_probability) - 0.587));
 
 async function openCompare(page) {
@@ -52,7 +50,7 @@ try {
     assert.equal(await page.locator('.market-calculator').count(), 0, 'calculator must live only on Market Analysis');
     await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
-    assert.equal(await page.getByLabel('Game', { exact: true }).inputValue(), String(game.game_id), 'selected matchup transferred');
+    assert.match(await page.locator('.market-selected-game').textContent(), new RegExp(game.home), 'selected matchup transferred');
     assert.ok(page.url().endsWith('#/market') && !/[?&]/.test(new URL(page.url()).hash), 'only the view name is in the URL');
     const calc = page.locator('.market-calculator');
     await calc.getByRole('heading', { name: 'Market Analysis Calculator' }).waitFor();
@@ -70,11 +68,11 @@ try {
     const results = calc.locator('.market-result');
     await assert.doesNotReject(results.nth(2).waitFor());
     const text = async i => (await results.nth(i).textContent()).replace(/\s+/g, ' ');
-    assert.ok((await text(0)).includes(`Difference${homeSpreadDiff} points`), await text(0));
+    assert.ok((await text(0)).includes('Our prediction') && (await text(0)).includes('What this means') && (await text(0)).includes('Our take'), await text(0));
     assert.ok((await text(1)).includes(`Difference${homeProbDiff} percentage points`), await text(1));
     assert.ok((await text(2)).includes(`Difference${homeLineDiff} percentage points`), await text(2));
     assert.ok((await text(2)).includes('42.2% raw implied'));
-    assert.equal(await calc.getByText('Market number entered by you; not retrieved or verified by this app.').count(), 3);
+    assert.equal(await calc.getByText('Market number entered by you; not retrieved or verified by this app.').count(), 2);
     assert.match(await calc.textContent(), /not removed/);
     assert.match(await calc.textContent(), /not a forecast of profit or a recommendation to wager/);
 
@@ -87,7 +85,7 @@ try {
     assert.equal(await calc.getByLabel(`${game.away} prediction-market win probability (%)`).inputValue(), '58.7');
     assert.equal(await calc.getByLabel(`${game.away} American moneyline`).inputValue(), '');
     await calc.getByText(`Moneyline cleared: enter ${game.away}'s own moneyline`, { exact: false }).waitFor();
-    assert.ok((await text(0)).includes(`Difference${awaySpreadDiff} points`), await text(0));
+    assert.ok((await text(0)).includes('Our take'), await text(0));
     assert.ok((await text(1)).includes(`Difference${awayProbDiff} percentage points`), await text(1));
     if (width === 390 || width === 1536) await calc.screenshot({ path: `${evidence}/calculator-${width}.png` });
 
@@ -100,7 +98,7 @@ try {
     await calc.getByText('A probability cannot be more than 100%.').waitFor();
     assert.equal(await results.count(), 1);
     await awaySpread.fill('PK');
-    assert.ok((await text(0)).includes('PK (0)'));
+    assert.ok((await text(0)).includes('pick’em'));
 
     // Accessibility: WCAG AA contrast for every calculator text element and visible keyboard focus.
     // Reflow: 320px is WCAG 1.4.10 (1280px at 400%); 200% zoom of a 768px window is a 384px layout (covered by 375/390).
@@ -135,7 +133,7 @@ try {
       await page.getByLabel('Game location').selectOption('neutral');
       await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
       await calc.getByText('Hypothetical matchup', { exact: true }).waitFor();
-      assert.match(await page.getByLabel('Game', { exact: true }).locator('option:checked').textContent(), /^Your matchup \(hypothetical\)/);
+      assert.match(await page.locator('.market-selected-game').textContent(), new RegExp(game.home));
       assert.equal(await calc.getByLabel(`${game.home} point spread`).inputValue(), '');
     }
     await page.close();
