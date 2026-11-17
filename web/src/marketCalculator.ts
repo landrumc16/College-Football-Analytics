@@ -131,3 +131,38 @@ export function headlineProbability(team: string, model: number, market: number)
 }
 
 export const spreadExample = (team: string) => `Example: ${team} −7 means ${team} is favoured by 7; ${team} +3.5 means ${team} is a 3.5-point underdog.`
+
+/** Plain-language spread comparison; keeps the signed arithmetic unchanged. */
+export function spreadStory(team: string, opponent: string, margin: number, spread: number) {
+  const modelWinner = Math.abs(margin) < 0.05 ? null : margin > 0 ? team : opponent
+  const lineFavorite = Math.abs(spread) < 0.05 ? null : spread < 0 ? team : opponent
+  const modelSize = Math.abs(margin)
+  const lineSize = Math.abs(spread)
+  const modelText = modelWinner ? `Our model predicts ${modelWinner} will win by approximately ${points(modelSize)}.` : 'Our model predicts an even game.'
+  const lineText = lineFavorite ? `The betting line you entered has ${lineFavorite} favored by ${points(lineSize)}.` : 'The betting line you entered has neither team favored (pick’em).'
+  const gap = Math.abs(margin + spread)
+  if (gap < 1.5) return {
+    title: 'Our model and the spread are close',
+    modelText, lineText,
+    meaning: 'Our model and the entered betting line tell a similar story about this matchup.',
+    take: 'There is no major disagreement between our prediction and the spread you entered.',
+  }
+  if (modelWinner && lineFavorite && modelWinner !== lineFavorite) return {
+    title: 'Our model and the spread disagree',
+    modelText, lineText,
+    meaning: 'Our model predicts a different winner from the team favored by the entered betting line.',
+    take: 'This is a significant disagreement. Look more closely at the matchup before drawing conclusions from the spread.',
+  }
+  const closer = modelSize < lineSize
+  const qualifier = gap >= 4 ? 'much ' : ''
+  const meaning = closer
+    ? `Both point toward ${lineFavorite ?? modelWinner}, but our model expects a ${qualifier}closer game than the spread suggests.`
+    : `Both point toward ${modelWinner ?? lineFavorite}, but our model expects a ${qualifier}bigger win than the spread suggests.`
+  return {
+    title: closer ? 'Our model expects a closer game' : 'Our model expects a bigger win',
+    modelText, lineText, meaning,
+    take: closer && lineFavorite
+      ? `Be cautious about ${lineFavorite} covering this spread. Our model expects ${lineFavorite === team ? opponent : team} to keep the game more competitive.`
+      : 'Our model expects a larger winning margin than the entered spread suggests. That difference is worth examining, not a guarantee of a result.',
+  }
+}
