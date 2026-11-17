@@ -1,8 +1,8 @@
 import { useId, useState } from 'react'
 import {
-  explainProbability, explainSpread, flipProbabilityInput, flipSpreadInput, headlineProbability, headlineSpread,
+  explainProbability, flipProbabilityInput, flipSpreadInput, headlineProbability,
   moneylineProbability, parseMoneyline, parseProbability, parseSpread, percent, probabilityDifference, signed,
-  spreadDifference, spreadExample, teamView, toggleSign, type Parsed,
+  spreadExample, spreadStory, teamView, toggleSign, type Parsed,
 } from './marketCalculator'
 
 export type ModelSource = { kind: 'published' | 'hypothetical'; label: string }
@@ -62,11 +62,17 @@ export default function MarketCalculator({ home, away, homeProbability, homeMarg
         <small id={`${id}-spread-help`}>{spreadExample(selected)}</small>
         <div id={`${id}-spread-out`} aria-live="polite">
           {error(spreadParsed) && <p className="market-error">{error(spreadParsed)}</p>}
-          {spreadParsed.ok && <Result headline={headlineSpread(selected, model.margin, spreadParsed.value)} rows={[
-            ['Our model', `${selected} ${signed(model.margin)} projected margin`],
-            ['You entered', `${selected} ${spreadParsed.value === 0 ? 'PK (0)' : signed(spreadParsed.value)}`],
-            ['Difference', `${signed(spreadDifference(model.margin, spreadParsed.value))} points`],
-          ]} text={explainSpread(selected, model.margin, spreadParsed.value)} />}
+          {spreadParsed.ok && (() => {
+            const story = spreadStory(selected, opponent, model.margin, spreadParsed.value)
+            return <div className="market-result">
+              <p className="market-headline"><strong>{story.title}</strong></p>
+              <p><strong>Our prediction</strong></p><p>{story.modelText}</p>
+              <p><strong>Your entered betting line</strong></p><p>{story.lineText}</p>
+              <p><strong>What this means</strong></p><p>{story.meaning}</p>
+              <p><strong>Our take</strong></p><p>{story.take}</p>
+              <small>Based on our model and the betting line you entered, not a verified live market line. Educational comparison only.</small>
+            </div>
+          })()}
         </div>
       </div>
       <div className="market-card">
