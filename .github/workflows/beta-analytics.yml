@@ -91,9 +91,12 @@ jobs:
           node web/tests/editorial-home.mjs
           node web/tests/v6-browser.mjs
       - name: Compare gzip JavaScript against the current production source
+        # Baseline: production deployment 474c72d (2026-11-17, PR #38), built with the same env.
+        # Re-baselined from the pre-analytics 451f610 because released V7 work already used 11,046
+        # bytes of the allowance; the 10,240-byte growth limit is unchanged. See docs/PUBLIC-BETA-READINESS.md.
         run: |
           cp -a web/dist /tmp/analytics-dist
-          git worktree add --detach /tmp/cfa-without-analytics 451f6107c24f0f240a84d1e31906bd2c2fcccad0
+          git worktree add --detach /tmp/cfa-without-analytics 474c72d09c0e9beaf0e4c2988f6fc9dac8fb14c8
           ln -s "$GITHUB_WORKSPACE/web/node_modules" /tmp/cfa-without-analytics/web/node_modules
           cp web/public/*.json /tmp/cfa-without-analytics/web/public/
           npm --prefix /tmp/cfa-without-analytics/web run build
