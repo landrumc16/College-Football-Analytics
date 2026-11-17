@@ -47,7 +47,7 @@ export async function openDestination(page, name) {
 
 // Choose a school in either the released <select> or the shared SchoolSearch combobox (type, then pick the suggestion).
 export async function chooseSchool(page, label, team) {
-  const field = page.getByLabel(label, { exact: true }).locator('visible=true').first();
+  const field = page.getByLabel(label).locator('visible=true').first();
   if (await field.evaluate(e => e.tagName) === 'SELECT') return field.selectOption(team);
   if (!team) { await field.focus(); await field.press('Escape'); return; }   // comboboxes keep their selection
   await field.fill(team);
