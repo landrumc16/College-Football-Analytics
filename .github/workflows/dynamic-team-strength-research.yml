@@ -25,3 +25,12 @@ jobs:
         run: python -m pytest -q tests/test_recency_research.py tests/test_recency_rating_research.py tests/test_recency_replay_research.py tests/test_lineup_advisory_research.py
       - name: Run existing rating and pipeline regression tests
         run: python -m pytest -q tests/test_pipeline.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci --prefix web
+      - name: Build frontend with TypeScript checks
+        run: npm run build --prefix web
