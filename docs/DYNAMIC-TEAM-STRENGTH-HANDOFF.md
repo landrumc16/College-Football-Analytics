@@ -142,3 +142,37 @@ Current branch research implementation:
 6. Finish required tests, artifact/report, evidence, release-readiness summary, and PR #38 review package. No production merge without owner approval.
 
 **Important constraints**: The existing verified 2022–2025 archive has neutral zero priors and one synthetic conference in proxy replay; season-specific archived priors/pregame forecasts are missing. Therefore proxy replay cannot satisfy incumbent promotion gates, regardless of candidate result. Separate a descriptive three-score UI release from any prediction-engine promotion. No new version, no broad refactor, no speculative personnel deductions.
+
+## Ninth pass — Claude Code finish (2026-11-18)
+
+**CI fixes (no safeguard bypassed):**
+- **`visual` guard:** the four research-only modules moved from protected `src/cfb_analytics/` to `scripts/`, which production never imports. The guard stays strict, with no exception.
+- **Research workflow:** its `paths` list contained a literal `\n`, which made the YAML invalid, so the workflow never ran. Fixed.
+- **Blend screen:** the screen script had the same `\n` bug as a Python syntax error. Fixed.
+
+**Momentum definition corrected.** Recent Momentum is now the plain mean of the latest 3 (or 4) opponent-adjusted results. The opponent benchmark is the as-of season rating; FCS opponents are −26; margins are capped and have home field removed, as in the engine. The earlier ridge toward Season Strength reintroduced earlier games and shrank twice. Direction uses a ±1-point steady band.
+
+**2022–2025 blend screen.** Artifact: `docs/evidence/dynamic-strength/strength-blend-2022-2025.json`.
+- **Setup:** 3,174 FBS-vs-FBS games, neutral-prior proxy, kickoff + 4 h cutoffs, postseason clustered separately. The rewrite reuses one rating solve per eligible-history prefix with identical cutoffs, which cut the runtime from a >2 h timeout to 29 s.
+- **Best result:** 3-game window at 20% momentum gives a Brier change of −0.30% (3 of 4 seasons; clustered 95% CI −0.0022 to +0.0011). The 4-game window at 20% gives −0.29% (4 of 4 seasons; CI crosses zero).
+- **65/35 hypothesis:** worse in both windows, +0.51% Brier (3-game) and +0.11% (4-game).
+- **50% momentum:** significantly worse in the 3-game window (+1.95%; CI excludes zero).
+- **Verdict:** no candidate passes the V6 gates (≥5% Brier improvement, ≥3 of 4 seasons, ≤2% log-loss regression, favourable interval). **The official engine is unchanged.**
+
+**Team Profile display.** `web/src/strengthScores.ts` plus `StrengthBreakdown` in `TeamProfile.tsx` show Season Strength, Recent Momentum (last 3 games, with rising/steady/declining) and Combined Strength. The display is in the overview, below the released tile grid.
+- **Weight:** 80/20, the best tested weight.
+- **Labelling:** descriptive only. The copy states that official predictions, rankings and playoff odds use Season Strength.
+- **Data:** computed in the browser from the published report, with no new data artifact under protected paths.
+- **Parity:** TypeScript matches the Python research function for all 138 teams.
+
+**Tests:**
+- **Python:** `pytest` 725 passed, including the new momentum, steady-band and zero-weight tests, plus 25 research tests.
+- **Browser:**
+  - `strength-scores-unit.mjs` (fixtures plus parity);
+  - `strength-scores.mjs` at 375, 390, 430, 768 and 1536px (values, labels, unchanged official tile and six-tile grid, contrast ≥4.5, no overflow, no page errors).
+- **Regression:** Market Analysis, calculator, Poll Rankings, editorial-home, adversarial-reliability (0 failures), mobile-smoke with Android PWA, publication and scenarios, and the before/after editorial parity test all pass.
+- **`v6-browser` speed budget:** it fails on this container at 3.1–3.3 s against a 3.0 s budget. Unchanged `main` fails identically on the same machine (3.14 and 3.27 s), so this is environmental. The budget was not changed; CI is authoritative.
+
+**Still open:**
+- **Lineup advisory:** stays gated. No verified event feed has been connected, so no advisory shows.
+- **Promotion evidence:** season-specific archived priors and pregame forecasts don't exist, so a genuine incumbent promotion test remains impossible.
