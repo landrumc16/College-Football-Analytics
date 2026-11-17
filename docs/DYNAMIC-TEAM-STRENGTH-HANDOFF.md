@@ -25,3 +25,19 @@ Verify Texas Tech's 2026 starting-quarterback transition involving Tommy Castell
 
 ## Handoff to Claude Code
 Resume from `research/dynamic-team-strength` and this file. Do not search other Claude sessions for the assignment. Check actual GitHub state and existing work before writing code. Report tested SHA, precise tests run, data cutoff, findings and remaining blockers. The current file records scope and repository-contract review, **not** a completed backtest, correction or deployment.
+
+## Verified code trace — 2026-11-17
+Inspected current `src/cfb_analytics/ratings.py`, `pipeline.py`, `model.py` and `predictions.py`:
+- `calculate_ratings` sums each completed game's opponent-adjusted capped margin with **unit weight**, and uses raw completed-game counts in its ridge denominator. There is no within-season recency weighting in this rating calculation.
+- The rating uses eight iterative opponent-adjustment passes, a prior/ridge term, conference shrinkage and a pass chosen from total completed game count. A weighted challenger must preserve coherent scaling of the ridge and conference terms and avoid double-counting.
+- `build_season_report` passes `adaptive_rating` to `project_season`, `predict`, rankings and `simulate_cfp`. Any validated rating change therefore affects all those outputs. `predict` maps rating gap plus home advantage to margin and probability.
+- The current output stores `home_margin` and `home_win_probability`, **not a separately verified pair of projected team scores**. Do not claim this change updates independently modeled scores unless such a component is identified and validated.
+- Current game object includes `week` but no exact kickoff time. For chronological rolling weights, verify deterministic ordering from snapshot start dates and completed status; same-week ordering and late corrections matter.
+
+## Research implementation committed
+- `src/cfb_analytics/recency_research.py`: isolated normalized rolling three-tier weight helper, latest three equal.
+- `tests/test_recency_research.py`: intended unit coverage for equal weights, short seasons, bye weeks and invalid parameters.
+- These files **do not modify production ratings or forecasts**.
+- Tests have **not yet been executed in the repository environment**. Do not mark them passing until actually run.
+- Latest branch commit at this stage: `e3ccdfe1e9d51dac408a919ce89fb70dd920338c`.
+- Next: run tests, inspect current snapshot ordering and available season-specific pregame archives, then implement paired research-only rating replay. No promotion without the V6 evaluation gates.
