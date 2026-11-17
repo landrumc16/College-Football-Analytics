@@ -41,3 +41,11 @@ Inspected current `src/cfb_analytics/ratings.py`, `pipeline.py`, `model.py` and 
 - Tests have **not yet been executed in the repository environment**. Do not mark them passing until actually run.
 - Latest branch commit at this stage: `e3ccdfe1e9d51dac408a919ce89fb70dd920338c`.
 - Next: run tests, inspect current snapshot ordering and available season-specific pregame archives, then implement paired research-only rating replay. No promotion without the V6 evaluation gates.
+
+## Second development pass — research-only challenger
+- Added `src/cfb_analytics/recency_rating_research.py`, implementing opponent-adjusted iterative ratings with per-team tier weights and ridge scale preserved by rescaling normalized weights to each team's game count. No production pipeline imports this module.
+- Added `tests/test_recency_rating_research.py`, testing exact incumbent parity when all tier weights are 1, a change in ratings with nonunit weights, and invalid-game rejection.
+- Latest branch commit: `df2f3a1f447474abb02caeb5cc3ba217cac3dfc3`.
+- **Test execution blocked:** attempted to clone the branch into the local execution container, but the container could not resolve `github.com` (DNS). Tests are committed but unverified; GitHub CI or a connected execution environment must run them.
+- **Chronology warning:** `ingestion.normalize_cfbd_games` currently sorts by `(week, game_id)`, while `IngestedGame` includes `start_date`. Before replay, establish chronological ordering using valid kickoff timestamps and conservative completed-game cutoffs. Do not mistake `game_id` for kickoff ordering. Preserve incumbent pipeline untouched.
+- Next highest-value step: build an as-of chronological replay using verified 2026 inputs; run baseline-parity and leakage tests; compare paired pregame predictions. Do not use current full-season results for past-week features.
