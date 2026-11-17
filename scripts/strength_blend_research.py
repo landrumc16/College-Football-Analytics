@@ -67,7 +67,7 @@ def momentum_window(completed_games: list, *, window: int = 3) -> list:
 def calculate_strength_components(teams, chronological_games, *,
                                   window: int = 3,
                                   momentum_weight: float = 0.35,
-                                  settings=None):
+                                  settings=None, season_ratings=None):
     """As-of opponent-adjusted season and short-window momentum ratings.
 
     The opponent benchmark is estimated from the full *as-of* season history,
@@ -82,7 +82,7 @@ def calculate_strength_components(teams, chronological_games, *,
         raise ValueError("momentum window must be 3 or 4")
     if settings is None:
         settings = ModelSettings()
-    ratings = calculate_ratings(teams, chronological_games, settings)
+    ratings = (season_ratings if season_ratings is not None else\n               calculate_ratings(teams, chronological_games, settings))
     output = {}
     for team in teams:
         played = [game for game in chronological_games
