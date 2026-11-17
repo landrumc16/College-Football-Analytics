@@ -36,7 +36,7 @@ def blend_strength(
         raise ValueError("season strength must be finite")
     if not 0 <= momentum_weight <= 1:
         raise ValueError("momentum weight must be in [0, 1]")
-    if minimum_games != 3 or not 0 <= momentum_games <= 4:
+    if minimum_games not in (3, 4) or not 0 <= momentum_games <= 4:
         raise ValueError("momentum must use a 3- or 4-game window")
     if recent_momentum is not None and not isfinite(recent_momentum):
         raise ValueError("momentum must be finite")
@@ -91,7 +91,7 @@ def calculate_strength_components(teams, chronological_games, *,
         if len(played) < window:
             output[team.name] = blend_strength(
                 season, None, momentum_games=len(played),
-                momentum_weight=momentum_weight)
+                momentum_weight=momentum_weight, minimum_games=window)
             continue
         recent = played[-window:]
         observations = []
@@ -109,5 +109,5 @@ def calculate_strength_components(teams, chronological_games, *,
                     / (len(observations) + settings.ridge_strength))
         output[team.name] = blend_strength(
             season, momentum, momentum_games=len(recent),
-            momentum_weight=momentum_weight)
+            momentum_weight=momentum_weight, minimum_games=window)
     return output
