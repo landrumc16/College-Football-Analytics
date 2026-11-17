@@ -5,10 +5,10 @@ Requires season-specific as-of-eligible roster priors supplied by caller.
 """
 from datetime import datetime, timedelta, timezone
 from math import log
-from .ratings import Game, Team, calculate_ratings
-from .recency_rating_research import calculate_weighted_ratings
-from .model import ModelSettings
-from .predictions import predict
+from cfb_analytics.ratings import Game, Team, calculate_ratings
+from scripts.recency_rating_research import calculate_weighted_ratings
+from cfb_analytics.model import ModelSettings
+from cfb_analytics.predictions import predict
 
 
 def _utc(value: str) -> datetime:

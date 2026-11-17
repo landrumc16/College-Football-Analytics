@@ -4,9 +4,9 @@ Do not call from production pipeline. Input completed games must be sorted
 chronologically by kickoff (not merely by week or provider game ID).
 """
 from collections import defaultdict
-from .model import ModelSettings, adjusted_home_margin
-from .ratings import Team, Game
-from .recency_research import team_game_weights
+from cfb_analytics.model import ModelSettings, adjusted_home_margin
+from cfb_analytics.ratings import Team, Game
+from scripts.recency_research import team_game_weights
 
 
 def calculate_weighted_ratings(teams: list[Team], games: list[Game],

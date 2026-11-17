@@ -1,6 +1,6 @@
 import unittest
 from cfb_analytics.ratings import Team
-from cfb_analytics.recency_replay_research import paired_replay, paired_metrics
+from scripts.recency_replay_research import paired_replay, paired_metrics
 
 
 def g(n, kickoff, home, away, hs, ass):

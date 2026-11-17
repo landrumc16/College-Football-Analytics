@@ -12,7 +12,7 @@ from pathlib import Path
 from cfb_analytics.ratings import Team, Game, calculate_ratings
 from cfb_analytics.predictions import predict
 from cfb_analytics.model import ModelSettings
-from cfb_analytics.recency_replay_research import _utc, paired_metrics
+from scripts.recency_replay_research import _utc, paired_metrics
 from scripts.strength_blend_research import calculate_strength_components
 
 ROOT = Path(__file__).resolve().parents[1]

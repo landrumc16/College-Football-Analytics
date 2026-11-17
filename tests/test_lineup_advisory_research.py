@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import replace
-from cfb_analytics.lineup_advisory_research import LineupChange, lineup_advisory
+from scripts.lineup_advisory_research import LineupChange, lineup_advisory
 
 
 class LineupAdvisoryTests(unittest.TestCase):

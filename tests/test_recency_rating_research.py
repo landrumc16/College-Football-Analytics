@@ -1,7 +1,7 @@
 """Weighted ratings remain research-only and preserve baseline at unit weights."""
 import unittest
 from cfb_analytics.ratings import Team, Game, calculate_ratings
-from cfb_analytics.recency_rating_research import calculate_weighted_ratings
+from scripts.recency_rating_research import calculate_weighted_ratings
 
 
 class WeightedRatingsResearchTests(unittest.TestCase):

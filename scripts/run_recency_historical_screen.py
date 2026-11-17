@@ -9,7 +9,7 @@ import gzip
 import json
 from pathlib import Path
 from cfb_analytics.ratings import Team
-from cfb_analytics.recency_replay_research import paired_replay, paired_metrics
+from scripts.recency_replay_research import paired_replay, paired_metrics
 from cfb_analytics.v4_evaluation import evaluate_pairs, clustered_brier_interval
 
 ROOT = Path(__file__).resolve().parents[1]

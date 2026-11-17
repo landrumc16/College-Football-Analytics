@@ -3,10 +3,13 @@ name: Dynamic Team Strength Research Checks
 on:
   pull_request:
     paths:
-      - 'src/cfb_analytics/recency*'
-      - 'src/cfb_analytics/lineup_advisory_research.py'
+      - 'scripts/recency*'
+      - 'scripts/lineup_advisory_research.py'
       - 'scripts/run_recency_historical_screen.py'
-      - 'scripts/strength_blend_research.py'\n      - 'scripts/run_strength_blend_historical_screen.py'
+      - 'scripts/strength_blend_research.py'
+      - 'scripts/run_strength_blend_historical_screen.py'
+      - 'web/src/TeamProfile.tsx'
+      - 'web/src/StrengthScores.tsx'
       - 'tests/test_strength_blend_research.py'
       - 'tests/test_recency*'
       - 'tests/test_lineup_advisory_research.py'

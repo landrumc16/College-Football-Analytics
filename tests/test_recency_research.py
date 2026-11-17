@@ -1,7 +1,7 @@
 """Research-only recency-weight invariants."""
 import unittest
 from types import SimpleNamespace
-from cfb_analytics.recency_research import rolling_tier_weights, team_game_weights
+from scripts.recency_research import rolling_tier_weights, team_game_weights
 
 
 class RecencyResearchTests(unittest.TestCase):
