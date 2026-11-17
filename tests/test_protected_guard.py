@@ -63,3 +63,16 @@ def test_reviewed_protected_edits_are_pinned_to_exact_content(monkeypatch):
     assert len(rejected) == 2
     _, rejected = guard.evaluate(rows, MANIFEST, "main", True, lambda p: 5)    # other branches stay strict
     assert len(rejected) == 2
+
+
+def test_only_the_v7_manifest_remains_and_selection_is_per_branch():
+    manifests = guard.load_manifests(ROOT / ".github/release-manifests")
+    assert [m["head_ref"] for m in manifests] == ["v7-development"]
+    assert guard.select_manifest(manifests, "v7-development", True) is manifests[0]
+    for head_ref, same_repo in (("beta-rankings-usability", True), ("main", True), ("", True), ("v7-development", False)):
+        assert guard.select_manifest(manifests, head_ref, same_repo) is None
+
+
+def test_committed_pins_match_the_files():
+    for path, entry in MANIFEST["modified_exact"].items():
+        assert guard.head_sha256(path) == entry["sha256"], path

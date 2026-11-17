@@ -1,8 +1,8 @@
 """V6 protected-path guard with a narrowly scoped, reviewed release manifest.
 
 Default (any branch): protected paths must be byte-identical to the merge base, exactly as before.
-Only a same-repository pull request whose head branch equals the manifest's head_ref may carry the
-manifest's explicitly listed additions, and additive-only edits to the listed existing files.
+Each reviewed release has its own manifest in .github/release-manifests/. Only a same-repository pull
+request whose head branch equals a manifest's head_ref may carry that manifest's explicitly listed additions, and additive-only edits to the listed existing files.
 Reviewed edits to protected files are pinned by the exact SHA-256 of their committed content ("modified_exact"):
 any further change to such a file fails until the manifest is re-reviewed.
 Deletions, renames, mode changes and any other modification still fail.
@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-MANIFEST = Path(".github/release-manifests/v7-protected-changes.json")
+MANIFEST_DIR = Path(".github/release-manifests")
 SLUG_JSON = re.compile(r"^[a-z0-9-]+\.json$")
 
 
@@ -33,6 +33,18 @@ def changes(base, paths):
 def deletions(base, path):
     added, removed, _ = git("diff", "--numstat", base, "HEAD", "--", path).split("\t", 2)
     return int(removed)
+
+
+def load_manifests(directory=MANIFEST_DIR):
+    return [json.loads(f.read_text()) for f in sorted(Path(directory).glob("*.json"))]
+
+
+def select_manifest(manifests, head_ref, same_repo):
+    """The one reviewed manifest naming this pull request's head branch, if any; otherwise strict."""
+    matches = [m for m in manifests if same_repo and head_ref and m.get("head_ref") == head_ref]
+    if len(matches) > 1:
+        raise SystemExit(f"more than one release manifest names head branch {head_ref!r}")
+    return matches[0] if matches else None
 
 
 def head_sha256(path):
@@ -69,7 +81,7 @@ def evaluate(rows, manifest, head_ref, same_repo, removed_lines):
 
 def main(argv):
     base, head_ref, same_repo, paths = argv[0], argv[1], argv[2] == "true", argv[4:]
-    manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else None
+    manifest = select_manifest(load_manifests(), head_ref, same_repo)
     rows = changes(base, paths)
     approved, rejected = evaluate(rows, manifest, head_ref, same_repo, lambda p: deletions(base, p))
     scope = "release manifest applies" if manifest and same_repo and head_ref == manifest.get("head_ref") else "strict (no exception)"

@@ -1,5 +1,6 @@
 import PlayoffScenarios from './PlayoffScenarios'
 import AnalyticsPrivacy from './AnalyticsPrivacy'
+import PollRankings, { type PollSortKey } from './PollRankings'
 import { analyticsError, observePage, setAnalyticsSchools } from './analytics'
 import DataBoundary from './DataBoundary'
 import ProgramContext from './ProgramContext'
@@ -70,7 +71,8 @@ export function App() {
   const [refreshAttempt, setRefreshAttempt] = useState(0)
   const [appUpdateReady, setAppUpdateReady] = useState(false)
   const [offline, setOffline] = useState(!navigator.onLine)
-  const [pollSort, setPollSort] = useState<'model' | 'ap' | 'coaches' | 'cfp'>('model')
+  const [pollSort, setPollSort] = useState<PollSortKey>('ap')
+  const [pollConference, setPollConference] = useState('all')
   // Deep links and Back/Forward use the view name only (#/market). Matchups and entered odds never enter the URL.
   const viewFromHash = (): View => { const id = window.location.hash.replace(/^#\/?/, ''); return (destinations.some(d => d.views.some(v => v.id === id)) ? id : 'home') as View }
   const [tab, setCurrentView] = useState<View>(viewFromHash)
@@ -79,7 +81,6 @@ export function App() {
   const [profileSection, setProfileSection] = useState<ProfileSection>('overview')
   const setTab = (view: View) => {
     if (view === 'profile') setProfileSection('overview')
-    if (view === 'ap' || view === 'coaches') setPollSort(view)
     if (view !== viewFromHash()) window.history.pushState(null, '', view === 'home' ? window.location.pathname + window.location.search : `#/${view}`)
     setCurrentView(view)
   }
@@ -178,8 +179,8 @@ export function App() {
               Array.isArray(poll) && poll.length <= 25 &&
               poll.every(row => typeof row.team === 'string' && row.team.trim().length > 0 &&
                 Number.isInteger(row.rank) && row.rank >= 1 && row.rank <= 25) &&
-              new Set(poll.map(row => row.team)).size === poll.length &&
-              new Set(poll.map(row => row.rank)).size === poll.length)) setPollSnapshot(data)
+              // Teams must be unique; equal ranks are legitimate published ties (shown as T-n), not invalid data.
+              new Set(poll.map(row => row.team)).size === poll.length)) setPollSnapshot(data)
         else setPollUnavailable(true)
       })
       .catch(() => setPollUnavailable(true))
@@ -352,7 +353,7 @@ export function App() {
       {tab === 'sources' && <><section className="notice"><h3>Published data and provenance</h3><p>Current report: {report.source || 'Source unavailable'}. Retrieved: {report.retrieved_at || 'Not published'}. Last game-data change: {report.data_changed_at || 'Not published'}.</p><p>Historical inputs and accepted exceptions are retained in the verified archive. Source details also accompany each historical table and Report Card.</p><p><a href="https://github.com/landrumc16/College-Football-Analytics/tree/main/research/archive/verified" target="_blank" rel="noreferrer">Retained verified historical archive</a></p></section><details className="research-topic"><summary>Public Poll Comparisons</summary>{pollSnapshot ? <section className="accuracy-summary" aria-label="AP Coaches and CFP Poll Comparison"><strong>AP / Coaches / CFP Poll Comparison · Week {pollSnapshot.week}</strong><p>Published poll positions alongside current model rankings. Poll week and model snapshot may differ; this is not a historical accuracy test. CFP rankings appear only when a verified snapshot is supplied.</p><div className="table-wrap"><table><thead><tr><th>School</th><th>Model</th><th>AP</th><th>Coaches</th><th>CFP</th></tr></thead><tbody>{[...new Set([...pollSnapshot.ap_top25, ...pollSnapshot.coaches_top25, ...(pollSnapshot.cfp_top25 || [])].map(row => row.team))].map(team => <tr key={team}><td>{team}</td><td>{report.rankings.find(r => r.team === team)?.rank ?? '—'}</td><td>{pollSnapshot.ap_top25.find(r => r.team === team)?.rank ?? '—'}</td><td>{pollSnapshot.coaches_top25.find(r => r.team === team)?.rank ?? '—'}</td><td>{pollSnapshot.cfp_top25?.find(r => r.team === team)?.rank ?? '—'}</td></tr>)}</tbody></table></div><small>Source: {pollSnapshot.source}. Missing CFP entries and unmatched school names are shown as —; no inferred matches are made.</small></section> : pollUnavailable && <section className="accuracy-summary" aria-label="Poll comparison availability"><strong>Public poll comparison unavailable</strong><p>No verified AP / Coaches / CFP poll snapshot has been published for this dashboard. Poll rankings are not inferred from the model.</p></section>}
 </details></>}
       </section>}
-      {(tab === 'ap' || tab === 'coaches') && <section className="notice"><h2>Poll Comparison</h2><p>Our Model vs. AP, Coaches and CFP Top 25. A dash means the school is not listed in that poll or has no verified matching entry. These are rankings, not predictions of future poll positions.</p>{pollSnapshot ? <><p>Poll season {pollSnapshot.season} · Week {pollSnapshot.week} · Source: {pollSnapshot.source}. Model and poll snapshots may have different dates.</p><div className="table-wrap"><table><thead><tr><th>School</th>{([['model', 'Our Model'], ['ap', 'AP'], ['coaches', 'Coaches'], ['cfp', 'CFP']] as const).map(([key, label]) => <th key={key}><button type="button" className="poll-sort-button" aria-label={`Sort by ${label} ranking`} aria-pressed={pollSort === key} onClick={() => setPollSort(key)}>{label}{pollSort === key ? ' ↑' : ''}</button></th>)}</tr></thead><tbody>{[...new Set([...report.rankings.slice(0, 30).map(t => t.team), ...pollSnapshot.ap_top25.map(t => t.team), ...pollSnapshot.coaches_top25.map(t => t.team), ...(pollSnapshot.cfp_top25 || []).map(t => t.team)])].map(team => ({ team, model: report.rankings.find(t => t.team === team)?.rank ?? null, ap: pollSnapshot.ap_top25.find(t => t.team === team)?.rank ?? null, coaches: pollSnapshot.coaches_top25.find(t => t.team === team)?.rank ?? null, cfp: pollSnapshot.cfp_top25?.find(t => t.team === team)?.rank ?? null })).sort((a, b) => (a[pollSort] ?? Infinity) - (b[pollSort] ?? Infinity) || (a.model ?? Infinity) - (b.model ?? Infinity) || a.team.localeCompare(b.team)).slice(0, 30).map(row => <tr key={row.team}><td className="team">{row.team}</td><td>{row.model ?? '—'}</td><td>{row.ap ?? '—'}</td><td>{row.coaches ?? '—'}</td><td>{row.cfp ?? '—'}</td></tr>)}</tbody></table></div><small>Click a ranking column to sort 1–25 (or 1–30 for Our Model). The selected poll's ranked teams appear first, followed by other schools for comparison, up to 30 total. CFP is blank until its independently verified poll is available. Unmatched school names are not silently merged.</small></> : <p role="status">Verified AP and Coaches Poll data is unavailable. Public poll rankings are not inferred from our model.</p>}</section>}
+      {tab === 'ap' && (pollSnapshot ? <PollRankings snapshot={pollSnapshot} conferenceTeams={Object.fromEntries(Object.entries(report.conference_standings || {}).map(([name, entries]) => [name, entries.map(entry => entry.team)]))} search={search} onSearch={setSearch} conference={pollConference} onConference={setPollConference} sort={pollSort} onSort={setPollSort} /> : <section className="notice"><h2>Poll Rankings</h2><p role="status">Verified AP and Coaches Poll data is unavailable. Public poll rankings are not inferred from our model.</p></section>)}
       {/* Conference membership reflects the current standings snapshot, not historical realignment. */}
       {(['programs', 'hype', 'trajectory', 'stock', 'contenders'] as const).includes(tab as 'programs') && <ProgramIntelligence view={tab === 'hype' ? 'hype' : tab === 'trajectory' ? 'trajectory' : tab === 'stock' ? 'stock' : tab === 'contenders' ? 'contenders' : 'overview'} currentPoll={pollSnapshot} currentRankings={report.rankings} currentSeason={report.season} conferenceStandings={report.conference_standings || {}} schedule={report.schedule || []} performance={report.performance || {}} postseason={report.cfp?.teams || []} conferenceTeams={Object.fromEntries(Object.entries(report.conference_standings || {}).map(([name, entries]) => [name, entries.map(entry => entry.team)]))} onTeam={team => { setScheduleTeam(team); setTab('profile') }} onCompare={openComparison} />}
       {tab === 'profile' && <TeamProfile team={selectedScheduleTeam} rankings={report.rankings} poll={pollSnapshot} cfp={report.cfp?.teams || []} schedule={report.schedule || []} predictions={report.predictions} recruiting={recruitingResearch?.program_recruiting_residuals?.programs || []} performance={report.performance || {}} conferences={report.conference_standings || {}} modelMetadata={report.model_metadata} section={profileSection} onSection={setProfileSection} scheduleContent={schoolSchedule} onChoose={setScheduleTeam} onCompare={openComparison} />}

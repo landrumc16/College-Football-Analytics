@@ -29,9 +29,9 @@ jobs:
           # Baseline is the PR merge-base with main, so routine data refreshes on main are not attributed to the PR.
           guard_base="$(git merge-base "${{ github.event.pull_request.base.sha || '451f6107c24f0f240a84d1e31906bd2c2fcccad0' }}" HEAD)"
           echo "Guard baseline: $guard_base"
-          # Strict byte-identical guard on every branch. The single exception is the reviewed V7 release manifest
-          # (.github/release-manifests/v7-protected-changes.json): same-repository PRs from v7-development may add only
-          # its listed V7 files and make additive-only edits to its listed files. Deletions/renames/other edits fail.
+          # Strict byte-identical guard on every branch. The only exceptions are reviewed per-release manifests in
+          # .github/release-manifests/: a same-repository PR whose head branch a manifest names may make exactly the
+          # changes it lists (pinned files by SHA-256). Deletions/renames/other edits fail. Remove manifests after merge.
           python scripts/verify_protected_changes.py "$guard_base" "${{ github.head_ref }}" \
             "${{ github.event.pull_request.head.repo.full_name == github.repository }}" \
             -- src data research web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/secondary-navigation.css web/src/EditorialHome.tsx web/public web/package.json

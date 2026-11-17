@@ -21,8 +21,8 @@
   },
   "modified_exact": {
     "web/src/Navigation.tsx": {
-      "sha256": "1fcaf5f656572357b4a291c95bdd146d0fa49a8c5d70949afa0da073c5fb60df",
-      "reason": "owner-approved V7 information architecture: Market destination added; Research & Data kept as a full destination reached from the top menu"
+      "sha256": "8aa30905d3278b171123af2e4fb683660d18cb34e6a609d4bb258654a044991a",
+      "reason": "owner-approved V7 information architecture on top of the merged PR #34 Rankings change: Market destination added; Research & Data kept as a full destination reached from the top menu"
     },
     "web/src/EditorialHome.tsx": {
       "sha256": "7d212f3b00d91450abb4aa3deca088300fd0f7cce6f86424a80c54b78db59daf",

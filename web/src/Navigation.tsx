@@ -3,7 +3,7 @@ import './secondary-navigation.css'
 
 export const destinations = [
   { id: 'home', label: 'Home', views: [{ id: 'home', label: 'This Week' }, { id: 'predictions', label: 'Game Predictions' }] },
-  { id: 'rankings', label: 'Rankings', views: [{ id: 'rankings', label: 'Model Rankings' }, { id: 'ap', label: 'AP Poll' }, { id: 'coaches', label: 'Coaches Poll' }, { id: 'stock', label: 'Team Stock Watch' }] },
+  { id: 'rankings', label: 'Rankings', views: [{ id: 'rankings', label: 'Model Rankings' }, { id: 'ap', label: 'Poll Rankings' }, { id: 'stock', label: 'Team Stock Watch' }] },
   { id: 'teams', label: 'Teams', views: [{ id: 'profile', label: 'Team Profiles' }, { id: 'compare', label: 'Compare & What If' }, { id: 'programs', label: 'Program Directory' }, { id: 'hype', label: 'Hype Index' }, { id: 'trajectory', label: 'Program Trajectory' }] },
   { id: 'playoffs', label: 'Playoffs', views: [{ id: 'cfp', label: 'CFP Projections' }, { id: 'conferences', label: 'Conference Races' }, { id: 'contenders', label: 'Contenders & Pretenders' }] },
   { id: 'market', label: 'Market', views: [{ id: 'market', label: 'Market Analysis' }] },
