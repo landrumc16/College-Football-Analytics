@@ -52,7 +52,8 @@ try{
  // Decline: no capture, choice remembered across reloads and new tabs, reflected in the menu.
  {const c=await browser.newContext({viewport:{width:375,height:844},serviceWorkers:'block'}),packets=[];await c.route(endpoint,r=>{packets.push(r.request().postData());return r.abort()});const p=await c.newPage()
   await p.goto(url,{waitUntil:'networkidle'});await answerConsentPrompt(p,false);await nav(p,'Rankings');await nav(p,'Teams');await delay(700);assert.equal(packets.length,0,'Events after declining')
-  assert.equal(await p.evaluate(k=>localStorage.getItem(k),CHOICE_KEY),'"off"');await p.reload({waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await delay(400);assert.equal(await consentDialog(p).count(),0,'Declined visitor re-prompted after reload')
+  // The app restores the current view from the URL (#/teams) on reload, so wait for Teams, not the homepage.
+  assert.equal(await p.evaluate(k=>localStorage.getItem(k),CHOICE_KEY),'"off"');await p.reload({waitUntil:'networkidle'});await p.getByRole('navigation',{name:'Main navigation',exact:true}).locator('button[aria-current="page"]',{hasText:'Teams'}).waitFor();await delay(400);assert.equal(await consentDialog(p).count(),0,'Declined visitor re-prompted after reload')
   const tab=await c.newPage();await tab.goto(url,{waitUntil:'networkidle'});await delay(400);assert.equal(await consentDialog(tab).count(),0,'Declined visitor re-prompted in new tab');await settings(tab);assert.ok(await tab.getByText('Usage analytics: off',{exact:true}).isVisible())
   await nav(tab,'Rankings');await delay(600);assert.equal(packets.length,0);results.push({consent:'decline, reload, new tab',status:'PASS',events:0});await c.close()}
  // Accept: same-tab reload keeps the visit consent without re-prompting; a later visit (new tab) is not re-prompted and is not tracked.
