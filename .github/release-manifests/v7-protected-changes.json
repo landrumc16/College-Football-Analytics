@@ -1,0 +1,32 @@
+{
+  "release": "Version 7 market analysis",
+  "head_ref": "v7-development",
+  "pull_request": 33,
+  "purpose": "Narrow exception to the V6 protected-path guard for the reviewed V7 additions only. Applies only to pull requests from v7-development in this repository; every other branch keeps the strict byte-identical guard. Remove after the V7 release is merged.",
+  "added_files": {
+    "src/cfb_analytics/v7_market_archive.py": "M2 historical closing-line archive",
+    "src/cfb_analytics/v7_market_metrics.py": "M3 metrics engine",
+    "src/cfb_analytics/v7_validation.py": "M6 historical validation",
+    "data/v7-market-receipts.json": "M2 public retrieval receipts (hashes and counts only)",
+    "research/v7/historical-validation.json": "M6 frozen validation results (aggregates only)",
+    "web/public/v7-team-market-history.json": "M2 derived team statistics",
+    "web/public/v7-market-metrics.json": "M3 team aggregates and comparison summary"
+  },
+  "added_file_patterns": {
+    "web/public/v7-team-lines/": "M2 per-team closing lines (one named provider; CFBD written permission)",
+    "web/public/v7-model-market/": "M3 per-team authentic model-vs-market rows"
+  },
+  "modified_additive_only": {
+    "src/cfb_analytics/refresh.py": "adds fetch_cfbd_lines beside the existing CFBD fetch; no existing line changes"
+  },
+  "modified_exact": {
+    "web/src/Navigation.tsx": {
+      "sha256": "8aa30905d3278b171123af2e4fb683660d18cb34e6a609d4bb258654a044991a",
+      "reason": "owner-approved V7 information architecture on top of the merged PR #34 Rankings change: Market destination added; Research & Data kept as a full destination reached from the top menu"
+    },
+    "web/src/EditorialHome.tsx": {
+      "sha256": "7d212f3b00d91450abb4aa3deca088300fd0f7cce6f86424a80c54b78db59daf",
+      "reason": "bottom navigation renders the five primary destinations (Market replaces Research) and adds the Market icon"
+    }
+  }
+}

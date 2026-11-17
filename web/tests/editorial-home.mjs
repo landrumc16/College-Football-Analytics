@@ -1,4 +1,4 @@
-import { chooseSection, assertSection, assertNavigationFits } from './section-navigation.mjs';
+import { chooseSection, assertSection, assertNavigationFits, openDestination, PRIMARY } from './section-navigation.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -37,7 +37,7 @@ try {
     await page.getByText('Texas Tech is trending up.', { exact: true }).waitFor();
     for (const name of ['Featured Matchups','My Teams','Rankings Snapshot','Playoff Watch','Program Spotlight']) await page.getByRole('heading', { name, exact: true }).waitFor();
     const nav = page.getByRole('navigation', { name: 'Main navigation', exact: true });
-    assert.deepEqual(await nav.getByRole('button').allTextContents(), ['Home','Rankings','Teams','Playoffs','Research']);
+    assert.deepEqual(await nav.getByRole('button').allTextContents(), PRIMARY);
     assert.equal(await page.getByRole('tab', { name: 'This Week', exact: true }).count(), 0);
     assert.equal(await page.getByRole('tab', { name: 'Game Predictions', exact: true }).count(), 0);
     const data = await page.evaluate(async () => ({ season: await (await fetch('./season-report.json')).json(), cards: await (await fetch('./v5-program-report-cards.json')).json() }));
@@ -80,7 +80,7 @@ try {
       await page.screenshot({ path: `web/editorial-evidence/profile-${label.split(' ')[0].toLowerCase()}-${width}.png`, fullPage: true });
     }
     for (const destination of ['Rankings','Teams','Playoffs','Research']) {
-      await nav.getByRole('button', { name: destination, exact: true }).click();
+      await openDestination(page, destination);
       const group = `${destination} sections`;
       const dropdown = await assertNavigationFits(page, group, width);
       if (width === 1536) assert.equal(dropdown, false, 'Desktop tabs should fit');

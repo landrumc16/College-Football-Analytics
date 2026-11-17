@@ -60,6 +60,8 @@ jobs:
         run: |
           node web/tests/historical-publication.mjs
           node web/tests/v6-scenarios.mjs
+      - name: Market Analysis Calculator math fixtures (moneyline, spread, probability, perspective)
+        run: node web/tests/market-calculator-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -73,6 +75,10 @@ jobs:
         run: node web/tests/editorial-home.mjs
       - name: Verify V6 research, program parity and bounded mobile scenarios
         run: node web/tests/v6-browser.mjs
+      - name: Verify Market Analysis Calculator (five widths, perspective, invalid input, missing model, privacy)
+        run: node web/tests/market-calculator.mjs
+      - name: Verify Market Analysis page (entry point, matchup transfer, deep links, Back/Forward, privacy)
+        run: node web/tests/market-analysis.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

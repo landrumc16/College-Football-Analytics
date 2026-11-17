@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process'
 import {setTimeout as delay} from 'node:timers/promises'
 import {createHash} from 'node:crypto'
 import {chromium} from 'playwright'
-import {chooseSection,assertNavigationFits} from './section-navigation.mjs'
+import {chooseSection,assertNavigationFits,openDestination,PRIMARY} from './section-navigation.mjs'
 const phase=process.env.EDITORIAL_PHASE
 assert.ok(['before','after'].includes(phase))
 const directory=`web/polish-evidence/${phase}`
@@ -28,7 +28,8 @@ try {
   await page.goto(url,{waitUntil:'networkidle'})
   const nav=page.getByRole('navigation',{name:'Main navigation',exact:true})
   proof.navigation=await nav.getByRole('button').allTextContents()
-  assert.deepEqual(proof.navigation,['Home','Rankings','Teams','Playoffs','Research'])
+  // Owner-approved V7 information architecture: Market replaces Research in the bottom bar; Research & Data moves to the menu.
+  assert.deepEqual(proof.navigation,phase==='before'?['Home','Rankings','Teams','Playoffs','Research']:PRIMARY)
   const capture=async(name,{full=false,region=null}={})=>{
    if(region)await region.scrollIntoViewIfNeeded();else await page.evaluate(()=>scrollTo(0,0))
    const dimensions=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))
@@ -70,7 +71,7 @@ try {
   if(phase==='after')await page.getByText('Program histories and report cards',{exact:true}).click()
   await page.getByRole('region',{name:'CFA Program Report Card for Texas Tech',exact:true}).getByRole('heading').waitFor()
   await page.getByRole('region',{name:'Historical FBS results',exact:true}).getByRole('heading',{name:'Historical FBS results comparison'}).waitFor()
-  await nav.getByRole('button',{name:'Research',exact:true}).click()
+  if(phase==='before')await nav.getByRole('button',{name:'Research',exact:true}).click();else await openDestination(page,'Research')
   const archive=page.getByRole('region',{name:'Independent pregame forecast verification',exact:true})
   await archive.getByRole('heading').waitFor()
   const research=page.getByRole('region',{name:'Experimental prediction research',exact:true})
@@ -109,7 +110,8 @@ try {
   const before=JSON.parse(await readFile('web/polish-evidence/before/proof.json','utf8'))
   assert.deepEqual(hashes,before.hashes,'Before/after must use identical real data bytes')
   for(let i=0;i<records.length;i++){
-   const {layout:beforeLayout,...a}=before.records[i],{layout:afterLayout,...b}=records[i]
+   // Navigation is asserted per phase above; every other visible metric and behaviour must stay identical.
+   const {layout:beforeLayout,navigation:beforeNavigation,...a}=before.records[i],{layout:afterLayout,navigation:afterNavigation,...b}=records[i]
    assert.deepEqual(b,a,'Visible metrics, model output, favorites and research must remain identical')
   }
   await writeFile('web/polish-evidence/behavior-parity.json',JSON.stringify({status:'passed',viewports:records.map(r=>r.width),sameData:true,unchanged:['navigation','favorites','rankings','profile metrics','program metrics','matchup probabilities','verified scoring','research tables','tracked ledger','scenario results and exact reset']},null,2)+'\n')

@@ -1,4 +1,4 @@
-import { chooseSection, assertSection } from './section-navigation.mjs';
+import { chooseSection, assertSection, openDestination, PRIMARY } from './section-navigation.mjs';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { startAsDeclinedVisitor } from './consent-prompt.mjs';
@@ -52,14 +52,16 @@ async function waitForPreview() {
 const sections = {
   home: ['Home', 'This Week'], predictions: ['Home', 'Game Predictions'],
   rankings: ['Rankings', 'Model Rankings'], ap: ['Rankings', 'Poll Rankings'], stock: ['Rankings', 'Team Stock Watch'],
+  market: ['Market', 'Market Analysis'],
   profile: ['Teams', 'Team Profiles'], compare: ['Teams', 'Compare & What If'], programs: ['Teams', 'Program Directory'], hype: ['Teams', 'Hype Index'], trajectory: ['Teams', 'Program Trajectory'],
   cfp: ['Playoffs', 'CFP Projections'], conferences: ['Playoffs', 'Conference Races'], contenders: ['Playoffs', 'Contenders & Pretenders'],
   research: ['Research', 'Prediction Accuracy'], history: ['Research', 'Historical Research'], methods: ['Research', 'Methodology'], sources: ['Research', 'Data Sources'], validation: ['Research', 'Model Validation'],
 };
 async function navigate(page, view) {
   const [destination, label] = sections[view];
-  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: destination, exact: true }).click();
+  await openDestination(page, destination);
   if (view === 'home') return;
+  if (view === 'market') { await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor(); return; }
   if (view === 'predictions') { await page.getByRole('button', { name: 'All games', exact: false }).click(); return; }
   await chooseSection(page, `${destination} sections`, label);
 }
@@ -97,7 +99,7 @@ try {
     await page.getByRole('heading', { name: /College Football Analytics/i }).waitFor();
     await page.getByRole('navigation', { name: 'Main navigation', exact: true }).waitFor();
     const mainLabels = await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button').allTextContents();
-    if (JSON.stringify(mainLabels) !== JSON.stringify(['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'])) throw new Error('Primary navigation must contain exactly five ordered destinations');
+    if (JSON.stringify(mainLabels) !== JSON.stringify(PRIMARY)) throw new Error('Primary navigation must contain exactly five ordered destinations');
     if (await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Home', exact: true }).getAttribute('aria-current') !== 'page') throw new Error('This Week is not the default homepage');
     await page.getByRole('heading', { name: 'Playoff Watch', exact: true }).waitFor();
     // Tabs must be operable by keyboard as well as touch.
@@ -201,7 +203,7 @@ try {
       throw new Error('Direct Team Profile navigation did not select the first available school');
     }
     await navigate(page, 'home');
-    for (const section of ['rankings', 'ap', 'predictions', 'conferences', 'cfp', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile', 'history', 'methods', 'sources', 'validation']) {
+    for (const section of ['rankings', 'ap', 'predictions', 'market', 'conferences', 'cfp', 'compare', 'programs', 'hype', 'trajectory', 'stock', 'contenders', 'profile', 'history', 'methods', 'sources', 'validation']) {
       await navigate(page, section);
       if (section === 'ap') {
         // Consolidated AP + Coaches poll view: sortable, accessible headings, NR for unranked, mobile fit.
@@ -445,7 +447,9 @@ try {
         if (await page.getByLabel('Choose school').inputValue() !== firstTeam) throw new Error('Compare-to-profile navigation lost team selection');
         await navigate(page, 'compare');
       }
-      if (await page.locator(`#dashboard-panel-${section}`).getAttribute('aria-selected') !== 'true') {
+      // Market is a single-view destination: no section tab; it must be the current bottom-navigation item instead.
+      if (section === 'market' ? await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: 'Market', exact: true }).getAttribute('aria-current') !== 'page'
+          : await page.locator(`#dashboard-panel-${section}`).getAttribute('aria-selected') !== 'true') {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
       if (section === 'history') {

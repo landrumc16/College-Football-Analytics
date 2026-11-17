@@ -20,6 +20,18 @@ def fetch_cfbd_games(season: int, api_key: str):
         return json.load(response)
 
 
+def fetch_cfbd_lines(season: int, season_type: str, api_key: str):
+    """Raw CFBD /lines rows for one season and season type (V7 market archive)."""
+    if not api_key:
+        raise ValueError("CFBD_API_KEY is required")
+    if season_type not in ("regular", "postseason"):
+        raise ValueError("season_type must be regular or postseason")
+    url = f"https://api.collegefootballdata.com/lines?year={season}&seasonType={season_type}"
+    req = Request(url, headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"})
+    with urlopen(req, timeout=45) as response:
+        return json.load(response)
+
+
 def refresh(season: int, output: Path, api_key: str):
     raw = fetch_cfbd_games(season, api_key)
     if not isinstance(raw, list):

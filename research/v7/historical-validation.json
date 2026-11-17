@@ -1,0 +1,580 @@
+{
+ "archive_integrity": {
+  "ats_or_ou_letter_mismatches": 0,
+  "identity_score_or_venue_mismatches": 0,
+  "missing_from_verified_sources": 0,
+  "sources": [
+   "research/archive/verified/espn-games.json.gz (2016-2025)",
+   "data/cfbd-2026-games.json (2026 completed)"
+  ],
+  "status": "passed",
+  "team_game_rows_checked": 17599
+ },
+ "frozen_inputs_sha256": {
+  "comparison_dir": "f7b54d5c6fc6757605dc2baacd6b810b911e05189f1059d892646df5c5ae51f9",
+  "current_results": "808a8f697a1962ca7da9b21c12801377fd07724dd0a624d7555a178954e89f84",
+  "forecast_ledger": "e8031d26c8852b2dfd0458be89b0adedafd75620326be8373167fc41c620a262",
+  "lines_dir": "5c0614a0ef738f56d138299166531c85a3e04209be97275021aa1fb475457c59",
+  "verified_publication_rows": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
+  "verified_results_archive": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
+ },
+ "limitations": [
+  "Authentic pregame forecasts exist only for 2026 Weeks 10-13; 2016-2025 have no archived model forecasts, so no historical model-vs-market evaluation is possible.",
+  "125 games is a small sample; intervals are wide and week-to-week stability cannot be established.",
+  "The model's forecasts were recorded days before kickoff; the closing spread reflects later information.",
+  "The incumbent model produces no game totals, so totals are evaluated only descriptively (over rate), never model-vs-market.",
+  "No result here is evidence of a profitable betting strategy; bookmaker margins are not modelled."
+ ],
+ "method": {
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 20261116,
+  "interval": "95% paired percentile bootstrap; Wilson for proportions",
+  "market_probability": "closing spread converted with the existing logistic (scale 19.5)",
+  "outcome": "home team won (no ties in the sample)"
+ },
+ "milestone": "V7 M6 historical validation",
+ "model_vs_market": {
+  "all_authentic": {
+   "average_minus_market_brier": {
+    "ci95": [
+     -0.0071,
+     0.0097
+    ],
+    "mean": 0.0013
+   },
+   "calibration": {
+    "market_spread_implied": [
+     {
+      "ci95": [
+       0.0,
+       0.324
+      ],
+      "games": 8,
+      "lower": 0,
+      "mean_predicted": 0.152,
+      "observed_home_win_rate": 0.0,
+      "upper": 0.2
+     },
+     {
+      "ci95": [
+       0.149,
+       0.492
+      ],
+      "games": 24,
+      "lower": 0.2,
+      "mean_predicted": 0.318,
+      "observed_home_win_rate": 0.292,
+      "upper": 0.4
+     },
+     {
+      "ci95": [
+       0.255,
+       0.577
+      ],
+      "games": 32,
+      "lower": 0.4,
+      "mean_predicted": 0.502,
+      "observed_home_win_rate": 0.406,
+      "upper": 0.6
+     },
+     {
+      "ci95": [
+       0.499,
+       0.788
+      ],
+      "games": 38,
+      "lower": 0.6,
+      "mean_predicted": 0.69,
+      "observed_home_win_rate": 0.658,
+      "upper": 0.8
+     },
+     {
+      "ci95": [
+       0.581,
+       0.903
+      ],
+      "games": 23,
+      "lower": 0.8,
+      "mean_predicted": 0.881,
+      "observed_home_win_rate": 0.783,
+      "upper": 1.0
+     }
+    ],
+    "model": [
+     {
+      "ci95": [
+       0.02,
+       0.435
+      ],
+      "games": 9,
+      "lower": 0,
+      "mean_predicted": 0.157,
+      "observed_home_win_rate": 0.111,
+      "upper": 0.2
+     },
+     {
+      "ci95": [
+       0.112,
+       0.469
+      ],
+      "games": 20,
+      "lower": 0.2,
+      "mean_predicted": 0.317,
+      "observed_home_win_rate": 0.25,
+      "upper": 0.4
+     },
+     {
+      "ci95": [
+       0.264,
+       0.578
+      ],
+      "games": 34,
+      "lower": 0.4,
+      "mean_predicted": 0.507,
+      "observed_home_win_rate": 0.412,
+      "upper": 0.6
+     },
+     {
+      "ci95": [
+       0.492,
+       0.792
+      ],
+      "games": 35,
+      "lower": 0.6,
+      "mean_predicted": 0.689,
+      "observed_home_win_rate": 0.657,
+      "upper": 0.8
+     },
+     {
+      "ci95": [
+       0.553,
+       0.868
+      ],
+      "games": 27,
+      "lower": 0.8,
+      "mean_predicted": 0.862,
+      "observed_home_win_rate": 0.741,
+      "upper": 1.0
+     }
+    ]
+   },
+   "conclusion": "Inconclusive: the Brier difference between model and market is not distinguishable from zero on this sample. No evidence that model-market disagreement carried information beyond the market (interval includes zero).",
+   "disagreement_information": {
+    "games_model_above_market": 71,
+    "games_model_below_market": 54,
+    "mean_outcome_minus_market_when_model_above": -0.017,
+    "mean_outcome_minus_market_when_model_below": -0.134,
+    "reading": "Positive would mean outcomes moved, on average, in the direction the model disagreed with the market.",
+    "signed_residual_toward_model": {
+     "ci95": [
+      -0.0291,
+      0.126
+     ],
+     "mean": 0.0483
+    }
+   },
+   "favorite_disagreements": {
+    "ci95": [
+     0.283,
+     0.676
+    ],
+    "games": 21,
+    "model_favorite_win_rate": 0.476,
+    "model_favorite_won": 10
+   },
+   "games": 125,
+   "margin_mae_points": {
+    "market": 13.18,
+    "model": 13.67
+   },
+   "market_spread_implied": {
+    "brier": 0.1995,
+    "log_loss": 0.5832,
+    "winner_accuracy": 0.68
+   },
+   "model": {
+    "brier": 0.2075,
+    "log_loss": 0.6019,
+    "winner_accuracy": 0.672
+   },
+   "model_market_average": {
+    "brier": 0.2008,
+    "log_loss": 0.5862,
+    "winner_accuracy": 0.648
+   },
+   "neutral_50_50": {
+    "brier": 0.25,
+    "log_loss": 0.6931,
+    "winner_accuracy": 0.5
+   },
+   "paired_differences_model_minus_market": {
+    "brier": {
+     "ci95": [
+      -0.0088,
+      0.0251
+     ],
+     "mean": 0.008
+    },
+    "log_loss": {
+     "ci95": [
+      -0.0204,
+      0.058
+     ],
+     "mean": 0.0187
+    },
+    "margin_absolute_error_points": {
+     "ci95": [
+      -0.1944,
+      1.176
+     ],
+     "mean": 0.5
+    }
+   },
+   "population": "all forecasts recorded before kickoff with a non-disputed closing spread"
+  },
+  "by_week": {
+   "10": {
+    "games": 58,
+    "market_brier": 0.1998,
+    "model_brier": 0.2188
+   },
+   "11": {
+    "games": 67,
+    "market_brier": 0.1992,
+    "model_brier": 0.1977
+   }
+  },
+  "forecast_kind": "authentic_pregame",
+  "independently_verified": {
+   "average_minus_market_brier": {
+    "ci95": [
+     -0.0029,
+     0.0182
+    ],
+    "mean": 0.0073
+   },
+   "calibration": {
+    "market_spread_implied": [
+     {
+      "ci95": [
+       0.0,
+       0.434
+      ],
+      "games": 5,
+      "lower": 0,
+      "mean_predicted": 0.15,
+      "observed_home_win_rate": 0.0,
+      "upper": 0.2
+     },
+     {
+      "ci95": [
+       0.043,
+       0.422
+      ],
+      "games": 13,
+      "lower": 0.2,
+      "mean_predicted": 0.325,
+      "observed_home_win_rate": 0.154,
+      "upper": 0.4
+     },
+     {
+      "ci95": [
+       0.214,
+       0.674
+      ],
+      "games": 14,
+      "lower": 0.4,
+      "mean_predicted": 0.497,
+      "observed_home_win_rate": 0.429,
+      "upper": 0.6
+     },
+     {
+      "ci95": [
+       0.445,
+       0.798
+      ],
+      "games": 25,
+      "lower": 0.6,
+      "mean_predicted": 0.684,
+      "observed_home_win_rate": 0.64,
+      "upper": 0.8
+     },
+     {
+      "ci95": [
+       0.409,
+       0.929
+      ],
+      "games": 8,
+      "lower": 0.8,
+      "mean_predicted": 0.867,
+      "observed_home_win_rate": 0.75,
+      "upper": 1.0
+     }
+    ],
+    "model": [
+     {
+      "ci95": [
+       0.0,
+       0.39
+      ],
+      "games": 6,
+      "lower": 0,
+      "mean_predicted": 0.159,
+      "observed_home_win_rate": 0.0,
+      "upper": 0.2
+     },
+     {
+      "ci95": [
+       0.063,
+       0.547
+      ],
+      "games": 9,
+      "lower": 0.2,
+      "mean_predicted": 0.321,
+      "observed_home_win_rate": 0.222,
+      "upper": 0.4
+     },
+     {
+      "ci95": [
+       0.246,
+       0.663
+      ],
+      "games": 18,
+      "lower": 0.4,
+      "mean_predicted": 0.511,
+      "observed_home_win_rate": 0.444,
+      "upper": 0.6
+     },
+     {
+      "ci95": [
+       0.31,
+       0.738
+      ],
+      "games": 17,
+      "lower": 0.6,
+      "mean_predicted": 0.707,
+      "observed_home_win_rate": 0.529,
+      "upper": 0.8
+     },
+     {
+      "ci95": [
+       0.48,
+       0.891
+      ],
+      "games": 15,
+      "lower": 0.8,
+      "mean_predicted": 0.846,
+      "observed_home_win_rate": 0.733,
+      "upper": 1.0
+     }
+    ]
+   },
+   "conclusion": "Inconclusive: the Brier difference between model and market is not distinguishable from zero on this sample. No evidence that model-market disagreement carried information beyond the market (interval includes zero).",
+   "disagreement_information": {
+    "games_model_above_market": 43,
+    "games_model_below_market": 22,
+    "mean_outcome_minus_market_when_model_above": -0.063,
+    "mean_outcome_minus_market_when_model_below": -0.147,
+    "reading": "Positive would mean outcomes moved, on average, in the direction the model disagreed with the market.",
+    "signed_residual_toward_model": {
+     "ci95": [
+      -0.1014,
+      0.1129
+     ],
+     "mean": 0.0079
+    }
+   },
+   "favorite_disagreements": {
+    "ci95": [
+     0.071,
+     0.591
+    ],
+    "games": 8,
+    "model_favorite_win_rate": 0.25,
+    "model_favorite_won": 2
+   },
+   "games": 65,
+   "margin_mae_points": {
+    "market": 12.23,
+    "model": 13.23
+   },
+   "market_spread_implied": {
+    "brier": 0.1923,
+    "log_loss": 0.5663,
+    "winner_accuracy": 0.7077
+   },
+   "model": {
+    "brier": 0.2114,
+    "log_loss": 0.6109,
+    "winner_accuracy": 0.6462
+   },
+   "model_market_average": {
+    "brier": 0.1996,
+    "log_loss": 0.5828,
+    "winner_accuracy": 0.6769
+   },
+   "neutral_50_50": {
+    "brier": 0.25,
+    "log_loss": 0.6931,
+    "winner_accuracy": 0.5
+   },
+   "paired_differences_model_minus_market": {
+    "brier": {
+     "ci95": [
+      -0.0022,
+      0.0421
+     ],
+     "mean": 0.0191
+    },
+    "log_loss": {
+     "ci95": [
+      -0.0041,
+      0.0985
+     ],
+     "mean": 0.0445
+    },
+    "margin_absolute_error_points": {
+     "ci95": [
+      0.1985,
+      1.8231
+     ],
+     "mean": 1.0
+    }
+   },
+   "population": "independently verified publication cohort"
+  },
+  "model_total": {
+   "reason": "The incumbent model does not produce game totals, so no model-vs-market totals comparison is made.",
+   "status": "not_available"
+  },
+  "retrospective_replays": "not used: no 2016-2025 model forecasts were archived before kickoff",
+  "timing": {
+   "earliest_kickoff": "2026-11-06T00:30:00.000Z",
+   "latest_kickoff": "2026-11-15T18:00:00.000Z",
+   "median_hours_forecast_before_kickoff": 150.9,
+   "note": "The market value is the closing spread, observed at kickoff, after the model forecast was recorded; the market therefore had later information (injuries, weather, line moves)."
+  }
+ },
+ "national_market_checks": {
+  "favorite_cover": {
+   "ci95": [
+    0.485,
+    0.505
+   ],
+   "n": 9101,
+   "pushes": 169,
+   "rate": 0.4948
+  },
+  "favorite_cover_by_season": {
+   "2016": {
+    "ci95": [
+     0.442,
+     0.509
+    ],
+    "n": 835,
+    "rate": 0.4754
+   },
+   "2017": {
+    "ci95": [
+     0.44,
+     0.507
+    ],
+    "n": 850,
+    "rate": 0.4729
+   },
+   "2018": {
+    "ci95": [
+     0.449,
+     0.516
+    ],
+    "n": 844,
+    "rate": 0.4822
+   },
+   "2019": {
+    "ci95": [
+     0.477,
+     0.543
+    ],
+    "n": 861,
+    "rate": 0.5099
+   },
+   "2020": {
+    "ci95": [
+     0.451,
+     0.534
+    ],
+    "n": 552,
+    "rate": 0.4928
+   },
+   "2021": {
+    "ci95": [
+     0.475,
+     0.541
+    ],
+    "n": 874,
+    "rate": 0.508
+   },
+   "2022": {
+    "ci95": [
+     0.445,
+     0.511
+    ],
+    "n": 877,
+    "rate": 0.4778
+   },
+   "2023": {
+    "ci95": [
+     0.46,
+     0.526
+    ],
+    "n": 877,
+    "rate": 0.4926
+   },
+   "2024": {
+    "ci95": [
+     0.464,
+     0.53
+    ],
+    "n": 882,
+    "rate": 0.4966
+   },
+   "2025": {
+    "ci95": [
+     0.483,
+     0.548
+    ],
+    "n": 911,
+    "rate": 0.5159
+   },
+   "2026": {
+    "ci95": [
+     0.483,
+     0.555
+    ],
+    "n": 738,
+    "rate": 0.519
+   }
+  },
+  "games": 9384,
+  "home_cover_non_neutral": {
+   "ci95": [
+    0.487,
+    0.508
+   ],
+   "n": 8489,
+   "pushes": 159,
+   "rate": 0.4975
+  },
+  "interpretation": "Rates near 50% are what an efficient closing market implies. These are descriptive checks of the archive, not betting strategies; the published rates exclude pushes and ignore bookmaker margin.",
+  "over": {
+   "ci95": [
+    0.483,
+    0.503
+   ],
+   "n": 8981,
+   "pushes": 94,
+   "rate": 0.4932
+  }
+ },
+ "schema_version": 1
+}

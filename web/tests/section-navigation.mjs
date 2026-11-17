@@ -32,3 +32,15 @@ export async function assertNavigationFits(page, group, width) {
   }
   return dropdown;
 }
+
+// Bottom navigation is Home | Rankings | Teams | Playoffs | Market; Research & Data opens from the top menu.
+export const PRIMARY = ['Home', 'Rankings', 'Teams', 'Playoffs', 'Market'];
+export async function openDestination(page, name) {
+  if (name === 'Research') {
+    const menu = page.locator('details.editorial-menu');
+    if (!(await menu.evaluate(d => d.open))) await page.getByLabel('App menu', { exact: true }).click();
+    await menu.getByRole('button', { name: 'Research & Data', exact: true }).click();
+    return;
+  }
+  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name, exact: true }).click();
+}
