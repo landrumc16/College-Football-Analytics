@@ -468,14 +468,14 @@
     "unmatched": 0
    },
    "postseason": {
-    "retrieved_at": "2026-11-17T01:00:54.395521+00:00",
+    "retrieved_at": "2026-11-17T19:54:51.952129+00:00",
     "rows": 0,
     "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
    },
    "regular": {
-    "retrieved_at": "2026-11-17T01:00:49.805520+00:00",
+    "retrieved_at": "2026-11-17T19:54:51.806290+00:00",
     "rows": 1477,
-    "sha256": "8db5d456a131372fc625331cc8f269833f9c48ce27c3386d63e16d37ca63dc3b"
+    "sha256": "4927a6afda90f9b94218b9665e3d991d5da2d9d0a4cf40f54322ad3d0bcc297e"
    }
   }
  },
