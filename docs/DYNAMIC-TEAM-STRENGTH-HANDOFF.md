@@ -82,3 +82,10 @@ No production change authorized by this documentation. Implement only as part of
 - Latest branch commit before this handoff update: `ade4caa307e543b5b0398968372b64b60b970c02`.
 - **Not integrated into UI, data feed, or production. Tests not executed.** A source URL format check does not independently verify source credibility. No verified Texas Tech player event has been ingested.
 - Next: run unit tests in CI, determine verified event-source workflow and actual starter-participation data, then integrate a single concise accessible advisory into the matchup's primary UI location behind a tested data contract. Avoid repeated banners across pages.
+
+## Fourth development pass — paired chronological replay (2026-11-17)
+- Added `src/cfb_analytics/recency_replay_research.py` to generate *retrospective* paired incumbent/challenger pregame estimates. Each target game uses only earlier kickoffs whose conservative kickoff-plus-four-hour result window precedes target kickoff. This is not a substitute for verified actual result publication timestamps.
+- Added `tests/test_recency_replay_research.py` for same-day cutoff, input-order independence, paired metrics, duplicate IDs, and missing kickoff.
+- Latest implementation commit: `25d2f7b4e9919797f5be5c86b77be923195010b9`.
+- Important: **No real historical replay metrics have been produced**, and none of the new tests have yet been executed. Season-specific historically available priors and source publication provenance must be verified before making historical accuracy claims. Do not mistake a replay for a published archived forecast.
+- Next finish-first work: execute tests in GitHub Actions or another actual runtime; use a verified season-specific dataset to produce paired scorecard; fix any failures; wire a single accessible UI advisory to a source-verified event feed; keep draft PR #38 unmerged.
