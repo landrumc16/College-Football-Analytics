@@ -47,7 +47,7 @@ def run():
             for window in (3, 4):
                 # Calculate as-of strength ONCE per window, then vary only blend weights.
                 components = calculate_strength_components(
-                    teams, games, window=window, momentum_weight=1.0, settings=settings)
+                    teams, games, window=window, momentum_weight=1.0, settings=settings,\n                    season_ratings=base)
                 for weight in WEIGHTS:
                     def rating(name):
                         if name not in components:
