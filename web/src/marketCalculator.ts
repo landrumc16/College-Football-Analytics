@@ -153,6 +153,11 @@ export function spreadStory(team: string, opponent: string, margin: number, spre
     meaning: 'Our model predicts a different winner from the team favored by the entered betting line.',
     take: 'This is a significant disagreement. Look more closely at the matchup before drawing conclusions from the spread.',
   }
+  if (!lineFavorite || !modelWinner) return {
+    title: 'Our model and the spread differ', modelText, lineText,
+    meaning: 'The entered spread and our model suggest different winning margins for this matchup.',
+    take: 'Consider the full matchup context before interpreting this difference.',
+  }
   const closer = modelSize < lineSize
   const qualifier = gap >= 4 ? 'much ' : ''
   const meaning = closer
