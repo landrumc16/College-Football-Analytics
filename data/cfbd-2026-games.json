@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-18T04:38:20.490958+00:00",
+  "retrieved_at": "2026-11-18T19:25:56.801881+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3718,
@@ -42930,7 +42930,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T19:00:00.000Z"
+      "start_date": "2026-11-21T19:05:00.000Z"
     },
     {
       "game_id": 401868128,
@@ -43110,7 +43110,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T20:00:00.000Z"
+      "start_date": "2026-11-21T18:00:00.000Z"
     },
     {
       "game_id": 401868314,
@@ -43206,7 +43206,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T21:00:00.000Z"
+      "start_date": "2026-11-21T20:00:00.000Z"
     },
     {
       "game_id": 401868947,
@@ -43446,7 +43446,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T18:00:00.000Z"
+      "start_date": "2026-11-21T17:00:00.000Z"
     },
     {
       "game_id": 401934524,
@@ -43542,7 +43542,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T18:00:00.000Z"
+      "start_date": "2026-11-21T17:00:00.000Z"
     },
     {
       "game_id": 401934532,
@@ -43566,7 +43566,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T18:00:00.000Z"
+      "start_date": "2026-11-21T19:00:00.000Z"
     },
     {
       "game_id": 401934534,
@@ -43614,7 +43614,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T18:00:00.000Z"
+      "start_date": "2026-11-21T17:00:00.000Z"
     },
     {
       "game_id": 401934558,
@@ -43626,7 +43626,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-21T18:00:00.000Z"
+      "start_date": "2026-11-21T17:00:00.000Z"
     },
     {
       "game_id": 401934559,
@@ -44625,5 +44625,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-18T04:38:20.490958+00:00"
+  "data_changed_at": "2026-11-18T19:25:56.801881+00:00"
 }
