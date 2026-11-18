@@ -1,4 +1,8 @@
-"""The V6 protected-path guard stays strict except for the reviewed V7 release manifest."""
+"""The V6 protected-path guard is strict on every branch.
+
+Version 7 is released (PR #33), so its temporary release manifest has been removed and no release
+manifest remains. The exception mechanism stays tested with a fixture copy of the reviewed V7
+manifest so a future owner-approved release can reuse it; it must again be removed after merge."""
 import importlib.util
 import json
 from pathlib import Path
@@ -9,7 +13,23 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("guard", ROOT / "scripts/verify_protected_changes.py")
 guard = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(guard)
-MANIFEST = json.loads((ROOT / ".github/release-manifests/v7-protected-changes.json").read_text())
+MANIFEST_DIR = ROOT / ".github/release-manifests"
+# Fixture: the reviewed V7 manifest as it was approved (removed from the repository after release).
+MANIFEST = {
+    "head_ref": "v7-development",
+    "added_files": {"src/cfb_analytics/v7_market_archive.py": "reviewed V7 change (fixture)", "src/cfb_analytics/v7_market_metrics.py": "reviewed V7 change (fixture)",
+                    "src/cfb_analytics/v7_validation.py": "reviewed V7 change (fixture)", "data/v7-market-receipts.json": "reviewed V7 change (fixture)",
+                    "research/v7/historical-validation.json": "reviewed V7 change (fixture)", "web/public/v7-team-market-history.json": "reviewed V7 change (fixture)",
+                    "web/public/v7-market-metrics.json": "reviewed V7 change (fixture)"},
+    "added_file_patterns": {"web/public/v7-team-lines/": "reviewed V7 change (fixture)", "web/public/v7-model-market/": "reviewed V7 change (fixture)"},
+    "modified_additive_only": {"src/cfb_analytics/refresh.py": "reviewed V7 change (fixture)"},
+    "modified_exact": {
+        "web/src/Navigation.tsx": {"sha256": "8aa30905d3278b171123af2e4fb683660d18cb34e6a609d4bb258654a044991a",
+                                   "reason": "V7 navigation (fixture)"},
+        "web/src/EditorialHome.tsx": {"sha256": "7d212f3b00d91450abb4aa3deca088300fd0f7cce6f86424a80c54b78db59daf",
+                                      "reason": "V7 bottom navigation (fixture)"},
+    },
+}
 V7_ROWS = [("A", "src/cfb_analytics/v7_market_archive.py"), ("A", "web/public/v7-team-lines/texas-tech.json"),
            ("A", "web/public/v7-model-market/texas-tech.json"), ("M", "src/cfb_analytics/refresh.py")]
 none_removed = lambda path: 0
@@ -65,14 +85,18 @@ def test_reviewed_protected_edits_are_pinned_to_exact_content(monkeypatch):
     assert len(rejected) == 2
 
 
-def test_only_the_v7_manifest_remains_and_selection_is_per_branch():
-    manifests = guard.load_manifests(ROOT / ".github/release-manifests")
-    assert [m["head_ref"] for m in manifests] == ["v7-development"]
-    assert guard.select_manifest(manifests, "v7-development", True) is manifests[0]
-    for head_ref, same_repo in (("beta-rankings-usability", True), ("main", True), ("", True), ("v7-development", False)):
+def test_no_release_manifest_remains_so_every_branch_is_strict():
+    manifests = guard.load_manifests(MANIFEST_DIR)
+    assert manifests == []
+    for head_ref, same_repo in (("v7-development", True), ("beta-rankings-usability", True), ("main", True),
+                                ("", True), ("v7-development", False)):
         assert guard.select_manifest(manifests, head_ref, same_repo) is None
+        _, rejected = guard.evaluate(V7_ROWS + [("M", "web/src/Navigation.tsx")], None, head_ref, same_repo,
+                                     none_removed)
+        assert len(rejected) == 5
 
 
-def test_committed_pins_match_the_files():
+def test_released_v7_navigation_matches_the_reviewed_pins():
+    # Production still carries exactly the owner-reviewed V7 navigation; any future edit needs a new review.
     for path, entry in MANIFEST["modified_exact"].items():
         assert guard.head_sha256(path) == entry["sha256"], path
