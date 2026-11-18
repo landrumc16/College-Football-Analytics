@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "source": "CFBD rankings endpoint (2026 regular season)",
+  "source": "AP Top 25 (published 2026-11-16): https://apnews.com/article/8f5b89e14a42c7eb1526c0eff0d16697 ; Coaches Poll (published 2026-11-15): https://www.saturdaydownsouth.com/news/college-football/coaches-poll-week-12-8-sec-teams-ranked-in-new-top-25/",
   "poll_weeks": {
-    "coaches_top25": 11,
-    "ap_top25": 11
+    "coaches_top25": 12,
+    "ap_top25": 12
   },
   "coaches_top25": [
     {
@@ -43,11 +43,11 @@
       "rank": 9
     },
     {
-      "team": "Texas Tech",
+      "team": "Wake Forest",
       "rank": 10
     },
     {
-      "team": "Wake Forest",
+      "team": "Texas Tech",
       "rank": 11
     },
     {
@@ -55,55 +55,55 @@
       "rank": 12
     },
     {
-      "team": "Kentucky",
+      "team": "Iowa",
       "rank": 13
     },
     {
-      "team": "USC",
+      "team": "Oregon",
       "rank": 14
     },
     {
-      "team": "Iowa",
+      "team": "Boise State",
       "rank": 15
     },
     {
-      "team": "Houston",
+      "team": "Ole Miss",
       "rank": 16
     },
     {
-      "team": "Ole Miss",
+      "team": "Ohio State",
       "rank": 17
     },
     {
-      "team": "Boise State",
+      "team": "Kentucky",
       "rank": 18
     },
     {
-      "team": "Oregon",
+      "team": "USC",
       "rank": 19
     },
     {
-      "team": "Ohio State",
+      "team": "Arizona",
       "rank": 20
     },
     {
-      "team": "Arizona",
+      "team": "Houston",
       "rank": 21
     },
     {
-      "team": "LSU",
+      "team": "Louisville",
       "rank": 22
     },
     {
-      "team": "SMU",
+      "team": "LSU",
       "rank": 23
     },
     {
-      "team": "South Carolina",
+      "team": "Duke",
       "rank": 24
     },
     {
-      "team": "New Mexico",
+      "team": "Florida",
       "rank": 25
     }
   ],
@@ -145,11 +145,11 @@
       "rank": 9
     },
     {
-      "team": "Texas Tech",
+      "team": "Wake Forest",
       "rank": 10
     },
     {
-      "team": "Wake Forest",
+      "team": "Texas Tech",
       "rank": 11
     },
     {
@@ -157,59 +157,59 @@
       "rank": 12
     },
     {
-      "team": "Kentucky",
+      "team": "Iowa",
       "rank": 13
     },
     {
-      "team": "Houston",
+      "team": "Oregon",
       "rank": 14
     },
     {
-      "team": "USC",
+      "team": "Boise State",
       "rank": 15
     },
     {
-      "team": "Iowa",
+      "team": "Ohio State",
       "rank": 16
     },
     {
-      "team": "Boise State",
+      "team": "Kentucky",
       "rank": 17
     },
     {
-      "team": "Oregon",
+      "team": "USC",
       "rank": 18
     },
     {
-      "team": "Ole Miss",
+      "team": "Arizona",
       "rank": 19
     },
     {
-      "team": "South Carolina",
+      "team": "Houston",
       "rank": 20
     },
     {
-      "team": "Ohio State",
+      "team": "Louisville",
       "rank": 21
     },
     {
-      "team": "Arizona",
+      "team": "Liberty",
       "rank": 22
     },
     {
-      "team": "New Mexico",
+      "team": "Florida",
       "rank": 23
     },
     {
-      "team": "LSU",
+      "team": "Memphis",
       "rank": 24
     },
     {
-      "team": "SMU",
+      "team": "Ole Miss",
       "rank": 25
     }
   ],
-  "week": 11,
+  "week": 12,
   "cfp_top25": [
     {
       "team": "Georgia",
@@ -314,5 +314,9 @@
   ],
   "cfp_published_at": "2026-11-10",
   "cfp_week": 11,
-  "cfp_source": "https://collegefootballplayoff.com/news/2026/11/10/rankings"
+  "cfp_source": "https://collegefootballplayoff.com/news/2026/11/10/rankings",
+  "ap_published_at": "2026-11-16",
+  "coaches_published_at": "2026-11-15",
+  "ap_source": "https://apnews.com/article/8f5b89e14a42c7eb1526c0eff0d16697",
+  "coaches_source": "https://www.saturdaydownsouth.com/news/college-football/coaches-poll-week-12-8-sec-teams-ranked-in-new-top-25/"
 }
