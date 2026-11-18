@@ -11,7 +11,7 @@ CFP_DATES = {(11, 10), (11, 17), (11, 24), (12, 1), (12, 6)}
 def release_window(now):
     local = now.astimezone(ZoneInfo("America/Chicago"))
     hour = local.hour + local.minute / 60
-    if local.weekday() == 6 and 10.5 <= hour <= 16 and 8 <= local.month <= 12:
+    if local.weekday() in (6, 0) and 10.5 <= hour <= 17 and 8 <= local.month <= 12:
         return True
     if (local.month, local.day) in CFP_DATES and local.year == 2026:
         if local.weekday() == 6:
@@ -95,12 +95,26 @@ def main():
     if not found:
         print("No complete polls available; retaining last valid snapshot")
         return
+    # A delayed or lagging provider must never roll back a verified newer poll.
+    for key in ("ap_top25", "coaches_top25"):
+        old_week = existing.get("poll_weeks", {}).get(key)
+        new_week = found.get(key, (None,))[0]
+        if isinstance(old_week, int) and (new_week is None or new_week < old_week):
+            print(f"{key}: provider week {new_week} older than verified week {old_week}; retaining snapshot")
+            return
+    # Same weeks as the verified snapshot: keep its dated, sourced rows untouched.
+    if all(found.get(key, (None,))[0] == existing.get("poll_weeks", {}).get(key)
+           for key in ("ap_top25", "coaches_top25")):
+        print("Verified AP and Coaches polls already current; retaining snapshot")
+        return
     ap_week = output["poll_weeks"].get("ap_top25")
     coaches_week = output["poll_weeks"].get("coaches_top25")
     if ap_week is None or ap_week != coaches_week:
         print("AP and Coaches poll weeks not aligned; waiting for both")
         return
     output["week"] = ap_week
+    # The feed gives no publication date; record when it was retrieved instead (never a guessed date).
+    output["retrieved_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     # The CFBD weekly endpoint does not supply a verified CFP publication date.
     output.pop("cfp_top25", None)
     output["poll_weeks"].pop("cfp_top25", None)
