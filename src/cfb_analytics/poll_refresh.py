@@ -102,12 +102,19 @@ def main():
         if isinstance(old_week, int) and (new_week is None or new_week < old_week):
             print(f"{key}: provider week {new_week} older than verified week {old_week}; retaining snapshot")
             return
+    # Same weeks as the verified snapshot: keep its dated, sourced rows untouched.
+    if all(found.get(key, (None,))[0] == existing.get("poll_weeks", {}).get(key)
+           for key in ("ap_top25", "coaches_top25")):
+        print("Verified AP and Coaches polls already current; retaining snapshot")
+        return
     ap_week = output["poll_weeks"].get("ap_top25")
     coaches_week = output["poll_weeks"].get("coaches_top25")
     if ap_week is None or ap_week != coaches_week:
         print("AP and Coaches poll weeks not aligned; waiting for both")
         return
     output["week"] = ap_week
+    # The feed gives no publication date; record when it was retrieved instead (never a guessed date).
+    output["retrieved_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     # The CFBD weekly endpoint does not supply a verified CFP publication date.
     output.pop("cfp_top25", None)
     output["poll_weeks"].pop("cfp_top25", None)
