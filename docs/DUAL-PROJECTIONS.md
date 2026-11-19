@@ -1,6 +1,6 @@
 # Dual projection models: Standard and Momentum
 
-**Status:** development on `dual-projection-development`. It is not merged and not deployed. Official forecasts still
+**Status:** release candidate on `dual-projection-development`. It is not merged and not deployed. Official forecasts still
 come from the existing (incumbent) engine.
 
 **Evidence:**
@@ -229,9 +229,33 @@ data) and `web/tests/model-projections-unit.mjs`.
 **Freshness:** the dashboard build reruns `dual_publish` from the routinely refreshed CFBD snapshot. A failure keeps
 the committed file and does not block deployment.
 
+## Release candidate acceptance (local, 2026-11-19)
+
+**Tested source:** `723d875`, on `dual-projection-development`. Its code and data are identical to `d630911`; the later
+commit only restored other releases' screenshots. Later commits change documentation only.
+
+**Python:**
+- 765 tests pass, including 14 dual-projection tests and 19 protected-guard tests.
+- `dual_evaluation` reruns byte-for-byte identically to the committed `research/dual/evaluation.json`.
+
+**Browser tests (Chromium, emulated viewports; no physical phone or tablet was tested):**
+
+| Result | Suites |
+| --- | --- |
+| Passed with the default build | `model-projections` at 375, 390, 430, 768 and 1536px, including keyboard use, overflow, contrast, bottom navigation and the missing-data state; the `model-projections`, `v8-stats`, `strength-scores`, `school-search`, `market-calculator` and `analytics` unit suites; `editorial-home`; `historical-publication`; `strength-scores`; `school-search`; `poll-rankings`; `offense-defense`; `market-calculator`; `market-analysis` |
+| Passed after staging data exactly as CI does | `mobile-smoke` (including Android Chrome-emulated PWA install, update, offline and recovery); `v6-scenarios`; `adversarial-reliability`; `beta-analytics` (built with CI's placeholder analytics key) |
+| Not passed in this container | `v6-browser`: its 4× CPU-throttled timing budget (3,000 ms) is exceeded here, at 3,598 and 3,710 ms. The current `main` build fails the same check in this container (3,486 and 3,567 ms), so this is the container's speed, not a regression. Every functional assertion before the budget check passed. CI is the authority for this check |
+
+The protected-file guard and the before/after visual parity check run in CI on the pull request.
+
+**Official forecasts:** unchanged. No incumbent model, simulation, protected app file or published official data file is
+modified.
+
 ## Release safeguards needed at merge
 
-**New protected-path files** (need an owner-reviewed, additions-only release manifest, as for V8):
+**New protected-path files:** they need an owner-reviewed, additions-only release manifest, as V8 did. It is
+prepared in `.github/release-manifests/dual-projection-protected-changes.json`. `tests/test_protected_guard.py` checks
+that it lists exactly these files and applies only to this branch. Remove it after the merge.
 - `src/cfb_analytics/dual_projection.py`, `dual_evaluation.py` and `dual_publish.py`;
 - `research/dual/evaluation.json`;
 - `web/public/dual-projections.json`.
