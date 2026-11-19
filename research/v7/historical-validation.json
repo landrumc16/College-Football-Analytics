@@ -11,10 +11,10 @@
   "team_game_rows_checked": 17609
  },
  "frozen_inputs_sha256": {
-  "comparison_dir": "a959c54842767be1e63fe908188e86581f6b226e3c32c7692403c61292e1b44c",
-  "current_results": "e1ee584eefbfc125b5eadd41dffad490779a243bb0a23fa0c536044a3959e193",
-  "forecast_ledger": "e8031d26c8852b2dfd0458be89b0adedafd75620326be8373167fc41c620a262",
-  "lines_dir": "7a10bce0c92f3227bd942ef5b62cb024a8ba60d998d8d8d60deb7d7782065802",
+  "comparison_dir": "4f03eace3014ca64dfb6f1c7dcb6b18a4b12f6f3e5b715ac1da9e95e51710714",
+  "current_results": "fefcdae81d569111bab605ac96e57b32ae153a83128c4d986b09d8ea3a0d19b3",
+  "forecast_ledger": "c992220390f9401e0498bdf08b112d0e797458a0e671c8881f0faaff7ba9df09",
+  "lines_dir": "71a3088d5e622c73e69fd08038541a9c1c9a804be28523743dcb68006fbe9d95",
   "verified_publication_rows": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
   "verified_results_archive": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
  },
