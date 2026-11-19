@@ -1,0 +1,15 @@
+{
+  "release": "Dual projection models (Standard and Momentum) preview",
+  "head_ref": "dual-projection-development",
+  "purpose": "Narrow, additions-only exception to the V6 protected-path guard for the reviewed dual projection files. Applies only to pull requests from dual-projection-development in this repository; every other branch keeps the strict byte-identical guard. No existing protected file may change. Remove after the dual projection release is merged.",
+  "added_files": {
+    "src/cfb_analytics/dual_projection.py": "Standard and Momentum engine: shared opponent fit, per-model weighting, projections and win distributions",
+    "src/cfb_analytics/dual_evaluation.py": "Walk-forward historical evaluation against the incumbent replay (never changes published forecasts)",
+    "src/cfb_analytics/dual_publish.py": "Publishes the preview projections file; conference and CFP odds use the unchanged incumbent simulation",
+    "research/dual/evaluation.json": "Evaluation results (aggregates only)",
+    "web/public/dual-projections.json": "Published preview projections for the Model Projections section"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {}
+}
