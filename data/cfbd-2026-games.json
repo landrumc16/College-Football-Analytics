@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-18T19:25:56.801881+00:00",
+  "retrieved_at": "2026-11-19T03:58:03.312736+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3718,
-    "completed": 3477,
-    "pending": 241
+    "completed": 3479,
+    "pending": 239
   },
   "games": [
     {
@@ -42530,9 +42530,9 @@
       "week": 12,
       "home": "Massachusetts",
       "away": "Akron",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 33,
+      "away_score": 34,
       "neutral_site": false,
       "start_date": "2026-11-19T00:00:00.000Z"
     },
@@ -42554,9 +42554,9 @@
       "week": 12,
       "home": "Buffalo",
       "away": "Central Michigan",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 40,
+      "away_score": 21,
       "neutral_site": false,
       "start_date": "2026-11-19T00:30:00.000Z"
     },
@@ -44625,5 +44625,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-18T19:25:56.801881+00:00"
+  "data_changed_at": "2026-11-19T03:58:03.312736+00:00"
 }

@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-18T19:25:56.801881+00:00",
+  "as_of": "2026-11-19T03:58:03.312736+00:00",
   "coverage": {
     "hype": {
       "eligible": 138,
@@ -844,7 +844,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 5.109489051094891
+          "score": 5.839416058394161
         },
         "trajectory": {
           "grade": "F",
@@ -870,7 +870,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 28.29046460433322,
+      "overall_score": 28.533773606766307,
       "team": "Bowling Green",
       "trajectory": {
         "annual_slopes": {
@@ -898,7 +898,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 9.489051094890511
+          "score": 10.218978102189782
         },
         "trajectory": {
           "grade": "D",
@@ -924,7 +924,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 45.4910593596725,
+      "overall_score": 45.73436836210559,
       "team": "Buffalo",
       "trajectory": {
         "annual_slopes": {
@@ -1006,7 +1006,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 16.05839416058394
+          "score": 13.138686131386862
         },
         "trajectory": {
           "grade": "F",
@@ -1032,7 +1032,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 38.55385625458619,
+      "overall_score": 37.580620244853826,
       "team": "Central Michigan",
       "trajectory": {
         "annual_slopes": {
@@ -2968,7 +2968,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 5.839416058394161
+          "score": 5.109489051094891
         },
         "trajectory": {
           "grade": "F",
@@ -2994,7 +2994,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 24.300969373962076,
+      "overall_score": 24.057660371528986,
       "team": "Massachusetts",
       "trajectory": {
         "annual_slopes": {
@@ -3292,7 +3292,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 13.86861313868613
+          "score": 14.598540145985401
         },
         "trajectory": {
           "grade": "F",
@@ -3318,7 +3318,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 29.09377051712818,
+      "overall_score": 29.33707951956127,
       "team": "Middle Tennessee",
       "trajectory": {
         "annual_slopes": {
@@ -3799,7 +3799,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 10.218978102189782
+          "score": 9.489051094890511
         },
         "trajectory": {
           "grade": "F",
@@ -3825,7 +3825,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 23.379871007608234,
+      "overall_score": 23.136562005175147,
       "team": "New Mexico State",
       "trajectory": {
         "annual_slopes": {
@@ -4360,7 +4360,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 15.328467153284672
+          "score": 16.05839416058394
         },
         "trajectory": {
           "grade": "A-",
@@ -4386,7 +4386,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 49.42165836326421,
+      "overall_score": 49.664967365697294,
       "team": "Old Dominion",
       "trajectory": {
         "annual_slopes": {
@@ -4738,7 +4738,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 13.138686131386862
+          "score": 13.86861313868613
         },
         "trajectory": {
           "grade": "F",
@@ -4764,7 +4764,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 34.93511759935118,
+      "overall_score": 35.17842660178427,
       "team": "Rice",
       "trajectory": {
         "annual_slopes": {
@@ -4846,7 +4846,7 @@
         },
         "strength": {
           "grade": "C",
-          "score": 74.45255474452554
+          "score": 73.72262773722628
         },
         "trajectory": {
           "grade": "F",
@@ -4872,7 +4872,7 @@
         }
       },
       "overall_grade": "D+",
-      "overall_score": 68.99741242806935,
+      "overall_score": 68.75410342563627,
       "team": "SMU",
       "trajectory": {
         "annual_slopes": {
@@ -4996,7 +4996,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 14.598540145985401
+          "score": 15.328467153284672
         },
         "trajectory": {
           "grade": "F",
@@ -5022,7 +5022,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 32.90850809098984,
+      "overall_score": 33.15181709342293,
       "team": "San Jos\u00e9 State",
       "trajectory": {
         "annual_slopes": {
@@ -5989,7 +5989,7 @@
         },
         "strength": {
           "grade": "D-",
-          "score": 62.043795620437955
+          "score": 61.31386861313869
         },
         "trajectory": {
           "grade": "F",
@@ -6015,7 +6015,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 57.18920171474915,
+      "overall_score": 56.945892712316066,
       "team": "UCF",
       "trajectory": {
         "annual_slopes": {
@@ -6529,7 +6529,7 @@
         },
         "strength": {
           "grade": "D-",
-          "score": 61.31386861313869
+          "score": 62.043795620437955
         },
         "trajectory": {
           "grade": "A+",
@@ -6555,7 +6555,7 @@
         }
       },
       "overall_grade": "B-",
-      "overall_score": 82.60726837369172,
+      "overall_score": 82.85057737612482,
       "team": "Vanderbilt",
       "trajectory": {
         "annual_slopes": {
@@ -6745,7 +6745,7 @@
         },
         "strength": {
           "grade": "C",
-          "score": 73.72262773722628
+          "score": 74.45255474452554
         },
         "trajectory": {
           "grade": "F",
@@ -6771,7 +6771,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 57.37844204997489,
+      "overall_score": 57.62175105240798,
       "team": "Washington",
       "trajectory": {
         "annual_slopes": {
