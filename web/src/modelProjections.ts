@@ -11,7 +11,8 @@ export type ProjectedGame = {
 export type TeamModel = { expected_wins: number; expected_losses: number; win_distribution: number[]; rating: number | null
   offense: number | null; defense: number | null; conference_title?: number; cfp_field?: number; national_title?: number }
 export type TeamProjection = { wins: number; losses: number; remaining: number; standard: TeamModel; momentum: TeamModel
-  official: { cfp_field: number; conference_title: number } | null }
+  official: { cfp_field: number; conference_title: number } | null
+  tiebreak_swaps?: { rival: string; standard_gap: number; momentum_gap: number }[] }
 type Scores = { brier: number; log_loss: number; winner_accuracy: number; margin_mae: number }
 export type DualProjections = {
   season: number; generated_at: string; data_retrieved_at: string | null; status: string
@@ -38,26 +39,55 @@ export function scoreLine(g: ProjectedGame, k: ModelKey) {
   return homeFirst ? `${g.home} ${points(m.home_points)}, ${g.away} ${points(m.away_points)}` : `${g.away} ${points(m.away_points)}, ${g.home} ${points(m.home_points)}`
 }
 
+/** Signed margin from one team's point of view, as words: "Texas Tech by 2.3" or "even". */
+function margin(g: ProjectedGame, k: ModelKey) {
+  const m = g[k].home_margin
+  return Math.abs(m) < 0.05 ? 'even' : `${m > 0 ? g.home : g.away} by ${Math.abs(m).toFixed(1)}`
+}
+const signed = (v: number) => `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}`
+
+export type Explanation = { summary: string; details: string[] }
+
 /**
- * Why the two models disagree, from published numbers only: Momentum weights recent games more, so the gap follows
- * whichever team's last three games (opponent-adjusted) sit furthest from its full-season rating.
+ * Why the two models disagree, from published numbers only. Momentum weights recent games more, so the gap follows
+ * whichever team's last three games (opponent-adjusted) sit furthest from its full-season rating. Only an explanation
+ * consistent with the direction of the gap is offered. The summary is one short sentence; the calculation is in details.
  */
-export function disagreement(g: ProjectedGame, data: DualProjections): string {
+export function disagreement(g: ProjectedGame, data: DualProjections): Explanation {
   const shift = g.momentum.home_margin - g.standard.home_margin
-  if (Math.abs(shift) < 1) return 'The two models agree to within a point: recent games and the full season tell the same story.'
-  const helped = shift > 0 ? g.home : g.away
+  const details = [`Standard margin: ${margin(g, 'standard')}. Momentum margin: ${margin(g, 'momentum')}.`]
   const formOf = (team: string) => (team === g.home ? g.home_form : g.away_form)
   const seasonOf = (team: string) => data.teams[team]?.standard.rating ?? null
-  // A home surge or an away slump helps the home side (and vice versa); only consistent explanations are offered.
-  const consistent = [g.home, g.away].map(team => {
-    const f = formOf(team), s = seasonOf(team)
-    return { team, delta: f != null && s != null ? f - s : null }
+  for (const team of [g.away, g.home]) {
+    const f = formOf(team), r = seasonOf(team)
+    if (f != null && r != null) details.push(`${team}: last three games ${signed(f)} per game vs a season rating of ${signed(r)} (opponent-adjusted).`)
+  }
+  details.push('Momentum counts each earlier game 10% less than the one after it; Standard counts every game equally.')
+  if (Math.abs(shift) < 1) return { summary: 'The models agree to within a point.', details }
+  const helped = shift > 0 ? g.home : g.away
+  const by = `Momentum favors ${helped} by ${Math.abs(shift).toFixed(1)} additional points`
+  // A home surge or an away slump helps the home side (and vice versa).
+  const driver = [g.home, g.away].map(team => {
+    const f = formOf(team), r = seasonOf(team)
+    return { team, delta: f != null && r != null ? f - r : null }
   }).filter(c => c.delta != null && Math.sign(c.delta) === Math.sign(shift) * (c.team === g.home ? 1 : -1))
-  const driver = consistent.sort((a, b) => Math.abs(b.delta!) - Math.abs(a.delta!))[0]
-  const lead = `Momentum favours ${helped} by ${Math.abs(shift).toFixed(1)} more points than Standard.`
-  if (!driver) return `${lead} Recent games count more in Momentum, and they lean slightly toward ${helped}.`
-  const direction = driver.delta! > 0 ? 'better' : 'worse'
-  return `${lead} ${driver.team}'s last three games were ${Math.abs(driver.delta!).toFixed(1)} points per game ${direction} than its season level, after adjusting for opponents.`
+    .sort((a, b) => Math.abs(b.delta!) - Math.abs(a.delta!))[0]
+  if (!driver) return { summary: `${by} because recent games count more.`, details }
+  return { summary: driver.team === helped
+    ? `${by} based on stronger recent opponent-adjusted performance.`
+    : `${by} based on ${driver.team}'s weaker recent opponent-adjusted performance.`, details }
+}
+
+/**
+ * One sentence when a team's conference and CFP odds differ between models mainly because it swaps rating order with a
+ * same-conference contender (the shared simulation breaks tied conference records by model rating).
+ */
+export function tiebreakNote(team: string, t: TeamProjection): string | null {
+  const swaps = t.tiebreak_swaps ?? []
+  if (!swaps.length) return null
+  const rivals = swaps.map(s => s.rival)
+  const list = rivals.length === 1 ? rivals[0] : `${rivals.slice(0, -1).join(', ')} and ${rivals[rivals.length - 1]}`
+  return `Playoff odds differ partly because ${team} and ${list} swap order between the models, and tied conference records go to the higher-rated team.`
 }
 
 /** Most likely final record from a win distribution (ties go to the higher win total). */

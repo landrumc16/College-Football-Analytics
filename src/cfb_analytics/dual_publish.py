@@ -54,9 +54,46 @@ def form(values, team, n=3):
     return round(sum(g[2] - g[3] for g in games) / len(games), 2) if games else None
 
 
+def report_names(fbs):
+    """Map CFBD school names (used by the models) to the report's canonical names, one-to-one.
+
+    The season report and the CFP simulation inputs use canonical names (for example "Miami (FL)"), while the CFBD
+    snapshot uses "Miami". Every lookup between the two must go through this map so that no team is silently dropped.
+    """
+    from scripts.reconcile_v5_historical_sources import canonical
+    names = {t: canonical(t) for t in fbs}
+    if len(set(names.values())) != len(names):
+        raise ValueError("FBS school names do not map one-to-one to report names")
+    return names
+
+
+def tiebreak_swaps(conference, standard, momentum, contenders):
+    """Same-conference contender pairs whose rating order differs between the two models.
+
+    The shared CFP simulation picks conference-title-game teams by conference wins and breaks ties by model rating, so
+    when two contenders swap order between models every tied scenario changes hands. This is a legitimate consequence
+    of the shared rules (both models use them identically) but it can move conference and CFP odds far more than the
+    small rating change suggests, so the page names the swap. Returns team -> sorted list of
+    {"rival", "standard_gap", "momentum_gap"} with gaps from the team's point of view.
+    """
+    out = {}
+    names = sorted(t for t in contenders if t in standard and t in momentum)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            if conference.get(a) is None or conference.get(a) != conference.get(b):
+                continue
+            ds, dm = standard[a] - standard[b], momentum[a] - momentum[b]
+            if ds * dm < 0:
+                out.setdefault(a, []).append({"rival": b, "standard_gap": round(ds, 2), "momentum_gap": round(dm, 2)})
+                out.setdefault(b, []).append({"rival": a, "standard_gap": round(-ds, 2), "momentum_gap": round(-dm, 2)})
+    return {t: sorted(v, key=lambda x: x["rival"]) for t, v in out.items()}
+
+
 def build(report, snapshot, evaluation, membership):
     season = snapshot["season"]
     fbs = set(membership[str(season)])
+    to_report = report_names(fbs)
+    to_model = {v: k for k, v in to_report.items()}
     dp.REGRESS = evaluation["prior_tuning"]["chosen"]["regress"]
     dp.PRIOR_GAMES = evaluation["prior_tuning"]["chosen"]["prior_games"]
     momentum = evaluation["selected_momentum"]
@@ -81,7 +118,7 @@ def build(report, snapshot, evaluation, membership):
                         "home_win_probability": round(dp.probability(m, scales[k]), 4)}
         o = official.get(g["game_id"])
         entry["official"] = ({"home_win_probability": round(o["home_win_probability"], 4), "home_margin": round(o["home_margin"], 2)}
-                             if o and o["home"] == g["home"] else None)
+                             if o and o["home"] == to_report.get(g["home"], g["home"]) else None)
         games.append(entry)
     # Season records: actual wins/losses plus each model's exact distribution over remaining games.
     record = {t: [0, 0] for t in fbs}
@@ -107,18 +144,31 @@ def build(report, snapshot, evaluation, membership):
     # Conference, CFP and title odds: unchanged incumbent simulation rules with each model's ratings.
     base = scenario_input(report, snapshot)
     official_cfp = {t["team"]: t for t in report.get("cfp", {}).get("teams", [])}
+    model_name = lambda name: to_model.get(name, name)
+    missing = sorted(t for t in base["teams"] if model_name(t) not in teams or model_name(t) not in ratings["standard"])
+    if missing:
+        raise ValueError(f"CFP simulation teams without a model rating: {missing}")
+    sim_games = [{"home": model_name(g["home"]), "away": model_name(g["away"]), "neutral_site": g["neutral_site"]} for g in base["games"]]
+    published = {(x["home"], x["away"]) for x in games}
+    if any((g["home"], g["away"]) not in published for g in sim_games if g["home"] in fbs or g["away"] in fbs):
+        raise ValueError("CFP simulation schedule differs from the published game projections")
     for k in kinds:
-        sim_teams = {t: {**v, "rating": ratings[k][t][0] - ratings[k][t][1]} for t, v in base["teams"].items() if t in ratings[k]}
-        result = simulate_cfp(sim_teams, [{"home": g["home"], "away": g["away"], "neutral_site": g["neutral_site"]} for g in base["games"]],
-                              simulations=10000, seed=2026, scale=scales[k] * math.log(10), home_edge=2 * fit["home"],
-                              fcs_rating=ratings[k][dp.FCS][0] - ratings[k][dp.FCS][1])
-        for row in result["teams"] if isinstance(result, dict) else result:
+        sim_teams = {model_name(t): {**v, "rating": ratings[k][model_name(t)][0] - ratings[k][model_name(t)][1]} for t, v in base["teams"].items()}
+        result = simulate_cfp(sim_teams, sim_games, simulations=10000, seed=2026, scale=scales[k] * math.log(10),
+                              home_edge=2 * fit["home"], fcs_rating=ratings[k][dp.FCS][0] - ratings[k][dp.FCS][1])
+        for row in result["teams"]:
             name = row["team"]
             if name in teams:
                 teams[name][k].update({"conference_title": row.get("conference_title"), "cfp_field": row.get("cfp_field"),
                                        "national_title": row.get("national_title")})
+    # Contenders: a realistic chance at the conference title game in either model.
+    conference = {model_name(t): v["conference"] for t, v in base["teams"].items()}
+    rating = {k: {t: ratings[k][t][0] - ratings[k][t][1] for t in teams if t in ratings[k]} for k in kinds}
+    contenders = {t for t, e in teams.items() if max(e["standard"]["conference_title"] or 0, e["momentum"]["conference_title"] or 0) >= 0.02}
+    swaps = tiebreak_swaps(conference, rating["standard"], rating["momentum"], contenders)
     for t, entry in teams.items():
-        o = official_cfp.get(t)
+        entry["tiebreak_swaps"] = swaps.get(t, [])
+        o = official_cfp.get(to_report[t])
         entry["official"] = {"cfp_field": o.get("cfp_field"), "conference_title": o.get("conference_title")} if o else None
     pooled, test = evaluation["pooled_2017_2025"], evaluation["test_seasons_2022_2025"]
     summary = lambda b: {k: {m: round(b[key][m], 4) for m in ("brier", "log_loss", "winner_accuracy", "margin_mae")}
@@ -133,7 +183,9 @@ def build(report, snapshot, evaluation, membership):
                        "priors": f"preseason prior = {dp.REGRESS:g} x last season's final rating, worth {dp.PRIOR_GAMES:g} games",
                        "probability": "logistic in projected margin, scale fitted on 2016-2025 (not 2020)",
                        "records": "actual record plus the exact win distribution of each model's own game probabilities",
-                       "playoffs": "conference, CFP and title odds use the existing simulation rules (10,000 seasons) with each model's ratings"},
+                       "playoffs": "conference, CFP and title odds use the existing simulation rules (10,000 seasons) with each model's ratings",
+                       "tiebreaks": "the simulation breaks tied conference records by model rating, so two contenders that swap order between "
+                                    "the models can see their conference and CFP odds move much more than their projected records"},
             "home_field_points": round(2 * fit["home"], 2), "scales": {k: round(v, 3) for k, v in scales.items()},
             "validation": {"pooled_2017_2025": summary(pooled), "test_2022_2025": summary(test),
                            "second_half": summary(evaluation["second_half_weeks_ge_8"]),

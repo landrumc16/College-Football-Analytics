@@ -55,7 +55,14 @@ try {
     assert.ok(/STANDARD/i.test(text) && /MOMENTUM/i.test(text), text);
     const pStd = Math.round(100 * Math.max(first.standard.home_win_probability, 1 - first.standard.home_win_probability));
     assert.ok(text.includes(`${pStd}%`), text);
-    assert.ok(/(agree to within a point|Momentum favours)/.test(text), text);
+    // One short explanation sentence; the calculation sits behind a keyboard-operable expander.
+    const why = (await cards.first().locator('.mp-why').innerText()).trim();
+    assert.ok(/^(The models agree to within a point\.|Momentum favors .+ by \d+\.\d additional points)/.test(why) && why.length <= 160, why);
+    const calc = cards.first().locator('details.mp-calc');
+    assert.ok(!(await calc.evaluate(d => d.open)));
+    await calc.locator('summary').focus(); await page.keyboard.press('Enter');
+    assert.match(await calc.innerText(), /Standard margin: .+ Momentum margin: /);
+    await calc.locator('summary').click();
     if (first.official) assert.match(text, /Official forecast:/);
     // Standard and Momentum views show one projection per card (keyboard switch).
     await mp.getByRole('radio', { name: 'Compare' }).focus();
@@ -73,10 +80,32 @@ try {
     // Team search: every remaining Texas Tech game across weeks, and its projected record in both models.
     await chooseSchool(page, 'Find a team', TEAM);
     assert.equal(await cards.count(), ttGames.length);
-    const rowText = (await mp.locator('.mp-table tbody tr').first().innerText()).replace(/\s+/g, ' ');
+    // Records: mobile shows a team heading and one separated block per model; desktop keeps the table.
+    const mobile = width < 768;
+    assert.equal(await mp.locator('.mp-team-cards').isVisible(), mobile);
+    assert.equal(await mp.locator('.mp-records').isVisible(), !mobile);
+    const record = mobile ? mp.locator('.mp-team-card').first() : mp.locator('.mp-records tbody tr').first();
+    const rowText = (await record.innerText()).replace(/\s+/g, ' ');
     const t = data.teams[TEAM];
-    assert.ok(rowText.includes(`${t.standard.expected_wins.toFixed(1)}–${t.standard.expected_losses.toFixed(1)}`) && rowText.includes(`${t.momentum.expected_wins.toFixed(1)}–${t.momentum.expected_losses.toFixed(1)}`), rowText);
-    assert.ok(rowText.includes(`CFP ${Math.round(100 * t.standard.cfp_field)}%`) && rowText.includes(`CFP ${Math.round(100 * t.momentum.cfp_field)}%`), rowText);
+    const exp = k => `${t[k].expected_wins.toFixed(1)}–${t[k].expected_losses.toFixed(1)}`;
+    assert.ok(rowText.includes(exp('standard')) && rowText.includes(exp('momentum')), rowText);
+    if (mobile) {
+      assert.equal(await record.locator('h4').innerText(), TEAM);
+      const blocks = record.locator('.mp-team-model');
+      assert.equal(await blocks.count(), 2);
+      for (const [i, k] of [[0, 'standard'], [1, 'momentum']]) {
+        const b = (await blocks.nth(i).innerText()).replace(/\s+/g, ' ');
+        assert.ok(b.includes(exp(k)) && b.includes(`CFP ${Math.round(100 * t[k].cfp_field)}%`) && b.includes(`Conference title ${Math.round(100 * t[k].conference_title)}%`) && /Most likely \d+–\d+/.test(b), b);
+      }
+    } else assert.ok(rowText.includes(`CFP ${Math.round(100 * t.standard.cfp_field)}%`) && rowText.includes(`CFP ${Math.round(100 * t.momentum.cfp_field)}%`), rowText);
+    // Large playoff-odds gaps caused by a tiebreak swap are explained in plain language.
+    for (const sw of t.tiebreak_swaps || []) assert.ok(rowText.includes(sw.rival) && /tied conference records go to the higher-rated team/.test(rowText), rowText);
+    // The view selection drives games and records alike (Standard only, then back to Compare).
+    await mp.locator('.mp-views label', { hasText: 'Standard' }).click();
+    const stdText = (await record.innerText()).replace(/\s+/g, ' ');
+    assert.ok(stdText.includes(exp('standard')) && !stdText.includes(exp('momentum')) && !/higher-rated team/.test(stdText), stdText);
+    assert.equal(await cards.first().locator('.mp-model').count(), 1);
+    await mp.locator('.mp-views label', { hasText: 'Compare' }).click();
     if (width === 390 || width === 1536) {
       await mp.locator('#mp-games-title').evaluate(e => window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 60));
       await page.screenshot({ path: `${evidence}/compare-${width}.png` });
@@ -84,7 +113,7 @@ try {
       await page.screenshot({ path: `${evidence}/records-${width}.png` });
     }
     await mp.getByRole('button', { name: 'Show every team' }).click();
-    assert.equal(await mp.locator('.mp-table').first().locator('tbody tr').count(), 25);
+    assert.equal(await (mobile ? mp.locator('.mp-team-card') : mp.locator('.mp-records tbody tr')).count(), 25);
     // Methodology and validation behind a keyboard-operable expander.
     const info = mp.locator('details.mp-more-info');
     await info.locator('summary').focus(); await page.keyboard.press('Enter');

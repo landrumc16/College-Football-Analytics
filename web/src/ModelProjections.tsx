@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
-import { disagreement, favourite, likelyRecord, pct, scoreLine, weeks, type DualProjections, type ModelKey, type ProjectedGame, type View } from './modelProjections'
+import { disagreement, favourite, likelyRecord, pct, scoreLine, tiebreakNote, weeks, type DualProjections, type ModelKey, type ProjectedGame, type TeamProjection, type View } from './modelProjections'
 import './model-projections.css'
 
 const VIEWS: { id: View; label: string }[] = [{ id: 'compare', label: 'Compare' }, { id: 'standard', label: 'Standard' }, { id: 'momentum', label: 'Momentum' }]
@@ -28,6 +28,32 @@ function ModelPanel({ g, k, data, large }: { g: ProjectedGame; k: ModelKey; data
   </div>
 }
 
+function Why({ g, data }: { g: ProjectedGame; data: DualProjections }) {
+  const e = disagreement(g, data)
+  return <div className="mp-why-wrap">
+    <p className="mp-why">{e.summary}</p>
+    <details className="mp-calc"><summary>How this is calculated</summary><ul>{e.details.map(d => <li key={d}>{d}</li>)}</ul></details>
+  </div>
+}
+
+/** Mobile record card: team heading, then one clearly separated summary per model in the current view. */
+function TeamCard({ name, t, models, data, note }: { name: string; t: TeamProjection; models: ModelKey[]; data: DualProjections; note: string | null }) {
+  return <li className="mp-team-card">
+    <h4>{name}</h4>
+    <p className="mp-sub">{t.wins}–{t.losses} now · {t.remaining} {t.remaining === 1 ? 'game' : 'games'} left</p>
+    {models.map(k => { const r = likelyRecord(t, k); return <div className="mp-team-model" key={k}>
+      <span className="mp-model-name">{data.models[k].label}</span>
+      <dl>
+        <div><dt>Expected record</dt><dd>{t[k].expected_wins.toFixed(1)}–{t[k].expected_losses.toFixed(1)}</dd></div>
+        <div><dt>Most likely</dt><dd>{r.wins}–{r.losses} ({pct(r.probability)})</dd></div>
+        <div><dt>Conference title</dt><dd>{pct(t[k].conference_title)}</dd></div>
+        <div><dt>CFP</dt><dd>{pct(t[k].cfp_field)}</dd></div>
+      </dl>
+    </div> })}
+    {note && <p className="mp-note">{note}</p>}
+  </li>
+}
+
 function GameCard({ g, view, data }: { g: ProjectedGame; view: View; data: DualProjections }) {
   const when = g.start_date ? new Date(g.start_date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) : 'Date TBA'
   const official = g.official ? (g.official.home_win_probability >= 0.5 ? `${g.home} ${pct(g.official.home_win_probability)}` : `${g.away} ${pct(1 - g.official.home_win_probability)}`) : null
@@ -36,7 +62,7 @@ function GameCard({ g, view, data }: { g: ProjectedGame; view: View; data: DualP
     {view === 'compare'
       ? <div className="mp-models"><ModelPanel g={g} k="standard" data={data} /><ModelPanel g={g} k="momentum" data={data} /></div>
       : <ModelPanel g={g} k={view} data={data} large />}
-    {view === 'compare' && <p className="mp-why">{disagreement(g, data)}</p>}
+    {view === 'compare' && <Why g={g} data={data} />}
     {official && <p className="mp-official">Official forecast: {official}</p>}
   </li>
 }
@@ -82,11 +108,14 @@ export default function ModelProjections({ initialTeam = '', onTeam }: { initial
     </section>
     <section aria-labelledby="mp-records-title"><h3 id="mp-records-title">Projected records and playoff odds</h3>
       <p className="mp-muted">Each model's record and odds come from its own game probabilities; conference and CFP odds use the existing playoff simulation rules.</p>
-      <div className="table-wrap"><table className="mp-table">
+      <ul className="mp-team-cards" aria-label={`Projected records: ${view === 'compare' ? 'Standard and Momentum' : data.models[view].label}`}>
+        {shownTeams.map(([name, t]) => <TeamCard key={name} name={name} t={t} models={models} data={data} note={view === 'compare' ? tiebreakNote(name, t) : null} />)}
+      </ul>
+      <div className="table-wrap mp-records-wrap"><table className="mp-table mp-records">
         <caption>{view === 'compare' ? 'Standard and Momentum' : data.models[view].label} · sorted by CFP chance</caption>
         <thead><tr><th scope="col">Team</th>{models.map(k => <th scope="col" key={k}>{data.models[k].label}</th>)}</tr></thead>
         <tbody>{shownTeams.map(([name, t]) => <tr key={name}>
-          <th scope="row">{name}<small className="mp-sub">{t.wins}–{t.losses} now · {t.remaining} left</small></th>
+          <th scope="row">{name}<small className="mp-sub">{t.wins}–{t.losses} now · {t.remaining} left</small>{view === 'compare' && tiebreakNote(name, t) && <small className="mp-sub mp-note">{tiebreakNote(name, t)}</small>}</th>
           {models.map(k => { const r = likelyRecord(t, k); return <td key={k}>
             <b>{t[k].expected_wins.toFixed(1)}–{t[k].expected_losses.toFixed(1)}</b><small className="mp-sub">most likely <span className="mp-nowrap">{r.wins}–{r.losses} ({pct(r.probability)})</span></small>
             <small className="mp-sub"><span className="mp-nowrap">CFP {pct(t[k].cfp_field)}</span> · <span className="mp-nowrap">conf. title {pct(t[k].conference_title)}</span></small></td> })}

@@ -121,3 +121,61 @@ def test_published_projections_are_internally_consistent():
             assert abs(t[k]["expected_wins"] - (t["wins"] + sum(ps))) < 0.02            # records follow the model's own games
             assert abs(sum(t[k]["win_distribution"]) - 1) < 1e-3
             assert len(t[k]["win_distribution"]) == len(mine) + 1
+
+
+def test_cfp_inputs_map_every_report_team_to_a_model_team():
+    """Regression: report names ("Miami (FL)") differ from CFBD names ("Miami"); none may be dropped from the simulation."""
+    import json
+    from pathlib import Path
+    from cfb_analytics.dual_publish import report_names
+    from cfb_analytics.v6_scenarios import scenario_input
+    report = json.loads(Path("data/season-2026-report.json").read_text())
+    base = scenario_input(report, json.loads(Path("data/cfbd-2026-games.json").read_text()))
+    fbs = set(json.loads(Path("research/v8/fbs-membership.json").read_text())["2026"])
+    to_model = {v: k for k, v in report_names(fbs).items()}
+    assert {to_model.get(t, t) for t in base["teams"]} <= fbs
+    assert to_model["Miami (FL)"] == "Miami" and to_model["Appalachian State"] == "App State"
+
+
+def test_published_playoff_odds_are_complete_and_use_each_models_own_probabilities():
+    import json
+    from pathlib import Path
+    data = json.loads(Path("web/public/dual-projections.json").read_text())
+    conferences = len(json.loads(Path("data/season-2026-report.json").read_text())["conference_standings"])
+    for k in ("standard", "momentum"):
+        rows = [t[k] for t in data["teams"].values()]
+        assert all(r["cfp_field"] is not None and r["conference_title"] is not None and r["national_title"] is not None for r in rows)
+        assert abs(sum(r["cfp_field"] for r in rows) - 12) < 1e-6            # every simulated field has 12 teams
+        assert abs(sum(r["national_title"] for r in rows) - 1) < 1e-6
+        assert sum(r["conference_title"] for r in rows) <= conferences + 1e-6
+    assert all(t["official"] is not None for t in data["teams"].values())    # official odds found for every team
+    # The simulation's game probabilities (rating gap + home field, same scale) equal the published game probabilities,
+    # so records, conference odds and CFP odds rest on the same assumptions within each model.
+    home = data["home_field_points"]
+    for g in data["games"]:
+        if not (g["home_fbs"] and g["away_fbs"]):
+            continue
+        for k in ("standard", "momentum"):
+            gap = data["teams"][g["home"]][k]["rating"] - data["teams"][g["away"]][k]["rating"] + (0 if g["neutral_site"] else home)
+            assert abs(dp.probability(gap, data["scales"][k]) - g[k]["home_win_probability"]) < 0.002
+
+
+def test_tiebreak_swaps_name_contenders_whose_order_flips():
+    from cfb_analytics.dual_publish import tiebreak_swaps
+    conf = {"A": "X", "B": "X", "C": "X", "D": "Y"}
+    std = {"A": 11.8, "B": 12.7, "C": 5.0, "D": 12.0}
+    mom = {"A": 13.2, "B": 13.0, "C": 5.5, "D": 14.0}
+    swaps = tiebreak_swaps(conf, std, mom, {"A", "B", "C", "D"})
+    assert swaps == {"A": [{"rival": "B", "standard_gap": -0.9, "momentum_gap": 0.2}],
+                     "B": [{"rival": "A", "standard_gap": 0.9, "momentum_gap": -0.2}]}
+    assert tiebreak_swaps(conf, std, mom, {"A", "C"}) == {}                  # non-contenders are not named
+
+
+def test_cfp_simulation_is_paired_and_identical_ratings_give_identical_odds():
+    """Common random numbers: the same seed and inputs reproduce exactly, so model differences are not simulation noise."""
+    from cfb_analytics.cfp import simulate_cfp
+    teams = {f"T{i}": {"conference": f"C{i % 4}", "rating": 20 - i, "wins": 9 - i % 5, "conference_wins": 6 - i % 4} for i in range(16)}
+    games = [{"home": f"T{i}", "away": f"T{i + 4}", "neutral_site": False} for i in range(12)]
+    a = simulate_cfp(teams, games, simulations=2000, seed=7, scale=22.0, home_edge=3.3, fcs_rating=-30)
+    b = simulate_cfp(teams, games, simulations=2000, seed=7, scale=22.0, home_edge=3.3, fcs_rating=-30)
+    assert a["teams"] == b["teams"]

@@ -98,6 +98,103 @@ Each cell shows Brier score (lower is better) / winner accuracy / margin MAE.
   percentage points (8 at most). The page explains each gap, using the team whose last three games differ most from
   its season level.
 
+## CFP probability investigation (Texas Tech example)
+
+**The question:** Texas Tech's projected records are nearly identical (Standard 10.3–1.8, Momentum 10.3–1.7), but the
+first preview showed CFP odds of 60% vs 85% and conference-title odds of 23% vs 39%.
+
+### Defect found and fixed: four programs were missing from the playoff simulation
+
+- **Cause:** the season report, which supplies the simulation's teams and schedule, uses canonical school names (for
+  example "Miami (FL)", "Appalachian State", "Sam Houston State", "ULM"). The models use CFBD names ("Miami", "App
+  State", "Sam Houston", "UL Monroe"). `dual_publish` kept only teams whose report name matched a model name.
+- **Effect:**
+  - Those four teams were silently dropped from both models' simulations.
+  - Their remaining games were simulated as if their opponents were playing an FCS team.
+  - Miami (9–1, a near-certain playoff team) was absent from every simulated field, which inflated other bubble
+    teams' odds.
+  - The official forecast was also blank for those teams and their five remaining games.
+- **Fix:**
+  - All names now pass through one checked, one-to-one mapping (`report_names`).
+  - Publishing fails if any simulation team lacks a model rating, or if the simulated schedule differs from the
+    published games.
+- **Regression tests (`tests/test_dual_projection.py`):**
+  - every report team maps to a model team;
+  - every team has conference, CFP and title odds;
+  - each simulated season fills exactly 12 CFP spots and crowns one national champion;
+  - official odds are found for every team;
+  - the simulation's game probabilities equal the published game probabilities in each model;
+  - identical inputs and seed reproduce identically.
+- **What changed:** game projections and records did not change. Texas Tech's CFP odds moved to 54% (Standard) and
+  79% (Momentum); its conference-title odds are 24% and 39%.
+
+### The remaining gap is legitimate under the shared playoff rules
+
+**Consistency checks (all pass):**
+- each model uses its own ratings, probability scale and home field throughout;
+- the simulation's per-game probabilities match the published game probabilities to within 0.002;
+- opponent strength enters once, in the shared stage-1 fit;
+- records, conference odds and CFP odds come from the same game probabilities;
+- both models use the identical, unchanged `cfp.simulate_cfp` rules.
+
+**Stability:** the same seed is used for both models (common random numbers), and the results are stable:
+
+| Draws | Seeds | Standard CFP | Momentum CFP | Standard conference title | Momentum conference title |
+| --- | --- | --- | --- | --- | --- |
+| 10,000 | 2026, 7, 99, 12345 | 53.1–53.8% | 78.4–79.4% | 22.9–23.5% | 38.4–40.0% |
+| 50,000 | 2026, 7, 99, 12345 | 53.2–53.6% | 78.7–78.9% | 22.6–23.2% | 38.8–39.1% |
+
+**Paired decomposition** (seed 2026, 10,000 draws, changing one input at a time):
+
+| Scenario | Texas Tech CFP | Conference title |
+| --- | --- | --- |
+| All Standard ratings | 53.7% | 23.5% |
+| Standard, but Texas Tech's Momentum rating only (+1.40) | 84.9% | 38.6% |
+| Standard, but other Big 12 ratings from Momentum (Texas Tech unchanged) | 53.5% | 23.9% |
+| All Momentum ratings | 79.2% | 39.2% |
+
+The gap comes almost entirely from Texas Tech's own rating. Rival ratings barely matter, and other conferences'
+Momentum ratings lower Texas Tech's odds by about 6 points.
+
+**Why a 1.4-point rating change matters so much: a tiebreak threshold.**
+- **The rule:** the shared simulation chooses conference title-game teams by conference wins and breaks ties by model
+  rating.
+- **The race:** Texas Tech (6 conference wins), Utah (7) and BYU (5) are in the Big 12 race, and Texas Tech did not
+  play either team.
+- **The flip:** BYU's rating sits between Texas Tech's two ratings (Standard: BYU 12.73 vs Texas Tech 11.83; Momentum:
+  Texas Tech 13.23 vs BYU 13.02). Every tied scenario therefore changes hands between the models.
+
+A sweep of Texas Tech's rating, with everything else held fixed, shows the threshold:
+
+| Texas Tech rating (BYU 12.73) | CFP | Conference title |
+| --- | --- | --- |
+| 12.72 | 62.5% | 25.7% |
+| 12.74 | 78.6% | 37.3% |
+
+The same 16-point step appears in the Momentum world: Texas Tech at 13.00 gets 62.8%, and at 13.04 gets 78.8%, with BYU
+at 13.02.
+
+**How the gap breaks down:**
+- about 16 points from the tiebreak order;
+- about 15 points from the smooth effects of a higher rating:
+  - Texas Tech's remaining games: 52% vs 56% at Baylor, and 73% vs 75% against TCU;
+  - title-game win probability;
+  - the rating half of the selection score;
+- about −6 points from other teams' Momentum ratings.
+
+**Conclusion:**
+- This is not double counting or an inconsistency. It is a real property of the existing playoff rules, which the
+  official forecast shares.
+- Agreement was not forced. Changing the tiebreak (for example to the conference's real tiebreak criteria, or to a
+  random draw when ratings are close) would change the official forecasts too, so it is left as an owner decision.
+
+**User-facing interpretation:**
+- **The page:** in Compare view, every team whose order flips against a conference contender (both teams with at least
+  a 2% conference-title chance in either model) gets one sentence. For example: "Playoff odds differ partly because
+  Texas Tech and BYU swap order between the models, and tied conference records go to the higher-rated team."
+- **The method notes:** they explain that tiebreaks can move playoff odds far more than records.
+- **Swaps in the current file:** Texas Tech/BYU, Memphis/North Texas, James Madison/Louisiana Tech and Army/UTSA.
+
 ## Product (preview)
 
 **Where it lives:** **Home → Model Projections** (`#/projections`), linked from Game Predictions. It is added from
@@ -115,8 +212,15 @@ Each cell shows Brier score (lower is better) / winner accuracy / margin MAE.
 - week and team filters;
 - projected scores and win probabilities;
 - the official forecast for reference;
-- a plain-language disagreement explanation;
-- projected records with conference and CFP odds per model;
+- a one-sentence disagreement explanation (for example "Momentum favors Texas Tech by 1.3 additional points based on
+  stronger recent opponent-adjusted performance."), with the calculation behind a "How this is calculated" expander;
+- projected records with conference and CFP odds per model:
+  - on desktop, a table with one column per model;
+  - on phones (767px and below), one card per team: a team heading, then a separate block for each model with expected
+    record, most likely record, conference-title chance and CFP chance;
+- the view selection (Compare, the default; Standard; Momentum) controls the game cards, records, conference odds and
+  CFP odds together, on one page;
+- a tiebreak note in Compare view when a team swaps order with a conference contender between models;
 - validation results, with the existing-method rows labelled as a replay.
 
 **Tests:** `web/tests/model-projections.mjs` (five widths, keyboard, overflow, contrast, bottom navigation, missing

@@ -20,26 +20,37 @@ check('score line puts the projected winner first; favourite and probability', (
   assert.equal(s.pct(0.5589), '56%'); assert.equal(s.pct(null), 'N/A')
 })
 check('agreement within a point is stated plainly', () => {
-  assert.match(s.disagreement(game(proj(28, 29, 0.47), proj(28.2, 29, 0.48), 4, 12), data), /agree to within a point/)
+  assert.equal(s.disagreement(game(proj(28, 29, 0.47), proj(28.2, 29, 0.48), 4, 12), data).summary, 'The models agree to within a point.')
 })
-check('disagreement names the side Momentum favours and a consistent cause', () => {
+check('short summary names the side Momentum favours and a consistent cause; calculation in details', () => {
   // Momentum shifts 1.35 toward Texas Tech (away); Texas Tech's recent form is 4 above its season level.
-  const text = s.disagreement(game(proj(28.0, 28.9, 0.476), proj(28.7, 31.0, 0.441), 4, 16), data)
-  assert.match(text, /^Momentum favours Texas Tech by 1\.4 more points than Standard\./)
-  assert.match(text, /Texas Tech's last three games were 4\.0 points per game better than its season level/)
+  const e = s.disagreement(game(proj(28.0, 28.9, 0.476), proj(28.7, 31.0, 0.441), 4, 16), data)
+  assert.equal(e.summary, 'Momentum favors Texas Tech by 1.4 additional points based on stronger recent opponent-adjusted performance.')
+  assert.ok(e.summary.length < 120)
+  assert.ok(e.details.some(d => d === 'Standard margin: Texas Tech by 0.9. Momentum margin: Texas Tech by 2.3.'), e.details)
+  assert.ok(e.details.some(d => d.startsWith('Texas Tech: last three games +16.0 per game vs a season rating of +12.0')), e.details)
 })
-check('an inconsistent driver is never used as the explanation', () => {
+check('a slump by the other team is described as such; an inconsistent driver is never used', () => {
+  // Shift toward Texas Tech explained by Baylor's slump (home form 1 vs season 4).
+  assert.equal(s.disagreement(game(proj(28.0, 28.9, 0.476), proj(28.7, 31.0, 0.441), 1, 12), data).summary,
+    "Momentum favors Texas Tech by 1.4 additional points based on Baylor's weaker recent opponent-adjusted performance.")
   // Shift toward Texas Tech, but the only form change is a Baylor surge (would favour Baylor): fall back.
-  const text = s.disagreement(game(proj(28.0, 28.9, 0.476), proj(28.7, 31.0, 0.441), 9, 12), data)
-  assert.ok(!/Baylor's last three games/.test(text), text)
-  assert.match(text, /lean slightly toward Texas Tech/)
+  const e = s.disagreement(game(proj(28.0, 28.9, 0.476), proj(28.7, 31.0, 0.441), 9, 12), data)
+  assert.equal(e.summary, 'Momentum favors Texas Tech by 1.4 additional points because recent games count more.')
+})
+check('tiebreak note names the swapped contenders, and is absent otherwise', () => {
+  assert.equal(s.tiebreakNote('Texas Tech', { tiebreak_swaps: [{ rival: 'BYU', standard_gap: -0.9, momentum_gap: 0.21 }] }),
+    'Playoff odds differ partly because Texas Tech and BYU swap order between the models, and tied conference records go to the higher-rated team.')
+  assert.match(s.tiebreakNote('A', { tiebreak_swaps: [{ rival: 'B' }, { rival: 'C' }] }), /A and B and C swap/)
+  assert.equal(s.tiebreakNote('A', { tiebreak_swaps: [] }), null)
+  assert.equal(s.tiebreakNote('A', {}), null)
 })
 check('most likely record from the distribution', () => {
   const t = { wins: 9, losses: 1, standard: { win_distribution: [0.05, 0.35, 0.6] } }
   assert.deepEqual({ ...s.likelyRecord(t, 'standard') }, { wins: 11, losses: 1, probability: 0.6 })
 })
 const real = JSON.parse(await readFile('web/public/dual-projections.json', 'utf8'))
-for (const g of real.games) for (const k of ['standard', 'momentum']) assert.ok(s.scoreLine(g, k).includes(g.home) && s.disagreement(g, real).length > 20)
+for (const g of real.games) for (const k of ['standard', 'momentum']) assert.ok(s.scoreLine(g, k).includes(g.home) && s.disagreement(g, real).summary.length > 20 && s.disagreement(g, real).summary.length <= 160)
 assert.deepEqual([...s.weeks(real)], [...new Set(real.games.map(g => g.week))].sort((a, b) => a - b))
 results.push(`real published file: ${real.games.length} games explained, weeks ${s.weeks(real).join(', ')}`)
 console.log(JSON.stringify({ status: 'PASS', cases: results.length, results }, null, 2))
