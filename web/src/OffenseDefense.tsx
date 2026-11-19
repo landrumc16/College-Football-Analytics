@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
-import { describeEdge, field, format, GROUPS, leaderboard, lowerIsBetter, matchupEdges, notableEdges, percentile, poolSize, sampleUnit,
+import { edgeStrength, explainEdge, field, format, GROUPS, leaderboard, lowerIsBetter, matchupEdges, notableEdges, percentile, poolSize, sampleUnit,
   type Side, type V8Stats, type View } from './v8Stats'
 import './offense-defense.css'
 
-const VIEWS: { id: View; label: string; help: string }[] = [
-  { id: 'raw', label: 'Traditional', help: 'Every game played, including FCS opponents. Not adjusted for opponents.' },
-  { id: 'power', label: 'Power Four only', help: 'Only games against ACC, Big Ten, Big 12, SEC and Notre Dame opponents. Shown for power-conference teams.' },
-  { id: 'adjusted', label: 'Opponent-adjusted', help: 'Expected result against an average FBS opponent on a neutral field. Accounts for every opponent once; small samples are pulled toward average.' },
+const VIEWS: { id: View; label: string; short: string; help: string }[] = [
+  { id: 'raw', label: 'Traditional', short: 'Every game, as played.', help: 'Every game played, including FCS opponents. Not adjusted for opponents.' },
+  { id: 'power', label: 'Power Four only', short: 'Only games against power-conference opponents.', help: 'Only games against ACC, Big Ten, Big 12, SEC and Notre Dame opponents. Shown for power-conference teams.' },
+  { id: 'adjusted', label: 'Opponent-adjusted', short: 'Rated against an average FBS opponent.', help: 'Expected result against an average FBS opponent on a neutral field. Accounts for every opponent once; small samples are pulled toward average.' },
 ]
 
 export function useV8Stats() {
@@ -38,7 +38,7 @@ function UnitTable({ data, team, side, view }: { data: V8Stats; team: string; si
   const pool = poolSize(data, view)
   return <div className="table-wrap"><table className="od-table">
     <caption>{side === 'offense' ? 'Offense' : 'Defense'} · {VIEWS.find(v => v.id === view)!.label}</caption>
-    <thead><tr><th scope="col">Measure</th><th scope="col">{side === 'offense' ? 'Gained' : 'Allowed'}</th><th scope="col">{view === 'power' ? 'Power rank' : 'FBS rank'}</th></tr></thead>
+    <thead><tr><th scope="col">Measure</th><th scope="col">{side === 'offense' ? 'Gained' : 'Allowed'}</th><th scope="col">{view === 'power' ? 'Power rank' : 'FBS rank'} <span className="od-head-note">(#1 best)</span></th></tr></thead>
     {GROUPS.map(group => <tbody key={group.id}>
       <tr className="od-group"><th scope="rowgroup" colSpan={3}>{group.label}</th></tr>
       {group.metrics.map(metric => {
@@ -58,7 +58,7 @@ function Trends({ data, team }: { data: V8Stats; team: string }) {
   const t = data.teams[team]
   const items: [string, string][] = [['offense_epa', 'Offense efficiency'], ['offense_ppd', 'Offense scoring'], ['defense_epa', 'Defense efficiency'], ['defense_ppd', 'Defense scoring']]
   return <section className="od-card" aria-labelledby="od-trends"><h3 id="od-trends">Recent form and consistency</h3>
-    <p className="od-muted">Last four games against earlier games, adjusted for opponents. A change is only called improving or declining when it is larger than its uncertainty.</p>
+    <p className="od-muted">Last 4 games vs earlier games, adjusted for opponents. Labelled only when the change is bigger than its uncertainty.</p>
     <ul className="od-trends">{items.map(([key, label]) => {
       const tr = t.trend[key], vol = t.volatility[key]
       return <li key={key}><strong>{label}</strong>
@@ -70,18 +70,26 @@ function Trends({ data, team }: { data: V8Stats; team: string }) {
 
 function Matchup({ data, team, opponent }: { data: V8Stats; team: string; opponent: string }) {
   const edges = matchupEdges(data, team, opponent)
-  const notable = notableEdges(edges)
+  const top = notableEdges(edges, 3)
   const rows = (offense: string) => edges.filter(e => e.offense === offense)
-  return <section className="od-card" aria-labelledby="od-matchup"><h3 id="od-matchup">How {team} and {opponent} match up</h3>
-    <p className="od-muted">Each line combines one team's opponent-adjusted offense with the other's opponent-adjusted defense on a neutral field. These are descriptive matchup factors, not a separate prediction.</p>
-    {notable.length ? <ul className="od-edges">{notable.map(e => <li key={e.offense + e.metric}>{describeEdge(e)}</li>)}</ul>
-      : <p>No phase of this matchup differs from the national average by half a standard deviation or more.</p>}
-    {[team, opponent].map(offense => <div className="table-wrap" key={offense}><table className="od-table">
-      <caption>{offense} offense vs {offense === team ? opponent : team} defense</caption>
-      <thead><tr><th scope="col">Phase</th><th scope="col">Expected</th><th scope="col">National average</th><th scope="col">Edge</th></tr></thead>
-      <tbody>{rows(offense).map(e => <tr key={e.metric}><th scope="row">{e.label}</th><td>{format(e.metric, e.expected)}</td><td>{format(e.metric, e.mean)}</td>
-        <td><span className={Math.abs(e.size) >= 0.5 ? (e.size > 0 ? 'od-rank od-good' : 'od-rank od-weak') : 'od-muted'}>{Math.abs(e.size) < 0.5 ? 'Even' : e.size > 0 ? 'Offense' : 'Defense'}</span></td></tr>)}</tbody>
-    </table></div>)}
+  return <section className="od-matchup" aria-labelledby="od-matchup"><h3 id="od-matchup">How {team} and {opponent} match up</h3>
+    <p className="od-muted">The strongest edges when each offense meets the other defense. Descriptive only: game predictions do not change.</p>
+    {top.length ? <ol className="od-edge-cards" aria-label="Biggest matchup advantages">{top.map(e => <li key={e.offense + e.metric}>
+      <span className="od-edge-kicker">{edgeStrength(e)} · {e.size >= 0 ? `${e.offense} offense` : `${e.defense} defense`}</span>
+      <strong className="od-edge-title">{e.label}</strong>
+      <span className="od-edge-stat"><b>{format(e.metric, e.expected)}</b> expected vs {format(e.metric, e.mean)} national average</span>
+      <p>{explainEdge(e)}</p>
+    </li>)}</ol>
+      : <p>No phase of this matchup stands out: every expected value is within half a standard deviation of the national average.</p>}
+    <details className="od-more"><summary>All matchup factors</summary>
+      <p className="od-muted">Expected = one team's opponent-adjusted offense combined with the other's opponent-adjusted defense on a neutral field. An edge needs half a national standard deviation or more.</p>
+      {[team, opponent].map(offense => <div className="table-wrap" key={offense}><table className="od-table">
+        <caption>{offense} offense vs {offense === team ? opponent : team} defense</caption>
+        <thead><tr><th scope="col">Phase</th><th scope="col">Expected</th><th scope="col"><abbr title="National average">Nat. avg</abbr></th><th scope="col">Edge</th></tr></thead>
+        <tbody>{rows(offense).map(e => <tr key={e.metric}><th scope="row">{e.label}</th><td>{format(e.metric, e.expected)}</td><td>{format(e.metric, e.mean)}</td>
+          <td><span className={Math.abs(e.size) >= 0.5 ? (e.size > 0 ? 'od-rank od-good' : 'od-rank od-weak') : 'od-muted'}>{Math.abs(e.size) < 0.5 ? 'Even' : e.size > 0 ? 'Offense' : 'Defense'}</span></td></tr>)}</tbody>
+      </table></div>)}
+    </details>
   </section>
 }
 
@@ -101,14 +109,23 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
   const board = leaderboard(data, boardMetric, boardSide, view)
   return <section className="notice offense-defense" aria-labelledby="od-title">
     <h2 id="od-title">Offense &amp; Defense</h2>
-    <p className="page-deck">How every FBS offense and defense performed, and how much the schedule explains it. {data.season} season{data.coverage ? ` · play-by-play for ${data.coverage.games_with_plays} of ${data.coverage.completed_games} completed games` : ''}.</p>
+    <p className="page-deck">How every FBS offense and defense performed. {data.season} season{data.coverage ? ` · ${data.coverage.games_with_plays} of ${data.coverage.completed_games} games with play-by-play` : ''}.</p>
     <div className="od-controls">
       <SchoolSearch label="Choose team" value={selected} onChange={onTeam} schools={schools} />
       <fieldset className="od-views"><legend>Statistics</legend>
         {VIEWS.map(v => <label key={v.id}><input type="radio" name="od-view" value={v.id} checked={view === v.id} onChange={() => setView(v.id)} />{v.label}</label>)}
       </fieldset>
     </div>
-    <p className="od-muted od-help">{VIEWS.find(v => v.id === view)!.help}</p>
+    <p className="od-muted od-help">{VIEWS.find(v => v.id === view)!.short}</p>
+    <details className="od-more od-guide"><summary>How to read these numbers</summary>
+      <ul>
+        {VIEWS.map(v => <li key={v.id}><strong>{v.label}:</strong> {v.help}</li>)}
+        <li><strong>Rank:</strong> #1 is always the best, whichever way the numbers run. Offense ranks reward more; defense ranks reward allowing less, except sacks, run stuffs and turnovers, where the note in the row says which way is better.</li>
+        <li><strong>± range:</strong> opponent-adjusted values show a 90% range. For example 0.15 ± 0.08 means the team's true level is very likely between 0.07 and 0.23. Bigger samples give narrower ranges.</li>
+        <li><strong>Sample:</strong> the small grey line under each measure is how many plays, drives, attempts or games the number is based on.</li>
+        <li><strong>Descriptive, not predictive:</strong> these statistics describe how units performed. Game predictions still come from the existing model.</li>
+      </ul>
+    </details>
     {t && <>
       <div className="od-summary" aria-label={`${selected} summary`}>
         <div><small>Record context</small><strong>{t.games} games</strong><span className="od-muted">{t.power_games} vs power opponents · {t.fcs_games} vs FCS</span></div>
@@ -130,11 +147,12 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
         <label>Measure <select value={boardMetric} onChange={e => setBoardMetric(e.target.value)}>{GROUPS.map(g => <optgroup key={g.id} label={g.label}>{g.metrics.map(m => <option key={m} value={m}>{data.definitions[m].label}</option>)}</optgroup>)}</select></label>
         <label>Unit <select value={boardSide} onChange={e => setBoardSide(e.target.value as Side)}><option value="offense">Offense</option><option value="defense">Defense</option></select></label>
       </div>
-      <div className="table-wrap"><table className="od-table">
+      <div className="table-wrap"><table className="od-table od-board-table">
         <caption>{boardSide === 'offense' ? 'Offense' : 'Defense'}: {data.definitions[boardMetric].label} · {VIEWS.find(v => v.id === view)!.label}{lowerIsBetter(data.definitions, boardMetric, boardSide) ? ' (lower is better)' : ''}</caption>
+        <colgroup><col className="od-col-rank" /><col /><col className="od-col-value" /></colgroup>
         <thead><tr><th scope="col">Rank</th><th scope="col">Team</th><th scope="col">Value</th></tr></thead>
         <tbody>{(showAll ? board : board.slice(0, 25)).map(row => <tr key={row.team} className={row.team === selected ? 'selected-row' : undefined}>
-          <td>{row.rank}</td><td><button type="button" className="od-team" onClick={() => onTeam(row.team)}>{row.team}</button> <small className="od-muted">{row.conference}</small></td>
+          <td>{row.rank}</td><td><button type="button" className="od-team" onClick={() => onTeam(row.team)}>{row.team}</button><small className="od-muted od-conf">{row.conference}</small></td>
           <td>{format(boardMetric, row.value)}{view === 'power' && row.games != null && <small className="od-muted"> · {row.games} g</small>}</td></tr>)}</tbody>
       </table></div>
       {board.length > 25 && <button type="button" onClick={() => setShowAll(!showAll)}>{showAll ? 'Show top 25' : `Show all ${board.length}`}</button>}

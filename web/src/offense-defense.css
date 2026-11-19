@@ -48,3 +48,32 @@
 }
 .od-sample{display:block;color:#a9b8cb;font-weight:400;font-size:12px;margin-top:2px}
 @media(max-width:767px){.od-views label{position:relative}.od-views input{position:absolute;opacity:0;width:1px;height:1px;left:50%;top:50%}.od-views label:has(input:focus-visible){outline:3px solid #8be5c8;outline-offset:1px}.od-views label{border:1px solid #34445a}}
+.od-head-note{font-weight:400;text-transform:none;letter-spacing:0;color:#a9b8cb}
+.od-more{margin-top:12px;border-top:1px solid #34445a;padding-top:4px}
+.od-more>summary{cursor:pointer;font-weight:700;color:#f2d3a2;min-height:44px;display:flex;align-items:center}
+.od-guide{border:1px solid #34445a;border-radius:10px;padding:0 12px;margin:0 0 14px}
+.od-guide ul{margin:0 0 12px;padding-left:18px;color:#dbe5f1}
+.od-guide li{margin:6px 0}
+.od-edge-cards{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.od-edge-cards li{display:flex;flex-direction:column;gap:6px;background:#142238;border:1px solid #34445a;border-left:4px solid #d4ad79;border-radius:10px;padding:12px;min-width:0}
+.od-edge-kicker{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#f2d3a2}
+.od-edge-title{font-size:17px;color:#f5f0e6}
+.od-edge-stat{color:#dbe5f1}
+.od-edge-stat b{font-size:20px;color:#8be5c8}
+.od-edge-cards p{margin:0;color:#c8d5e4;font-size:14px;line-height:1.45}
+.od-matchup{margin-top:14px}
+.od-matchup h3{margin:0 0 6px}
+.od-table caption{white-space:normal;overflow-wrap:anywhere}
+.od-table abbr{text-decoration:none}
+@media(max-width:767px){.od-card{padding:12px}.od-matchup .od-table td,.od-matchup .od-table th{padding:8px 6px}}
+.od-conf{display:block}
+.od-team{text-align:left}
+@media(max-width:420px){.offense-defense .od-table td,.offense-defense .od-table th{padding:8px 5px}.od-table caption{padding:10px 8px}}
+.od-board-table{table-layout:fixed}
+.od-col-rank{width:4.2rem}
+.od-col-value{width:6.5rem}
+.od-board-table td{overflow-wrap:anywhere}
+.od-matchup .od-table{table-layout:fixed}
+.od-matchup .od-table th[scope=row],.od-matchup .od-table thead th:first-child{width:34%}
+.od-matchup .od-table td,.od-matchup .od-table th{overflow-wrap:anywhere}
+.od-matchup .od-table td:last-child .od-rank,.od-matchup .od-table td:last-child .od-muted{font-size:13px}

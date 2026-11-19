@@ -29,6 +29,9 @@ check('edges favour the right side and lower-is-better metrics flip', () => {
   assert.ok(cSack.size < 0)   // C's offense allows sacks (8%) and A's defense creates them (9%): defense edge
   assert.equal(cSack.favours, 'A')
   assert.ok(s.describeEdge(aSr).startsWith('Clear edge for A\'s offense'))
+  const text = s.explainEdge(aSr)
+  assert.ok(text.includes("A's offense posts 48.0%") && text.includes("C's defense allows 48.0%") && text.includes('about 56.0%') && text.includes('national average of 40.0%'), text)
+  assert.equal(s.edgeStrength(aSr), 'Clear edge')
 })
 check('notable edges need half a standard deviation', () => {
   const calm = { ...fixture, teams: { A: fixture.teams.B, B: fixture.teams.B, C: fixture.teams.A } }

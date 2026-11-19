@@ -57,12 +57,38 @@ try {
     await od.getByRole('radio', { name: 'Traditional' }).check();
     const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
     assert.ok(rawText.includes(`#${ttEpa[1]} of ${stats.fbs_teams}`), rawText);
+    // Reading guide: ranks, the 90% range and samples explained one tap away.
+    const guide = od.locator('details.od-guide');
+    await guide.locator('summary').click();
+    const guideText = await guide.innerText();
+    assert.ok(/#1 is always the best/.test(guideText) && /90% range/.test(guideText) && /Descriptive, not predictive/.test(guideText), guideText);
+    await guide.locator('summary').click();
+    if (width === 390 || width === 1536) await page.screenshot({ path: `${evidence}/profile-top-${width}.png` });
     // Recent form and consistency are present with uncertainty-gated labels.
     await od.getByRole('heading', { name: 'Recent form and consistency' }).waitFor();
     // Matchup panel against an opponent.
     await chooseSchool(page, 'Choose opponent', OPP);
     await od.getByRole('heading', { name: `How ${TEAM} and ${OPP} match up` }).waitFor();
-    assert.equal(await od.locator('caption', { hasText: `${TEAM} offense vs ${OPP} defense` }).count(), 1);
+    // Hierarchy: at most three advantage cards first, each naming who benefits with the statistic and comparison.
+    const cards = od.getByRole('list', { name: 'Biggest matchup advantages' }).getByRole('listitem');
+    const cardCount = await cards.count();
+    assert.ok(cardCount >= 1 && cardCount <= 3, `cards ${cardCount}`);
+    for (let i = 0; i < cardCount; i++) {
+      const text = (await cards.nth(i).innerText()).replace(/\s+/g, ' ');
+      assert.match(text, /(Clear|Modest) edge · (Texas Tech|Baylor) (offense|defense)/i, text);
+      assert.match(text, /expected vs .* national average/, text);
+      assert.match(text, /Against average opponents, .* offense posts .* defense allows .*national average/, text);
+    }
+    // Detailed factors stay available behind a keyboard-operable expander.
+    const factors = od.locator('details.od-more', { hasText: 'All matchup factors' });
+    assert.equal(await factors.getAttribute('open'), null);
+    await factors.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await od.locator('caption', { hasText: `${TEAM} offense vs ${OPP} defense` }).waitFor();
+    // Readability: no statistics table needs sideways scrolling, even with every matchup factor open.
+    const tableOverflow = await page.evaluate(() => [...document.querySelectorAll('.offense-defense .table-wrap')].map(e => e.scrollWidth - e.clientWidth));
+    assert.ok(tableOverflow.every(v => v <= 1), `table overflow at ${width}: ${tableOverflow}`);
+    if (width === 390 || width === 1536) await od.getByRole('heading', { name: `How ${TEAM} and ${OPP} match up` }).locator('xpath=..').screenshot({ path: `${evidence}/matchup-${width}.png` });
     if (width === 390 || width === 1536) {
       await od.screenshot({ path: `${evidence}/offense-defense-${width}.png` });
     }

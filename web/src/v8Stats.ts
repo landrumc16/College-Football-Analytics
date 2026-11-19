@@ -74,7 +74,7 @@ function spread(data: V8Stats, metric: string, side: Side) {
   return Math.sqrt(values.reduce((s, v) => s + (v - m) ** 2, 0) / values.length) || 1
 }
 
-export type Edge = { metric: string; label: string; offense: string; defense: string; expected: number; mean: number; size: number; favours: string }
+export type Edge = { metric: string; label: string; offense: string; defense: string; expected: number; mean: number; size: number; favours: string; offenseValue: number; defenseValue: number }
 
 /** Phase-by-phase edges for both units in a matchup, sized in national standard deviations (positive favours the offense). */
 export function matchupEdges(data: V8Stats, a: string, b: string, metrics = ['epa', 'rush_sr', 'pass_sr', 'expl', 'pass_expl', 'rush_expl', 'sack', 'third', 'rz_td', 'ppd']): Edge[] {
@@ -86,7 +86,8 @@ export function matchupEdges(data: V8Stats, a: string, b: string, metrics = ['ep
       const sign = data.definitions[metric].offense_higher_is_better ? 1 : -1
       const size = sign * (value - mean) / spread(data, metric, 'offense')
       edges.push({ metric, label: data.definitions[metric].label, offense, defense, expected: value, mean, size,
-        favours: size >= 0 ? offense : defense })
+        favours: size >= 0 ? offense : defense,
+        offenseValue: data.teams[offense].offense[metric][5] as number, defenseValue: data.teams[defense].defense[metric][5] as number })
     }
   }
   return edges
@@ -102,6 +103,14 @@ export function describeEdge(e: Edge): string {
   const who = e.size >= 0 ? `${e.offense}'s offense` : `${e.defense}'s defense`
   return `${strength[0].toUpperCase() + strength.slice(1)} edge for ${who}: ${e.label.toLowerCase()} expected at ${format(e.metric, e.expected)} vs the national average of ${format(e.metric, e.mean)}.`
 }
+
+/** Plain-English explanation built only from the two units' adjusted values and the national average. */
+export function explainEdge(e: Edge): string {
+  const measure = e.label.charAt(0).toLowerCase() + e.label.slice(1)
+  return `Against average opponents, ${e.offense}'s offense posts ${format(e.metric, e.offenseValue)} and ${e.defense}'s defense allows ${format(e.metric, e.defenseValue)} (${measure}). Together that points to about ${format(e.metric, e.expected)}, against a national average of ${format(e.metric, e.mean)}.`
+}
+
+export const edgeStrength = (e: Edge) => (Math.abs(e.size) >= 1 ? 'Clear edge' : 'Modest edge')
 
 export function percentile(rank: number | null, pool: number) {
   return rank == null || pool < 2 ? null : Math.round(100 * (pool - rank) / (pool - 1))
