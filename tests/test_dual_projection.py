@@ -101,3 +101,23 @@ def test_priors_regress_and_cover_new_teams():
     assert priors == {"A": (6.0, -3.0)}
     fit = dp.stage1([], {"A": (6.0, -3.0), "New": dp.NEW_TEAM})
     assert dp.model_ratings({}, fit, "linear")["New"] == dp.NEW_TEAM     # no games: the prior
+
+
+def test_published_projections_are_internally_consistent():
+    import json
+    from pathlib import Path
+    data = json.loads(Path("web/public/dual-projections.json").read_text())
+    assert data["games"] and len(data["teams"]) >= 130
+    for g in data["games"]:
+        for k in ("standard", "momentum"):
+            m = g[k]
+            assert abs(m["home_points"] - m["away_points"] - m["home_margin"]) < 0.11
+            assert 0 < m["home_win_probability"] < 1 and (m["home_margin"] > 0) == (m["home_win_probability"] > 0.5)
+    for name, t in data["teams"].items():
+        mine = [g for g in data["games"] if name in (g["home"], g["away"])]
+        assert t["remaining"] == len(mine)
+        for k in ("standard", "momentum"):
+            ps = [g[k]["home_win_probability"] if g["home"] == name else 1 - g[k]["home_win_probability"] for g in mine]
+            assert abs(t[k]["expected_wins"] - (t["wins"] + sum(ps))) < 0.02            # records follow the model's own games
+            assert abs(sum(t[k]["win_distribution"]) - 1) < 1e-3
+            assert len(t[k]["win_distribution"]) == len(mine) + 1

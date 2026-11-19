@@ -809,6 +809,13 @@
    7e-05
   ]
  },
+ "final_scales": {
+  "momentum": 9.78017,
+  "momentum_geo70": 10.18162,
+  "momentum_geo80": 9.77186,
+  "momentum_geo90": 9.56824,
+  "standard": 9.57661
+ },
  "first_half_weeks_le_7": {
   "games": 2886,
   "incumbent_replay": {

@@ -269,6 +269,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Refresh Standard and Momentum projections from the current CFBD snapshot (preview models)
+        run: |
+          # Failure keeps the committed file (its data timestamp is shown on the page) and never blocks deployment.
+          python -m cfb_analytics.dual_publish || echo "::warning::dual projections not refreshed; keeping the committed file"
       - name: Install and build
         working-directory: web
         run: |

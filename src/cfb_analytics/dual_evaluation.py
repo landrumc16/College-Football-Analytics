@@ -273,6 +273,9 @@ def main(argv=None):
         "season_records": record_accuracy(snapshots, kinds, scales),
         "authentic_2026": authentic_2026(records, ["standard", selected]),
         "scales": {k: {str(s): v for s, v in sc.items()} for k, sc in scales.items()},
+        # For live 2026 projections: logistic scale fitted on every evaluated season (2016-2025, not 2020).
+        "final_scales": {k: dp.fit_scale([r["models"][k][2] for r in hist if r["season"] != 2020],
+                                         [r["y"] for r in hist if r["season"] != 2020]) for k in kinds},
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(round_tree(result), indent=1, sort_keys=True) + "\n")

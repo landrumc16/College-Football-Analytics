@@ -1,0 +1,51 @@
+/* Dual model projections (palette shared with the Offense & Defense page) */
+.model-projections h2{margin-top:0}
+.model-projections h3{margin:18px 0 8px}
+.mp-controls{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:14px;align-items:end}
+.mp-views{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;border:1px solid #34445a;border-radius:10px;padding:8px 10px;margin:0}
+.mp-views legend{font-weight:700;color:#e3ecf6;font-size:14px;padding:0 4px}
+.mp-views label{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;padding:4px 12px;border:1px solid #34445a;border-radius:8px;color:#dbe5f1;cursor:pointer;font-size:15px}
+.mp-views input{position:absolute;opacity:0;width:1px;height:1px;min-width:0;left:50%;top:50%;margin:0;padding:0}
+.mp-views label:has(input:checked){background:#792d36;border-color:#792d36;color:#fff8ee}
+.mp-views label:has(input:focus-visible){outline:3px solid #8be5c8;outline-offset:1px}
+.mp-week{display:flex;flex-direction:column;gap:6px;color:#e3ecf6;font-weight:700;font-size:14px}
+.mp-week select{min-height:48px}
+.mp-muted,.model-projections p.mp-muted{color:#a9b8cb;font-size:14px}
+.mp-games{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.mp-game{background:#132137;border:1px solid #34445a;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mp-game-head{display:flex;flex-direction:column;gap:2px}
+.mp-game-head strong{font-size:17px;color:#f5f0e6}
+.mp-game-head .mp-muted{font-size:13px}
+.mp-models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mp-model{display:flex;flex-direction:column;gap:4px;background:#142238;border:1px solid #34445a;border-radius:10px;padding:10px;min-width:0}
+.mp-model-name{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#f2d3a2}
+.mp-score{font-size:16px;color:#f5f0e6;overflow-wrap:anywhere}
+.mp-prob{font-size:14px;color:#dbe5f1}
+.mp-prob b{font-size:18px;color:#8be5c8}
+.mp-large .mp-score{font-size:19px}
+.mp-large .mp-prob b{font-size:22px}
+.mp-why{margin:0;font-size:14px;line-height:1.45;color:#c8d5e4}
+.mp-official{margin:0;font-size:13px;color:#a9b8cb}
+.mp-more,.mp-link{min-height:44px;margin-top:10px}
+.mp-link{color:#f2d3a2;text-decoration:underline;padding-left:0}
+.mp-table{white-space:normal;table-layout:fixed}
+.mp-table caption{text-align:left;font-weight:700;color:#f5f0e6;padding:12px 14px;font-size:15px}
+.mp-table th[scope=row]{text-transform:none;letter-spacing:0;font-size:15px;color:#e3ecf6;background:transparent;font-weight:600;overflow-wrap:anywhere}
+.mp-table thead th{font-size:12px}
+.mp-table td b{font-size:16px;color:#f5f0e6}
+.mp-sub{display:block;color:#a9b8cb;font-size:13px;font-weight:400;margin-top:2px}
+.mp-more-info{margin-top:18px;border:1px solid #34445a;border-radius:12px;padding:0 14px;background:#132137}
+.mp-more-info>summary{cursor:pointer;font-weight:700;color:#f2d3a2;min-height:44px;display:flex;align-items:center}
+.mp-more-info ul{color:#dbe5f1;padding-left:18px}
+.mp-more-info li{margin:6px 0}
+.mp-validation td,.mp-validation th{font-size:14px}
+@media(max-width:767px){
+ .mp-controls{grid-template-columns:1fr}
+ .mp-games{grid-template-columns:1fr}
+ .mp-table td,.mp-table th{padding:9px 7px}
+}
+@media(max-width:420px){.mp-models{grid-template-columns:1fr}}
+.mp-validation th[scope=row]{width:36%}
+.mp-validation td,.mp-validation th{overflow-wrap:anywhere}
+@media(max-width:420px){.mp-validation td,.mp-validation th{padding:8px 5px;font-size:13px}}
+.mp-nowrap{white-space:nowrap}
