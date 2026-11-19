@@ -299,7 +299,7 @@ probability is well calibrated across 9,273 games (M3).
   - edits to `src/cfb_analytics/refresh.py`, and only edits that add lines.
 
   Deletions, renames, other modifications, nested paths and non-JSON shapes still fail.
-- **Tests:** `tests/test_protected_guard.py` (15 tests) covers these rules, including forks and other
+- **Tests:** `tests/test_protected_guard.py` (15 tests at the time; 18 at closeout) covers these rules, including forks and other
   branches.
 - **After the release:** remove the manifest once V7 is merged.
 
@@ -309,3 +309,34 @@ probability is well calibrated across 9,273 games (M3).
 - **PR #33:** ready for the owner's review and approval. Merge and deployment happen only on
   explicit approval.
 - **Unchanged:** Kalshi stays blocked, and no V7.1 or new roadmap is planned.
+
+## Release record and closeout (2026-11-18)
+
+### Releases (owner-merged)
+| Release | PR | Merged head | Merge commit on `main` | Merged (UTC) |
+|---|---|---|---|---|
+| Rankings usability (Option A scoped exception) | #34 | `e4c1cd0` | `efecd97` | 2026-11-17 00:01 |
+| Version 7 market analysis | #33 | `638835b` | `5147b4b` | 2026-11-17 00:59 |
+
+**Production deployment**
+- **Rankings:** "Build and publish analytics dashboard" run 382 deployed `efecd97` (success).
+- **Version 7:** push run 383 was cancelled by design (superseded). Run 384, triggered by the data refresh at `0cc6f9e`, deployed V7 (success).
+
+**Later owner-merged production changes (not part of the V7 scope):**
+- #36 Market usability, `c72801f`;
+- #38 Team strength, `474c72d`;
+- #39 Shared school search, `f3ea70b`;
+- #40 Week 12 poll fix, `195b21a`.
+
+**Production verification at `195b21a`** (2026-11-18, publish run 392 and Python tests run 2006, both success):
+- the published-dashboard smoke test passed;
+- live desktop, mobile and PWA journeys passed;
+- consented production analytics with excluded test traffic passed;
+- the V7 market files (`v7-market-metrics.json`, `v7-team-market-history.json`) are served live.
+
+**Observation:** publish run 389 (2026-11-17 23:19, after a scheduled refresh) failed its post-deploy smoke test with "Deployed report differs from the validated build artifact". Runs 390, 391 and 392 passed the same check, which is consistent with a transient stale read of the newly deployed report. No regression is outstanding.
+
+### Closeout
+- **Release manifest removed.** The V7 release manifest has been removed, so `.github/release-manifests/` is now empty. `scripts/verify_protected_changes.py` therefore applies the strict byte-identical guard to every branch. The mechanism is kept for a future owner-approved release; any new manifest must again be removed after merge.
+- **Tests updated.** `tests/test_protected_guard.py` (18 tests, all passing) now tests the mechanism with a fixture copy of the reviewed V7 manifest, and asserts that no manifest remains and every branch is strict. It also confirms that production still carries exactly the reviewed V7 navigation (`Navigation.tsx`, `EditorialHome.tsx` SHA-256 pins). Any future edit to these protected files needs a new review.
+- **Version 7 is complete and formally closed** once this closeout change is merged with owner approval. Kalshi stays blocked, and no V7.1 is planned.
