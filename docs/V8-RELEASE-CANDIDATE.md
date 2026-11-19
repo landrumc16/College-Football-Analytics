@@ -232,3 +232,44 @@ and the next routine dashboard deployment publishes them.
 
 **Rollback:** revert the V8 merge commit. V8 adds files and a section without changing existing calculations, so
 a revert restores the previous app exactly.
+
+## Release record (2026-11-19)
+
+**Merge:** the owner merged PR #43 at 16:28 UTC, from tested head `a763063`. The merge commit on `main` is
+`ebcc3f3046198f9a919a2da3be1d299635598022`.
+
+**Deployment:** the "Build and publish analytics dashboard" run 44566590263 deployed `ebcc3f3` to GitHub Pages
+(status: success). Its smoke test, its live desktop, mobile and PWA journeys, and its consented-analytics check all
+passed. The Python model tests passed on `main`.
+
+**Live verification:**
+- **Offense & Defense page:** the browser acceptance test passed against the live site at 375, 390, 430, 768 and
+  1536px (Chromium emulation, not a physical device).
+- **Data file:** the live `v8-team-stats.json` is byte-identical to `main`.
+- **Forecasts:** the live season report's rankings, predictions and CFP odds equal the repository data (only
+  `generated_at` differs). Published forecasts are unchanged.
+
+**Production smoke tests (live site, Chromium emulation; no physical device):**
+
+| Area | Result |
+| --- | --- |
+| Offense & Defense (three views, search, rankings, matchup cards and calculation expanders, recent form and consistency, leaders, entry points, contrast, overflow, bottom navigation) | Pass at 375, 390, 430, 768 and 1536px |
+| Navigation, favourites, rankings, CFP and polls | Pass at 375–1536px (deploy job's live mobile smoke) |
+| Android Chrome offline app: install, update, offline and recovery | Pass (deploy job) |
+| School search | Pass at five widths |
+| Market calculator | Pass at 320–1536px. Its missing-model fault-injection step needs a network route this sandbox blocks, so it was verified in CI only |
+| Published predictions | Live rankings, predictions and CFP odds equal the repository data, so they are unchanged |
+
+**Model status:**
+- **The incumbent stays authoritative:** the workbook 2026 baseline produces every published forecast.
+- **The V8 challenger was not promoted:** it failed the pre-registered gates (pooled Brier +0.62% against the 2%
+  required). Its research stays in `research/v8/`.
+
+**Remaining limitations:**
+- **Missing inputs:** quarterback, travel and coaching inputs have no verified pregame source and are shown as N/A.
+- **Season rollover:** the in-season refresh season defaults to 2026 and needs updating each new season.
+- **Device testing:** all mobile verification is browser emulation.
+
+**Closeout:** the temporary manifest is removed and the strict guard test is restored byte-for-byte to the PR #41
+version, on branch `v8-manifest-closeout` (its own PR). Version 8 is complete once that closeout merges. The
+challenger stays research-only.
