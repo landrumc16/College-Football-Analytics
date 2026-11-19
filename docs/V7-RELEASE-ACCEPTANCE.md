@@ -299,7 +299,7 @@ probability is well calibrated across 9,273 games (M3).
   - edits to `src/cfb_analytics/refresh.py`, and only edits that add lines.
 
   Deletions, renames, other modifications, nested paths and non-JSON shapes still fail.
-- **Tests:** `tests/test_protected_guard.py` (15 tests) covers these rules, including forks and other
+- **Tests:** `tests/test_protected_guard.py` (15 tests at the time; 18 at closeout) covers these rules, including forks and other
   branches.
 - **After the release:** remove the manifest once V7 is merged.
 
@@ -338,5 +338,5 @@ probability is well calibrated across 9,273 games (M3).
 
 ### Closeout
 - **Release manifest removed.** The V7 release manifest has been removed, so `.github/release-manifests/` is now empty. `scripts/verify_protected_changes.py` therefore applies the strict byte-identical guard to every branch. The mechanism is kept for a future owner-approved release; any new manifest must again be removed after merge.
-- **Tests updated.** `tests/test_protected_guard.py` now tests the mechanism with a fixture copy of the reviewed V7 manifest, and asserts that no manifest remains and every branch is strict. It also confirms that production still carries exactly the reviewed V7 navigation (`Navigation.tsx`, `EditorialHome.tsx` SHA-256 pins). Any future edit to these protected files needs a new review.
+- **Tests updated.** `tests/test_protected_guard.py` (18 tests, all passing) now tests the mechanism with a fixture copy of the reviewed V7 manifest, and asserts that no manifest remains and every branch is strict. It also confirms that production still carries exactly the reviewed V7 navigation (`Navigation.tsx`, `EditorialHome.tsx` SHA-256 pins). Any future edit to these protected files needs a new review.
 - **Version 7 is complete and formally closed** once this closeout change is merged with owner approval. Kalshi stays blocked, and no V7.1 is planned.
