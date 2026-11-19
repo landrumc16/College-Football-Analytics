@@ -50,13 +50,13 @@ const predictedForecast = (predictions: Prediction[], game: ScheduleGame, team: 
   return p.home === team ? p.home_win_probability : 1 - p.home_win_probability
 }
 
-export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare, lineupAdvisories, advisoryAsOf }: {
+export default function TeamProfile({ team, rankings, poll, cfp, schedule, predictions, recruiting, performance, conferences, modelMetadata, section, onSection, scheduleContent, onChoose, onCompare, onStats, lineupAdvisories, advisoryAsOf }: {
   team: string; rankings: Team[]; poll: Poll | null; cfp: Cfp[];
   schedule: ScheduleGame[]; predictions: Prediction[]; recruiting: Recruiting[];
   performance: Record<string, Performance>; conferences: Record<string, ConferenceTeam[]>; modelMetadata?: ModelMetadata;
   section: ProfileSection; onSection: (section: ProfileSection) => void; scheduleContent: ReactNode;
   lineupAdvisories?: Record<string, unknown>; advisoryAsOf?: string;
-  onChoose: (team: string) => void; onCompare: (team: string) => void;
+  onChoose: (team: string) => void; onCompare: (team: string) => void; onStats?: (team: string) => void;
 }) {
   const reportCards = useReportCards()
   const verified = reportCards?.programs.find(p => p.team === team)
@@ -96,7 +96,7 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
   const coaches = poll?.coaches_top25.find(r => r.team === team)?.rank
   const tile = (name: string, value: string) => <div className="team-profile-tile" key={name}><small>{name}</small><strong>{value}</strong></div>
   return <section className="notice team-profile">
-    <h2>Team Profile</h2><div className="profile-tools"><SchoolSearch label="Choose school" value={team} onChange={onChoose} schools={rankings.map(r => r.team).sort((a, b) => a.localeCompare(b))} /><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button></div>
+    <h2>Team Profile</h2><div className="profile-tools"><SchoolSearch label="Choose school" value={team} onChange={onChoose} schools={rankings.map(r => r.team).sort((a, b) => a.localeCompare(b))} /><button type="button" onClick={() => onCompare(team)} disabled={!team}>Compare this school</button>{onStats && <button type="button" onClick={() => onStats(team)} disabled={!team}>Offense &amp; Defense</button>}</div>
     {team && <><h3>{team}</h3>
     <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" onDropdownChange={setSectionDropdown} />
     <div id="profile-panel" role={sectionDropdown ? "region" : "tabpanel"} aria-labelledby={sectionDropdown ? "profile-panel-selection" : `profile-panel-${section}`}>

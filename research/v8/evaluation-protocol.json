@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "registered_at": "2026-11-19",
+  "registered_before_results": true,
+  "purpose": "V8 M5-M6: does an efficiency/matchup challenger beat the incumbent method on identical games?",
+  "cohort": {
+    "historical": "FBS vs FBS completed games, target seasons 2017-2025; 2020 reported separately and excluded from pooled gates",
+    "eligibility": "both teams have at least 3 completed FBS games with play data before kickoff; every feature computed from games strictly before the game's week",
+    "authentic_2026": "FBS vs FBS games with a timestamped incumbent forecast generated before kickoff (data/pregame-2026-history.json)"
+  },
+  "baseline": {
+    "historical": "incumbent-method replay: cfb_analytics.ratings.calculate_ratings week by week (incumbent settings), preseason prior = the same method's previous-season final rating; talent, returning production and coaching terms unavailable historically and omitted. Labelled a retrospective replay, never an archived forecast.",
+    "authentic_2026": "published incumbent pregame probabilities as recorded"
+  },
+  "challenger": "ridge linear model of home margin on the baseline rating gap plus as-of opponent-adjusted offense/defense matchup features; probability from a logistic mapping fitted on training seasons only; trained only on seasons before the target season",
+  "ablation_groups": ["efficiency", "scoring", "rush_pass", "explosive", "situational", "trend", "volatility", "vulnerability_interactions", "rest"],
+  "unavailable_inputs": {
+    "quarterback_changes": "not acquired with pregame timestamps in this pass; N/A",
+    "travel_altitude": "no venue coordinates in the acquired sources; N/A",
+    "coaching_scheme": "V6 coaching records lack verified publication cutoffs; not eligible as pregame inputs"
+  },
+  "metrics": ["brier", "log_loss", "winner_accuracy", "margin_mae", "calibration_slope", "calibration_bins_10"],
+  "uncertainty": "2000 bootstrap draws clustered by season-week",
+  "promotion_gates": {
+    "pooled_relative_brier_improvement_min": 0.02,
+    "clustered_ci95_upper_challenger_minus_baseline_brier": 0.0,
+    "seasons_improved_min": "6 of 8 non-2020 target seasons",
+    "log_loss_not_worse": true,
+    "calibration_slope_range": [0.9, 1.1],
+    "authentic_2026_not_worse": "challenger minus published incumbent Brier CI95 upper bound must be <= 0.01 (small sample; reported separately)",
+    "feature_inclusion": "an ablation group stays only if removing it worsens pooled held-out Brier"
+  },
+  "decision": "No automatic promotion. Gates met -> recommend promotion for owner approval; otherwise retain the incumbent and ship descriptive analytics."
+}

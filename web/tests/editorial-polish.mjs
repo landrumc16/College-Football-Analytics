@@ -92,9 +92,15 @@ try {
   await scenario.getByRole('button',{name:'Explore scenarios',exact:true}).click()
   await page.waitForFunction(()=>{const s=document.querySelector('[aria-label="Scenario matchup"]');return s&&!s.disabled})
   const baseline=await scenario.locator('tbody').textContent()
-  await page.getByRole('combobox',{name:'Scenario matchup',exact:true}).selectOption('401862844')
-  await page.getByRole('combobox',{name:'Scenario winner',exact:true}).selectOption('Navy')
-  await page.waitForFunction(baseline=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&s.querySelector('tbody').textContent!==baseline},baseline)
+  // A genuinely future scheduled game from the staged data (a fixed game id goes stale once it is played).
+  const scenarioInput=JSON.parse(await readFile('web/public/v6-scenario-input.json','utf8'))
+  const future=scenarioInput.games.filter(g=>g.start_date&&Date.parse(g.start_date)>Date.now())
+  const pick=future.find(g=>g.home==='Army')||future[0]
+  assert.ok(pick,'Need a future scheduled game for scenario parity')
+  await page.getByRole('combobox',{name:'Scenario matchup',exact:true}).selectOption(String(pick.game_id))
+  await page.getByRole('combobox',{name:'Scenario winner',exact:true}).selectOption(pick.away)
+  // Applied pick, confirmed by the scenario's own status (any future game, whether or not it moves the visible rows).
+  await page.waitForFunction(()=>{const s=document.querySelector('[aria-label="Playoff what-if scenarios"]');return s.querySelector('.table-wrap[aria-busy="false"]')&&/1 pick applied|· 1 selected outcomes/.test(s.querySelector('[role="status"]')?.textContent||'')})
   proof.scenario=await scenario.locator('tbody').textContent()
   await capture('scenarios',{region:scenario})
   await scenario.getByRole('button',{name:'Reset to baseline',exact:true}).click()

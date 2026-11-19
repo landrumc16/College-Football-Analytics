@@ -66,6 +66,8 @@ jobs:
         run: node web/tests/strength-scores-unit.mjs
       - name: School search ranking fixtures (exact, abbreviation, prefix, partial, accents, every FBS school)
         run: node web/tests/school-search-unit.mjs
+      - name: V8 Offense & Defense helpers (formatting, matchup expectations, edges, real published file)
+        run: node web/tests/v8-stats-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -87,6 +89,8 @@ jobs:
         run: node web/tests/strength-scores.mjs
       - name: Verify shared school search (five widths, touch, keyboard, ARIA, clipping, Compare, Market, Favorites)
         run: node web/tests/school-search.mjs
+      - name: Verify V8 Offense & Defense destination (five widths, views, matchup, entry points, contrast)
+        run: node web/tests/offense-defense.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

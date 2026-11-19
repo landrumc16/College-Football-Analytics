@@ -1,0 +1,86 @@
+name: Refresh V8 offense and defense statistics
+# Scheduled refresh of the current season's derived play-by-play counts and the published Offense & Defense
+# file. Schedules only run from the default branch, so this stays dormant until V8 is merged with owner
+# approval. Re-downloads games, drives and only the latest two weeks of plays (about seven CFBD calls),
+# using the existing CFBD_API_KEY and the private snapshot store. Commits derived files only; the next
+# dashboard deployment (after the routine data refresh) publishes them.
+on:
+  schedule:
+    - cron: '41 10 * 8-12 0,1,2'
+    - cron: '41 16 * 8-12 0,1'
+    - cron: '41 10 * 1 1,2'
+  workflow_dispatch:
+    inputs:
+      season:
+        description: Season to refresh
+        required: true
+        default: '2026'
+permissions:
+  contents: write
+concurrency:
+  group: v8-stats-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SEASON: ${{ github.event.inputs.season || '2026' }}
+      HAS_STORE: ${{ secrets.CFBD_SNAPSHOT_TOKEN != '' }}
+      SNAPSHOT_REPO: ${{ vars.CFBD_SNAPSHOT_REPO || 'landrumc16/cfb-analytics-private-data' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - name: Restore private snapshot store (must be private)
+        if: env.HAS_STORE == 'true'
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+        run: |
+          visibility=$(curl -sS -H "Authorization: Bearer $TOKEN" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/$SNAPSHOT_REPO" | python -c "import json,sys; print(json.load(sys.stdin).get('visibility'))")
+          if [ "$visibility" != "private" ] && [ "$visibility" != "internal" ]; then echo "snapshot store not private ($visibility)"; exit 1; fi
+          git clone -q "https://x-access-token:${TOKEN}@github.com/${SNAPSHOT_REPO}.git" private-store 2>&1 | sed "s/${TOKEN}/***/g"
+          echo "STORE=$GITHUB_WORKSPACE/private-store/v8-cfbd" >> "$GITHUB_ENV"
+      - name: Temporary store when no private store is configured
+        if: env.HAS_STORE != 'true'
+        run: echo "STORE=$RUNNER_TEMP/v8-cfbd" >> "$GITHUB_ENV"
+      - name: Refresh current-season counts
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python -m cfb_analytics.v8_sources --seasons "$SEASON" --refresh "$SEASON" --cache "$STORE"
+      - name: Publish the Offense & Defense file and verify
+        run: |
+          python -m cfb_analytics.v8_publish --season "$SEASON"
+          python -m pytest -q tests/test_v8_sources.py tests/test_v8_stats.py
+      - name: Commit derived files only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/v8/team-games/"$SEASON".json.gz research/v8/fbs-membership.json research/v8/sources-receipt.json web/public/v8-team-stats.json
+          if git status --porcelain | grep -vE '^(M |A ) (research/v8/(team-games/[0-9]{4}\.json\.gz|fbs-membership\.json|sources-receipt\.json)|web/public/v8-team-stats\.json)$'; then
+            echo "unexpected files changed; refusing to commit"; exit 1
+          fi
+          # The season's derived counts are unchanged (only timestamps moved): nothing new to publish.
+          if git diff --cached --quiet -- research/v8/team-games; then
+            echo "No new games; nothing to publish"; exit 0
+          fi
+          git commit -m "Refresh V8 offense and defense statistics ($SEASON)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Save snapshots to the private store
+        if: env.HAS_STORE == 'true'
+        working-directory: private-store
+        env:
+          TOKEN: ${{ secrets.CFBD_SNAPSHOT_TOKEN }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add v8-cfbd
+          if ! git diff --cached --quiet; then
+            git commit -q -m "CFBD V8 refresh snapshots (run ${GITHUB_RUN_ID})"
+            git push -q origin HEAD:main 2>&1 | sed "s/${TOKEN}/***/g"
+          fi

@@ -1,0 +1,115 @@
+{
+ "schema_version": 1,
+ "source": "CollegeFootballData API (api.collegefootballdata.com)",
+ "endpoints": [
+  "/teams/fbs",
+  "/games",
+  "/drives",
+  "/plays"
+ ],
+ "derived_at": "2026-11-19T14:13:06+00:00",
+ "published": "per team-game offensive counts only; raw rows and play text stay private",
+ "definitions": {
+  "garbage_time": {
+   "Q2": "|margin|>38",
+   "Q3": "|margin|>28",
+   "Q4": "|margin|>22"
+  },
+  "explosive": {
+   "rush_yards": 10,
+   "pass_yards": 20
+  },
+  "close_late": "4th quarter or OT, |margin|<=8",
+  "success": "1st down 50%, 2nd 70%, 3rd/4th 100% of distance; touchdowns succeed; turnovers fail"
+ },
+ "coverage": [
+  {
+   "season": 2016,
+   "completed_games": 873,
+   "games_with_plays": 857,
+   "games_with_drives": 857,
+   "team_games": 1633,
+   "team_games_with_plays": 1604
+  },
+  {
+   "season": 2017,
+   "completed_games": 874,
+   "games_with_plays": 869,
+   "games_with_drives": 869,
+   "team_games": 1650,
+   "team_games_with_plays": 1641
+  },
+  {
+   "season": 2018,
+   "completed_games": 884,
+   "games_with_plays": 881,
+   "games_with_drives": 881,
+   "team_games": 1656,
+   "team_games_with_plays": 1651
+  },
+  {
+   "season": 2019,
+   "completed_games": 888,
+   "games_with_plays": 887,
+   "games_with_drives": 887,
+   "team_games": 1662,
+   "team_games_with_plays": 1660
+  },
+  {
+   "season": 2020,
+   "completed_games": 568,
+   "games_with_plays": 568,
+   "games_with_drives": 568,
+   "team_games": 1102,
+   "team_games_with_plays": 1102
+  },
+  {
+   "season": 2021,
+   "completed_games": 887,
+   "games_with_plays": 887,
+   "games_with_drives": 887,
+   "team_games": 1657,
+   "team_games_with_plays": 1657
+  },
+  {
+   "season": 2022,
+   "completed_games": 896,
+   "games_with_plays": 896,
+   "games_with_drives": 896,
+   "team_games": 1672,
+   "team_games_with_plays": 1672
+  },
+  {
+   "season": 2023,
+   "completed_games": 910,
+   "games_with_plays": 910,
+   "games_with_drives": 910,
+   "team_games": 1702,
+   "team_games_with_plays": 1702
+  },
+  {
+   "season": 2024,
+   "completed_games": 919,
+   "games_with_plays": 919,
+   "games_with_drives": 919,
+   "team_games": 1717,
+   "team_games_with_plays": 1717
+  },
+  {
+   "season": 2025,
+   "completed_games": 934,
+   "games_with_plays": 934,
+   "games_with_drives": 934,
+   "team_games": 1742,
+   "team_games_with_plays": 1742
+  },
+  {
+   "season": 2026,
+   "completed_games": 757,
+   "games_with_plays": 757,
+   "games_with_drives": 757,
+   "team_games": 1391,
+   "team_games_with_plays": 1391
+  }
+ ]
+}
