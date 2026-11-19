@@ -112,6 +112,17 @@ export function explainEdge(e: Edge): string {
 
 export const edgeStrength = (e: Edge) => (Math.abs(e.size) >= 1 ? 'Clear edge' : 'Modest edge')
 
+/** Card heading: the team that benefits and which unit, e.g. "Texas Tech defensive advantage". */
+export const advantageLabel = (e: Edge) => `${e.favours} ${e.size >= 0 ? 'offensive' : 'defensive'} advantage`
+
+/** One short sentence: which unit is expected to beat the national average, on which measure. */
+export function shortReason(e: Edge): string {
+  const measure = e.label.charAt(0).toLowerCase() + e.label.slice(1)
+  return e.size >= 0
+    ? `${e.offense}'s offense is expected to beat the national average on ${measure} against ${e.defense}.`
+    : `${e.defense}'s defense is expected to beat the national average on ${measure} against ${e.offense}.`
+}
+
 export function percentile(rank: number | null, pool: number) {
   return rank == null || pool < 2 ? null : Math.round(100 * (pool - rank) / (pool - 1))
 }

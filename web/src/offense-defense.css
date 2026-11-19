@@ -77,3 +77,36 @@
 .od-matchup .od-table th[scope=row],.od-matchup .od-table thead th:first-child{width:34%}
 .od-matchup .od-table td,.od-matchup .od-table th{overflow-wrap:anywhere}
 .od-matchup .od-table td:last-child .od-rank,.od-matchup .od-table td:last-child .od-muted{font-size:13px}
+/* Final mobile polish */
+.od-jump{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.od-jump button{min-height:44px;padding:8px 14px;border:1px solid #5b7a95;border-radius:999px;color:#f2d3a2;font-weight:700;font-size:14px}
+.od-jump button:focus-visible{outline:3px solid #8be5c8;outline-offset:2px}
+.od-unit{min-width:0}
+.od-unit-more{margin-top:6px}
+.od-edge-kicker{font-size:13px}
+.od-calc{margin-top:2px}
+.od-calc>summary{cursor:pointer;color:#f2d3a2;font-weight:700;font-size:14px;min-height:44px;display:flex;align-items:center}
+.od-calc p{margin:4px 0 0;color:#c8d5e4;font-size:14px;line-height:1.45}
+.od-leaders>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;list-style:revert}
+.od-leaders>summary h3{display:inline;margin:0}
+.od-sample{font-size:13px}
+.od-head-note{font-size:12px}
+.offense-defense .od-table thead th{font-size:12px}
+.od-edge-cards p{font-size:15px}
+@media(max-width:767px){.od-edge-cards{grid-template-columns:1fr}.od-edge-title{font-size:18px}}
+.offense-defense .od-table td small,.od-rank small{font-size:13px}
+.od-leaders>button,.od-leaders button:not(.od-team){min-height:44px}
+.offense-defense .od-table th[scope=row] small{font-size:13px}
+@media(max-width:767px){
+ .od-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .od-summary>div{padding:10px;gap:2px}
+ .od-summary strong{font-size:18px}
+ .od-summary small{font-size:12px;letter-spacing:.3px}
+ .od-summary span{font-size:13px;line-height:1.3}
+ .od-jump{gap:6px}
+ .od-jump button{padding:8px 12px}
+}
+@media(max-width:767px){
+ .od-summary small{letter-spacing:0;text-transform:none;font-size:13px}
+ .offense-defense .od-table td small{display:block;white-space:nowrap}
+}

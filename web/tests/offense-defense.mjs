@@ -57,6 +57,17 @@ try {
     await od.getByRole('radio', { name: 'Traditional' }).check();
     const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
     assert.ok(rawText.includes(`#${ttEpa[1]} of ${stats.fbs_teams}`), rawText);
+    // Core statistics visible; detail tables collapsed until requested.
+    assert.ok(await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Points per drive' }).isVisible());
+    const detail = od.locator('details.od-unit-more', { hasText: 'Offense: running, passing and situational' });
+    assert.equal(await detail.getAttribute('open'), null);
+    assert.ok(!(await detail.locator('tr', { hasText: 'Third-down conversion rate' }).isVisible()));
+    await detail.locator('summary').click();
+    await detail.locator('tr', { hasText: 'Third-down conversion rate' }).waitFor();
+    await detail.locator('summary').click();
+    // Jump links reach the matchup section without long scrolling.
+    await od.getByRole('navigation', { name: 'On this page' }).getByRole('button', { name: 'Matchup' }).click();
+    await page.waitForFunction(() => { const r = document.getElementById('od-vs').getBoundingClientRect(); return r.top >= -2 && r.top < window.innerHeight / 2; });
     // Reading guide: ranks, the 90% range and samples explained one tap away.
     const guide = od.locator('details.od-guide');
     await guide.locator('summary').click();
@@ -75,10 +86,17 @@ try {
     assert.ok(cardCount >= 1 && cardCount <= 3, `cards ${cardCount}`);
     for (let i = 0; i < cardCount; i++) {
       const text = (await cards.nth(i).innerText()).replace(/\s+/g, ' ');
-      assert.match(text, /(Clear|Modest) edge · (Texas Tech|Baylor) (offense|defense)/i, text);
+      assert.match(text, /^(Texas Tech|Baylor) (offensive|defensive) advantage/i, text);
       assert.match(text, /expected vs .* national average/, text);
-      assert.match(text, /Against average opponents, .* offense posts .* defense allows .*national average/, text);
+      assert.match(text, /(offense|defense) is expected to beat the national average on .* against (Texas Tech|Baylor)\./, text);
+      assert.ok(!/Against average opponents/.test(await cards.nth(i).locator('p').first().innerText()), 'card sentence stays short');
     }
+    // The full calculation is one keyboard press away on each card.
+    const calc = cards.first().locator('details.od-calc');
+    assert.equal(await calc.getAttribute('open'), null);
+    await calc.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    assert.match(await calc.innerText(), /Against average opponents, .* offense posts .* defense allows .*national standard deviations/s);
     // Detailed factors stay available behind a keyboard-operable expander.
     const factors = od.locator('details.od-more', { hasText: 'All matchup factors' });
     assert.equal(await factors.getAttribute('open'), null);
@@ -96,13 +114,27 @@ try {
     await chooseSchool(page, 'Choose team', nonPower);
     await od.getByRole('radio', { name: 'Power Four only' }).check();
     await od.getByText('is not in a power conference', { exact: false }).waitFor();
-    // Leaderboard ranks match the data and selecting a row changes the team.
+    // Leaderboard ranks match the data and selecting a row changes the team (collapsed by default on phones).
     await od.getByRole('radio', { name: 'Opponent-adjusted' }).check();
+    const leaders = od.locator('details.od-leaders');
+    assert.equal(await leaders.getAttribute('open') !== null, width >= 768, `leaders open state at ${width}`);
+    if (width < 768) { await leaders.locator('summary').focus(); await page.keyboard.press('Enter'); }
     const first = Object.entries(stats.teams).find(([, t]) => t.offense.epa[7] === 1)[0];
     const board = od.locator('table', { has: page.locator('caption', { hasText: 'Offense: Expected points added per play · Opponent-adjusted' }) });
     assert.equal((await board.locator('tbody tr').first().innerText()).split(/\s+/)[0], '1');
     await board.getByRole('button', { name: first, exact: true }).click();
     assert.equal(await page.getByLabel('Choose team', { exact: true }).inputValue(), first);
+    // Fixed bottom navigation never covers the end of the page.
+    if (width < 768) {
+      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await delay(300);
+      const gap = await page.evaluate(() => {
+        const nav = document.querySelector('.editorial-navigation').getBoundingClientRect();
+        const last = [...document.querySelectorAll('.offense-defense > *')].pop().getBoundingClientRect();
+        return nav.top - last.bottom;
+      });
+      assert.ok(gap >= 0, `bottom navigation covers ${-gap}px of content at ${width}`);
+    }
     // Layout and accessibility.
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert.ok(overflow <= 1, `horizontal overflow ${overflow}px at ${width}`);
@@ -115,7 +147,8 @@ try {
     assert.equal(await page.getByLabel('Choose team', { exact: true }).inputValue(), TEAM);
     await openDestination(page, 'Rankings');
     await page.getByRole('button', { name: 'Offense and defense rankings' }).click();
-    await od.getByRole('heading', { name: 'Leaders' }).waitFor();
+    await od.getByRole('heading', { name: 'National leaders' }).waitFor();
+    assert.notEqual(await od.locator('details.od-leaders').getAttribute('open'), null, 'Rankings link opens the leaders');
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Compare & What If');
     await chooseSchool(page, 'First school', TEAM);

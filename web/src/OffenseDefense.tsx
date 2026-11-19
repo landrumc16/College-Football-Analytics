@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
-import { edgeStrength, explainEdge, field, format, GROUPS, leaderboard, lowerIsBetter, matchupEdges, notableEdges, percentile, poolSize, sampleUnit,
+import { advantageLabel, edgeStrength, explainEdge, field, shortReason, format, GROUPS, leaderboard, lowerIsBetter, matchupEdges, notableEdges, percentile, poolSize, sampleUnit,
   type Side, type V8Stats, type View } from './v8Stats'
 import './offense-defense.css'
 
@@ -33,13 +33,12 @@ function Rank({ rank, pool }: { rank: number | null; pool: number }) {
 // Sacks, run stuffs and turnovers run against intuition on both sides (lower is better on offense, higher on defense).
 const unusualDirection = (metric: string, _side: Side) => ['sack', 'stuff', 'to'].includes(metric)
 
-function UnitTable({ data, team, side, view }: { data: V8Stats; team: string; side: Side; view: View }) {
+function UnitRows({ data, team, side, view, groups }: { data: V8Stats; team: string; side: Side; view: View; groups: typeof GROUPS }) {
   const t = data.teams[team]
   const pool = poolSize(data, view)
-  return <div className="table-wrap"><table className="od-table">
-    <caption>{side === 'offense' ? 'Offense' : 'Defense'} · {VIEWS.find(v => v.id === view)!.label}</caption>
+  return <>
     <thead><tr><th scope="col">Measure</th><th scope="col">{side === 'offense' ? 'Gained' : 'Allowed'}</th><th scope="col">{view === 'power' ? 'Power rank' : 'FBS rank'} <span className="od-head-note">(#1 best)</span></th></tr></thead>
-    {GROUPS.map(group => <tbody key={group.id}>
+    {groups.map(group => <tbody key={group.id}>
       <tr className="od-group"><th scope="rowgroup" colSpan={3}>{group.label}</th></tr>
       {group.metrics.map(metric => {
         const row = t[side][metric], f = field(row, view)
@@ -51,7 +50,24 @@ function UnitTable({ data, team, side, view }: { data: V8Stats; team: string; si
         </tr>
       })}
     </tbody>)}
-  </table></div>
+  </>
+}
+
+/** Scoring and efficiency always visible; running, passing and situational detail one tap away. */
+function UnitTable({ data, team, side, view }: { data: V8Stats; team: string; side: Side; view: View }) {
+  const unit = side === 'offense' ? 'Offense' : 'Defense'
+  return <div className="od-unit">
+    <div className="table-wrap"><table className="od-table">
+      <caption>{unit} · {VIEWS.find(v => v.id === view)!.label}</caption>
+      <UnitRows data={data} team={team} side={side} view={view} groups={GROUPS.slice(0, 1)} />
+    </table></div>
+    <details className="od-more od-unit-more"><summary>{unit}: running, passing and situational</summary>
+      <div className="table-wrap"><table className="od-table">
+        <caption>{unit} detail · {VIEWS.find(v => v.id === view)!.label}</caption>
+        <UnitRows data={data} team={team} side={side} view={view} groups={GROUPS.slice(1)} />
+      </table></div>
+    </details>
+  </div>
 }
 
 function Trends({ data, team }: { data: V8Stats; team: string }) {
@@ -75,10 +91,13 @@ function Matchup({ data, team, opponent }: { data: V8Stats; team: string; oppone
   return <section className="od-matchup" aria-labelledby="od-matchup"><h3 id="od-matchup">How {team} and {opponent} match up</h3>
     <p className="od-muted">The strongest edges when each offense meets the other defense. Descriptive only: game predictions do not change.</p>
     {top.length ? <ol className="od-edge-cards" aria-label="Biggest matchup advantages">{top.map(e => <li key={e.offense + e.metric}>
-      <span className="od-edge-kicker">{edgeStrength(e)} · {e.size >= 0 ? `${e.offense} offense` : `${e.defense} defense`}</span>
+      <span className="od-edge-kicker">{advantageLabel(e)}</span>
       <strong className="od-edge-title">{e.label}</strong>
       <span className="od-edge-stat"><b>{format(e.metric, e.expected)}</b> expected vs {format(e.metric, e.mean)} national average</span>
-      <p>{explainEdge(e)}</p>
+      <p>{shortReason(e)}</p>
+      <details className="od-calc"><summary>How this is calculated</summary>
+        <p>{explainEdge(e)} {edgeStrength(e)}: {Math.abs(e.size).toFixed(1)} national standard deviations from average (an edge needs at least 0.5; 1.0 or more is clear).</p>
+      </details>
     </li>)}</ol>
       : <p>No phase of this matchup stands out: every expected value is within half a standard deviation of the national average.</p>}
     <details className="od-more"><summary>All matchup factors</summary>
@@ -93,13 +112,17 @@ function Matchup({ data, team, opponent }: { data: V8Stats; team: string; oppone
   </section>
 }
 
-export default function OffenseDefense({ team, onTeam, onProfile, initialOpponent = '' }: { team: string; onTeam: (team: string) => void; onProfile: (team: string) => void; initialOpponent?: string }) {
+export default function OffenseDefense({ team, onTeam, onProfile, initialOpponent = '', showLeaders = false }: { team: string; onTeam: (team: string) => void; onProfile: (team: string) => void; initialOpponent?: string; showLeaders?: boolean }) {
   const { data, failed } = useV8Stats()
   const [view, setView] = useState<View>('adjusted')
   const [boardMetric, setBoardMetric] = useState('epa')
   const [boardSide, setBoardSide] = useState<Side>('offense')
   const [showAll, setShowAll] = useState(false)
   const [opponent, setOpponent] = useState(initialOpponent)
+  const [leadersOpen, setLeadersOpen] = useState(() => showLeaders || !window.matchMedia('(max-width: 767px)').matches)
+  const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  // Arriving from Rankings: open the national leaders and bring them into view once the data has loaded.
+  useEffect(() => { if (showLeaders && data) document.getElementById('od-board-section')?.scrollIntoView({ block: 'start' }) }, [showLeaders, data])
   const schools = useMemo(() => data ? Object.keys(data.teams).sort((a, b) => a.localeCompare(b)) : [], [data])
   if (failed) return <section className="notice"><h2>Offense &amp; Defense</h2><p role="status">Offense and defense statistics are not available right now. Try again later.</p></section>
   if (!data) return <section className="notice"><h2>Offense &amp; Defense</h2><p role="status">Loading offense and defense statistics…</p></section>
@@ -127,22 +150,29 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
       </ul>
     </details>
     {t && <>
+      <nav className="od-jump" aria-label="On this page">
+        <button type="button" onClick={() => jump('od-stats')}>Statistics</button>
+        <button type="button" onClick={() => jump('od-vs')}>Matchup</button>
+        <button type="button" onClick={() => jump('od-trends')}>Recent form</button>
+        <button type="button" onClick={() => { setLeadersOpen(true); setTimeout(() => jump('od-board-section'), 0) }}>Leaders</button>
+        <button type="button" onClick={() => onProfile(selected)}>Team Profile</button>
+      </nav>
       <div className="od-summary" aria-label={`${selected} summary`}>
         <div><small>Record context</small><strong>{t.games} games</strong><span className="od-muted">{t.power_games} vs power opponents · {t.fcs_games} vs FCS</span></div>
         <div><small>Points per game</small><strong>{t.ppg?.toFixed(1) ?? 'N/A'}</strong><span className="od-muted">allowed {t.papg?.toFixed(1) ?? 'N/A'}</span></div>
         <div><small>Conference</small><strong>{t.conference ?? 'N/A'}</strong><span className="od-muted">{t.power ? 'Power conference' : 'Not a power conference'}</span></div>
       </div>
-      <p><button type="button" className="od-link" onClick={() => onProfile(selected)}>Open the {selected} Team Profile</button></p>
       {powerViewUnavailable ? <p role="status">{selected} is not in a power conference, so the Power Four-only view does not apply. Its opponent-adjusted numbers compare it with every FBS team.</p>
-        : <div className="od-units"><UnitTable data={data} team={selected} side="offense" view={view} /><UnitTable data={data} team={selected} side="defense" view={view} /></div>}
-      <Trends data={data} team={selected} />
+        : <div className="od-units" id="od-stats"><UnitTable data={data} team={selected} side="offense" view={view} /><UnitTable data={data} team={selected} side="defense" view={view} /></div>}
       <section className="od-card" aria-labelledby="od-vs"><h3 id="od-vs">Compare a matchup</h3>
         <SchoolSearch label="Choose opponent" value={opponent} onChange={setOpponent} schools={schools.filter(s => s !== selected)} />
         {opponent && data.teams[opponent] && <Matchup data={data} team={selected} opponent={opponent} />}
       </section>
+      <Trends data={data} team={selected} />
     </>}
     {!t && <p role="status">Choose a team to see its offense and defense, or browse the leaders below.</p>}
-    <section className="od-card" aria-labelledby="od-board"><h3 id="od-board">Leaders</h3>
+    <details className="od-card od-leaders" id="od-board-section" open={leadersOpen} onToggle={e => setLeadersOpen((e.currentTarget as HTMLDetailsElement).open)}>
+      <summary><h3 id="od-board">National leaders</h3></summary>
       <div className="od-board-controls">
         <label>Measure <select value={boardMetric} onChange={e => setBoardMetric(e.target.value)}>{GROUPS.map(g => <optgroup key={g.id} label={g.label}>{g.metrics.map(m => <option key={m} value={m}>{data.definitions[m].label}</option>)}</optgroup>)}</select></label>
         <label>Unit <select value={boardSide} onChange={e => setBoardSide(e.target.value as Side)}><option value="offense">Offense</option><option value="defense">Defense</option></select></label>
@@ -156,7 +186,7 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
           <td>{format(boardMetric, row.value)}{view === 'power' && row.games != null && <small className="od-muted"> · {row.games} g</small>}</td></tr>)}</tbody>
       </table></div>
       {board.length > 25 && <button type="button" onClick={() => setShowAll(!showAll)}>{showAll ? 'Show top 25' : `Show all ${board.length}`}</button>}
-    </section>
+    </details>
     <details className="od-card"><summary>How these numbers work</summary>
       <ul>{Object.entries(data.method).map(([k, v]) => <li key={k}><strong>{k.replace('_', ' ')}:</strong> {v}</li>)}</ul>
       <p className="od-muted">Source: {data.source}. Rates use plays from scrimmage; penalties, kicks and kneel-downs are not plays. Expected points added comes from the provider's play-level model. N/A means the measure cannot be calculated reliably from the available data.</p>
