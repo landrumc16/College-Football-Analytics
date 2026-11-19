@@ -8,6 +8,7 @@ on:
     branches: [v8-development]
     paths:
       - 'src/cfb_analytics/v8_sources.py'
+      - 'src/cfb_analytics/v8_publish.py'
       - 'tests/test_v8_sources.py'
       - '.github/workflows/v8-sources.yml'
   workflow_dispatch:
@@ -56,6 +57,8 @@ jobs:
           cp -r research/v8/team-games "$RUNNER_TEMP/first"
           python -m cfb_analytics.v8_sources --seasons 2016-2026 --cache "$STORE" --offline
           diff -r "$RUNNER_TEMP/first" research/v8/team-games && echo "offline re-derivation identical"
+      - name: Regenerate the published Offense & Defense file from the new counts
+        run: python -m cfb_analytics.v8_publish --season 2026
       - name: Leak scan (no raw provider rows, play text or credentials in public outputs)
         run: |
           python - <<'PY'
@@ -74,11 +77,11 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/v8/team-games research/v8/fbs-membership.json research/v8/sources-receipt.json
-          if git status --porcelain | grep -vE '^(M |A ) research/v8/(team-games/[0-9]{4}\.json\.gz|fbs-membership\.json|sources-receipt\.json)$'; then
+          git add research/v8/team-games research/v8/fbs-membership.json research/v8/sources-receipt.json web/public/v8-team-stats.json
+          if git status --porcelain | grep -vE '^(M |A ) (research/v8/(team-games/[0-9]{4}\.json\.gz|fbs-membership\.json|sources-receipt\.json)|web/public/v8-team-stats\.json)$'; then
             echo "unexpected files changed; refusing to commit"; exit 1
           fi
-          if ! git diff --cached --quiet; then
+          if ! git diff --cached --quiet -- research/v8/team-games; then
             git commit -m "V8 M1: derived per team-game counts from CFBD (2016-2026)"
             git pull --rebase origin v8-development
             git push origin HEAD:v8-development

@@ -53,10 +53,11 @@ class Fetcher:
         self.calls = 0
         cache.mkdir(parents=True, exist_ok=True)
 
-    def get(self, path: str, season: int, **params):
+    def get(self, path: str, season: int, force: bool | None = None, **params):
         name = path.strip("/").replace("/", "-") + "-" + "-".join(f"{k}{v}" for k, v in sorted(params.items()))
         file = self.cache / f"{name}.json.gz"
-        if file.exists() and (self.offline or season not in self.refresh):
+        stale = season in self.refresh if force is None else force
+        if file.exists() and (self.offline or not stale):
             return json.loads(gzip.decompress(file.read_bytes()))
         if self.offline:
             raise FileNotFoundError(f"offline and not cached: {file.name}")
@@ -97,8 +98,12 @@ def acquire(season: int, fetch: Fetcher):
     drives, plays = [], []
     for kind in ("regular", "postseason"):
         drives += fetch.get("/drives", season, year=season, seasonType=kind)
-        for week in sorted({pick(g, "week") for g in played if pick(g, "seasonType") == kind}):
-            plays += fetch.get("/plays", season, year=season, week=week, seasonType=kind)
+        weeks = sorted({pick(g, "week") for g in played if pick(g, "seasonType") == kind})
+        for week in weeks:
+            # In-season refresh: earlier weeks' plays are final; re-download only the latest two weeks.
+            recent = season in fetch.refresh and week >= (weeks[-1] - 1)
+            plays += fetch.get("/plays", season, force=recent if season in fetch.refresh else None,
+                               year=season, week=week, seasonType=kind)
     return teams, games, drives, plays
 
 
@@ -238,7 +243,11 @@ def main(argv=None):
     seasons = list(range(int(first), int(last or first) + 1))
     fetch = Fetcher(args.cache, os.environ.get("CFBD_API_KEY"), args.offline,
                     {int(s) for s in args.refresh.split(",") if s.strip()})
-    membership_all, manifest = {}, []
+    # A partial run (e.g. the in-season refresh of one season) updates only its seasons in the shared records.
+    membership_path, receipt_path = OUT / "fbs-membership.json", OUT / "sources-receipt.json"
+    membership_all = json.loads(membership_path.read_text()) if membership_path.exists() else {}
+    previous = json.loads(receipt_path.read_text()).get("coverage", []) if receipt_path.exists() else []
+    manifest = []
     for season in seasons:
         teams, games, drives, plays = acquire(season, fetch)
         if args.diagnose:
@@ -254,7 +263,8 @@ def main(argv=None):
         write_gz(OUT / "team-games" / f"{season}.json.gz", {"schema_version": SCHEMA_VERSION, "season": season, "rows": rows})
         manifest.append(coverage(season, rows))
         print(json.dumps(manifest[-1]))
-    (OUT / "fbs-membership.json").write_text(json.dumps(membership_all, indent=1, sort_keys=True) + "\n")
+    membership_path.write_text(json.dumps(membership_all, indent=1, sort_keys=True) + "\n")
+    manifest = sorted([c for c in previous if c["season"] not in seasons] + manifest, key=lambda c: c["season"])
     receipt = {"schema_version": SCHEMA_VERSION, "source": "CollegeFootballData API (api.collegefootballdata.com)",
                "endpoints": ["/teams/fbs", "/games", "/drives", "/plays"],
                "derived_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -264,7 +274,7 @@ def main(argv=None):
                                "close_late": f"4th quarter or OT, |margin|<={CLOSE_LATE_MARGIN}",
                                "success": "1st down 50%, 2nd 70%, 3rd/4th 100% of distance; touchdowns succeed; turnovers fail"},
                "coverage": manifest}
-    (OUT / "sources-receipt.json").write_text(json.dumps(receipt, indent=1) + "\n")
+    receipt_path.write_text(json.dumps(receipt, indent=1) + "\n")
     print(f"api_calls={fetch.calls}")
 
 

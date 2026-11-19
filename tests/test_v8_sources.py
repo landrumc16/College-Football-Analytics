@@ -76,3 +76,37 @@ def test_derive_season_rows_both_sides_and_membership():
     assert rows[0]["team_fbs"] and not rows[0]["opp_fbs"] and rows[1]["team_conf"] == "SWAC"
     assert rows[0]["has_plays"] and rows[0]["off"]["plays"] == 1 and rows[0]["off"]["succ"] == 1
     assert rows[1]["off"]["plays"] == 0                                    # C ran no plays in the fixture
+
+
+def test_in_season_refresh_redownloads_only_recent_play_weeks(tmp_path):
+    calls = []
+
+    class Recorder(s.Fetcher):
+        def get(self, path, season, force=None, **params):
+            calls.append((path, params.get("week"), params.get("seasonType"), force))
+            if path == "/teams/fbs":
+                return [{"school": "A", "conference": "SEC"}]
+            if path == "/games":
+                return [{"id": w, "week": w, "completed": True, "homeTeam": "A", "awayTeam": "B", "seasonType": params["seasonType"]}
+                        for w in (1, 2, 3, 4)] if params["seasonType"] == "regular" else []
+            return []
+
+    s.acquire(2026, Recorder(tmp_path, "key", False, {2026}))
+    plays = [(w, f) for p, w, t, f in calls if p == "/plays"]
+    assert plays == [(1, False), (2, False), (3, True), (4, True)]
+    calls.clear()
+    s.acquire(2025, Recorder(tmp_path, "key", False, {2026}))
+    assert all(f is None for p, w, t, f in calls if p == "/plays")     # completed seasons use the cache
+
+
+def test_partial_run_merges_membership_and_coverage(tmp_path, monkeypatch):
+    import json
+    monkeypatch.setattr(s, "OUT", tmp_path)
+    (tmp_path / "fbs-membership.json").write_text(json.dumps({"2025": {"A": "SEC"}}))
+    (tmp_path / "sources-receipt.json").write_text(json.dumps({"coverage": [{"season": 2025, "completed_games": 9}]}))
+    monkeypatch.setattr(s, "acquire", lambda season, fetch: ([{"school": "A", "conference": "SEC"}, {"school": "N", "conference": "Mountain West"}], [], [], []))
+    s.main(["--seasons", "2026", "--cache", str(tmp_path / "cache")])
+    membership = json.loads((tmp_path / "fbs-membership.json").read_text())
+    assert membership["2025"] == {"A": "SEC"} and membership["2026"] == {"A": "SEC", "N": "Mountain West"}
+    seasons = [c["season"] for c in json.loads((tmp_path / "sources-receipt.json").read_text())["coverage"]]
+    assert seasons == [2025, 2026]

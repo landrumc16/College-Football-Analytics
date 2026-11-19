@@ -391,27 +391,87 @@ def ablation(records):
     return out
 
 
+def forward_selection(records, select_seasons, test_seasons):
+    """EXPLORATORY (post hoc): greedy group selection scored on select_seasons only, then a single test on test_seasons."""
+    def brier_on(groups, seasons):
+        pred = walk_forward(records, groups, targets=seasons)
+        sel = [r for r in records if r["game_id"] in pred]
+        return sum((pred[r["game_id"]][0] - r["y"]) ** 2 for r in sel) / len(sel)
+    chosen, best = [], brier_on([], select_seasons)
+    while True:
+        trials = {g: brier_on(chosen + [g], select_seasons) for g in ALL_GROUPS if g not in chosen}
+        if not trials:
+            break
+        g, b = min(trials.items(), key=lambda kv: kv[1])
+        if b >= best:
+            break
+        chosen.append(g); best = b
+    test = summary(evaluate([r for r in records if r["season"] < min(test_seasons) or r["season"] in test_seasons], chosen))
+    return {"label": "exploratory, selected after pre-registration; not used for promotion gates",
+            "selected_on": select_seasons, "tested_on": test_seasons, "groups": chosen,
+            "test_pooled": test["pooled_non2020"], "test_ci95": test["brier_difference_ci95"],
+            "test_by_season": {s: v for s, v in test["by_season"].items() if s in test_seasons}}
+
+
+def authentic_2026(records, groups, path=Path("data/pregame-2026-history.json")):
+    """Challenger vs the incumbent's published pregame probabilities on identical 2026 FBS games."""
+    published = json.loads(path.read_text())
+    train = [r for r in records if r["season"] < 2026 and r["season"] != 2020]
+    model = Ridge(keys_for(groups)).fit([r["x"] for r in train], [r["margin"] for r in train])
+    rows = []
+    for r in records:
+        f = published.get(r["game_id"])
+        if r["season"] != 2026 or not f or f.get("source") != "generated_before_kickoff" or f.get("home") != r["home"]:
+            continue
+        rows.append({"season": 2026, "week": r["week"], "y": r["y"], "c": model.prob(r["x"]),
+                     "b": f["home_win_probability"],
+                     "r": win_probability_from_rating_gap(r["x"]["gap"], SETTINGS.win_probability_scale)})
+    if not rows:
+        return None
+    return {"games": len(rows), "challenger": score([x["c"] for x in rows], [x["y"] for x in rows]),
+            "published_incumbent": score([x["b"] for x in rows], [x["y"] for x in rows]),
+            "brier_difference_ci95": clustered_bootstrap(rows, "c", "b"), "groups": groups,
+            "replay_baseline": score([x["r"] for x in rows], [x["y"] for x in rows]),
+            "challenger_minus_replay_ci95": clustered_bootstrap(rows, "c", "r"),
+            "kind": "authentic: incumbent probabilities recorded before kickoff; challenger computed retrospectively from pre-week data"}
+
+
+def save_records(records, path=ROOT / "challenger-features.json.gz"):
+    import gzip
+    path.write_bytes(gzip.compress(json.dumps({"schema_version": 1, "kind": "as-of pregame feature snapshot (games strictly before each week)",
+                                               "records": records}, sort_keys=True, separators=(",", ":")).encode(), mtime=0))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seasons", default="2016-2025")
+    ap.add_argument("--seasons", default="2016-2026")
     ap.add_argument("--out", type=Path, default=ROOT / "challenger-evaluation.json")
     args = ap.parse_args(argv)
     first, _, last = args.seasons.partition("-")
     records = build_records(list(range(int(first), int(last) + 1)))
-    rows = evaluate(records)
+    save_records(records)
+    historical = [r for r in records if r["season"] <= 2025]
+    rows = evaluate(historical)
     result = summary(rows)
-    abl = ablation(records)
+    abl = ablation(historical)
     kept = [g for g in ALL_GROUPS if abl[g]["helps"]]
-    reduced = summary(evaluate(records, kept)) if kept != ALL_GROUPS else result
+    reduced = summary(evaluate(historical, kept)) if kept != ALL_GROUPS else result
     final = {"protocol": "research/v8/evaluation-protocol.json", "kind": "retrospective walk-forward replay; not archived forecasts",
              "all_groups": result, "ablation": abl, "kept_groups": kept, "reduced_model": reduced,
-             "gates_all_groups": gates(result, abl), "gates_reduced": gates(reduced, abl)}
-    keys = keys_for(kept)
-    model = Ridge(keys).fit([r["x"] for r in records if r["season"] != 2020], [r["margin"] for r in records if r["season"] != 2020])
+             "gates_all_groups": gates(result, abl), "gates_reduced": gates(reduced, abl),
+             "authentic_2026_all_groups": authentic_2026(records, ALL_GROUPS),
+             "authentic_2026_reduced": authentic_2026(records, kept),
+             "exploratory_forward_selection": forward_selection(historical, [2018, 2019, 2021], [2022, 2023, 2024, 2025])}
+    final["promotion_recommendation"] = ("recommend promotion for owner review" if all(c["pass"] for c in final["gates_reduced"].values())
+                                         else "retain the incumbent; pre-registered gates not met")
+    model = Ridge(keys_for(kept)).fit([r["x"] for r in historical if r["season"] != 2020], [r["margin"] for r in historical if r["season"] != 2020])
     final["final_model"] = {"groups": kept, "coefficients_per_unit": model.coefficients(), "intercept": round(model.b0, 4),
-                            "probability_scale": round(model.scale, 4), "training_games": sum(r["season"] != 2020 for r in records)}
+                            "probability_scale": round(model.scale, 4), "training_games": sum(r["season"] != 2020 for r in historical)}
     args.out.write_text(json.dumps(final, indent=1, sort_keys=True) + "\n")
-    print(json.dumps({k: final[k] for k in ("gates_all_groups", "gates_reduced", "kept_groups")}, indent=1))
+    print(json.dumps({k: final[k] for k in ("gates_all_groups", "gates_reduced", "kept_groups", "promotion_recommendation",
+                                            "authentic_2026_all_groups", "authentic_2026_reduced")}, indent=1, default=str))
+    fs = final["exploratory_forward_selection"]
+    print("exploratory:", fs["groups"], fs["test_pooled"]["challenger"]["brier"], fs["test_pooled"]["baseline"]["brier"], fs["test_ci95"])
 
 
 if __name__ == "__main__":
