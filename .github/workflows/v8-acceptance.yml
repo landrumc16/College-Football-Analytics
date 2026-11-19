@@ -1,0 +1,78 @@
+name: V8 development acceptance
+# Runs on every push to v8-development: full Python suite, reproducibility of the published V8 data,
+# frontend build, V8 browser acceptance and the existing browser regressions.
+on:
+  push:
+    branches: [v8-development]
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest -q
+      - name: Published Offense & Defense data regenerates exactly from research/v8
+        run: |
+          python -m cfb_analytics.v8_publish --out "$RUNNER_TEMP/v8.json"
+          python - <<'PY'
+          import json, os
+          a = json.load(open("web/public/v8-team-stats.json")); b = json.load(open(os.environ["RUNNER_TEMP"] + "/v8.json"))
+          for d in (a, b):
+              d.pop("generated_at")
+          assert a == b, "web/public/v8-team-stats.json is stale; run python -m cfb_analytics.v8_publish"
+          print("published V8 data reproducible:", len(a["teams"]), "teams")
+          PY
+  frontend:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: web
+        run: |
+          npm install --no-package-lock
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Stage actual season data
+        run: |
+          python -m pip install -e .
+          python -m scripts.build_v6_product
+          python -m cfb_analytics.backtest --output web/public/historical-backtest.json
+          cp data/v2-research-summary.json web/public/v2-research-summary.json
+          cp data/season-2026-report.json web/public/season-report.json
+          cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+      - name: Build
+        working-directory: web
+        run: npm run build
+      - run: python scripts/verify_dashboard_bundle.py
+      - run: node web/tests/v8-stats-unit.mjs
+      - run: node web/tests/school-search-unit.mjs
+      - run: node web/tests/strength-scores-unit.mjs
+      - run: node web/tests/market-calculator-unit.mjs
+      - run: node web/tests/offense-defense.mjs
+      - run: node web/tests/school-search.mjs
+      - run: node web/tests/mobile-smoke.mjs
+      - run: node web/tests/editorial-home.mjs
+      - run: node web/tests/poll-rankings.mjs
+      - run: node web/tests/market-calculator.mjs
+      - run: node web/tests/market-analysis.mjs
+      - run: node web/tests/strength-scores.mjs
+      - run: node web/tests/v6-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v8-acceptance-evidence
+          path: |
+            docs/evidence/v8-offense-defense/
+            web/mobile-evidence/
+          if-no-files-found: ignore
