@@ -1,8 +1,8 @@
-"""The V6 protected-path guard is strict on every branch.
+"""The V6 protected-path guard is strict on every branch except the reviewed release manifest.
 
-Version 7 is released (PR #33), so its temporary release manifest has been removed and no release
-manifest remains. The exception mechanism stays tested with a fixture copy of the reviewed V7
-manifest so a future owner-approved release can reuse it; it must again be removed after merge."""
+Earlier releases' manifests were removed after merge. The only manifest now is the temporary, additions-only
+prediction-explanations manifest; it must be removed after that merge. The exception mechanism stays tested
+with a fixture copy of the reviewed V7 manifest."""
 import importlib.util
 import json
 from pathlib import Path
@@ -85,15 +85,31 @@ def test_reviewed_protected_edits_are_pinned_to_exact_content(monkeypatch):
     assert len(rejected) == 2
 
 
-def test_no_release_manifest_remains_so_every_branch_is_strict():
+def test_only_the_additions_only_explanations_manifest_remains_and_selection_is_per_branch():
+    # Temporary prediction-explanations release manifest (release preparation); remove after that merge.
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert manifests == []
-    for head_ref, same_repo in (("v7-development", True), ("beta-rankings-usability", True), ("main", True),
-                                ("", True), ("v7-development", False)):
+    assert [m["head_ref"] for m in manifests] == ["prediction-explanations"]
+    release = manifests[0]
+    assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
+    assert guard.select_manifest(manifests, "prediction-explanations", True) is release
+    for head_ref, same_repo in (("v7-development", True), ("dual-projection-development", True), ("beta-rankings-usability", True),
+                                ("main", True), ("", True), ("prediction-explanations", False)):
         assert guard.select_manifest(manifests, head_ref, same_repo) is None
         _, rejected = guard.evaluate(V7_ROWS + [("M", "web/src/Navigation.tsx")], None, head_ref, same_repo,
                                      none_removed)
         assert len(rejected) == 5
+    # Additions only: any modification or deletion of an existing protected file is still rejected.
+    _, rejected = guard.evaluate([("M", "web/src/Navigation.tsx"), ("M", "src/cfb_analytics/dual_publish.py"),
+                                  ("D", "web/public/dual-projections.json"), ("M", "web/public/prediction-explanations.json")],
+                                 release, "prediction-explanations", True, none_removed)
+    assert len(rejected) == 4
+
+
+def test_explanations_manifest_lists_exactly_the_new_protected_files():
+    listed = set(guard.load_manifests(MANIFEST_DIR)[0]["added_files"])
+    present = {str(p.relative_to(ROOT)) for p in [*ROOT.glob("src/cfb_analytics/explain_*.py"), *ROOT.glob("web/public/prediction-explanations*")]
+               if p.is_file()}
+    assert listed == present, {"unlisted": sorted(present - listed), "missing": sorted(listed - present)}
 
 
 def test_released_v7_navigation_matches_the_reviewed_pins():

@@ -70,6 +70,8 @@ jobs:
         run: node web/tests/v8-stats-unit.mjs
       - name: Dual model projection helpers (score lines, disagreement explanations, records, real file)
         run: node web/tests/model-projections-unit.mjs
+      - name: Verify prediction explanation helper (exact sums, Texas Tech at Baylor audit case)
+        run: node web/tests/prediction-explanations-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -95,6 +97,8 @@ jobs:
         run: node web/tests/offense-defense.mjs
       - name: Verify dual model projections (Compare / Standard / Momentum, records, five widths)
         run: node web/tests/model-projections.mjs
+      - name: Verify Why this prediction? in Game Predictions (five widths, Android, missing data)
+        run: node web/tests/prediction-explanations.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'
