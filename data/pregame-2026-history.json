@@ -14418,5 +14418,37 @@
     "scheduled_kickoff_at": "2026-11-21T23:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
+  },
+  "401935693": {
+    "game_id": 401935693,
+    "week": 14,
+    "home": "Southeastern Oklahoma State",
+    "away": "Central Missouri",
+    "neutral_site": true,
+    "predicted_winner": "Southeastern Oklahoma State",
+    "home_margin": 0.0,
+    "home_win_probability": 0.5,
+    "confidence": "Toss-up",
+    "forecast_recorded_at": "2026-11-20T19:09:08.706928+00:00",
+    "source_retrieved_at": "2026-11-20T19:09:06.614391+00:00",
+    "scheduled_kickoff_at": "2026-12-05T17:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "source": "generated_before_kickoff"
+  },
+  "401935694": {
+    "game_id": 401935694,
+    "week": 14,
+    "home": "Northeastern State",
+    "away": "Chadron State",
+    "neutral_site": false,
+    "predicted_winner": "Northeastern State",
+    "home_margin": 3.0,
+    "home_win_probability": 0.5947806561416223,
+    "confidence": "Lean",
+    "forecast_recorded_at": "2026-11-20T19:09:08.706928+00:00",
+    "source_retrieved_at": "2026-11-20T19:09:06.614391+00:00",
+    "scheduled_kickoff_at": "2026-12-05T19:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "source": "generated_before_kickoff"
   }
 }

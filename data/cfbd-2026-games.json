@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-20T06:48:33.393964+00:00",
+  "retrieved_at": "2026-11-20T19:09:06.614391+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3733,
+    "scheduled": 3735,
     "completed": 3482,
-    "pending": 251
+    "pending": 253
   },
   "games": [
     {
@@ -43765,7 +43765,7 @@
       "season": 2026,
       "week": 12,
       "home": "Hobart",
-      "away": "Alfred",
+      "away": "Alfred State",
       "completed": false,
       "home_score": null,
       "away_score": null,
@@ -44793,6 +44793,30 @@
       "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
+      "game_id": 401935693,
+      "season": 2026,
+      "week": 14,
+      "home": "Southeastern Oklahoma State",
+      "away": "Central Missouri",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": true,
+      "start_date": "2026-12-05T17:00:00.000Z"
+    },
+    {
+      "game_id": 401935694,
+      "season": 2026,
+      "week": 14,
+      "home": "Northeastern State",
+      "away": "Chadron State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-12-05T19:00:00.000Z"
+    },
+    {
       "game_id": 401862844,
       "season": 2026,
       "week": 15,
@@ -44805,5 +44829,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-20T06:48:33.393964+00:00"
+  "data_changed_at": "2026-11-20T19:09:06.614391+00:00"
 }
