@@ -1,0 +1,20 @@
+/* "Why this prediction?" inside each prediction card (palette shared with Model Projections) */
+.pick-explanation>summary{min-height:44px;display:flex;align-items:center;color:#f2d3a2}
+.why-prediction{display:flex;flex-direction:column;gap:10px;color:#dbe5f1}
+.why-prediction p{margin:0;line-height:1.5}
+.wp-bottom{font-size:15px;color:#f5f0e6;font-weight:600}
+.wp-muted,.why-prediction p.wp-muted{color:#a9b8cb;font-size:13px}
+.wp-factors{margin:0;display:flex;flex-direction:column;gap:10px}
+.wp-factors>div{border-top:1px solid #34445a;padding-top:8px}
+.wp-factors dt{font-weight:700;color:#f2d3a2;font-size:13px;letter-spacing:.3px;text-transform:uppercase}
+.wp-factors dd{margin:3px 0 0;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.wp-note{border-left:3px solid #f2d3a2;padding-left:10px;font-size:14px}
+.wp-numbers{border:1px solid #34445a;border-radius:10px;padding:0 10px}
+.wp-numbers>summary{cursor:pointer;font-weight:700;color:#f2d3a2;min-height:44px;display:flex;align-items:center}
+.wp-numbers .table-wrap{margin:0 0 8px}
+.wp-numbers table{width:100%;table-layout:fixed;white-space:normal}
+.wp-numbers caption{text-align:left;font-weight:600;color:#f5f0e6;padding:8px 6px;font-size:13px}
+.wp-numbers th,.wp-numbers td{padding:7px 5px;font-size:13px;text-align:right;overflow-wrap:anywhere}
+.wp-numbers th[scope=row],.wp-numbers thead th:first-child{text-align:left;text-transform:none;letter-spacing:0;background:transparent;color:#e3ecf6}
+.wp-numbers thead th{font-size:11px}
+.wp-numbers>p{margin:0 0 10px;font-size:13px}

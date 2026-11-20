@@ -469,6 +469,15 @@ jobs:
           assert research['promotion']['authorized'] is False
           print('Final V6 scenario/report identity and incumbent authority verified')
           PY_CHECK
+      - name: Publish Why this prediction? explanations from the final deployed report
+        run: |
+          # Exact decompositions of the published forecasts (no new model). Publishing stops if the official engine does
+          # not reproduce the report; a failure keeps the committed file and never blocks deployment.
+          if python -m cfb_analytics.explain_publish; then
+            cp web/public/prediction-explanations.json web/dist/
+          else
+            echo "::warning::prediction explanations not refreshed; keeping the committed file"
+          fi
       - name: Preserve V2 research summary for deployment verification
         uses: actions/upload-artifact@v4
         with:
