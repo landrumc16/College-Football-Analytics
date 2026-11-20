@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright';
 import { startAsDeclinedVisitor } from './consent-prompt.mjs';
-import { chooseSection, openDestination, chooseSchool } from './section-navigation.mjs';
+import { chooseSection, assertSection, assertNavigationFits, openDestination, chooseSchool } from './section-navigation.mjs';
 
 const PORT = 4206, base = process.env.BASE || `http://127.0.0.1:${PORT}/`;
 const evidence = process.env.EVIDENCE || 'docs/evidence/dual-projections';
@@ -35,14 +35,27 @@ try {
     const page = await browser.newPage({ viewport: { width, height: width === 1536 ? 900 : 844 }, deviceScaleFactor: width === 390 || width === 1536 ? 2 : 1 });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto(base, { waitUntil: 'networkidle' });
-    // One canonical section under Home, linked from Game Predictions.
+    // One canonical section in the Teams menu (phone dropdown / desktop tabs), still linked from Game Predictions.
     await openDestination(page, 'Home');
+    const homeSections = page.getByRole('combobox', { name: 'Home sections', exact: true });
+    const homeLabels = await homeSections.isVisible() ? await homeSections.locator('option').allTextContents()
+      : await page.getByRole('tablist', { name: 'Home sections', exact: true }).getByRole('tab').allTextContents();
+    assert.ok(!homeLabels.includes('Model Projections'), `Home sections still list Model Projections: ${homeLabels}`);
     await page.getByRole('button', { name: 'All games', exact: false }).click();
     await page.getByRole('button', { name: 'Compare the Standard and Momentum projections' }).click();
     const mp = page.locator('.model-projections');
     await mp.getByRole('heading', { name: 'Model Projections', level: 2 }).waitFor();
     assert.ok(page.url().endsWith('#/projections'));
-    await chooseSection(page, 'Home sections', 'Model Projections');
+    await assertSection(page, 'Teams sections', 'Model Projections');
+    const dropdown = await assertNavigationFits(page, 'Teams sections', width);   // must be a fitting dropdown on phones
+    if (width === 1536) assert.equal(dropdown, false, 'desktop shows Teams tabs');
+    await chooseSection(page, 'Teams sections', 'Offense & Defense');
+    await chooseSection(page, 'Teams sections', 'Model Projections');
+    await mp.getByRole('heading', { name: 'Model Projections', level: 2 }).waitFor();
+    // The existing direct link opens the same page with data loaded.
+    await page.goto(base + '#/projections', { waitUntil: 'networkidle' });
+    await mp.locator('.mp-game').first().waitFor();
+    await assertSection(page, 'Teams sections', 'Model Projections');
     // Compare (default): next week's games, both models side by side, with an explanation and the official forecast.
     assert.ok(await mp.getByRole('radio', { name: 'Compare' }).isChecked());
     assert.equal(await page.getByLabel('Week', { exact: true }).inputValue(), String(firstWeek));
