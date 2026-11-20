@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-20T03:51:29.154997+00:00",
+  "retrieved_at": "2026-11-20T06:48:33.393964+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3733,
-    "completed": 3481,
-    "pending": 252
+    "completed": 3482,
+    "pending": 251
   },
   "games": [
     {
@@ -42350,9 +42350,9 @@
       "week": 12,
       "home": "Temple",
       "away": "Rice",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 27,
+      "away_score": 31,
       "neutral_site": false,
       "start_date": "2026-11-20T00:30:00.000Z"
     },
@@ -44805,5 +44805,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-20T03:51:29.154997+00:00"
+  "data_changed_at": "2026-11-20T06:48:33.393964+00:00"
 }
