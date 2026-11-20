@@ -22,7 +22,7 @@ import OffenseDefense from './OffenseDefense'
 import ModelProjections from './ModelProjections'
 // V8: Offense & Defense is a Teams section added here (Navigation.tsx is unchanged).
 type View = NavigationView | 'stats' | 'projections'
-const EXTRA_VIEWS: Record<string, { id: View; label: string }[]> = { home: [{ id: 'projections', label: 'Model Projections' }], teams: [{ id: 'stats', label: 'Offense & Defense' }] }
+const EXTRA_VIEWS: Record<string, { id: View; label: string }[]> = { teams: [{ id: 'stats', label: 'Offense & Defense' }, { id: 'projections', label: 'Model Projections' }] }
 const isKnownView = (id: string) => destinations.some(d => d.views.some(v => v.id === id)) || Object.values(EXTRA_VIEWS).some(vs => vs.some(v => v.id === id))
 import type { ProfileSection } from './TeamProfile'
 import EditorialHome, { EditorialMasthead, EditorialNavigation } from './EditorialHome'
