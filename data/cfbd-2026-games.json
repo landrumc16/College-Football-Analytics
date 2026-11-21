@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-20T19:09:06.614391+00:00",
+  "retrieved_at": "2026-11-21T03:24:49.700764+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3735,
-    "completed": 3482,
-    "pending": 253
+    "completed": 3483,
+    "pending": 252
   },
   "games": [
     {
@@ -42026,9 +42026,9 @@
       "week": 12,
       "home": "UCF",
       "away": "Iowa State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 48,
+      "away_score": 17,
       "neutral_site": false,
       "start_date": "2026-11-20T23:00:00.000Z"
     },
@@ -44829,5 +44829,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-20T19:09:06.614391+00:00"
+  "data_changed_at": "2026-11-21T03:24:49.700764+00:00"
 }
