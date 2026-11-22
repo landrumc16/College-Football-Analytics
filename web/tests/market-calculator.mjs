@@ -77,9 +77,9 @@ try {
     assert.match(await calc.textContent(), /not a forecast of profit or a recommendation to wager/);
 
     // Switch perspective with the keyboard: spread and probability are re-expressed, moneyline cleared.
-    await calc.getByRole('radio', { name: game.home }).focus();
+    await calc.getByRole('radio', { name: game.home, exact: true }).focus();
     await page.keyboard.press('ArrowRight');
-    assert.ok(await calc.getByRole('radio', { name: game.away }).isChecked());
+    assert.ok(await calc.getByRole('radio', { name: game.away, exact: true }).isChecked());
     const awaySpread = calc.getByLabel(`${game.away} point spread`);
     assert.equal(await awaySpread.inputValue(), '+6.5');
     assert.equal(await calc.getByLabel(`${game.away} prediction-market win probability (%)`).inputValue(), '58.7');
