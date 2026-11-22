@@ -2,7 +2,8 @@ name: Event-driven game-day watcher
 # The calendar says when to look, the source says when to act, the live site confirms publication.
 # Scheduled starts only need to land once per window: a run watches continuously (up to ~6 hours) and later starts
 # queue behind it, so GitHub dropping most cron starts no longer delays results. Idle hours exit in seconds without
-# calling CFBD. See docs/EVENT-DRIVEN-DATA.md.
+# calling CFBD. The real-provider integration check is a manual dry run (workflow_dispatch, dry_run: true): each
+# costs about three CFBD calls, so it is not run on every push. See docs/EVENT-DRIVEN-DATA.md.
 on:
   workflow_dispatch:
     inputs:
@@ -13,14 +14,6 @@ on:
   schedule:
     - cron: '7 * * 8-12 *'
     - cron: '7 * * 1 *'
-  push:
-    branches: [v7-development]
-    paths:
-      - 'src/cfb_analytics/event_calendar.py'
-      - 'src/cfb_analytics/event_watcher.py'
-      - '.github/workflows/event-watcher.yml'
-      - 'src/cfb_analytics/cfp_publish.py'
-      - 'src/cfb_analytics/postseason.py'
 
 permissions:
   contents: read
@@ -40,12 +33,12 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -e .
-      - name: Watch (integration dry run on the development branch)
+      - name: Watch (or one real-provider dry run when requested)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
             python -m cfb_analytics.event_watcher --dry-run
           else
             python -m cfb_analytics.event_watcher --minutes 350
