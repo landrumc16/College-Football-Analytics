@@ -45,6 +45,8 @@ jobs:
           cp data/v2-research-summary.json web/public/v2-research-summary.json
           cp data/season-2026-report.json web/public/season-report.json
           cp data/poll-2026-snapshot.json web/public/poll-snapshot.json
+          # Explanations must describe the staged report, as in production (dashboard.yml regenerates them at deploy).
+          python -m cfb_analytics.explain_publish
       - name: Record exact candidate revision
         run: |
           mkdir -p web/mobile-evidence web/editorial-evidence
