@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "source": "AP Top 25, published 2026-11-16 (Associated Press); USA TODAY/AFCA Coaches Poll, published 2026-11-15",
+  "source": "CFBD rankings endpoint (2026 regular season)",
   "poll_weeks": {
-    "coaches_top25": 12,
-    "ap_top25": 12
+    "coaches_top25": 13,
+    "ap_top25": 13
   },
   "coaches_top25": [
     {
@@ -19,39 +19,39 @@
       "rank": 3
     },
     {
-      "team": "UCLA",
+      "team": "Miami",
       "rank": 4
     },
     {
-      "team": "Indiana",
+      "team": "Alabama",
       "rank": 5
     },
     {
-      "team": "Miami",
+      "team": "Texas",
       "rank": 6
     },
     {
-      "team": "Alabama",
+      "team": "Tennessee",
       "rank": 7
     },
     {
-      "team": "Texas",
+      "team": "Wake Forest",
       "rank": 8
     },
     {
-      "team": "Tennessee",
+      "team": "Texas Tech",
       "rank": 9
     },
     {
-      "team": "Wake Forest",
+      "team": "UCLA",
       "rank": 10
     },
     {
-      "team": "Texas Tech",
+      "team": "BYU",
       "rank": 11
     },
     {
-      "team": "BYU",
+      "team": "Indiana",
       "rank": 12
     },
     {
@@ -63,47 +63,47 @@
       "rank": 14
     },
     {
-      "team": "Boise State",
+      "team": "USC",
       "rank": 15
     },
     {
-      "team": "Ole Miss",
+      "team": "Arizona",
       "rank": 16
     },
     {
-      "team": "Ohio State",
+      "team": "Houston",
       "rank": 17
     },
     {
-      "team": "Kentucky",
+      "team": "Louisville",
       "rank": 18
     },
     {
-      "team": "USC",
+      "team": "Ole Miss",
       "rank": 19
     },
     {
-      "team": "Arizona",
+      "team": "Florida",
       "rank": 20
     },
     {
-      "team": "Houston",
+      "team": "Boise State",
       "rank": 21
     },
     {
-      "team": "Louisville",
+      "team": "Oklahoma",
       "rank": 22
     },
     {
-      "team": "LSU",
+      "team": "Missouri",
       "rank": 23
     },
     {
-      "team": "Duke",
+      "team": "Liberty",
       "rank": 24
     },
     {
-      "team": "Florida",
+      "team": "Kentucky",
       "rank": 25
     }
   ],
@@ -121,39 +121,39 @@
       "rank": 3
     },
     {
-      "team": "UCLA",
+      "team": "Miami",
       "rank": 4
     },
     {
-      "team": "Miami",
+      "team": "Texas",
       "rank": 5
     },
     {
-      "team": "Indiana",
+      "team": "Alabama",
       "rank": 6
     },
     {
-      "team": "Alabama",
+      "team": "Tennessee",
       "rank": 7
     },
     {
-      "team": "Texas",
+      "team": "Wake Forest",
       "rank": 8
     },
     {
-      "team": "Tennessee",
+      "team": "Texas Tech",
       "rank": 9
     },
     {
-      "team": "Wake Forest",
+      "team": "UCLA",
       "rank": 10
     },
     {
-      "team": "Texas Tech",
+      "team": "BYU",
       "rank": 11
     },
     {
-      "team": "BYU",
+      "team": "Indiana",
       "rank": 12
     },
     {
@@ -165,51 +165,52 @@
       "rank": 14
     },
     {
-      "team": "Boise State",
+      "team": "USC",
       "rank": 15
     },
     {
-      "team": "Ohio State",
+      "team": "Arizona",
       "rank": 16
     },
     {
-      "team": "Kentucky",
+      "team": "Houston",
       "rank": 17
     },
     {
-      "team": "USC",
+      "team": "Louisville",
       "rank": 18
     },
     {
-      "team": "Arizona",
+      "team": "Oklahoma",
       "rank": 19
     },
     {
-      "team": "Houston",
+      "team": "Florida",
       "rank": 20
     },
     {
-      "team": "Louisville",
+      "team": "Liberty",
       "rank": 21
     },
     {
-      "team": "Liberty",
+      "team": "Boise State",
       "rank": 22
     },
     {
-      "team": "Florida",
+      "team": "Ole Miss",
       "rank": 23
     },
     {
-      "team": "Memphis",
+      "team": "Missouri",
       "rank": 24
     },
     {
-      "team": "Ole Miss",
+      "team": "Ohio State",
       "rank": 25
     }
   ],
-  "week": 12,
+  "week": 13,
+  "retrieved_at": "2026-11-22T21:33:05+00:00",
   "cfp_top25": [
     {
       "team": "Georgia",
@@ -313,10 +314,6 @@
     }
   ],
   "cfp_published_at": "2026-11-10",
-  "cfp_week": 11,
   "cfp_source": "https://collegefootballplayoff.com/news/2026/11/10/rankings",
-  "ap_published_at": "2026-11-16",
-  "coaches_published_at": "2026-11-15",
-  "ap_source": "https://apnews.com/article/8f5b89e14a42c7eb1526c0eff0d16697",
-  "coaches_source": "https://www.saturdaydownsouth.com/news/college-football/coaches-poll-week-12-8-sec-teams-ranked-in-new-top-25/"
+  "cfp_week": 11
 }
