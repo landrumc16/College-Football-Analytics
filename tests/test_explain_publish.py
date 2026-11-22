@@ -25,7 +25,13 @@ def built(inputs):
 def test_official_parts_rebuild_every_published_margin(inputs, built):
     report = inputs[0]
     published = {p["game_id"]: p for p in report["predictions"]}
-    assert len(built["games"]) >= 100
+    # The eligible population shrinks as games are played: every upcoming prediction between two FBS (ranked) teams.
+    # It is derived independently from the report, and every eligible game must be explained exactly once.
+    ranked = {t["team"] for t in report["rankings"]}
+    upcoming = {g["game_id"] for g in report["schedule"] if not g["completed"]}
+    eligible = {p["game_id"] for p in report["predictions"] if p["game_id"] in upcoming and p["home"] in ranked and p["away"] in ranked}
+    explained = [g["game_id"] for g in built["games"]]
+    assert len(explained) == len(set(explained)) and set(explained) == eligible
     for g in built["games"]:
         o = g["official"]
         assert abs(o["home_margin"] - published[g["game_id"]]["home_margin"]) < 1e-3

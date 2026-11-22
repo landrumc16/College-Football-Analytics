@@ -332,9 +332,9 @@ def test_committed_metrics_reproduce_and_match_archive(monkeypatch):
 def test_committed_metrics_content(monkeypatch):
     monkeypatch.chdir(ROOT)
     m = json.loads(mm.PUBLIC.read_text())
-    tt = m["teams"]["Texas Tech"]["overall"]
-    assert (tt["ats"]["w"], tt["ats"]["l"], tt["ats"]["p"]) == (73, 57, 5)
-    assert (tt["ou"]["o"], tt["ou"]["u"], tt["ou"]["p"]) == (69, 62, 1)
+    # Season-to-date records change whenever a refresh adds a final game, so they are recomputed below from the
+    # published lines (test_committed_ats_and_totals_records_recomputed_from_lines). Completed seasons cannot change:
+    # Texas Tech's 2016-2025 record is pinned there.
     s = m["model_vs_market"]
     assert s["independently_verified_subset"]["games"] == 65
     assert s["model_total"] == mm.MODEL_TOTAL and s["retrospective_replays"]["used"] is False
@@ -360,6 +360,41 @@ def test_committed_comparison_files_are_authentic_and_licensed(monkeypatch):
             seen.add(g["game_id"])
     verified = {r["game_id"] for r in json.loads(mm.VERIFIED.read_text())}
     assert verified <= seen
+
+
+def _records(games):
+    """Plain ATS (team margin + spread) and over/under (combined points - total) records from scores and lines."""
+    ats, ou = {"w": 0, "l": 0, "p": 0}, {"o": 0, "u": 0, "p": 0}
+    for g in games:
+        if g["team_score"] is None:
+            continue
+        if g["spread_status"] == "ok":
+            cover = g["team_score"] - g["opponent_score"] + g["spread"]
+            ats["w" if cover > 0 else "l" if cover < 0 else "p"] += 1
+        if g["total_status"] == "ok":
+            diff = g["team_score"] + g["opponent_score"] - g["total"]
+            ou["o" if diff > 0 else "u" if diff < 0 else "p"] += 1
+    return ats, ou
+
+
+def test_committed_ats_and_totals_records_recomputed_from_lines(monkeypatch):
+    """Every team's published ATS and over/under records equal plain recomputation from its published lines."""
+    monkeypatch.chdir(ROOT)
+    m = json.loads(mm.PUBLIC.read_text())
+    checked = 0
+    for f in sorted(mm.LINES_DIR.glob("*.json")):
+        payload = json.loads(f.read_text())
+        ats, ou = _records(payload["games"])
+        t = m["teams"][payload["team"]]["overall"]
+        assert {k: t["ats"][k] for k in ats} == ats, payload["team"]
+        assert {k: t["ou"][k] for k in ou} == ou, payload["team"]
+        checked += 1
+    assert checked >= 130
+    # Completed seasons are history and must not move: Texas Tech 2016-2025 (verified before the 2026 refreshes).
+    tt = json.loads((mm.LINES_DIR / "texas-tech.json").read_text())["games"]
+    history = [g for g in tt if g["season"] <= 2025]
+    assert _records(history) == ({"w": 68, "l": 52, "p": 5}, {"o": 62, "u": 60, "p": 1})
+    assert len(history) == 125
 
 
 def test_committed_values_recomputed_independently_with_plain_code(monkeypatch):
