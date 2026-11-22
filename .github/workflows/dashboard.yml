@@ -3,7 +3,9 @@ name: Build and publish analytics dashboard
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ['Refresh college football data']
+    # Every workflow that commits published data must also publish it: bot pushes made with GITHUB_TOKEN do not
+    # trigger this workflow, so poll and statistics commits previously waited for the next game refresh.
+    workflows: ['Refresh college football data', 'Refresh official college football polls', 'Refresh V8 offense and defense statistics']
     types: [completed]
     branches: [main]
   push:

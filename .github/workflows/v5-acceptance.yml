@@ -74,6 +74,8 @@ jobs:
         run: node web/tests/model-projections-unit.mjs
       - name: Verify prediction explanation helper (exact sums, Texas Tech at Baylor audit case)
         run: node web/tests/prediction-explanations-unit.mjs
+      - name: Verify per-area data freshness states (scores, polls, CFP, model)
+        run: node web/tests/data-freshness-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |

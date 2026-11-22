@@ -1,0 +1,58 @@
+name: Event-driven game-day watcher
+# The calendar says when to look, the source says when to act, the live site confirms publication.
+# Scheduled starts only need to land once per window: a run watches continuously (up to ~6 hours) and later starts
+# queue behind it, so GitHub dropping most cron starts no longer delays results. Idle hours exit in seconds without
+# calling CFBD. See docs/EVENT-DRIVEN-DATA.md.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Check every real provider once and dispatch nothing
+        type: boolean
+        default: false
+  schedule:
+    - cron: '7 * * 8-12 *'
+    - cron: '7 * * 1 *'
+  push:
+    branches: [v7-development]
+    paths:
+      - 'src/cfb_analytics/event_calendar.py'
+      - 'src/cfb_analytics/event_watcher.py'
+      - '.github/workflows/event-watcher.yml'
+
+permissions:
+  contents: read
+  actions: write      # workflow_dispatch of the existing refresh workflows (allowed from GITHUB_TOKEN)
+
+concurrency:
+  group: event-watcher
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 358
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e .
+      - name: Watch (integration dry run on the development branch)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -m cfb_analytics.event_watcher --dry-run
+          else
+            python -m cfb_analytics.event_watcher --minutes 350
+          fi
+      - name: Keep the event ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-ledger
+          path: event-ledger.json
+          if-no-files-found: ignore
+          retention-days: 30

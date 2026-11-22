@@ -1,0 +1,12 @@
+{
+  "release": "Event-driven game-day data (calendar, watcher, verified publication)",
+  "head_ref": "v7-development",
+  "purpose": "Narrow, additions-only exception to the V6 protected-path guard for the reviewed event-driven refresh modules. Applies only to pull requests from v7-development in this repository; every other branch keeps the strict byte-identical guard. No existing protected file may change. Remove after this release is merged.",
+  "added_files": {
+    "src/cfb_analytics/event_calendar.py": "Pure calendar of game completion, poll and CFP release windows (no I/O, no model changes)",
+    "src/cfb_analytics/event_watcher.py": "Watcher that detects finals, corrections and poll releases, dispatches the existing refresh workflows and verifies the live site"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {}
+}
