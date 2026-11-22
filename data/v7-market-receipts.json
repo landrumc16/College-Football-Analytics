@@ -445,37 +445,37 @@
     "conflicting_duplicates": 0,
     "matched": 895,
     "selected_spread_providers": {
-     "DraftKings": 845
+     "DraftKings": 888
     },
     "selected_total_providers": {
-     "DraftKings": 845
+     "DraftKings": 888
     },
     "spread_consensus_replaced": 0,
     "spread_disputed": 4,
-    "spread_no_line": 50,
-    "spread_ok": 841,
-    "spread_open_available": 837,
+    "spread_no_line": 7,
+    "spread_ok": 884,
+    "spread_open_available": 880,
     "spread_priority_replaced": 0,
-    "spread_single_provider": 36,
+    "spread_single_provider": 79,
     "spread_suspicious": 0,
     "total_consensus_replaced": 0,
     "total_disputed": 3,
-    "total_no_line": 50,
-    "total_ok": 842,
-    "total_open_available": 779,
+    "total_no_line": 7,
+    "total_ok": 885,
+    "total_open_available": 822,
     "total_priority_replaced": 0,
     "total_suspicious": 0,
     "unmatched": 0
    },
    "postseason": {
-    "retrieved_at": "2026-11-22T14:40:19.911938+00:00",
+    "retrieved_at": "2026-11-22T18:34:33.855924+00:00",
     "rows": 0,
     "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
    },
    "regular": {
-    "retrieved_at": "2026-11-22T14:40:19.801417+00:00",
+    "retrieved_at": "2026-11-22T18:34:33.760421+00:00",
     "rows": 1544,
-    "sha256": "74443f1ac57e06505d80a5bfb6025290d3debe99084cbbe73f2f7bdd6c4d1dfc"
+    "sha256": "64a173130b7c4105c9f0f7db6d231b81da229cc89f77d44466c9ece9f79e6de1"
    }
   }
  },
