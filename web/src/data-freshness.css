@@ -1,5 +1,5 @@
 /* Per-area data freshness in the footer: quiet by default, a warm accent only for delayed or unverified data */
-.data-status{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:2px 14px;color:#b9c4d3;font-size:12px}
+.data-status{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:2px 14px;color:#b9c4d3;font-size:inherit}
 .data-status li{overflow-wrap:anywhere}
 .data-status strong{color:#dbe5f1;font-weight:600}
 .data-status li[data-state=delayed],.data-status li[data-state=awaiting]{color:#f2d3a2}
