@@ -30,6 +30,12 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: PYTHONPATH=src python -m cfb_analytics.poll_refresh
+      - name: Publish official CFP rankings when dated and independently confirmed
+        # Only a dated official release that parses to ranks 1-25 and matches CFBD's committee poll for the same week
+        # is published (with an evidence file). Anything else changes nothing and raises a warning.
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: PYTHONPATH=src python -m cfb_analytics.cfp_publish
       - name: Commit only changed verified poll data
         run: |
           git config user.name 'github-actions[bot]'
@@ -39,6 +45,7 @@ jobs:
             exit 0
           fi
           git add data/poll-2026-snapshot.json
+          git add docs/evidence/cfp-publication-*.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Refresh verified official poll snapshot"
             git pull --rebase origin main

@@ -11,13 +11,10 @@ on:
         required: true
         default: '2026'
   schedule:
-    - cron: '23 11 * * *' # Daily baseline (UTC)
-    # Every 15 minutes during US game hours, August-January. The gate checks
-    # for newly final games and skips full refreshes if none have completed.
-    - cron: '*/15 16-23 * 8-12 *'
-    - cron: '*/15 0-6 * 8-12 *'
-    - cron: '*/15 16-23 * 1 *'
-    - cron: '*/15 0-6 * 1 *'
+    - cron: '23 11 * * *' # Daily baseline (UTC): full reconciliation even if no event was detected.
+    # Game-day freshness comes from the event watcher (event-watcher.yml), which dispatches this workflow when a game
+    # becomes final and paces CFBD calls to the monthly quota. The former 15-minute game-hour crons were removed:
+    # GitHub ran them only every 3-4 hours, and each gate check spent a CFBD call (free tier: 1,000 a month).
 
 permissions:
   contents: write
@@ -53,7 +50,6 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -e '.[dev]'
-      - run: python -m pytest -q
       - name: Reject unsupported season before refresh
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
@@ -155,11 +151,20 @@ jobs:
         if: steps.v7_metrics.outcome == 'success'
         continue-on-error: true
         run: python -m cfb_analytics.v7_validation
+      - name: Refresh postseason games (conference championships filed as postseason, bowls, CFP)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python -m cfb_analytics.postseason
+      - name: Validate exactly the data about to be published
+        # Runs on the refreshed snapshot, report and derived files, so a bad refresh is never committed. The
+        # dashboard build skips its duplicate run for this exact validated commit (see dashboard.yml).
+        run: python -m pytest -q
       - name: Commit changed snapshot
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
+          git add data/cfbd-*-postseason.json web/public/postseason-*.json 2>/dev/null || true
           git add web/public/v5-program-report-cards.json web/public/v5-historical-results.json
           if [ -f data/v7-market-receipts.json ]; then
             git add data/v7-market-receipts.json web/public/v7-team-market-history.json web/public/v7-team-lines web/public/v7-market-metrics.json web/public/v7-model-market research/v7/historical-validation.json

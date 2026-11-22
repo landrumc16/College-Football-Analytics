@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from cfb_analytics import event_calendar as cal
-from cfb_analytics.event_watcher import Watcher, VERIFY_TIMEOUT
+from cfb_analytics.event_watcher import Watcher, VERIFY_TIMEOUT, quota_plan, REFRESH_COST
 
 T0 = datetime(2026, 11, 21, 17, 0, tzinfo=timezone.utc)    # Saturday 11:00 Central
 iso = lambda t: t.isoformat().replace("+00:00", ".000Z")
@@ -34,9 +34,12 @@ class Clock:
 class FakeProviders:
     """CFBD + GitHub + live site. `finals` maps game_id -> (time it becomes final in CFBD, home, away)."""
 
-    def __init__(self, clock, snapshot, deploy_minutes=6):
+    def __init__(self, clock, snapshot, deploy_minutes=6, postseason=None):
         self.clock, self.deploy = clock, timedelta(minutes=deploy_minutes)
         self.base = {g["game_id"]: dict(g) for g in snapshot["games"]}
+        self.post_base = {g["game_id"]: dict(g) for g in (postseason or {}).get("games", [])}
+        self.cfp_confirmable = True        # does the poll workflow's official-page check pass?
+        self.site_post = {"games": [dict(g) for g in self.post_base.values()]}
         self.finals, self.corrections, self.reschedules = {}, {}, {}
         self.polls_at = {}                 # poll -> (time published in CFBD, week)
         self.cfp_at = None
@@ -49,10 +52,10 @@ class FakeProviders:
         self.pending_deploys = []
         self.stale_final = set()           # game ids CFBD reports (wrongly) as not final
 
-    def _state(self):
+    def _state(self, base=None):
         now = self.clock()
         out = []
-        for gid, g in self.base.items():
+        for gid, g in (self.base if base is None else base).items():
             row = {"id": gid, "homeTeam": g["home"], "awayTeam": g["away"], "season": 2026, "week": g["week"],
                    "startDate": self.reschedules.get(gid, g["start_date"]), "completed": g["completed"],
                    "homePoints": g["home_score"], "awayPoints": g["away_score"], "seasonType": "regular"}
@@ -67,9 +70,20 @@ class FakeProviders:
 
     def games(self, season):
         self.cfbd_calls += 1
+        self.call_times = getattr(self, "call_times", []) + [self.clock()]
         if int((self.clock() - T0).total_seconds() // 60) in self.games_down or "all" in self.games_down:
             raise TimeoutError("CFBD timeout")
         return self._state()
+
+    def postseason(self, season):
+        self.cfbd_calls += 1
+        if "all" in self.games_down:
+            raise TimeoutError("CFBD timeout")
+        return self._state(self.post_base)
+
+    def live_postseason(self):
+        self._apply_deploys()
+        return self.site_post
 
     def rankings(self, season):
         self.cfbd_calls += 1
@@ -90,19 +104,22 @@ class FakeProviders:
             self.dispatch_fail -= 1
             raise RuntimeError("GitHub 502")
         self.dispatches.append((self.clock(), workflow))
-        self.pending_deploys.append((self.clock() + self.deploy, workflow, self._state()))
+        self.pending_deploys.append((self.clock() + self.deploy, workflow, (self._state(), self._state(self.post_base))))
 
     def _apply_deploys(self):
         now = self.clock()
-        for when, workflow, state in [d for d in self.pending_deploys if d[0] <= now]:
-            self.pending_deploys.remove((when, workflow, state))
+        for when, workflow, (state, post) in [d for d in self.pending_deploys if d[0] <= now]:
+            self.pending_deploys.remove((when, workflow, (state, post)))
+            row = lambda r: {"game_id": r["id"], "completed": r["completed"], "home_score": r["homePoints"], "away_score": r["awayPoints"]}
             if workflow == "refresh-data.yml":
-                self.site_report = {"schedule": [{"game_id": r["id"], "completed": r["completed"], "home_score": r["homePoints"],
-                                                  "away_score": r["awayPoints"]} for r in state]}
+                self.site_report = {"schedule": [row(r) for r in state]}
+                self.site_post = {"games": [row(r) for r in post]}
             else:
                 for key, (at, week) in self.polls_at.items():
                     if at <= when:
                         self.site_polls["poll_weeks"][key] = week
+                if self.cfp_at and self.cfp_at[0] <= when and self.cfp_confirmable:
+                    self.site_polls.update(cfp_week=self.cfp_at[1], cfp_published_at="2026-11-24")
 
     def live_report(self):
         self._apply_deploys()
@@ -116,9 +133,11 @@ class FakeProviders:
 def setup(games, polls=None, **kw):
     clock = Clock(kw.pop("start", T0))
     snapshot = {"season": 2026, "games": games}
-    providers = FakeProviders(clock, snapshot, kw.pop("deploy_minutes", 6))
+    post = {"games": kw.pop("postseason", [])}
+    providers = FakeProviders(clock, snapshot, kw.pop("deploy_minutes", 6), post)
     w = Watcher(snapshot, polls or {"poll_weeks": {"ap_top25": 12, "coaches_top25": 12}, "cfp_week": 11}, providers,
-                clock=clock, sleep=clock.sleep, active_interval=kw.pop("interval", 120), watch_interval=600, log=lambda *_: None)
+                clock=clock, sleep=clock.sleep, active_interval=kw.pop("interval", 120), watch_interval=600, log=lambda *_: None,
+                cfbd_budget=kw.pop("budget", 400), postseason=post)
     return clock, providers, w
 
 
@@ -188,7 +207,8 @@ def test_duplicate_detections_dispatch_once():
 def test_authoritative_correction_hours_later_propagates():
     clock, p, w = setup([game(1, T0 - timedelta(hours=3))])
     p.finals[1] = (T0, 21, 14)
-    p.corrections[1] = (T0 + timedelta(hours=2), 21, 17)                 # stat correction after the fast final
+    # Corrections within the 2-hour reconciliation window are caught here; later ones by the daily baseline refresh.
+    p.corrections[1] = (T0 + timedelta(minutes=90), 21, 17)              # stat correction after the fast final
     w.run(T0 + timedelta(hours=5))
     assert [e.status for e in finals_of(w)] == ["published"]
     corr = finals_of(w, "correction")
@@ -247,7 +267,7 @@ def test_downtime_recovery_picks_up_yesterdays_overdue_finals():
     assert [e.status for e in finals_of(w)] == ["published"]
 
 
-def test_poll_published_late_and_cfp_release_is_alerted_not_published():
+def test_poll_published_late_and_cfp_release_published_only_when_confirmed():
     sunday = datetime(2026, 11, 22, 17, 0, tzinfo=timezone.utc)
     clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=sunday)
     p.polls_at["coaches_top25"] = (sunday + timedelta(minutes=20), 13)    # earlier than AP
@@ -256,11 +276,73 @@ def test_poll_published_late_and_cfp_release_is_alerted_not_published():
     polls = {e.detail["poll"]: e.status for e in w.events if e.kind == "poll"}
     assert polls == {"coaches_top25": "published", "ap_top25": "published"}
     assert all(wf == "refresh-polls.yml" for _, wf in p.dispatches)
+    # CFP release: detected in CFBD, the poll workflow confirms the dated official page, the site shows it.
     tuesday = datetime(2026, 11, 24, 23, 30, tzinfo=timezone.utc)          # 17:30 Central CFP window
     clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday)
     p.cfp_at = (tuesday + timedelta(minutes=40), 13)
     w.run(tuesday + timedelta(hours=2))
-    assert [e.status for e in w.events if e.kind == "cfp"] == ["alerted"] and not p.dispatches and w.alerts
+    cfp = [e for e in w.events if e.kind == "cfp"]
+    assert [e.status for e in cfp] == ["published"] and p.dispatches[0][1] == "refresh-polls.yml"
+    assert cfp[0].record()["detection_to_publication_seconds"] <= 8 * 60
+    # The official page cannot confirm it: never published, re-dispatched once, then alerted.
+    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday)
+    p.cfp_at, p.cfp_confirmable = (tuesday + timedelta(minutes=40), 13), False
+    w.run(tuesday + timedelta(hours=2))
+    assert [e.status for e in w.events if e.kind == "cfp"] == ["alerted"] and len(p.dispatches) == 2 and w.alerts
+    assert "cfp_published_at" not in p.site_polls
+
+
+def test_postseason_bowl_and_cfp_games_are_detected_and_verified_on_the_postseason_page():
+    bowl_day = datetime(2026, 12, 31, 20, 0, tzinfo=timezone.utc)
+    bowl = dict(game(901, bowl_day - timedelta(hours=3), week=1), neutral_site=True, label="Sugar Bowl - CFP Quarterfinal")
+    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=bowl_day, postseason=[bowl])
+    p.post_base[901]["completed"] = False
+    p.finals[901] = None                                                   # unused for regular games
+    p.finals.pop(901)
+    p.post_base[901].update(completed=False)
+    # CFBD reports the bowl final 10 minutes into the session.
+    orig = p._state
+    def state(base=None):
+        rows = orig(base)
+        if base is p.post_base and clock() >= bowl_day + timedelta(minutes=10):
+            for r in rows:
+                r.update(completed=True, homePoints=34, awayPoints=31)
+        return rows
+    p._state = state
+    w.run(bowl_day + timedelta(hours=2))
+    ev = [e for e in w.events if e.kind == "final"]
+    assert len(ev) == 1 and ev[0].detail["season_type"] == "postseason" and ev[0].status == "published"
+    assert p.dispatches[0][1] == "refresh-data.yml" and ev[0].record()["detection_to_publication_seconds"] <= 8 * 60
+
+
+def test_games_in_progress_cost_no_cfbd_calls_before_their_window():
+    clock, p, w = setup([game(1, T0 - timedelta(minutes=30))])                 # kicked off 30 minutes ago
+    p.finals[1] = (T0 + timedelta(hours=2, minutes=50), 28, 20)               # final 3h20 after kickoff
+    w.run(T0 + timedelta(hours=5))
+    kickoff = T0 - timedelta(minutes=30)
+    assert [e.status for e in finals_of(w)] == ["published"]
+    assert min(p.call_times) >= kickoff + cal.EARLY_FINISH                     # nothing spent while it was in progress
+    assert p.cfbd_calls <= 40
+
+
+def test_quota_plan_spends_only_what_is_left_after_the_reserve():
+    now = datetime(2026, 11, 22, 22, 40, tzinfo=timezone.utc)
+    snap = {"season": 2026, "games": [game(i, datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc) + timedelta(hours=i % 4 * 3)) for i in range(60)]
+            + [game(100 + i, now + timedelta(hours=1)) for i in range(3)]}
+    # The real account state on 22 November: free tier, 83 calls left, reset 1 December.
+    tight = quota_plan({"remainingCalls": 83, "resetAt": "2026-12-01T00:00:00.000Z"}, snap, now)
+    assert tight["days_to_reset"] == 9 and tight["spendable"] == 83 - 54 and tight["budget"] <= 29
+    # A fresh month on the free tier: Saturday gets most of the spendable calls, checks spread over its windows.
+    fresh = quota_plan({"remainingCalls": 1000, "resetAt": "2026-12-01T00:00:00.000Z"},
+                       {"season": 2026, "games": snap["games"][:60]}, datetime(2026, 11, 28, 18, 0, tzinfo=timezone.utc))
+    assert fresh["budget"] > 0 and fresh["interval_seconds"] >= 120
+    # Exhausted (reserve not covered): the watcher makes no CFBD calls at all.
+    none = quota_plan({"remainingCalls": 20, "resetAt": "2026-12-01T00:00:00.000Z"}, snap, now)
+    assert none["budget"] == 0 and none["interval_seconds"] is None
+    clock, p, w = setup([game(1, T0 - timedelta(hours=3))], budget=0)
+    p.finals[1] = (T0, 21, 14)
+    w.run(T0 + timedelta(hours=1))
+    assert p.cfbd_calls == 0 and not p.dispatches
 
 
 def test_cfbd_call_budget_caps_a_long_day():

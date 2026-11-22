@@ -4,7 +4,9 @@
   "purpose": "Narrow, additions-only exception to the V6 protected-path guard for the reviewed event-driven refresh modules. Applies only to pull requests from v7-development in this repository; every other branch keeps the strict byte-identical guard. No existing protected file may change. Remove after this release is merged.",
   "added_files": {
     "src/cfb_analytics/event_calendar.py": "Pure calendar of game completion, poll and CFP release windows (no I/O, no model changes)",
-    "src/cfb_analytics/event_watcher.py": "Watcher that detects finals, corrections and poll releases, dispatches the existing refresh workflows and verifies the live site"
+    "src/cfb_analytics/event_watcher.py": "Watcher that detects finals, corrections and poll releases, dispatches the existing refresh workflows and verifies the live site",
+    "src/cfb_analytics/cfp_publish.py": "Publishes official CFP rankings only when the dated official release parses completely and CFBD confirms it (evidence file per release)",
+    "src/cfb_analytics/postseason.py": "Postseason games and predictions from the existing official formula and published ratings (ratings unchanged)"
   },
   "added_file_patterns": {},
   "modified_additive_only": {},

@@ -210,9 +210,22 @@ jobs:
         with:
           python-version: '3.11'
       - name: Build frozen-data demo if live report absent
+        env:
+          WR_NAME: ${{ github.event.workflow_run.name }}
+          WR_SHA: ${{ github.event.workflow_run.head_sha }}
+          WR_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         run: |
           python -m pip install -e '.[dev]'
-          PYTHONPATH=. python -m pytest -q
+          # The data refresh now runs the full suite on exactly the data it commits. Skip the duplicate run only when
+          # HEAD is that validated bot commit directly on top of the refresh's starting commit; otherwise test here.
+          parent="$(git log -1 --format=%P)"
+          if [ "${{ github.event_name }}" = "workflow_run" ] && [ "$WR_NAME" = "Refresh college football data" ] \
+             && [ "$WR_CONCLUSION" = "success" ] && [ "$parent" = "$WR_SHA" ] \
+             && [ "$(git log -1 --format=%an)" = "github-actions[bot]" ] && [ "$(git log -1 --format=%s)" = "Refresh CFBD season snapshot" ]; then
+            echo "Suite already passed on this exact commit in the data refresh ($WR_SHA -> $(git rev-parse --short HEAD)); not repeated"
+          else
+            PYTHONPATH=. python -m pytest -q
+          fi
           if [ ! -f data/season-2026-report.json ]; then
             python -m cfb_analytics.demo
           fi

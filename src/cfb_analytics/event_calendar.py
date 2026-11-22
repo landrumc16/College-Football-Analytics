@@ -24,7 +24,7 @@ EARLY_FINISH = timedelta(hours=2, minutes=15)
 LATE_FINISH = timedelta(hours=4, minutes=45)
 OVERDUE_LIMIT = timedelta(hours=36)
 ACTIVE_INTERVAL = 300      # seconds between source checks while an event is due (CFBD call budget; configurable)
-WATCH_INTERVAL = 900       # seconds while games are in progress but none is near completion
+WATCH_INTERVAL = 900       # seconds between checks of overdue (delayed, suspended) games
 
 
 def parse_time(value):
@@ -115,7 +115,8 @@ def plan(snapshot, polls, now, *, active_interval=ACTIVE_INTERVAL, watch_interva
         elif s == "overdue":
             p.games_overdue.append(g)
         elif s == "in_progress":
-            p.games_in_progress.append(g)
+            p.games_in_progress.append(g)               # cannot be final yet: no source check until its window opens
+            upcoming.append(parse_time(g["start_date"]) + EARLY_FINISH)
         elif s == "upcoming":
             upcoming.append(parse_time(g["start_date"]) + EARLY_FINISH)
     week = expected_poll_week(snapshot, now)
@@ -126,7 +127,7 @@ def plan(snapshot, polls, now, *, active_interval=ACTIVE_INTERVAL, watch_interva
     p.cfp_due = cfp_window(now)
     if p.games_due or p.polls_due or p.cfp_due:
         p.intensity, p.interval = "active", active_interval
-    elif p.games_overdue or p.games_in_progress:
+    elif p.games_overdue:
         p.intensity, p.interval = "watch", watch_interval
     starts = sorted(t for t in upcoming if t > now)
     p.next_event_at = starts[0] if starts else None

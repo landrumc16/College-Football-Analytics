@@ -19,6 +19,7 @@ existing rule that undated CFP feed rows are never published as official.
 """
 import argparse
 import json
+import math
 import os
 import time
 from dataclasses import dataclass, field
@@ -33,7 +34,14 @@ from .poll_refresh import choose_polls
 SITE = "https://landrumc16.github.io/College-Football-Analytics/"
 REPO = "landrumc16/College-Football-Analytics"
 VERIFY_TIMEOUT = timedelta(minutes=20)   # refresh ~1 min + build/deploy ~5 min measured; generous before a retry
-RECONCILE_WINDOW = timedelta(hours=3)    # keep checking recently finalized games for authoritative corrections
+RECONCILE_WINDOW = timedelta(hours=2)    # keep checking recently finalized games for authoritative corrections
+RECONCILE_INTERVAL = 1800                # ... every 30 minutes (any other check also reconciles: one call returns all games)
+# CFBD quota (free tier: 1,000 calls a month, verified with GET /info). The watcher spends only what is left after
+# reserving the calls the scheduled workflows need until the monthly reset.
+RESERVE_PER_DAY = 6      # daily baseline refresh (games, lines x2, postseason) + poll and statistics refreshes
+REFRESH_COST = 4         # CFBD calls one dispatched data refresh spends
+POLL_REFRESH_COST = 2    # poll refresh + CFP confirmation
+MIN_INTERVAL = 120       # never check more often than every 2 minutes
 
 
 def utcnow():
@@ -91,6 +99,12 @@ class Providers:
     def live_report(self):
         return _get_json(self.site + f"season-report.json?t={int(time.time())}")
 
+    def live_postseason(self):
+        try:
+            return _get_json(self.site + f"postseason-2026.json?t={int(time.time())}")
+        except Exception:
+            return {"games": []}
+
     def live_polls(self):
         return _get_json(self.site + f"poll-snapshot.json?t={int(time.time())}")
 
@@ -141,11 +155,44 @@ class SourceHealth:
         self.failures, self.next_allowed, self.last_error = 0, None, None
 
 
+def quota_plan(info, snapshot, now, *, reserve_per_day=RESERVE_PER_DAY):
+    """CFBD calls this session may spend and the check interval, from the live remaining quota.
+
+    Spendable = remaining - (reserve_per_day x days until reset). Today's share is proportional to the games whose
+    completion window falls in the next 24 hours, out of all games before the reset (at least an even daily share).
+    Detection checks are spread over today's completion windows after reserving one refresh per kickoff cluster.
+    """
+    remaining, reset = int(info["remainingCalls"]), cal.parse_time(info["resetAt"])
+    days = max(1, math.ceil((reset - now).total_seconds() / 86400))
+    spendable = remaining - reserve_per_day * days
+    pending = []
+    for g in snapshot["games"]:
+        k = cal.parse_time(g.get("start_date"))
+        if not g.get("completed") and k and now <= k + cal.LATE_FINISH + cal.OVERDUE_LIMIT and k + cal.EARLY_FINISH < reset:
+            pending.append(k)
+    soon = [k for k in pending if k + cal.EARLY_FINISH <= now + timedelta(hours=24)]
+    share = max(len(soon) / len(pending) if pending else 0, 1 / days)
+    budget = max(0, math.floor(spendable * share)) if spendable > 0 else 0
+    clusters = len({(k.date(), k.hour) for k in soon}) or 1
+    detect = budget - REFRESH_COST * clusters
+    if soon:
+        start = max(now, min(k + cal.EARLY_FINISH for k in soon))
+        span = max(600, (max(k + cal.LATE_FINISH for k in soon) - start).total_seconds())
+    else:
+        span = 86400
+    interval = max(MIN_INTERVAL, span / detect) if detect > 0 else None
+    return {"remaining": remaining, "days_to_reset": days, "spendable": max(0, spendable), "share_today": round(share, 3),
+            "budget": budget if detect > 0 else 0, "interval_seconds": round(interval) if interval else None,
+            "kickoff_clusters_today": clusters, "games_finishing_next_24h": len(soon)}
+
+
 class Watcher:
     def __init__(self, snapshot, polls, providers, *, clock=utcnow, sleep=time.sleep, dry_run=False,
-                 active_interval=cal.ACTIVE_INTERVAL, watch_interval=cal.WATCH_INTERVAL, cfbd_budget=400, log=print):
+                 active_interval=cal.ACTIVE_INTERVAL, watch_interval=cal.WATCH_INTERVAL, cfbd_budget=400, log=print,
+                 postseason=None):
         self.season = snapshot["season"]
-        self.snapshot = {"season": self.season, "games": [dict(g) for g in snapshot["games"]]}
+        post = [dict(g, season_type="postseason") for g in (postseason or {}).get("games", [])]
+        self.snapshot = {"season": self.season, "games": [dict(g) for g in snapshot["games"]] + post}
         self.games = {int(g["game_id"]): g for g in self.snapshot["games"]}
         self.polls = json.loads(json.dumps(polls or {}))
         self.p, self.clock, self.sleep, self.dry_run, self.log = providers, clock, sleep, dry_run, log
@@ -155,6 +202,14 @@ class Watcher:
         self.stale_signals = []
         self.alerts = []
         self._last_games_check = None
+        self.dispatch_cost = 0
+
+    @property
+    def spent(self):
+        return self.p.cfbd_calls + self.dispatch_cost
+
+    def can_check(self):
+        return self.spent + REFRESH_COST < self.cfbd_budget      # always keep enough for one refresh
 
     # ---- detection -------------------------------------------------------------------------------------------
     def _add(self, kind, key, detail, source):
@@ -166,13 +221,16 @@ class Watcher:
         self.log(f"{kind}: {detail}")
         return e
 
-    def check_games(self):
+    def check_games(self, season_types=("regular",)):
         now = self.clock()
         h = self.health["games"]
-        if not h.ok(now) or self.p.cfbd_calls >= self.cfbd_budget:
+        if not h.ok(now) or not self.can_check():
             return []
         try:
-            current = normalise(self.p.games(self.season), self.season)
+            current = {}
+            for kind in season_types:
+                rows = self.p.games(self.season) if kind == "regular" else self.p.postseason(self.season)
+                current.update(normalise(rows, self.season))
         except Exception as error:                      # outage, timeout, bad JSON: back off this source only
             h.fail(now, error, self.active_interval)
             self.log(f"games source failed ({h.failures}): {h.last_error}")
@@ -202,7 +260,8 @@ class Watcher:
                     game.update(home_score=src["home_score"], away_score=src["away_score"])
             elif src["completed"] and has_score:
                 e = self._add("final", f"final:{gid}:{src['home_score']}-{src['away_score']}",
-                              {"game_id": gid, "home": game.get("home"), "away": game.get("away"), "score": [src["home_score"], src["away_score"]]}, "cfbd/games")
+                              {"game_id": gid, "home": game.get("home"), "away": game.get("away"), "score": [src["home_score"], src["away_score"]],
+                               "season_type": game.get("season_type", "regular")}, "cfbd/games")
                 if e:
                     finals.append(e)
                 game.update(completed=True, home_score=src["home_score"], away_score=src["away_score"])
@@ -211,7 +270,7 @@ class Watcher:
     def check_polls(self, plan):
         now = self.clock()
         h = self.health["rankings"]
-        if not (plan.polls_due or plan.cfp_due) or not h.ok(now) or self.p.cfbd_calls >= self.cfbd_budget:
+        if not (plan.polls_due or plan.cfp_due) or not h.ok(now) or self.spent + POLL_REFRESH_COST >= self.cfbd_budget:
             return []
         try:
             found = choose_polls(self.p.rankings(self.season))
@@ -233,10 +292,10 @@ class Watcher:
                 if e:
                     out.append(e)
         if plan.cfp_due and "cfp_top25" in found and found["cfp_top25"][0] > (self.polls.get("cfp_week") or 0):
+            # The poll workflow publishes it only if the dated official release confirms it (cfp_publish).
             e = self._add("cfp", f"cfp:{found['cfp_top25'][0]}", {"week": found["cfp_top25"][0]}, "cfbd/rankings")
             if e:
-                e.status = "alerted"
-                self.alerts.append(f"CFP rankings week {found['cfp_top25'][0]} detected in CFBD; verify the official release and publish it with its date and source")
+                out.append(e)
         return out
 
     # ---- action and verification ----------------------------------------------------------------------------
@@ -258,6 +317,7 @@ class Watcher:
             self.log(f"dispatch {workflow} failed ({h.failures}): {h.last_error}")
             return
         h.recover()
+        self.dispatch_cost += REFRESH_COST if workflow == "refresh-data.yml" else POLL_REFRESH_COST
         for e in events:
             e.dispatched_at, e.status, e.attempts = now, "dispatched", e.attempts + 1
             e.detail["workflow"] = workflow
@@ -271,18 +331,22 @@ class Watcher:
         if not h.ok(now):
             return
         try:
-            report = self.p.live_report() if any(e.kind in ("final", "correction") for e in waiting) else None
-            polls = self.p.live_polls() if any(e.kind == "poll" for e in waiting) else None
+            report = self.p.live_report() if any(e.kind in ("final", "correction") and e.detail.get("season_type") != "postseason" for e in waiting) else None
+            post = self.p.live_postseason() if any(e.detail.get("season_type") == "postseason" for e in waiting) else None
+            polls = self.p.live_polls() if any(e.kind in ("poll", "cfp") for e in waiting) else None
         except Exception as error:
             h.fail(now, error, 60)
             return
         h.recover()
         live = {g["game_id"]: g for g in (report or {}).get("schedule", [])}
+        live_post = {g["game_id"]: g for g in (post or {}).get("games", [])}
         for e in waiting:
             if e.kind in ("final", "correction"):
-                g = live.get(e.detail["game_id"])
+                g = (live_post if e.detail.get("season_type") == "postseason" else live).get(e.detail["game_id"])
                 want = e.detail.get("score") or e.detail.get("to")
                 ok = bool(g and g.get("completed") and [g.get("home_score"), g.get("away_score")] == want)
+            elif e.kind == "cfp":
+                ok = ((polls or {}).get("cfp_week") or 0) >= e.detail["week"] and bool((polls or {}).get("cfp_published_at"))
             else:
                 ok = ((polls or {}).get("poll_weeks", {}).get(e.detail["poll"]) or 0) >= e.detail["week"]
             if ok:
@@ -297,7 +361,7 @@ class Watcher:
     def redispatch(self):
         retry = [e for e in self.events if e.status == "detected" and e.kind in ("final", "correction")]
         self.dispatch("refresh-data.yml", retry, {"season": str(self.season)})
-        retry_polls = [e for e in self.events if e.status == "detected" and e.kind == "poll"]
+        retry_polls = [e for e in self.events if e.status == "detected" and e.kind in ("poll", "cfp")]
         self.dispatch("refresh-polls.yml", retry_polls)
 
     # ---- loop ---------------------------------------------------------------------------------------------------
@@ -306,19 +370,26 @@ class Watcher:
         return any(e.kind in ("final", "correction") and now - e.detected_at <= RECONCILE_WINDOW for e in self.events)
 
     def awaiting(self):
-        return any(e.status in ("detected", "dispatched") and e.kind in ("final", "correction", "poll") for e in self.events)
+        return any(e.status in ("detected", "dispatched") and e.kind in ("final", "correction", "poll", "cfp") for e in self.events)
 
     def step(self):
         plan = cal.plan(self.snapshot, self.polls, self.clock(), active_interval=self.active_interval, watch_interval=self.watch_interval)
         now = self.clock()
-        due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=self.watch_interval))
+        due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=max(self.watch_interval, RECONCILE_INTERVAL)))
         finals = []
-        if plan.monitors_games or plan.games_in_progress or due_reconcile:
+        if plan.monitors_games or due_reconcile:
             self._last_games_check = now
-            finals = self.check_games()
+            watched = plan.games_due + plan.games_overdue
+            kinds = {g.get("season_type", "regular") for g in watched} if watched else {"regular"}
+            if due_reconcile:
+                kinds |= {e.detail.get("season_type", "regular") for e in self.events if e.kind in ("final", "correction")}
+            finals = self.check_games(tuple(sorted(kinds, reverse=True)))
         polls = self.check_polls(plan)
         for e in polls:                                  # the poll workflow re-validates; mark expected week as seen
-            self.polls["poll_weeks"][e.detail["poll"]] = e.detail["week"]
+            if e.kind == "poll":
+                self.polls["poll_weeks"][e.detail["poll"]] = e.detail["week"]
+            else:
+                self.polls["cfp_week"] = e.detail["week"]
         self.redispatch()                                # includes the new events (status "detected")
         self.verify()
         return plan, finals, polls
@@ -332,7 +403,7 @@ class Watcher:
             elif self.awaiting():
                 wait = 60                                # dispatch retries and live-site verification
             elif self.reconciling():
-                wait = self.watch_interval
+                wait = max(self.watch_interval, RECONCILE_INTERVAL)
             elif plan.next_event_at and plan.next_event_at < deadline:
                 wait = (plan.next_event_at - now).total_seconds()
             else:
@@ -346,21 +417,11 @@ class Watcher:
         latencies = [e.record()["detection_to_publication_seconds"] for e in self.events if e.published_at]
         within = sum(1 for s in latencies if s <= 300)
         return {"generated_at": self.clock().isoformat(), "dry_run": self.dry_run, "cfbd_calls": self.p.cfbd_calls,
+                "cfbd_calls_including_dispatched_refreshes": self.spent, "cfbd_budget": self.cfbd_budget,
                 "events": [e.record() for e in self.events], "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
                 "source_health": {k: {"failures": v.failures, "last_error": v.last_error} for k, v in self.health.items()},
                 "latency": {"published": len(latencies), "within_5_minutes": within,
                             "median_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None}}
-
-
-def _save_probe(html, path=Path("cfp-official-probe.html")):
-    import re
-    path.write_text(html)
-    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)))
-    i = text.find("Georgia")
-    print("CFP-PROBE-TEXT:", text[max(0, i - 1500):i + 2500])
-    for m in list(re.finditer(r"Georgia", html))[:3]:
-        print("CFP-PROBE-HTML:", html[max(0, m.start() - 400):m.start() + 300].replace("\n", " "))
-    return {"bytes": len(html), "has_rank_text": "Rankings" in html}
 
 
 def summary_markdown(result, plan):
@@ -383,22 +444,40 @@ def main(argv=None):
     args = ap.parse_args(argv)
     snapshot = json.loads(Path("data/cfbd-2026-games.json").read_text())
     polls = json.loads(Path("data/poll-2026-snapshot.json").read_text())
+    post_path = Path("data/cfbd-2026-postseason.json")
+    postseason = json.loads(post_path.read_text()) if post_path.exists() else None
     providers = Providers(os.environ.get("CFBD_API_KEY", ""), os.environ.get("GITHUB_TOKEN", ""))
-    watcher = Watcher(snapshot, polls, providers, dry_run=args.dry_run,
-                      active_interval=int(os.environ.get("WATCH_ACTIVE_SECONDS", cal.ACTIVE_INTERVAL)),
-                      cfbd_budget=int(os.environ.get("CFBD_CALL_BUDGET", 400)))
-    start_plan = cal.plan(watcher.snapshot, watcher.polls, utcnow())
+    watcher = Watcher(snapshot, polls, providers, dry_run=args.dry_run, postseason=postseason)
+    now = utcnow()
+    # Pace CFBD calls to the live monthly quota; an unreadable quota falls back to a conservative session.
+    try:
+        quota = quota_plan(providers.info(), watcher.snapshot, now)
+    except Exception as error:
+        quota = {"error": str(error)[:200], "budget": 12, "interval_seconds": 1800}
+    watcher.cfbd_budget = min(int(os.environ.get("CFBD_CALL_BUDGET", 400)), quota["budget"])
+    if quota.get("interval_seconds"):
+        watcher.active_interval = max(int(os.environ.get("WATCH_ACTIVE_SECONDS", MIN_INTERVAL)), quota["interval_seconds"])
+    start_plan = cal.plan(watcher.snapshot, watcher.polls, now, active_interval=watcher.active_interval)
     print("plan:", json.dumps(start_plan.summary()))
+    print("quota:", json.dumps(quota))
     if args.dry_run:
-        # One real check of every provider, regardless of the calendar.
+        from . import cfp_publish
+        known = {t["team"] for t in json.loads(Path("data/season-2026-report.json").read_text())["rankings"]}
+        def page(url):
+            try:
+                return providers.official_page(url)
+            except Exception as error:
+                if "404" in str(error):
+                    return None
+                raise
         checks = {}
         for name, call in (("cfbd_games", lambda: len(normalise(providers.games(watcher.season), watcher.season))),
                            ("cfbd_rankings", lambda: {k: v[0] for k, v in choose_polls(providers.rankings(watcher.season)).items()}),
+                           ("cfbd_postseason", lambda: len(providers.postseason(watcher.season))),
+                           ("cfbd_info", lambda: {k: v for k, v in providers.info().items() if k in ("tierName", "monthlyLimit", "remainingCalls", "usedCalls", "resetAt")}),
+                           ("cfp_publish_would", lambda: cfp_publish.run(now, polls, known, fetch_page=page, fetch_rankings=lambda: providers.rankings(watcher.season))[2]),
                            ("github_workflows", lambda: sorted(w["path"].split("/")[-1] for w in providers.workflows()["workflows"]
                                                                if w["path"].endswith(("refresh-data.yml", "refresh-polls.yml")))),
-                           ("cfbd_info", lambda: providers.info()),
-                           ("cfbd_postseason", lambda: len(providers.postseason(watcher.season))),
-                           ("cfp_official_page", lambda: _save_probe(providers.official_page("https://collegefootballplayoff.com/news/2026/11/17/rankings"))),
                            ("live_report", lambda: providers.live_report()["retrieved_at"]),
                            ("live_polls", lambda: providers.live_polls().get("poll_weeks"))):
             started = time.monotonic()
@@ -406,14 +485,17 @@ def main(argv=None):
                 checks[name] = {"ok": True, "value": call(), "seconds": round(time.monotonic() - started, 2)}
             except Exception as error:
                 checks[name] = {"ok": False, "error": str(error)[:200], "seconds": round(time.monotonic() - started, 2)}
-        watcher.check_games()                           # detection against the committed snapshot (no dispatch)
-        result = {**watcher.report(), "provider_checks": checks}
+        result = {**watcher.report(), "quota": quota, "provider_checks": checks}
+    elif watcher.cfbd_budget <= 0:
+        watcher.alerts.append(f"Monitoring paused to protect the CFBD quota ({quota.get('remaining')} calls left, "
+                              f"{quota.get('days_to_reset')} days to reset); the daily baseline refresh still reconciles results")
+        result = {**watcher.report(), "quota": quota}
     else:
-        result = watcher.run(utcnow() + timedelta(minutes=args.minutes))
+        result = {**watcher.run(now + timedelta(minutes=args.minutes)), "quota": quota}
     args.ledger.write_text(json.dumps(result, indent=1))
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            f.write(summary_markdown(result, start_plan))
+            f.write(summary_markdown(result, start_plan) + f"\nQuota: `{json.dumps(quota)}`\n")
     for alert in result["alerts"]:
         print(f"::warning::{alert}")
     print(json.dumps({k: result[k] for k in ("cfbd_calls", "latency", "alerts")} | ({"provider_checks": result["provider_checks"]} if "provider_checks" in result else {}), indent=1))

@@ -19,6 +19,8 @@ on:
       - 'src/cfb_analytics/event_calendar.py'
       - 'src/cfb_analytics/event_watcher.py'
       - '.github/workflows/event-watcher.yml'
+      - 'src/cfb_analytics/cfp_publish.py'
+      - 'src/cfb_analytics/postseason.py'
 
 permissions:
   contents: read
@@ -53,8 +55,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: event-ledger
-          path: |
-            event-ledger.json
-            cfp-official-probe.html
+          path: event-ledger.json
           if-no-files-found: ignore
           retention-days: 30

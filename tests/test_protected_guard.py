@@ -107,7 +107,7 @@ def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_
 
 def test_event_driven_manifest_lists_exactly_the_new_protected_files():
     listed = set(guard.load_manifests(MANIFEST_DIR)[0]["added_files"])
-    present = {str(p.relative_to(ROOT)) for p in [*ROOT.glob("src/cfb_analytics/event_*.py")]
+    present = {str(p.relative_to(ROOT)) for p in [*ROOT.glob("src/cfb_analytics/event_*.py"), ROOT / "src/cfb_analytics/cfp_publish.py", ROOT / "src/cfb_analytics/postseason.py"]
                if p.is_file()}
     assert listed == present, {"unlisted": sorted(present - listed), "missing": sorted(listed - present)}
 
