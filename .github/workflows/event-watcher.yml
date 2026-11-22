@@ -53,6 +53,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: event-ledger
-          path: event-ledger.json
+          path: |
+            event-ledger.json
+            cfp-official-probe.html
           if-no-files-found: ignore
           retention-days: 30

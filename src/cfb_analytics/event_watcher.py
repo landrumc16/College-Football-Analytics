@@ -71,6 +71,19 @@ class Providers:
             if r.status != 204:
                 raise RuntimeError(f"dispatch {workflow} returned {r.status}")
 
+    def info(self):
+        """CFBD account tier and remaining monthly calls (GET /info)."""
+        return _get_json("https://api.collegefootballdata.com/info", {"Authorization": f"Bearer {self.cfbd_key}"})
+
+    def postseason(self, season):
+        self.cfbd_calls += 1
+        return _get_json(f"https://api.collegefootballdata.com/games?year={season}&seasonType=postseason",
+                         {"Authorization": f"Bearer {self.cfbd_key}"}, timeout=45)
+
+    def official_page(self, url):
+        with urlopen(Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; cfb-analytics-verifier)"}), timeout=30) as r:
+            return r.read().decode("utf-8", "replace")
+
     def workflows(self):
         return _get_json(f"https://api.github.com/repos/{self.repo}/actions/workflows",
                          {"Authorization": f"Bearer {self.github_token}"})
@@ -339,6 +352,11 @@ class Watcher:
                             "median_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None}}
 
 
+def _save_probe(html, path=Path("cfp-official-probe.html")):
+    path.write_text(html)
+    return {"bytes": len(html), "has_rank_text": "Rankings" in html}
+
+
 def summary_markdown(result, plan):
     lines = ["## Event watcher", "", f"Plan at start: `{json.dumps(plan.summary())}`", "",
              f"CFBD calls: {result['cfbd_calls']} · events: {len(result['events'])} · alerts: {len(result['alerts'])}", ""]
@@ -372,6 +390,9 @@ def main(argv=None):
                            ("cfbd_rankings", lambda: {k: v[0] for k, v in choose_polls(providers.rankings(watcher.season)).items()}),
                            ("github_workflows", lambda: sorted(w["path"].split("/")[-1] for w in providers.workflows()["workflows"]
                                                                if w["path"].endswith(("refresh-data.yml", "refresh-polls.yml")))),
+                           ("cfbd_info", lambda: providers.info()),
+                           ("cfbd_postseason", lambda: len(providers.postseason(watcher.season))),
+                           ("cfp_official_page", lambda: _save_probe(providers.official_page("https://collegefootballplayoff.com/news/2026/11/17/rankings"))),
                            ("live_report", lambda: providers.live_report()["retrieved_at"]),
                            ("live_polls", lambda: providers.live_polls().get("poll_weeks"))):
             started = time.monotonic()
