@@ -353,7 +353,13 @@ class Watcher:
 
 
 def _save_probe(html, path=Path("cfp-official-probe.html")):
+    import re
     path.write_text(html)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)))
+    i = text.find("Georgia")
+    print("CFP-PROBE-TEXT:", text[max(0, i - 1500):i + 2500])
+    for m in list(re.finditer(r"Georgia", html))[:3]:
+        print("CFP-PROBE-HTML:", html[max(0, m.start() - 400):m.start() + 300].replace("\n", " "))
     return {"bytes": len(html), "has_rank_text": "Rankings" in html}
 
 
