@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-22T06:11:14.768813+00:00",
+  "retrieved_at": "2026-11-22T14:40:14.485929+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3735,
-    "completed": 3638,
-    "pending": 97
+    "scheduled": 3758,
+    "completed": 3643,
+    "pending": 115
   },
   "games": [
     {
@@ -42038,9 +42038,9 @@
       "week": 12,
       "home": "Arizona State",
       "away": "Oklahoma State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 27,
+      "away_score": 30,
       "neutral_site": false,
       "start_date": "2026-11-22T03:15:00.000Z"
     },
@@ -42302,9 +42302,9 @@
       "week": 12,
       "home": "Oregon State",
       "away": "Utah State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 31,
+      "away_score": 24,
       "neutral_site": false,
       "start_date": "2026-11-22T03:30:00.000Z"
     },
@@ -42434,9 +42434,9 @@
       "week": 12,
       "home": "Nevada",
       "away": "Hawai'i",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 16,
+      "away_score": 8,
       "neutral_site": false,
       "start_date": "2026-11-22T03:30:00.000Z"
     },
@@ -43562,9 +43562,9 @@
       "week": 12,
       "home": "Benedict",
       "away": "Newberry",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 3,
+      "away_score": 38,
       "neutral_site": false,
       "start_date": "2026-11-21T19:00:00.000Z"
     },
@@ -43706,9 +43706,9 @@
       "week": 12,
       "home": "Montclair State",
       "away": "Brockport",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 19,
+      "away_score": 52,
       "neutral_site": false,
       "start_date": "2026-11-20T23:30:00.000Z"
     },
@@ -43902,7 +43902,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-29T00:30:00.000Z"
     },
     {
       "game_id": 401856758,
@@ -43914,7 +43914,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T17:45:00.000Z"
     },
     {
       "game_id": 401856759,
@@ -43938,7 +43938,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T20:30:00.000Z"
     },
     {
       "game_id": 401856761,
@@ -43950,7 +43950,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T17:00:00.000Z"
     },
     {
       "game_id": 401856762,
@@ -43986,7 +43986,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T20:00:00.000Z"
     },
     {
       "game_id": 401856765,
@@ -43998,7 +43998,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-29T00:00:00.000Z"
     },
     {
       "game_id": 401856873,
@@ -44118,7 +44118,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T20:30:00.000Z"
     },
     {
       "game_id": 401858313,
@@ -44166,7 +44166,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T20:30:00.000Z"
     },
     {
       "game_id": 401858317,
@@ -44214,7 +44214,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-29T00:00:00.000Z"
     },
     {
       "game_id": 401858539,
@@ -44250,7 +44250,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-29T00:30:00.000Z"
     },
     {
       "game_id": 401858542,
@@ -44287,6 +44287,54 @@
       "away_score": null,
       "neutral_site": false,
       "start_date": "2026-11-28T00:30:00.000Z"
+    },
+    {
+      "game_id": 401860926,
+      "season": 2026,
+      "week": 13,
+      "home": "Colorado State",
+      "away": "Boise State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T23:00:00.000Z"
+    },
+    {
+      "game_id": 401860927,
+      "season": 2026,
+      "week": 13,
+      "home": "Fresno State",
+      "away": "Oregon State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-29T03:00:00.000Z"
+    },
+    {
+      "game_id": 401860928,
+      "season": 2026,
+      "week": 13,
+      "home": "Utah State",
+      "away": "Texas State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-29T02:30:00.000Z"
+    },
+    {
+      "game_id": 401860929,
+      "season": 2026,
+      "week": 13,
+      "home": "Washington State",
+      "away": "San Diego State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T23:30:00.000Z"
     },
     {
       "game_id": 401861969,
@@ -44793,6 +44841,234 @@
       "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
+      "game_id": 401936245,
+      "season": 2026,
+      "week": 13,
+      "home": "SUNY Cortland",
+      "away": "Amherst",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401936246,
+      "season": 2026,
+      "week": 13,
+      "home": "Wheaton (IL)",
+      "away": "Monmouth (IL)",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T18:00:00.000Z"
+    },
+    {
+      "game_id": 401936247,
+      "season": 2026,
+      "week": 13,
+      "home": "Endicott",
+      "away": "Trinity (CT)",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401936252,
+      "season": 2026,
+      "week": 13,
+      "home": "Ferris State",
+      "away": "Findlay",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936253,
+      "season": 2026,
+      "week": 13,
+      "home": "Kutztown",
+      "away": "East Stroudsburg",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936254,
+      "season": 2026,
+      "week": 13,
+      "home": "Michigan Tech",
+      "away": "Grand Valley State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936255,
+      "season": 2026,
+      "week": 13,
+      "home": "Saint John's (MN)",
+      "away": "Hanover",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T18:00:00.000Z"
+    },
+    {
+      "game_id": 401936256,
+      "season": 2026,
+      "week": 13,
+      "home": "Washington St. Louis",
+      "away": "Wartburg",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T18:00:00.000Z"
+    },
+    {
+      "game_id": 401936257,
+      "season": 2026,
+      "week": 13,
+      "home": "Slippery Rock",
+      "away": "California (PA)",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936258,
+      "season": 2026,
+      "week": 13,
+      "home": "Valdosta State",
+      "away": "Carson Newman",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936259,
+      "season": 2026,
+      "week": 13,
+      "home": "Calvin",
+      "away": "Hardin Simmons",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401936260,
+      "season": 2026,
+      "week": 13,
+      "home": "Baldwin Wallace",
+      "away": "Susquehanna",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401936266,
+      "season": 2026,
+      "week": 13,
+      "home": "Harding",
+      "away": "Northwest Missouri State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936273,
+      "season": 2026,
+      "week": 13,
+      "home": "UNC Pembroke",
+      "away": "Newberry",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401936274,
+      "season": 2026,
+      "week": 13,
+      "home": "Wisconsin Whitewater",
+      "away": "Claremont Mudd Scripps",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T18:00:00.000Z"
+    },
+    {
+      "game_id": 401936275,
+      "season": 2026,
+      "week": 13,
+      "home": "CSU Pueblo",
+      "away": "Central Washington",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "game_id": 401858318,
+      "season": 2026,
+      "week": 14,
+      "home": "Miami",
+      "away": "Wake Forest",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": true,
+      "start_date": "2026-12-05T17:00:00.000Z"
+    },
+    {
+      "game_id": 401869535,
+      "season": 2026,
+      "week": 14,
+      "home": "Liberty",
+      "away": "Jacksonville State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-12-05T00:00:00.000Z"
+    },
+    {
+      "game_id": 401869542,
+      "season": 2026,
+      "week": 14,
+      "home": "Boise State",
+      "away": "San Diego State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-12-05T01:00:00.000Z"
+    },
+    {
       "game_id": 401935693,
       "season": 2026,
       "week": 14,
@@ -44829,5 +45105,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-22T06:11:14.768813+00:00"
+  "data_changed_at": "2026-11-22T14:40:14.485929+00:00"
 }
