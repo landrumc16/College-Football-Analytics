@@ -126,7 +126,8 @@ try {
     await table.waitFor();
     for (const team of [first.home, first.away]) {
       const t = metrics.teams[team]?.overall;
-      if (t) assert.ok((await table.getByRole('row', { name: new RegExp(team.replace(/[()]/g, '\\$&')) }).textContent()).includes(`${t.ats.w}-${t.ats.l}-${t.ats.p}`));
+      // The row whose header is exactly this team ("Texas" must not also match "Texas A&M").
+      if (t) assert.ok((await table.getByRole('row').filter({ has: page.getByRole('rowheader', { name: team, exact: true }) }).textContent()).includes(`${t.ats.w}-${t.ats.l}-${t.ats.p}`));
     }
 
     // No horizontal overflow.
