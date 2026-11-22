@@ -336,6 +336,12 @@ def test_quota_plan_spends_only_what_is_left_after_the_reserve():
     fresh = quota_plan({"remainingCalls": 1000, "resetAt": "2026-12-01T00:00:00.000Z"},
                        {"season": 2026, "games": snap["games"][:60]}, datetime(2026, 11, 28, 18, 0, tzinfo=timezone.utc))
     assert fresh["budget"] > 0 and fresh["interval_seconds"] >= 120
+    # Sunday with no games but AP/Coaches week 13 due: budget covers the poll refresh and a few checks.
+    sunday = datetime(2026, 11, 22, 16, 0, tzinfo=timezone.utc)
+    played = {"season": 2026, "games": [game(1, datetime(2026, 11, 21, 17, 0, tzinfo=timezone.utc), True, 1, 0, week=12)]}
+    polls = quota_plan({"remainingCalls": 77, "resetAt": "2026-12-01T00:00:00.000Z"}, played, sunday,
+                       {"poll_weeks": {"ap_top25": 12, "coaches_top25": 12}})
+    assert polls["releases_due_today"] == {"polls": True, "cfp": False} and polls["budget"] >= 5 and polls["interval_seconds"]
     # Exhausted (reserve not covered): the watcher makes no CFBD calls at all.
     none = quota_plan({"remainingCalls": 20, "resetAt": "2026-12-01T00:00:00.000Z"}, snap, now)
     assert none["budget"] == 0 and none["interval_seconds"] is None

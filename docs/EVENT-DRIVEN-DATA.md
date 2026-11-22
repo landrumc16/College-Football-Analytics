@@ -27,15 +27,60 @@ The pipeline itself is fast once started: a refresh takes about 1 minute and a b
 **Considered and not adopted:** ESPN's undocumented scoreboard API. It is unofficial with unclear terms, and CFBD
 already detects finals.
 
-**Provider limits:**
-- **CFBD:** every call counts against the account's monthly quota. The watcher checks every 5 minutes only while a game
-  is in its completion window or a release is due (15 minutes while games are in progress), and caps each run at 400
-  calls (`CFBD_CALL_BUDGET`).
-  - A busy Saturday is roughly 150–250 calls.
-  - **Check the account tier.** A free tier cannot cover every Saturday at this cadence. Raise or lower
-    `WATCH_ACTIVE_SECONDS` to match the tier.
+**Provider limits (CFBD verified on 2026-11-22 with `GET /info`):**
+- **CFBD account:**
+
+  | Field | Value |
+  | --- | --- |
+  | Tier | Free (patron level 0) |
+  | Monthly limit | 1,000 calls |
+  | Reset | First of the month |
+  | Used by November 22 | 917 |
+  | Remaining on November 22 | 83 (74 after the integration runs) |
+  | Cost of `/info` itself | None |
+
+- **Where November's calls went:**
+  - 19 runs of the V7 historical backfill (`v7-market-backfill.yml`), about 22 calls each. It is triggered by pushes to
+    `v7-development` that touch V7 files, and one was triggered by this branch's first sync.
+  - The one-off V8 source acquisition.
+  - About 15 calls a day of routine refreshes. The removed 15-minute gate crons spent one call per run.
+- **Pacing:** the watcher reads `/info` at the start of each session (`quota_plan`).
+  - **Reserve:** it keeps 6 calls a day until the reset for the scheduled workflows (daily baseline, polls, statistics).
+  - **Today's share:** it gives today a share of the rest proportional to today's games, always covering the releases
+    due today.
+  - **Spreading:** it spreads check-and-refresh cycles over today's completion windows.
+  - **Pausing:** below the reserve it makes no calls and alerts; the daily baseline still reconciles.
+
+  | Situation | Check interval |
+  | --- | --- |
+  | Free tier, healthy mid-month Saturday | About 10 minutes |
+  | Early month | About 2–3 minutes |
+  | November 28, 2026, with the current remaining quota | About every 2 hours (six publication waves) |
+
+- **Do not re-run the V7 backfill or V8 source acquisition in-season.** Each costs tens to hundreds of calls.
 - **GitHub Actions:** the repository is public, so standard runner minutes are free. An idle hourly start exits in under
   a minute and makes no CFBD call.
+
+## Postseason and CFP (added after review)
+
+- **`postseason.py`:**
+  - **Sources:** CFBD `seasonType=postseason` (conference championships if CFBD files them there, bowls and CFP games).
+  - **Outputs:** `data/cfbd-2026-postseason.json` (the watcher's calendar) and `web/public/postseason-2026.json` (the
+    site).
+  - **Predictions:** the existing official formula applied to the published ratings. Postseason results are not fed
+    into the ratings.
+  - **Quota:** the CFBD call is skipped before December. Conference championships filed as regular-season games are
+    already covered by the main refresh.
+  - **Display:** a "Bowls and College Football Playoff" section on Game Predictions, hidden until games exist.
+- **`cfp_publish.py`** (run by `refresh-polls.yml`) publishes a CFP release only if every check passes:
+  1. the official dated page exists and states its release date;
+  2. it parses to ranks 1–25 of known FBS programs;
+  3. CFBD's committee poll for its newest week matches at every position;
+  4. it is newer than the published release.
+
+  It writes an evidence file like the reviewed November 10 one. Anything else changes nothing and warns.
+- **Live check, run 45079999028:** the real November 17 official page and CFBD agreed at all 25 positions ("published
+  the 2026-11-17 release (week 12)" in dry run).
 
 ## Architecture (reuses the existing pipeline)
 
@@ -85,10 +130,20 @@ about 4.9 minutes, so about 6 minutes. With checks every 5 minutes:
 | End-to-end, from availability in CFBD | Median about 8.5 minutes, worst about 11 minutes |
 | Previously | Hours (one cron start every 3–4 hours) |
 
-**The 5-minute objective is not met yet.** Meeting it needs two things:
-- checks every 2 minutes (`WATCH_ACTIVE_SECONDS=120`), if the CFBD tier allows;
-- a slimmer publish job. The current deploy also reruns the backtest, the parity audit, the Python suite and preview
-  builds on every refresh.
+**Publication pipeline (optimized; no validation removed):**
+- The data refresh now runs the full Python suite **after** building the new data and **before** committing it, so a bad
+  refresh is never committed. Previously it ran before fetching.
+- The dashboard skips its duplicate run only for that exact validated bot commit.
+- Measured on production runs: refresh about 55 s, then build about 2 min 45 s (including about 36 s of tests, now
+  skipped for validated refresh commits), then the site is live about 15 s into the deploy job.
+- **Estimated dispatch-to-live:** about 3.5 minutes. The deploy job's 2 minutes of live verification run after
+  publication.
+
+**The 5-minute objective, end to end:**
+- **Free tier:** met only when the month's quota allows checks about every 2 minutes (early month). A healthy mid-month
+  Saturday checks about every 10 minutes, so about 9 minutes on average.
+- **Paid CFBD tier:** sustained 2-minute checks would meet it on every Saturday. That is an owner decision; no paid tier
+  was assumed.
 
 The watcher's ledger reports the real latency of every event once it runs on `main`.
 

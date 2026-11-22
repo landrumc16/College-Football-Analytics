@@ -155,35 +155,61 @@ class SourceHealth:
         self.failures, self.next_allowed, self.last_error = 0, None, None
 
 
-def quota_plan(info, snapshot, now, *, reserve_per_day=RESERVE_PER_DAY):
+def releases_due_today(snapshot, polls, now):
+    """AP/Coaches or CFP releases expected later today (Central) and not yet published."""
+    local = now.astimezone(cal.CENTRAL)
+    week = cal.expected_poll_week(snapshot, now)
+    published = (polls or {}).get("poll_weeks", {})
+    poll = local.weekday() in (6, 0) and week is not None and any((published.get(k) or 0) < week for k in ("ap_top25", "coaches_top25"))
+    cfp = local.year == 2026 and (local.month, local.day) in cal.CFP_DATES
+    return {"polls": bool(poll), "cfp": bool(cfp)}
+
+
+def quota_plan(info, snapshot, now, polls=None, *, reserve_per_day=RESERVE_PER_DAY):
     """CFBD calls this session may spend and the check interval, from the live remaining quota.
 
     Spendable = remaining - (reserve_per_day x days until reset). Today's share is proportional to the games whose
-    completion window falls in the next 24 hours, out of all games before the reset (at least an even daily share).
-    Detection checks are spread over today's completion windows after reserving one refresh per kickoff cluster.
+    completion window falls in the next 24 hours, out of all games before the reset (at least an even daily share),
+    and always covers the releases due today (a refresh per kickoff cluster, a poll refresh, a few checks) when the
+    spendable calls allow. Detection checks are spread over today's windows.
     """
     remaining, reset = int(info["remainingCalls"]), cal.parse_time(info["resetAt"])
     days = max(1, math.ceil((reset - now).total_seconds() / 86400))
-    spendable = remaining - reserve_per_day * days
+    spendable = max(0, remaining - reserve_per_day * days)
     pending = []
     for g in snapshot["games"]:
         k = cal.parse_time(g.get("start_date"))
         if not g.get("completed") and k and now <= k + cal.LATE_FINISH + cal.OVERDUE_LIMIT and k + cal.EARLY_FINISH < reset:
             pending.append(k)
     soon = [k for k in pending if k + cal.EARLY_FINISH <= now + timedelta(hours=24)]
+    releases = releases_due_today(snapshot, polls, now)
     share = max(len(soon) / len(pending) if pending else 0, 1 / days)
-    budget = max(0, math.floor(spendable * share)) if spendable > 0 else 0
-    clusters = len({(k.date(), k.hour) for k in soon}) or 1
-    detect = budget - REFRESH_COST * clusters
+    clusters = len({(k.date(), k.hour) for k in soon})
+    cycle = 1 + REFRESH_COST                                # one check that finds finals + the refresh it triggers
+    release_cost = (3 + POLL_REFRESH_COST) * (releases["polls"] + releases["cfp"])
+    wanted = cycle * min(clusters, 3) + release_cost         # aim for at least three publication waves today
+    budget = min(spendable, max(math.floor(spendable * share), wanted)) if (soon or release_cost) else 0
+    games_budget = max(0, budget - release_cost)
+    # Checks happen only inside completion windows (the calendar sleeps otherwise), so spread the affordable
+    # check-and-refresh cycles over the total length of today's windows. A refresh publishes every final found so
+    # far, so a tight quota means fewer, larger publication waves rather than no monitoring.
+    windows = sorted((max(now, k + cal.EARLY_FINISH), k + cal.LATE_FINISH) for k in soon if k + cal.LATE_FINISH > now)
+    covered, end = 0.0, None
+    for a, b in windows:
+        if end is None or a > end:
+            covered += (b - a).total_seconds(); end = b
+        elif b > end:
+            covered += (b - end).total_seconds(); end = b
+    cycles = games_budget // cycle
     if soon:
-        start = max(now, min(k + cal.EARLY_FINISH for k in soon))
-        span = max(600, (max(k + cal.LATE_FINISH for k in soon) - start).total_seconds())
+        interval = max(MIN_INTERVAL, covered / cycles) if cycles else None
     else:
-        span = 86400
-    interval = max(MIN_INTERVAL, span / detect) if detect > 0 else None
-    return {"remaining": remaining, "days_to_reset": days, "spendable": max(0, spendable), "share_today": round(share, 3),
-            "budget": budget if detect > 0 else 0, "interval_seconds": round(interval) if interval else None,
-            "kickoff_clusters_today": clusters, "games_finishing_next_24h": len(soon)}
+        interval = max(MIN_INTERVAL, 5 * 3600 / 3) if release_cost and budget >= release_cost else None
+    if interval is None:
+        budget = 0
+    return {"remaining": remaining, "days_to_reset": days, "spendable": spendable, "share_today": round(share, 3),
+            "budget": budget, "interval_seconds": round(interval) if interval else None,
+            "kickoff_clusters_today": clusters, "games_finishing_next_24h": len(soon), "releases_due_today": releases}
 
 
 class Watcher:
@@ -451,7 +477,7 @@ def main(argv=None):
     now = utcnow()
     # Pace CFBD calls to the live monthly quota; an unreadable quota falls back to a conservative session.
     try:
-        quota = quota_plan(providers.info(), watcher.snapshot, now)
+        quota = quota_plan(providers.info(), watcher.snapshot, now, watcher.polls)
     except Exception as error:
         quota = {"error": str(error)[:200], "budget": 12, "interval_seconds": 1800}
     watcher.cfbd_budget = min(int(os.environ.get("CFBD_CALL_BUDGET", 400)), quota["budget"])
