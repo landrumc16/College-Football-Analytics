@@ -21,7 +21,7 @@ import { destinations, SectionTabs, type View as NavigationView } from './Naviga
 import OffenseDefense from './OffenseDefense'
 import ModelProjections from './ModelProjections'
 import WhyThisPrediction from './WhyThisPrediction'
-import { freshness } from './dataFreshness'
+import { freshness, statusSummary, type FreshnessItem } from './dataFreshness'
 import './data-freshness.css'
 // V8: Offense & Defense is a Teams section added here (Navigation.tsx is unchanged).
 type View = NavigationView | 'stats' | 'projections'
@@ -386,9 +386,15 @@ export function App() {
       {tab === 'conferences' && !!report.projected_bracket?.conference_championships?.length && <><h2>Projected Conference Championship Games</h2><div className="table-wrap"><table><thead><tr><th>Conference</th><th>Projected finalists</th><th>Model favorite</th></tr></thead><tbody>{report.projected_bracket.conference_championships.filter(m => selectedConference === m.conference).map(m => <tr key={m.conference}><td className="team">{m.conference}</td><td>{m.first} vs {m.second}</td><td className="emphasis">{m.projected_champion}</td></tr>)}</tbody></table></div></>}
       {tab === 'cfp' && <section className="notice"><strong>{report.cfp?.simulations?.toLocaleString() || 'No'} CFP simulations</strong><p>{report.cfp?.methodology || 'Rebuild the season report to enable CFP Forecasting.'}</p></section>}
       {tab === 'conferences' && !!report.conference_strength?.length && <><h2>Conference Strength</h2><div className="table-wrap"><table><thead><tr><th>Conference</th><th>Teams</th><th>Average rating</th><th>Best team</th></tr></thead><tbody>{report.conference_strength.map(c => <tr key={c.conference}><td className="team">{c.conference}</td><td>{c.teams}</td><td>{num(c.average_rating)}</td><td>{c.best_team}</td></tr>)}</tbody></table></div></>}
-      </div><footer>Model estimates are probabilistic, not guarantees. Data source: {report.source || 'CFBD'}. {report.retrieved_at ? `Last successful data check: ${new Date(report.retrieved_at).toLocaleString()}.` : 'Historical fixture or retrieval date unavailable.'} {report.data_changed_at ? `Game data last changed: ${new Date(report.data_changed_at).toLocaleString()}.` : ''}<ul className="data-status" aria-label="Data status">{freshness(report, pollSnapshot, new Date()).map(f => <li key={f.area} data-state={f.state}><strong>{f.area}:</strong> {f.text}</li>)}</ul></footer>
+      </div><footer>Model estimates are probabilistic, not guarantees. Data source: {report.source || 'CFBD'}. {report.retrieved_at ? `Last successful data check: ${new Date(report.retrieved_at).toLocaleString()}.` : 'Historical fixture or retrieval date unavailable.'} {report.data_changed_at ? `Game data last changed: ${new Date(report.data_changed_at).toLocaleString()}.` : ''}<DataStatus items={freshness(report, pollSnapshot, new Date())} /></footer>
     </>}
   </main>
+}
+
+/** Per-area data freshness: one quiet line (naming only areas that need attention), details on demand. */
+function DataStatus({ items }: { items: FreshnessItem[] }) {
+  return <details className="data-status"><summary>Data status: {statusSummary(items)}</summary>
+    <ul aria-label="Data status">{items.map(f => <li key={f.area} data-state={f.state}><strong>{f.area}:</strong> {f.text}</li>)}</ul></details>
 }
 
 if ('serviceWorker' in navigator) {

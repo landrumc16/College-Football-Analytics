@@ -36,3 +36,10 @@ export function freshness(report: Report, polls: Polls, now: Date): FreshnessIte
   else items.push({ area: 'CFP rankings', text: `${day(verified)} release (verified)`, state: 'current' })
   return items
 }
+
+/** One-line summary: "all current", or the areas that are delayed, awaiting verification or unavailable. */
+export function statusSummary(items: FreshnessItem[]): string {
+  const label: Record<FreshnessState, string> = { current: '', delayed: 'update delayed', awaiting: 'awaiting verification', unavailable: 'unavailable' }
+  const flagged = items.filter(i => i.state !== 'current').map(i => `${i.area} ${label[i.state]}`)
+  return flagged.length ? flagged.join('; ') : 'all current'
+}
