@@ -21,10 +21,12 @@ const data = JSON.parse(await readFile('web/public/prediction-explanations.json'
 const report = JSON.parse(await readFile('data/season-2026-report.json', 'utf8'))
 const published = new Map(report.predictions.map(p => [p.game_id, p]))
 const sameData = report.retrieved_at === data.report_retrieved_at
+const AUDIT_SNAPSHOT = '2026-11-20T06:48:33.393964+00:00'
 
 check('Texas Tech at Baylor reflects the published forecasts and the verified matchup audit', () => {
   const g = data.games.find(x => x.home === 'Baylor' && x.away === 'Texas Tech')
-  if (!g) { results.push('Texas Tech at Baylor already played; audit case checked by the fixture above'); return }
+  // The audit is a point-in-time analysis of one pregame snapshot; later refreshes legitimately move these numbers.
+  if (!g || data.data_retrieved_at !== AUDIT_SNAPSHOT) { results.push('Texas Tech at Baylor audit wording applies only to the audited snapshot; sums and wording rules are checked for every game'); return }
   const e = s.explain(g, data)
   assert.equal(e.favourite, 'Texas Tech')
   assert.match(e.headline, /^Official forecast: Texas Tech by 1\.1 points\. Standard: Texas Tech by 0\.9\. Momentum: Texas Tech by 2\.3\.$/)

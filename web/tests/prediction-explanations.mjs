@@ -16,7 +16,8 @@ const report = JSON.parse(await readFile(process.env.REPORT || 'web/public/seaso
 const upcoming = new Set(report.schedule.filter(g => !g.completed).map(g => g.game_id));
 const shown = new Map(report.predictions.map(p => [p.game_id, p]));
 const usable = data.games.filter(g => upcoming.has(g.game_id) && Math.abs(shown.get(g.game_id).home_margin - g.official.home_margin) < 0.01);
-const auditCase = usable.find(g => g.home === 'Baylor' && g.away === 'Texas Tech');
+// Exact audit wording applies only to the audited pregame snapshot; other data gets the structural checks.
+const auditCase = data.data_retrieved_at === '2026-11-20T06:48:33.393964+00:00' ? usable.find(g => g.home === 'Baylor' && g.away === 'Texas Tech') : undefined;
 const tt = auditCase || usable[0];
 const other = usable.find(g => ![g.home, g.away].some(t => [tt.home, tt.away].includes(t)));
 assert.ok(tt && other, 'at least two current explained games');
