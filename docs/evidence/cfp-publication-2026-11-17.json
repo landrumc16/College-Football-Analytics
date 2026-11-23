@@ -1,0 +1,143 @@
+{
+ "kind": "official_current_cfp_publication",
+ "season": 2026,
+ "week": 12,
+ "published_at": "2026-11-17",
+ "source_url": "https://collegefootballplayoff.com/news/2026/11/17/rankings",
+ "source_title": "CFP Selection Committee Completes Its Third Rankings of 2026",
+ "verification": "Automatically published: the dated official release parsed to ranks 1-25 of known FBS programs and matched CFBD's Playoff Committee Rankings for the same week at every position.",
+ "verified_at": "2026-11-23T19:08:21+00:00",
+ "canonical_rank_team_sha256": "d3874a467116ae8457304f5dc877e39a1ecde69dbfd7e55a47a8bc66c2ce7187",
+ "rankings": [
+  {
+   "team": "Georgia",
+   "rank": 1,
+   "record": "9-1"
+  },
+  {
+   "team": "Utah",
+   "rank": 2,
+   "record": "10-0"
+  },
+  {
+   "team": "Alabama",
+   "rank": 3,
+   "record": "8-2"
+  },
+  {
+   "team": "UCLA",
+   "rank": 4,
+   "record": "10-0"
+  },
+  {
+   "team": "Texas",
+   "rank": 5,
+   "record": "8-2"
+  },
+  {
+   "team": "Notre Dame",
+   "rank": 6,
+   "record": "9-1"
+  },
+  {
+   "team": "Miami (FL)",
+   "rank": 7,
+   "record": "9-1"
+  },
+  {
+   "team": "Indiana",
+   "rank": 8,
+   "record": "9-1"
+  },
+  {
+   "team": "Tennessee",
+   "rank": 9,
+   "record": "8-2"
+  },
+  {
+   "team": "BYU",
+   "rank": 10,
+   "record": "8-2"
+  },
+  {
+   "team": "Wake Forest",
+   "rank": 11,
+   "record": "9-1"
+  },
+  {
+   "team": "Texas Tech",
+   "rank": 12,
+   "record": "9-1"
+  },
+  {
+   "team": "Oregon",
+   "rank": 13,
+   "record": "7-3"
+  },
+  {
+   "team": "Ohio State",
+   "rank": 14,
+   "record": "7-3"
+  },
+  {
+   "team": "Iowa",
+   "rank": 15,
+   "record": "8-2"
+  },
+  {
+   "team": "Kentucky",
+   "rank": 16,
+   "record": "7-3"
+  },
+  {
+   "team": "Boise State",
+   "rank": 17,
+   "record": "9-1"
+  },
+  {
+   "team": "USC",
+   "rank": 18,
+   "record": "7-3"
+  },
+  {
+   "team": "Arizona",
+   "rank": 19,
+   "record": "7-3"
+  },
+  {
+   "team": "Houston",
+   "rank": 20,
+   "record": "7-3"
+  },
+  {
+   "team": "South Carolina",
+   "rank": 21,
+   "record": "6-4"
+  },
+  {
+   "team": "Oklahoma",
+   "rank": 22,
+   "record": "6-4"
+  },
+  {
+   "team": "Louisville",
+   "rank": 23,
+   "record": "7-3"
+  },
+  {
+   "team": "Florida",
+   "rank": 24,
+   "record": "6-4"
+  },
+  {
+   "team": "Ole Miss",
+   "rank": 25,
+   "record": "6-4"
+  }
+ ],
+ "unchanged": [
+  "AP poll",
+  "Coaches poll",
+  "model rankings"
+ ]
+}
