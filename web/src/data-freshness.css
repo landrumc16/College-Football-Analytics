@@ -1,0 +1,9 @@
+/* Per-area data freshness in the footer: one quiet line, details on demand, warm accent only when flagged */
+.data-status{display:inline;color:inherit;font-size:inherit}
+.data-status[open]{display:block;margin-top:4px}
+.data-status>summary{cursor:pointer;color:#c8d5e4;display:inline;text-decoration:underline;text-underline-offset:2px}
+.data-status ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:2px 14px;color:#b9c4d3}
+.data-status li{overflow-wrap:anywhere}
+.data-status strong{color:#dbe5f1;font-weight:600}
+.data-status li[data-state=delayed],.data-status li[data-state=awaiting]{color:#f2d3a2}
+@media(max-width:767px){.data-status ul{flex-direction:column}}
