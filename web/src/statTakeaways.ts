@@ -39,7 +39,7 @@ export function rankingsTakeaway(rows: RankRow[]): string | null {
   const top = [...rows].sort((a, b) => a.rank - b.rank)
   if (top.length < 10) return null
   const ratingSpread = top[0].rating - top[9].rating
-  return `${top[0].team} leads our rankings. The top 10 are separated by ${one(ratingSpread)} rating points, about ${one(ratingSpread)} points of expected margin on a neutral field.`
+  return `${top[0].team} leads our rankings. The top 10 are separated by ${one(ratingSpread)} rating points: on a neutral field, No. 1 would be favored over No. 10 by about that many points.`
 }
 
 type PollRow = { team: string; rank: number }
