@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-22T18:34:29.167800+00:00",
+  "retrieved_at": "2026-11-23T12:28:07.174004+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3758,
+    "scheduled": 3767,
     "completed": 3643,
-    "pending": 115
+    "pending": 124
   },
   "games": [
     {
@@ -44745,6 +44745,102 @@
       "start_date": "2026-11-24T18:00:00.000Z"
     },
     {
+      "game_id": 401934095,
+      "season": 2026,
+      "week": 13,
+      "home": "Monmouth",
+      "away": "Harvard",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401934096,
+      "season": 2026,
+      "week": 13,
+      "home": "North Dakota",
+      "away": "Idaho State",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T18:00:00.000Z"
+    },
+    {
+      "game_id": 401934097,
+      "season": 2026,
+      "week": 13,
+      "home": "Lehigh",
+      "away": "UAlbany",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T17:00:00.000Z"
+    },
+    {
+      "game_id": 401934098,
+      "season": 2026,
+      "week": 13,
+      "home": "Illinois State",
+      "away": "Austin Peay",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T21:00:00.000Z"
+    },
+    {
+      "game_id": 401934099,
+      "season": 2026,
+      "week": 13,
+      "home": "Weber State",
+      "away": "Western Illinois",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T20:00:00.000Z"
+    },
+    {
+      "game_id": 401934100,
+      "season": 2026,
+      "week": 13,
+      "home": "Tennessee Tech",
+      "away": "Dayton",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T19:00:00.000Z"
+    },
+    {
+      "game_id": 401934101,
+      "season": 2026,
+      "week": 13,
+      "home": "Northern Arizona",
+      "away": "Long Island University",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-28T21:00:00.000Z"
+    },
+    {
+      "game_id": 401934102,
+      "season": 2026,
+      "week": 13,
+      "home": "Montana",
+      "away": "Incarnate Word",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-11-29T01:00:00.000Z"
+    },
+    {
       "game_id": 401934575,
       "season": 2026,
       "week": 13,
@@ -44886,7 +44982,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
       "game_id": 401936253,
@@ -44910,7 +45006,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
       "game_id": 401936255,
@@ -44946,7 +45042,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
       "game_id": 401936258,
@@ -44958,7 +45054,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
       "game_id": 401936259,
@@ -44994,7 +45090,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T19:00:00.000Z"
     },
     {
       "game_id": 401936273,
@@ -45006,7 +45102,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T18:00:00.000Z"
     },
     {
       "game_id": 401936274,
@@ -45030,7 +45126,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-28T05:00:00.000Z"
+      "start_date": "2026-11-28T20:00:00.000Z"
     },
     {
       "game_id": 401858318,
@@ -45069,6 +45165,18 @@
       "start_date": "2026-12-05T01:00:00.000Z"
     },
     {
+      "game_id": 401872642,
+      "season": 2026,
+      "week": 14,
+      "home": "Prairie View A&M",
+      "away": "Alabama A&M",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": false,
+      "start_date": "2026-12-05T19:00:00.000Z"
+    },
+    {
       "game_id": 401935693,
       "season": 2026,
       "week": 14,
@@ -45105,5 +45213,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-22T14:40:14.485929+00:00"
+  "data_changed_at": "2026-11-23T12:28:07.174004+00:00"
 }
