@@ -76,6 +76,8 @@ jobs:
         run: node web/tests/prediction-explanations-unit.mjs
       - name: Verify per-area data freshness states (scores, polls, CFP, model)
         run: node web/tests/data-freshness-unit.mjs
+      - name: Verify statistics takeaways (wording thresholds and agreement with published numbers)
+        run: node web/tests/stat-takeaways-unit.mjs
       - name: Install browser acceptance dependencies
         working-directory: web
         run: |
@@ -105,6 +107,8 @@ jobs:
         run: node web/tests/prediction-explanations.mjs
       - name: Verify the Bowls and College Football Playoff section (five widths, Android, hidden without games)
         run: node web/tests/postseason.mjs
+      - name: Verify numbers, takeaways and collapsed explanations across Teams, Rankings, Polls and Playoffs (five widths)
+        run: node web/tests/stat-explanations.mjs
       - name: Check PWA assets and poll snapshot
         run: |
           python - <<'PY'

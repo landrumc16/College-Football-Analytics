@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Takeaway } from './StatExplain'
+import { reportCardTakeaway } from './statTakeaways'
 import SchoolSearch from './SchoolSearch'
 
 type Category = { score: number | null; grade: string | null }
@@ -45,9 +47,11 @@ export function useReportCards() {
 function Card({ team, report }: { team: string; report: Report | null }) {
   const record = report?.programs.find(p => p.team === team)
   const publishedCategories = (['hype', 'trajectory', 'strength'] as const).filter(k => report?.coverage[k]?.national_grades_available)
+  const takeaway = record ? reportCardTakeaway(team, publishedCategories.map(k => ({ label: k === 'hype' ? 'Hype Index' : k === 'trajectory' ? 'Program Trajectory' : 'Program Strength', ...record.categories[k] }))) : null
   return <section className="accuracy-summary" aria-label={`CFA Program Report Card for ${team}`}>
     <h3>{team} · CFA Program Report Card</h3>
     <p>Three independent peer-relative grades, equally weighted. Overall: <strong>{record?.overall_grade != null && record.overall_score != null ? `${record.overall_grade} (${record.overall_score.toFixed(1)}/100)` : 'N/A — awaiting all three reviewed categories'}</strong></p>
+    {takeaway && <Takeaway>{takeaway}</Takeaway>}
     <div className="team-profile-grid">
       {(['hype', 'trajectory', 'strength'] as const).map(k => <div className="team-profile-tile" key={k}>
         <small>{k === 'hype' ? 'Hype Index' : k === 'trajectory' ? 'Program Trajectory' : 'Program Strength'}</small>
