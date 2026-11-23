@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Takeaway } from './StatExplain'
+import { forecastTakeaway } from './statTakeaways'
 type Stats = { games: number; accuracy: number; brier: number; logloss: number; confidence_segments: Record<string, { games: number; accuracy: number | null; brier: number | null }> }
 type Evidence = { status: string; evaluation_scope: string; outcome_as_of: string; eligible_completed_games: number; forecast_coverage: number; forecast_publication: { workflow_url: string }; models: Record<string, Stats> }
 export default function ForecastEvidence() {
@@ -15,6 +17,7 @@ export default function ForecastEvidence() {
   return data && score ? <section aria-label="Independent pregame forecast verification" className="accuracy-summary verified-picks">
     <p className="section-kicker">THE TRACK RECORD</p>
     <h3>Verified pregame picks</h3>
+    <Takeaway>{forecastTakeaway(score.games, score.brier, baseline?.brier)}</Takeaway>
     <div className="research-scoreline"><div><strong>{(score.accuracy * 100).toFixed(1)}%</strong><span>Correct winners</span></div><p>{score.games} predictions checked against independent final scores. Picks were published before kickoff.</p></div>
     <p className="metric-note">A small sample from parts of two weeks—not a full season or a promise of future accuracy. {score.games} of {data.eligible_completed_games} eligible games are covered ({(data.forecast_coverage * 100).toFixed(1)}%).</p>
     <details><summary>Scores, sample and publication record</summary>

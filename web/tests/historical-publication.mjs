@@ -42,7 +42,7 @@ console.log('Historical publication gate: valid and 10 invalid fixtures passed')
 
 // The approved V5 Report Card contract is separate from abandoned V4
 // cross-season strength research. Its real publication must also fail closed.
-const cardsSource = (await readFile('web/src/ProgramReportCard.tsx', 'utf8')).replace(/^import .*from 'react'\s*$/m, '').replace(/^import SchoolSearch from '.\/SchoolSearch'\s*$/m, '')
+const cardsSource = (await readFile('web/src/ProgramReportCard.tsx', 'utf8')).replace(/^import .*from '(?:react|\.\/[^']+)'\s*$/gm, '')   // only validReportCards is under test; UI imports are not needed
 const cardsJs = ts.transpileModule(cardsSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React } }).outputText
 const { validReportCards } = await import('data:text/javascript,' + encodeURIComponent(cardsJs))
 const cards = JSON.parse(await readFile('web/public/v5-program-report-cards.json', 'utf8'))

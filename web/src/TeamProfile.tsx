@@ -1,4 +1,6 @@
 import { LineupAdvisoryNotice } from './LineupAdvisory'
+import { StatExplain, Takeaway } from './StatExplain'
+import { profileTakeaway } from './statTakeaways'
 import SchoolSearch from './SchoolSearch'
 import { MOMENTUM_GAMES, MOMENTUM_WEIGHT, rankedStrength } from './strengthScores'
 import ProgramContext from './ProgramContext'
@@ -101,14 +103,14 @@ export default function TeamProfile({ team, rankings, poll, cfp, schedule, predi
     <SectionTabs label="Team Profile sections" items={profileSections} value={section} onChange={value => onSection(value as ProfileSection)} panelId="profile-panel" onDropdownChange={setSectionDropdown} />
     <div id="profile-panel" role={sectionDropdown ? "region" : "tabpanel"} aria-labelledby={sectionDropdown ? "profile-panel-selection" : `profile-panel-${section}`}>
     {section === 'card' && <ProgramReportCard team={team} />}
-    {section === 'overview' && <><div className="team-profile-grid">
+    {section === 'overview' && <>{current && <Takeaway>{profileTakeaway(team, current.rank, ap, coaches, !!poll)}</Takeaway>}<div className="team-profile-grid">
       {tile('Current Model Rank', current ? '#' + current.rank : 'Unavailable')}
       {tile('Current Strength', current ? current.rating.toFixed(1) : 'Unavailable')}
       {tile('Record', current ? current.wins + '–' + current.losses : 'Unavailable')}
       {tile('Projected Wins', current ? current.projected_wins.toFixed(1) : 'Unavailable')}
       {tile('AP Poll', !poll ? 'Poll unavailable' : ap ? '#' + ap : 'Unranked')}
       {tile('Coaches Poll', !poll ? 'Poll unavailable' : coaches ? '#' + coaches : 'Unranked')}
-    </div>{current && <StrengthBreakdown team={team} rankings={rankings} schedule={schedule} />}<details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
+    </div>{current && <StatExplain><p><strong>Model rank</strong> places {team} among all {rankings.length} FBS teams using an equal mix of projected wins and team strength. <strong>Current strength</strong> is the model rating in points: the gap between two teams' ratings is roughly the expected margin on a neutral field.</p><p><strong>Projected wins</strong> are wins so far plus the model's win chances in the remaining games added together, an average rather than a guaranteed record.</p><p>The <strong>AP</strong> and <strong>Coaches</strong> polls are votes by journalists and coaches, shown for comparison. They are not inputs to the model, so the two can disagree.</p></StatExplain>}{current && <StrengthBreakdown team={team} rankings={rankings} schedule={schedule} />}<details className="profile-more"><summary>Form, conference and postseason details</summary><div className="team-profile-grid">
       {tile('Wins vs Current Model Top 25', schedule.some(g => g.completed && (g.home === team || g.away === team) && g.home_score != null && g.away_score != null) ? String(winsAgainstCurrentTop25) : 'No scored games')}
       {tile('Last Five Completed Games', lastFive.count ? `${lastFive.wins}–${lastFive.losses} (${lastFive.count} games)` : 'No scored games')}
       {tile('Conference', conference?.[0] || 'Unavailable')}

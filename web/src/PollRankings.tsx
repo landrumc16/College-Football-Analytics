@@ -1,4 +1,6 @@
 type PollEntry = { team: string; rank: number }
+import { StatExplain, Takeaway } from './StatExplain'
+import { pollTakeaway } from './statTakeaways'
 type Snapshot = { season: number; week: number; source: string; ap_top25: PollEntry[]; coaches_top25: PollEntry[] }
 export type PollSortKey = 'ap' | 'coaches'
 
@@ -43,6 +45,7 @@ export default function PollRankings({ snapshot, conferenceTeams, search, onSear
     <h2>Poll Rankings</h2>
     <p>AP and Coaches Top 25 side by side. NR means the school is not ranked in that poll. These are the published polls, not predictions.</p>
     <p>Poll season {snapshot.season} · Week {snapshot.week} · Source: {snapshot.source}.</p>
+    {pollTakeaway(snapshot.ap_top25, snapshot.coaches_top25) && <Takeaway>{pollTakeaway(snapshot.ap_top25, snapshot.coaches_top25)}</Takeaway>}
     <div className="poll-filters">
       <label>Search teams <input aria-label="Search poll teams" placeholder="Search teams…" value={search} onChange={e => onSearch(e.target.value)} /></label>
       <label>Conference <select aria-label="Filter polls by conference" value={conference} onChange={e => onConference(e.target.value)}>
@@ -64,5 +67,6 @@ export default function PollRankings({ snapshot, conferenceTeams, search, onSear
       {!visible.length && <p role="status">No ranked teams match this search or conference.</p>}
     </div>
     <small>Tap AP or Coaches to sort by that poll. Tied ranks are shown as T-n and keep their published rank. Teams ranked in only one poll show NR in the other.</small>
+    <StatExplain><p>The <strong>AP Top 25</strong> is voted on by sports journalists and the <strong>Coaches Poll</strong> by head coaches, each released weekly during the season. They reflect voters' judgment of the best teams, not a statistical model, so they can differ from each other and from our model rankings.</p><p>A team's poll rank can lag its results by a week, and voters weigh records, recent games and reputation differently. Use the polls to see how teams are perceived; use Model Rankings for the model's own estimate.</p></StatExplain>
   </section>
 }
