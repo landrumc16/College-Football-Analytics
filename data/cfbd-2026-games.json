@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-23T22:43:07.527077+00:00",
+  "retrieved_at": "2026-11-24T21:21:33.833987+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3767,
@@ -44784,8 +44784,8 @@
       "game_id": 401934098,
       "season": 2026,
       "week": 13,
-      "home": "Illinois State",
-      "away": "Austin Peay",
+      "home": "Austin Peay",
+      "away": "Illinois State",
       "completed": false,
       "home_score": null,
       "away_score": null,
@@ -45213,5 +45213,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-23T12:28:07.174004+00:00"
+  "data_changed_at": "2026-11-24T21:21:33.833987+00:00"
 }

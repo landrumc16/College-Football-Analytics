@@ -11,10 +11,10 @@
   "team_game_rows_checked": 17735
  },
  "frozen_inputs_sha256": {
-  "comparison_dir": "9f96e4aad8441ab86975c7183e714fbfcb1e46c7f3342bad221cc944d65d4ac5",
-  "current_results": "b0ce662e083d51b087e2a75274ffc3a3550cd6b75c4fd419d2d3e7e490d5f2a0",
+  "comparison_dir": "23709c14833445b0c48dbc472b34617253d29de3e04e4b0b36826d1f73321d41",
+  "current_results": "34dc7bdffe741ab005e13ced17e2dd4066a590833dbae30a39d06479d6674d0a",
   "forecast_ledger": "819235e79f2a39c3b475c1809904e51288dbf7ca3e397a7da1fb0d6ca493912d",
-  "lines_dir": "445fb8e8f2d253fe13bad890df7eae48c3383c6ab3fe4a67426b5f21ab63d865",
+  "lines_dir": "7ff7d7fff72534aa3a4044a97357152c05732e5e9affadec3b6b0f190c534738",
   "verified_publication_rows": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
   "verified_results_archive": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
  },
