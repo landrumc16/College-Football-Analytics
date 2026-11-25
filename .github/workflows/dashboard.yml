@@ -488,6 +488,16 @@ jobs:
           assert research['promotion']['authorized'] is False
           print('Final V6 scenario/report identity and incumbent authority verified')
           PY_CHECK
+      - name: Publish V9 evidence from the exact final report
+        run: |
+          if cmp -s data/season-2026-report.json web/dist/season-report.json &&
+             node scripts/v9_intelligence.mjs /tmp/v9-evidence &&
+             python -m scripts.v9_accountability --output /tmp/v9-evidence/v9-accountability.json; then
+            cp /tmp/v9-evidence/team-intelligence.json /tmp/v9-evidence/v9-accountability.json web/dist/
+          else
+            rm -f web/dist/team-intelligence.json web/dist/v9-accountability.json
+            echo "::warning::V9 evidence unavailable; core report publication remains independent"
+          fi
       - name: Publish Why this prediction? explanations from the final deployed report
         run: |
           # Exact decompositions of the published forecasts (no new model). Publishing stops if the official engine does

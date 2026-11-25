@@ -13,6 +13,14 @@
     "web/src/EditorialHome.tsx": {
       "sha256": "0561e0a618b043ef150b06ca4f7dac1d154ae216e26ebe02ce40f8dc984a9b3c",
       "reason": "Owner-authorized V9 intelligence integration and application-wide Title Case acceptance correction"
+    },
+    "web/public/dual-projections.json": {
+      "sha256": "8c3f3a664b0dcb50237fd5f200d9722084ab8d263e6d0d1146c2ba29a877893b",
+      "reason": "Re-publish existing unchanged models and explanation calculations on retained November 25 inputs; no API acquisition"
+    },
+    "web/public/prediction-explanations.json": {
+      "sha256": "0561d32481332905e72f4183bdded688d2cf2ed5d778dfbf90ac42fcefae7864",
+      "reason": "Re-publish existing unchanged models and explanation calculations on retained November 25 inputs; no API acquisition"
     }
   }
 }

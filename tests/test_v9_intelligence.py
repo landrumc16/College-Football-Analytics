@@ -21,7 +21,8 @@ def test_real_publication_preserves_models_and_retains_snapshot(tmp_path):
             assert trend['actual_window'] in (None, 3, 4)
     assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in protected] == before
     snapshots = list((tmp_path / 'strength-history').glob('*.json'))
-    assert len(snapshots) == 1
+    retained_hashes = {p.name for p in Path('docs/evidence/v9/strength-history').glob('*.json')}
+    assert {p.name for p in snapshots} == retained_hashes | {hashlib.sha256(protected[0].read_bytes()).hexdigest() + '.json'}
     first = snapshots[0].read_bytes()
     subprocess.run(['node', 'scripts/v9_intelligence.mjs', str(tmp_path)], check=True)
     assert snapshots[0].read_bytes() == first

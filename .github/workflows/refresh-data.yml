@@ -99,6 +99,15 @@ jobs:
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.report --season "$SEASON"
+      - name: Refresh dual projections from retained inputs without changing models
+        continue-on-error: true
+        run: |
+          python -m cfb_analytics.dual_publish --out /tmp/v9-dual-projections.json
+          cp /tmp/v9-dual-projections.json web/public/dual-projections.json
+      - name: Retain V9 issued forecasts and strength observation offline
+        run: |
+          python -m scripts.v9_accountability --retain --output /tmp/v9-accountability.json
+          python scripts/v9_strength_snapshot.py --report data/season-2026-report.json --archive docs/evidence/v9/strength-history --source-commit "$(git rev-parse HEAD)"
       - name: Rebuild reviewed V5 Report Cards from retained history and refreshed incumbent ratings
         run: PYTHONPATH=src python -m scripts.reconcile_v5_historical_sources
       - name: Verify archived forecast provenance and accuracy
@@ -166,6 +175,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/cfbd-*-games.json data/season-*-report.json data/pregame-*-history.json
+          git add docs/evidence/v9/pregame docs/evidence/v9/strength-history web/public/dual-projections.json
           git add data/cfbd-*-postseason.json web/public/postseason-*.json 2>/dev/null || true
           git add web/public/v5-program-report-cards.json web/public/v5-historical-results.json
           if [ -f data/v7-market-receipts.json ]; then

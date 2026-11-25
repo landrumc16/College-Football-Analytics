@@ -6,7 +6,7 @@ import './model-projections.css'
 
 const VIEWS: { id: View; label: string }[] = [{ id: 'compare', label: 'Compare' }, { id: 'standard', label: 'Standard' }, { id: 'momentum', label: 'Momentum' }]
 
-function useDualProjections() {
+export function useDualProjections() {
   const [data, setData] = useState<DualProjections | null>(null)
   const [failed, setFailed] = useState(false)
   useEffect(() => {
@@ -68,7 +68,7 @@ function GameCard({ g, view, data }: { g: ProjectedGame; view: View; data: DualP
   </li>
 }
 
-export default function ModelProjections({ initialTeam = '', onTeam }: { initialTeam?: string; onTeam?: (team: string) => void }) {
+export default function ModelProjections({ initialTeam = '', onTeam, onResearch }: { initialTeam?: string; onTeam?: (team: string) => void; onResearch?: () => void }) {
   const { data, failed } = useDualProjections()
   const [view, setView] = useState<View>('compare')
   const [team, setTeam] = useState(initialTeam)
@@ -88,12 +88,10 @@ export default function ModelProjections({ initialTeam = '', onTeam }: { initial
     .sort((a, b) => (b[1][sortKey].cfp_field ?? 0) - (a[1][sortKey].cfp_field ?? 0) || b[1][sortKey].expected_wins - a[1][sortKey].expected_wins || a[0].localeCompare(b[0]))
   const shownTeams = showAllTeams || team ? teamRows : teamRows.slice(0, 25)
   const models: ModelKey[] = view === 'compare' ? ['standard', 'momentum'] : [view]
-  const v = data.validation
-  const brier = (block: Record<string, { brier: number }>, k: string) => block[k]?.brier.toFixed(4) ?? 'N/A'
   return <section className="notice model-projections" aria-labelledby="mp-title">
     <h2 id="mp-title">Model Projections</h2>
     <p className="page-deck">Two independent forecasts for every upcoming game. <strong>Standard</strong> counts every game equally; <strong>Momentum</strong> counts recent games more. Official forecasts are unchanged.</p>
-    <div className="mp-controls">
+    <p className="metric-note">Projection source receipt: {data.data_retrieved_at || 'unavailable'}. {(!data.data_retrieved_at || Date.now()-Date.parse(data.data_retrieved_at)>24*3600000) && 'This source is older than 24 hours or unavailable; it may not reflect the latest results.'}</p><div className="mp-controls">
       <fieldset className="mp-views"><legend>View</legend>
         {VIEWS.map(o => <label key={o.id}><input type="radio" name="mp-view" value={o.id} checked={view === o.id} onChange={() => setView(o.id)} />{titleCase(o.label)}</label>)}
       </fieldset>
@@ -130,17 +128,26 @@ export default function ModelProjections({ initialTeam = '', onTeam }: { initial
         <li><strong>Momentum:</strong> {data.models.momentum.weighting}.</li>
         {Object.entries(data.method).map(([k, text]) => <li key={k}><strong>{k[0].toUpperCase() + k.slice(1)}:</strong> {text}.</li>)}
       </ul>
-      <div className="table-wrap"><table className="mp-table mp-validation">
+      {onResearch && <button type="button" onClick={onResearch}>Model Accountability in Research</button>}
+    </details>
+  </section>
+}
+
+export function HistoricalModelValidation() {
+  const {data,failed}=useDualProjections()
+  if(!data)return <p role="status">{failed?'Historical model evidence is unavailable.':'Loading historical model evidence…'}</p>
+  const v=data.validation
+  const brier=(block:Record<string,{brier:number}>,key:string)=>block[key]?.brier.toFixed(4)??'N/A'
+  return <details className="mp-more-info"><summary>Historical Model Comparisons · Replays</summary><p>These historical studies are separate from retained pregame accountability. They do not authorize changing the official model.</p>      <div className="table-wrap"><table className="mp-table mp-validation">
         <caption>Historical Accuracy on Identical Games (Brier Score: Lower Is Better)</caption>
         <thead><tr><th scope="col">Games</th><th scope="col">Standard</th><th scope="col">Momentum</th><th scope="col">Existing Method*</th></tr></thead>
         <tbody>
           <tr><th scope="row">2017–2025 ({v.games.toLocaleString()})</th><td>{brier(v.pooled_2017_2025, 'standard')}</td><td>{brier(v.pooled_2017_2025, 'momentum')}</td><td>{brier(v.pooled_2017_2025, 'incumbent_replay')}</td></tr>
           <tr><th scope="row">Second Half of Seasons</th><td>{brier(v.second_half, 'standard')}</td><td>{brier(v.second_half, 'momentum')}</td><td>{brier(v.second_half, 'incumbent_replay')}</td></tr>
           <tr><th scope="row">Held-out 2022–2025 ({v.test_games.toLocaleString()})</th><td>{brier(v.test_2022_2025, 'standard')}</td><td>{brier(v.test_2022_2025, 'momentum')}</td><td>{brier(v.test_2022_2025, 'incumbent_replay')}</td></tr>
-          <tr><th scope="row">2026 So Far ({v.authentic_2026_games})</th><td>{v.authentic_2026.standard?.toFixed(4)}</td><td>{v.authentic_2026.momentum?.toFixed(4)}</td><td>{v.authentic_2026.published_incumbent?.toFixed(4)} (published)</td></tr>
+          <tr><th scope="row">2026 Mixed-Evidence Study ({v.authentic_2026_games})</th><td>{v.authentic_2026.standard?.toFixed(4)}</td><td>{v.authentic_2026.momentum?.toFixed(4)}</td><td>{v.authentic_2026.published_incumbent?.toFixed(4)} (published)</td></tr>
         </tbody>
       </table></div>
-      <p className="mp-muted">*Historical rows replay the existing rating method with last season's rating as its starting point; they are not archived forecasts. The 2026 row compares against forecasts actually published before kickoff. Projected-record error at mid-season: Standard {v.season_records_mae_wins.standard} wins, Momentum {v.season_records_mae_wins.momentum}, existing method {v.season_records_mae_wins.incumbent_replay}. Data retrieved {data.data_retrieved_at ? new Date(data.data_retrieved_at).toLocaleString() : 'N/A'}.</p>
-    </details>
-  </section>
+      <p className="mp-muted">*Historical rows replay the existing rating method with last season's rating as its starting point; they are not archived forecasts. In the 2026 row only the existing-method probabilities were archived before kickoff; Standard and Momentum were retrospectively computed from pre-week data. This row is not a three-model authentic pregame comparison. Projected-record error at mid-season: Standard {v.season_records_mae_wins.standard} wins, Momentum {v.season_records_mae_wins.momentum}, existing method {v.season_records_mae_wins.incumbent_replay}. Data retrieved {data.data_retrieved_at ? new Date(data.data_retrieved_at).toLocaleString() : 'N/A'}.</p>
+</details>
 }
