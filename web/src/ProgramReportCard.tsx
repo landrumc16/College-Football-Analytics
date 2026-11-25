@@ -50,7 +50,7 @@ function Card({ team, report }: { team: string; report: Report | null }) {
   const publishedCategories = (['hype', 'trajectory', 'strength'] as const).filter(k => report?.coverage[k]?.national_grades_available)
   const takeaway = record ? reportCardTakeaway(team, publishedCategories.map(k => ({ label: k === 'hype' ? 'Hype Index' : k === 'trajectory' ? 'Program Trajectory' : 'Program Strength', ...record.categories[k] }))) : null
   return <section className="accuracy-summary" aria-label={`CFA Program Report Card for ${team}`}>
-    <h3>{team} · Cfa Program Report Card</h3>
+    <h3>{team} · CFA Program Report Card</h3>
     <p>Three independent peer-relative grades, equally weighted. Overall: <strong>{record?.overall_grade != null && record.overall_score != null ? `${record.overall_grade} (${record.overall_score.toFixed(1)}/100)` : 'N/A — awaiting all three reviewed categories'}</strong></p>
     {takeaway && <Takeaway>{takeaway}</Takeaway>}
     <div className="team-profile-grid">

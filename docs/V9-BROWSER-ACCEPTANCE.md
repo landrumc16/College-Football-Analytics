@@ -33,7 +33,7 @@ One favorite-row click occurred while asynchronous briefing content was appearin
 
 ## Genuine Defects Corrected
 
-Model-record metric labels still displayed `most likely` and `conf. title`; corrected to Most Likely and Conf. Title. The shared Title Case formatter treated Over/Under as a prepositional phrase; corrected the named metric's rendering and added a regression case. These are presentation-only corrections; no layout, numerical values or prediction formulas were changed.
+Model-record metric labels still displayed `most likely` and `conf. title`; corrected to Most Likely and Conf. Title. The shared Title Case formatter treated Over/Under as a prepositional phrase; corrected the named metric's rendering and added a regression case. The historical program picker was also verified for Texas Tech (3/5/10-year win rates 64.9% / 60.7% / 50.0%). It revealed the CFA brand acronym rendered as Cfa in the report-card heading; restored CFA and added acronym regression coverage. These are presentation-only corrections; no layout, numerical values or prediction formulas were changed.
 
 ## Remaining Environment Limitations
 
@@ -50,3 +50,5 @@ The advertised Browser and Tab APIs expose no viewport setter/emulation, network
 Transferred to Claude Code through the updated V9-CLAUDE-REVIEW.md. Do not restart research, redesign or alter models. Previously completed unit/build checks remain evidence; they do not satisfy these runtime gates. Main and production were not changed, and no production workflow was dispatched.
 
 Handoff delivery: no Claude Code executable or direct Claude launch capability is available in this environment. The remaining assignment is persisted in GitHub for Claude to resume; this report does not claim Claude has started or completed it.
+
+Updated-preview smoke confirmed Most Likely, Conf. Title and Historical ATS and Over/Under Records rendered correctly after publication. The subsequent CFA heading correction is source/unit-verified; full requested-width visual acceptance remains with Claude.

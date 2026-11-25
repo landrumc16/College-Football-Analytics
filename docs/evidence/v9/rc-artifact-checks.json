@@ -16,18 +16,18 @@
     "src/cfb_analytics/dual_projection.py": "42adef29bd023fef17a2181e81cc8df9795b93ce53bc07d370d2d8f7a0e06b69"
   },
   "artifacts": {
+    "assets/index-qa18nLWu.js": "ae2eec3917b012bcc910be3b33001e671cdb8c5f1c70dc2ee5ca4c2ed4dd0c97",
     "assets/index-DdhtErqf.css": "665595e9e789038cbae0be50d7ee45d4ab8c80e4d7f324512dbd67a946cf153c",
     "assets/scenario.worker-Ccc6b3Ak.js": "350dcf694cf6e3c240ba4bcc6a66cb6396a4adc527bb5c6ea8d53ece5ab29f42",
-    "assets/index-DnL1oqdk.js": "dd7a0fce026eb38594806dc3131b74946648df224c67de8c506f5aaac5d8389a",
-    "team-intelligence.json": "76c00576bcdfcd4dd51196c81a6fb2d6e55125a51dcdb64c4e866d504f407cbc",
+    "team-intelligence.json": "541c314636a3f026a99b43edb38566cffc091aebe4d71e8728013f74edb25148",
     "v9-accountability.json": "8828516c6b88604e29e2e5b5f5d4034b3b183646ec70c66e794d16646040b07b",
     "season-report.json": "f9819610f47e61414ebecbb2022763bfcc9df82bfaded6b9098cc49598101ed7",
     "v6-scenario-input.json": "1707a77c297ceb746136c5f0a06282848dbe30646f97f89f1c16a2a668cc14a1"
   },
   "gzip_bytes": {
+    "index-qa18nLWu.js": 121572,
     "index-DdhtErqf.css": 13745,
-    "scenario.worker-Ccc6b3Ak.js": 1543,
-    "index-DnL1oqdk.js": 121571
+    "scenario.worker-Ccc6b3Ak.js": 1543
   },
   "browser_acceptance_receipt": "docs/V9-BROWSER-ACCEPTANCE.md"
 }
