@@ -3,6 +3,49 @@
 **Principle:** the calendar tells us when to look, the event tells us when to act, and the authoritative source tells
 us when to verify. No prediction formula, weight or methodology changes.
 
+## Reliability after the November 24 CFP incident
+
+**What failed (verified from run logs):** the November 24 CFP rankings reached the site only after the owner reported
+them, about 1 hour 40 minutes after the usual release time.
+- **GitHub scheduling:** none of the poll workflow's 11 scheduled starts in the release window ran. Scheduled runs were
+  also starting about 10 hours late (the 11:23 UTC daily refresh ran at 21:20 UTC).
+- **Quota:** the watcher had 0 discretionary CFBD calls (40 left against a 42-call reserve), and it detected CFP releases
+  only through CFBD, so it could not detect the release at all.
+- **Site status:** the footer treated a release as due only 30 hours after its date, so it showed "all current" for six
+  hours after the release aired.
+
+**Corrections:**
+
+| Problem | Correction |
+| --- | --- |
+| CFP detection depended on CFBD quota | The watcher reads the dated official page every 30 s from the announcement time (no CFBD call). Only a complete parse (ranks 1–25, known programs, date stated) spends one CFBD call to confirm every position, retried at 2, 4 and 8 minutes if CFBD lags; `cfp_publish` re-checks both before publishing |
+| Releases competed with game monitoring for quota | Releases have a priority allowance that may spend down to an 8-call floor (`RELEASE_FLOOR`): up to 8 calls per CFP release, 10 per AP/Coaches release. When the discretionary budget is empty, one end-of-day publication wave for the day's games is also funded from it |
+| AP/Coaches detection | Still CFBD (no reliable machine-readable official source), but paid from the priority allowance and paced over the release window. Scheduled poll runs no longer call CFBD on days when no poll can change (about 24 calls saved per CFP night) |
+| Watcher starts depended on GitHub's scheduler | Each watcher run queues its successor when it starts and stays alive until its deadline while the season has games to watch. The concurrency group allows one running and one queued run, so runs never overlap; more than 4 starts in an hour (a crash loop) stops the chain and alerts. The hourly schedule remains a backup |
+| A stopped chain went unnoticed | `watch_keeper` runs after the data refresh, the poll refresh, every deployment and every watcher job: it restarts a stopped chain (never a second watcher) and runs a monitor pass |
+| Nobody was told | `freshness_monitor` checks missed scheduled runs, a stopped chain, unpublished official releases, finished games not yet published, exhausted CFBD budgets and failed deployments. Alerts go to one GitHub issue ("Data freshness alert"), which is opened, updated only on change, and closed when resolved |
+| Footer said "all current" | A CFP release counts as overdue 15 minutes after its scheduled time. Each deployment writes `monitor-status.json` (watcher state + open alerts), and a change in alerts redeploys it; critical alerts and interrupted monitoring replace "all current". The site contacts no third party |
+| Duplicate test run in the deploy | The build checkout now has the parent commit (`fetch-depth: 2`), so the validated-refresh skip works (about 20–30 s saved) |
+
+**Publication latency (CFP), by stage:**
+
+| Stage | Before | Now |
+| --- | --- | --- |
+| Detection | Next CFBD check or poll cron (hours on 24 November) | At most 30 s after the official page appears |
+| Verification | — | One CFBD call (about 1 s); more only if CFBD lags |
+| Poll workflow | About 15 s plus queueing | Unchanged |
+| Build to live | About 2 min 35 s (measured 25 November: commit 01:37:59, Pages 01:40:27) | Unchanged for poll commits, which still run the full suite. Game refreshes save about 20–30 s from the fixed test skip |
+| **Total** | 1 h 40 min on 24 November | **About 3.5 minutes at most** (estimated from the measured stages; first real measurement at the 1 December release) |
+
+Each watcher event records `available_after` (the last check that did not see it), `detected_at`, `confirmed_at`,
+`dispatched_at` and `published_at`, and the run summary shows detection, verification, publication and total
+latency separately.
+
+**External scheduler (not adopted):** the self-sustaining chain plus keepers removes the dependency on GitHub's cron for
+normal operation. A free external scheduler (for example cron-job.org) calling `workflow_dispatch` would add a second
+restart path, but it needs a fine-grained personal access token with Actions write permission stored at a third party.
+That is an owner decision; nothing was purchased or created.
+
 ## Audit: what was wrong (measured, November 7–22, 2026)
 
 | Finding | Evidence | Effect |
@@ -20,8 +63,8 @@ The pipeline itself is fast once started: a refresh takes about 1 minute and a b
 | Source | Provides | Speed | Role |
 | --- | --- | --- | --- |
 | CFBD `/games` | Scores, completion, kickoff changes | Finals detected by the existing gate within one check of CFBD marking them complete | **Both fast and authoritative.** The refresh already uses it, so detection and publication agree. No second provider was added |
-| CFBD `/rankings` | AP, Coaches and CFP polls by week | Present on Sunday afternoon (seen during the November 22 window) | Fast detection for AP and Coaches; `poll_refresh` validates and publishes them. CFP rows are undated, so they are **alert-only** |
-| Official CFP release | Dated, sourced CFP rankings | Tuesday evenings | Authoritative. Stays a manual, verified publication (an existing rule) |
+| CFBD `/rankings` | AP, Coaches and CFP polls by week | Present on Sunday afternoon (seen during the November 22 window) | Detection for AP and Coaches; `poll_refresh` validates and publishes them. For the CFP it is the independent confirmation of the official page |
+| Official CFP release | Dated, sourced CFP rankings | Tuesday evenings | Authoritative, and read directly by the watcher every 30 s during a release (no CFBD call). Published automatically only when CFBD confirms every position |
 | Live site (`season-report.json`, `poll-snapshot.json`) | What fans actually see | — | Publication verification |
 
 **Considered and not adopted:** ESPN's undocumented scoreboard API. It is unofficial with unclear terms, and CFBD
@@ -104,8 +147,8 @@ already detects finals.
      - duplicates are keyed by game and score;
      - each source backs off on its own, so a rankings outage does not stop game monitoring.
 3. **`.github/workflows/event-watcher.yml`:**
-   - **Starts:** hourly scheduled starts. A run watches continuously for up to about 6 hours, and later starts queue
-     behind it (one concurrency group), so dropped cron starts no longer matter.
+   - **Starts:** each run queues its successor (watcher chain); the hourly schedule and `watch_keeper` restart a
+     stopped chain. A run watches for up to about 6 hours; one concurrency group keeps runs from overlapping.
    - **Ledger:** each run's ledger (`event-ledger.json`) and summary table are kept.
    - **Integration check:** a push to `v7-development` runs the provider dry run.
 4. **`dashboard.yml`:** also publishes after "Refresh official college football polls" and "Refresh V8 offense and
@@ -178,7 +221,10 @@ clock and providers, and a site that deploys 6 minutes after a dispatch. They co
 ## Remaining gaps
 
 - **5-minute objective:** not met; see Service levels.
-- **CFP:** detection is alert-only. Publishing still requires the dated official release.
+- **CFP:** publication requires the dated official release and CFBD agreement; if CFBD never agrees, an alert is raised
+  and nothing is published.
+- **AP/Coaches:** detection still depends on CFBD and the priority allowance; with little quota left, checks are about
+  every 30–50 minutes in the release window.
 - **Postseason:** bowl and playoff games use CFBD `seasonType=postseason`, which neither the refresh nor the watcher
   reads yet.
 - **Provisional statistics:** none are published. CFBD `/games` already delivers final results, so no second, faster

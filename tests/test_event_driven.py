@@ -13,6 +13,13 @@ from cfb_analytics.event_watcher import Watcher, VERIFY_TIMEOUT, quota_plan, REF
 
 T0 = datetime(2026, 11, 21, 17, 0, tzinfo=timezone.utc)    # Saturday 11:00 Central
 iso = lambda t: t.isoformat().replace("+00:00", ".000Z")
+TEAMS = {f"T{i}" for i in range(1, 26)}
+
+
+def official_html(day="11/24/2026"):
+    """A minimal official CFP release page in the format cfp_publish parses (dated, ranks 1-25)."""
+    rows = " ".join(f"{i} -- {i} T{i} 9-2" for i in range(1, 26))
+    return f"<html><body><p>Posted {day}</p><h2>CFP Selection Committee Issues Fourth Rankings of 2026</h2><p>TEAM OVERALL RECORD {rows}</p></body></html>"
 
 
 def game(gid, kickoff, completed=False, hs=None, as_=None, week=12):
@@ -51,6 +58,12 @@ class FakeProviders:
         self.site_polls = {"poll_weeks": {"ap_top25": 12, "coaches_top25": 12}}
         self.pending_deploys = []
         self.stale_final = set()           # game ids CFBD reports (wrongly) as not final
+        self.official_at = None            # when the official CFP page appears (no CFBD call to read it)
+        self.page_calls = 0
+
+    def cfp_page(self, url):
+        self.page_calls += 1
+        return official_html() if self.official_at and self.clock() >= self.official_at else None
 
     def _state(self, base=None):
         now = self.clock()
@@ -137,7 +150,8 @@ def setup(games, polls=None, **kw):
     providers = FakeProviders(clock, snapshot, kw.pop("deploy_minutes", 6), post)
     w = Watcher(snapshot, polls or {"poll_weeks": {"ap_top25": 12, "coaches_top25": 12}, "cfp_week": 11}, providers,
                 clock=clock, sleep=clock.sleep, active_interval=kw.pop("interval", 120), watch_interval=600, log=lambda *_: None,
-                cfbd_budget=kw.pop("budget", 400), postseason=post)
+                cfbd_budget=kw.pop("budget", 400), postseason=post, release_budget=kw.pop("release_budget", 0),
+                known_teams=TEAMS, stay_alive=kw.pop("stay_alive", False))
     return clock, providers, w
 
 
@@ -276,16 +290,20 @@ def test_poll_published_late_and_cfp_release_published_only_when_confirmed():
     polls = {e.detail["poll"]: e.status for e in w.events if e.kind == "poll"}
     assert polls == {"coaches_top25": "published", "ap_top25": "published"}
     assert all(wf == "refresh-polls.yml" for _, wf in p.dispatches)
-    # CFP release: detected in CFBD, the poll workflow confirms the dated official page, the site shows it.
+    # CFP release: the dated official page is read directly (no CFBD call), CFBD confirms every position, the poll
+    # workflow publishes, the site shows it.
     tuesday = datetime(2026, 11, 24, 23, 30, tzinfo=timezone.utc)          # 17:30 Central CFP window
-    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday)
-    p.cfp_at = (tuesday + timedelta(minutes=40), 13)
+    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday, release_budget=10)
+    p.official_at = p.cfp_at = (tuesday + timedelta(minutes=40))
+    p.cfp_at = (p.cfp_at, 13)
     w.run(tuesday + timedelta(hours=2))
     cfp = [e for e in w.events if e.kind == "cfp"]
     assert [e.status for e in cfp] == ["published"] and p.dispatches[0][1] == "refresh-polls.yml"
     assert cfp[0].record()["detection_to_publication_seconds"] <= 8 * 60
-    # The official page cannot confirm it: never published, re-dispatched once, then alerted.
-    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday)
+    assert cfp[0].record()["detection_seconds_at_most"] <= 30
+    # The poll workflow cannot confirm it: never published, re-dispatched once, then alerted.
+    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=tuesday, release_budget=10)
+    p.official_at = tuesday + timedelta(minutes=40)
     p.cfp_at, p.cfp_confirmable = (tuesday + timedelta(minutes=40), 13), False
     w.run(tuesday + timedelta(hours=2))
     assert [e.status for e in w.events if e.kind == "cfp"] == ["alerted"] and len(p.dispatches) == 2 and w.alerts

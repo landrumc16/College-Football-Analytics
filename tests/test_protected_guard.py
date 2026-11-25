@@ -85,15 +85,21 @@ def test_reviewed_protected_edits_are_pinned_to_exact_content(monkeypatch):
     assert len(rejected) == 2
 
 
+def _manifest(head_ref):
+    return next(m for m in guard.load_manifests(MANIFEST_DIR) if m["head_ref"] == head_ref)
+
+
 def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
+    # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["v7-development"]
-    release = manifests[0]
+    assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development"]
+    release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
     for head_ref, same_repo in (("v8-development", True), ("dual-projection-development", True), ("beta-rankings-usability", True),
-                                ("main", True), ("", True), ("prediction-explanations", True), ("v7-development", False)):
+                                ("main", True), ("", True), ("prediction-explanations", True), ("v7-development", False),
+                                ("freshness-reliability", False)):
         assert guard.select_manifest(manifests, head_ref, same_repo) is None
         _, rejected = guard.evaluate(V7_ROWS + [("M", "web/src/Navigation.tsx")], None, head_ref, same_repo,
                                      none_removed)
@@ -106,7 +112,7 @@ def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_
 
 
 def test_event_driven_manifest_lists_exactly_the_new_protected_files():
-    listed = set(guard.load_manifests(MANIFEST_DIR)[0]["added_files"])
+    listed = set(_manifest("v7-development")["added_files"])
     present = {str(p.relative_to(ROOT)) for p in [*ROOT.glob("src/cfb_analytics/event_*.py"), ROOT / "src/cfb_analytics/cfp_publish.py", ROOT / "src/cfb_analytics/postseason.py"]
                if p.is_file()}
     assert listed == present, {"unlisted": sorted(present - listed), "missing": sorted(listed - present)}
@@ -116,3 +122,19 @@ def test_released_v7_navigation_matches_the_reviewed_pins():
     # Production still carries exactly the owner-reviewed V7 navigation; any future edit needs a new review.
     for path, entry in MANIFEST["modified_exact"].items():
         assert guard.head_sha256(path) == entry["sha256"], path
+
+
+def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content():
+    m = _manifest("freshness-reliability")
+    assert set(m["added_files"]) == {"src/cfb_analytics/freshness_monitor.py", "src/cfb_analytics/watch_keeper.py"}
+    assert m["added_file_patterns"] == {} and m["modified_additive_only"] == {}
+    assert set(m["modified_exact"]) == {"src/cfb_analytics/event_watcher.py", "src/cfb_analytics/event_calendar.py",
+                                        "src/cfb_analytics/poll_refresh.py"}
+    rows = [("A", p) for p in m["added_files"]] + [("M", p) for p in m["modified_exact"]]
+    approved, rejected = guard.evaluate(rows, m, "freshness-reliability", True, none_removed)
+    assert rejected == [] and len(approved) == 5                     # exactly the reviewed content (SHA-256 pins)
+    # No model, data, ratings or published files: anything else is rejected even on this branch.
+    _, rejected = guard.evaluate([("M", "src/cfb_analytics/model.py"), ("M", "data/season-2026-report.json"),
+                                  ("M", "web/public/sw.js"), ("D", "src/cfb_analytics/cfp_publish.py")],
+                                 m, "freshness-reliability", True, none_removed)
+    assert len(rejected) == 4
