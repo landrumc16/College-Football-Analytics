@@ -93,13 +93,13 @@ def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "v7-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
     for head_ref, same_repo in (("v8-development", True), ("dual-projection-development", True), ("beta-rankings-usability", True),
                                 ("main", True), ("", True), ("prediction-explanations", True), ("v7-development", False),
-                                ("freshness-reliability", False)):
+                                ("freshness-reliability", False), ("freshness-alert-flapping", False)):
         assert guard.select_manifest(manifests, head_ref, same_repo) is None
         _, rejected = guard.evaluate(V7_ROWS + [("M", "web/src/Navigation.tsx")], None, head_ref, same_repo,
                                      none_removed)
@@ -138,3 +138,14 @@ def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content(
                                   ("M", "web/public/sw.js"), ("D", "src/cfb_analytics/cfp_publish.py")],
                                  m, "freshness-reliability", True, none_removed)
     assert len(rejected) == 4
+
+
+def test_freshness_alert_flapping_manifest_pins_only_the_monitor():
+    m = _manifest("freshness-alert-flapping")
+    assert m["added_files"] == {} and m["added_file_patterns"] == {} and m["modified_additive_only"] == {}
+    assert set(m["modified_exact"]) == {"src/cfb_analytics/freshness_monitor.py"}
+    approved, rejected = guard.evaluate([("M", "src/cfb_analytics/freshness_monitor.py")], m, "freshness-alert-flapping", True, none_removed)
+    assert rejected == [] and len(approved) == 1
+    _, rejected = guard.evaluate([("M", "src/cfb_analytics/event_watcher.py"), ("M", "data/season-2026-report.json")],
+                                 m, "freshness-alert-flapping", True, none_removed)
+    assert len(rejected) == 2

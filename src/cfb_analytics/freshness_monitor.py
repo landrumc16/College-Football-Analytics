@@ -192,10 +192,24 @@ def keys_of(body):
     return sorted(a["key"] for a in json.loads(m.group(1))["alerts"]) if m else None
 
 
-def sync_issue(github, alerts, now, log=print):
-    """Open, update or close the single alert issue; comment only when the set of alerts changes."""
-    open_issues = [i for i in github("issues?state=open&per_page=50") or [] if i.get("title") == ISSUE_TITLE and "pull_request" not in i]
-    issue = open_issues[0] if open_issues else None
+def open_issue(github):
+    return next((i for i in github("issues?state=open&per_page=50") or [] if i.get("title") == ISSUE_TITLE and "pull_request" not in i), None)
+
+
+def issue_alerts(issue):
+    m = MARKER.search((issue or {}).get("body") or "")
+    return json.loads(m.group(1))["alerts"] if m else []
+
+
+def sync_issue(github, alerts, now, log=print, keep=()):
+    """Open, update or close the single alert issue; comment only when the set of alerts changes.
+
+    `keep` lists key prefixes this caller cannot evaluate (a keeper has no CFBD quota reading and no watcher alerts):
+    such alerts already in the issue are carried over instead of being cleared, so callers with different views never
+    make the issue flip back and forth."""
+    issue = open_issue(github)
+    known = {a["key"] for a in alerts}
+    alerts = list(alerts) + [a for a in issue_alerts(issue) if a["key"].startswith(tuple(keep)) and a["key"] not in known] if keep else list(alerts)
     keys = sorted(a["key"] for a in alerts)
     if not alerts:
         if issue:
@@ -219,8 +233,12 @@ def sync_issue(github, alerts, now, log=print):
 
 
 # ---- one pass ----------------------------------------------------------------------------------------------------------
-def run_pass(providers, *, now=None, snapshot, quota=None, watcher_alerts=(), watcher_running=True, log=print, report=True, crons=None):
-    """Collect state (GitHub API, live site, official CFP page; no CFBD calls), assess and sync the issue."""
+def run_pass(providers, *, now=None, snapshot, quota=None, watcher_alerts=None, watcher_running=True, log=print, report=True, crons=None):
+    """Collect state (GitHub API, live site, official CFP page; no CFBD calls), assess and sync the issue.
+
+    quota=None or watcher_alerts=None means this caller cannot evaluate those alerts (a keeper): existing ones are kept.
+    The site is redeployed only when the critical alerts change, because only those (and the watcher state) appear
+    in its Data status."""
     now = now or datetime.now(timezone.utc)
     runs = {}
     for workflow in WORKFLOWS:
@@ -246,14 +264,17 @@ def run_pass(providers, *, now=None, snapshot, quota=None, watcher_alerts=(), wa
         except Exception as error:
             log(f"freshness: official CFP page unavailable: {str(error)[:120]}")
     alerts = assess(now, runs=runs, crons=workflow_crons() if crons is None else crons, snapshot=snapshot, live_report=live_report, live_polls=live_polls,
-                    official_cfp_exists=official, quota=quota, watcher_running=watcher_running, watcher_alerts=watcher_alerts)
+                    official_cfp_exists=official, quota=quota, watcher_running=watcher_running, watcher_alerts=watcher_alerts or ())
     for a in alerts:
         log(f"freshness {a['severity']}: {a['area']}: {a['text']}")
     if report:
+        keep = (("quota-",) if quota is None else ()) + (("watcher:",) if watcher_alerts is None else ())
         try:
-            if sync_issue(providers.github, alerts, now, log) in ("opened", "updated", "closed"):
+            critical = lambda items: sorted(a["key"] for a in items if a["severity"] == "critical")
+            before = critical(issue_alerts(open_issue(providers.github)))
+            if sync_issue(providers.github, alerts, now, log, keep) != "unchanged" and critical(alerts) != before:
                 providers.dispatch("dashboard.yml")       # republish monitor-status.json so the site reflects it
-                log("freshness: alerts changed; site redeployment requested")
+                log("freshness: critical alerts changed; site redeployment requested")
         except Exception as error:
             log(f"freshness: could not update the alert issue: {str(error)[:200]}")
     return alerts
