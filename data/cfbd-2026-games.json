@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-24T21:21:33.833987+00:00",
+  "retrieved_at": "2026-11-25T03:51:17.086474+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
     "scheduled": 3767,
-    "completed": 3643,
-    "pending": 124
+    "completed": 3645,
+    "pending": 122
   },
   "games": [
     {
@@ -44498,9 +44498,9 @@
       "week": 13,
       "home": "Eastern Michigan",
       "away": "Kent State",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 17,
+      "away_score": 12,
       "neutral_site": false,
       "start_date": "2026-11-25T00:00:00.000Z"
     },
@@ -44510,9 +44510,9 @@
       "week": 13,
       "home": "Western Michigan",
       "away": "Miami (OH)",
-      "completed": false,
-      "home_score": null,
-      "away_score": null,
+      "completed": true,
+      "home_score": 24,
+      "away_score": 28,
       "neutral_site": false,
       "start_date": "2026-11-25T00:00:00.000Z"
     },
@@ -45213,5 +45213,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-24T21:21:33.833987+00:00"
+  "data_changed_at": "2026-11-25T03:51:17.086474+00:00"
 }

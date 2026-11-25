@@ -441,7 +441,7 @@
   "2026": {
    "coverage": {
     "archive_games": 895,
-    "completed": 822,
+    "completed": 824,
     "conflicting_duplicates": 0,
     "matched": 895,
     "selected_spread_providers": {
@@ -468,14 +468,14 @@
     "unmatched": 0
    },
    "postseason": {
-    "retrieved_at": "2026-11-24T21:21:38.060006+00:00",
+    "retrieved_at": "2026-11-25T03:51:20.869398+00:00",
     "rows": 0,
     "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
    },
    "regular": {
-    "retrieved_at": "2026-11-24T21:21:37.868617+00:00",
+    "retrieved_at": "2026-11-25T03:51:20.759378+00:00",
     "rows": 1553,
-    "sha256": "a9fa53c8e76ae43b7cc431c5422e6e442d357d609bfd5b12e714e17025d6fdb4"
+    "sha256": "43bcacdfdcfbf74c028129f4458cb70e653b55549b7d813e995fe064eafb280b"
    }
   }
  },
