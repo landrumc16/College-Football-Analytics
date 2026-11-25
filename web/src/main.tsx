@@ -401,7 +401,7 @@ export function App() {
 
 /** Per-area data freshness: one quiet line (naming only areas that need attention), details on demand. */
 function DataStatus({ items }: { items: FreshnessItem[] }) {
-  return <details className="data-status"><summary>Data Status: {statusSummary(items)}</summary>
+  return <details className="data-status"><summary>Data Status: {titleCase(statusSummary(items))}</summary>
     <ul aria-label="Data status">{items.map(f => <li key={f.area} data-state={f.state}><strong>{f.area}:</strong> {f.text}</li>)}</ul></details>
 }
 
