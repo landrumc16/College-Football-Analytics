@@ -6,12 +6,11 @@ export const destinations = [
   { id: 'rankings', label: 'Rankings', views: [{ id: 'rankings', label: 'Model Rankings' }, { id: 'ap', label: 'Poll Rankings' }, { id: 'stock', label: 'Team Stock Watch' }] },
   { id: 'teams', label: 'Teams', views: [{ id: 'profile', label: 'Team Profiles' }, { id: 'compare', label: 'Compare & What If' }, { id: 'programs', label: 'Program Directory' }, { id: 'hype', label: 'Hype Index' }, { id: 'trajectory', label: 'Program Trajectory' }] },
   { id: 'playoffs', label: 'Playoffs', views: [{ id: 'cfp', label: 'CFP Projections' }, { id: 'conferences', label: 'Conference Races' }, { id: 'contenders', label: 'Contenders & Pretenders' }] },
-  { id: 'market', label: 'Market', views: [{ id: 'market', label: 'Market Analysis' }] },
-  { id: 'research', label: 'Research', views: [{ id: 'research', label: 'Prediction Accuracy' }, { id: 'history', label: 'Historical Research' }, { id: 'methods', label: 'Methodology' }, { id: 'sources', label: 'Data Sources' }, { id: 'validation', label: 'Model Validation' }] },
+  { id: 'research', label: 'Research', views: [{ id: 'research', label: 'Prediction Accuracy' }, { id: 'market', label: 'Market Intelligence' }, { id: 'history', label: 'Historical Research' }, { id: 'methods', label: 'Methodology' }, { id: 'sources', label: 'Data Sources' }, { id: 'validation', label: 'Model Validation' }] },
 ] as const
 
-/** Bottom navigation: five destinations. Research & Data stays a full destination, reached from the top menu. */
-export const primaryDestinations = destinations.filter(destination => destination.id !== 'research')
+/** Five primary destinations; Market remains a tool within Research. */
+export const primaryDestinations = destinations
 
 export type View = typeof destinations[number]['views'][number]['id']
 

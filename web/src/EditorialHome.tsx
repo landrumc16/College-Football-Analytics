@@ -1,3 +1,4 @@
+import { IntelligenceBrief } from './Intelligence'
 import type { ReactNode } from 'react'
 import { primaryDestinations } from './Navigation'
 import { useReportCards } from './ProgramReportCard'
@@ -78,7 +79,7 @@ export default function EditorialHome({ report, games, favorites, poll, favorite
     </section>
     <div className="editorial-news-grid">
       <section className="editorial-my-teams" aria-labelledby="my-teams-heading"><div className="editorial-section-heading"><h2 id="my-teams-heading">My Teams</h2><details className="editorial-favorite-editor"><summary>Edit teams</summary><div>{favoriteControls}</div></details></div>
-        <div>{saved.map(name => {
+        {saved[0] && <IntelligenceBrief team={saved[0]} onOpen={() => onTeam(saved[0])} />}<div>{saved.map(name => {
           const team = report.rankings.find(team => team.team === name)
           const game = games.filter(game => game.home === name || game.away === name).sort((a,b) => a.week-b.week)[0]
           const probability = game ? game.home === name ? game.home_win_probability : 1-game.home_win_probability : null

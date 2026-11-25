@@ -2,7 +2,7 @@ name: V9 isolated intelligence publication
 on:
   push:
     branches: [v9-development]
-    paths: ['scripts/v9*', 'tests/test_v9*', '.github/workflows/v9-foundation.yml']
+    paths: ['scripts/v9*', 'tests/test_v9*', 'web/src/**', '.github/workflows/v9-foundation.yml']
 permissions:
   contents: write
 jobs:
@@ -32,6 +32,11 @@ jobs:
             git commit -m "Retain V9 development strength observation"
             git push origin HEAD:v9-development
           fi
+      - run: node scripts/v9_preview.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v9-react-review
+          path: web/dist
       - uses: actions/upload-artifact@v4
         with:
           name: v9-intelligence-foundation

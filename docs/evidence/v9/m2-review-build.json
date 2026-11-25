@@ -1,0 +1,13 @@
+{
+  "baseline_commit": "4f5df3df15578cc34eaa0e59d1bb3f7bcd1714ba",
+  "preview_url": "https://college-football-v9-review.orderlykingfisher32.chatgpt.site/",
+  "analytics": "disabled in review build",
+  "artifacts": {
+    "assets/index-DAXGvoCP.css": "0f848b566aa1069aa9f44dc03c236e7cb1996a0481769ae28abbcca07e3fba25",
+    "assets/index-DpBkCbjz.js": "740467f9e44018e5f45df36592ae0f2e58dbdbc3575eb4e7c0bd8524e5d2d7e4",
+    "assets/scenario.worker-Ccc6b3Ak.js": "350dcf694cf6e3c240ba4bcc6a66cb6396a4adc527bb5c6ea8d53ece5ab29f42",
+    "season-report.json": "f9819610f47e61414ebecbb2022763bfcc9df82bfaded6b9098cc49598101ed7",
+    "team-intelligence.json": "01f437a4083eac9af85b59ee9e6130a1ce8e136004752488474180f9f5b6c083"
+  },
+  "browser_verification": "blocked at owner authentication; no interaction/viewport/device claims"
+}

@@ -96,6 +96,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     if (fs.existsSync(retained)) fs.cpSync(retained, `${directory}/strength-history`, { recursive: true })
     execFileSync('python', ['scripts/v9_strength_snapshot.py', '--report', 'data/season-2026-report.json',
       '--archive', `${directory}/strength-history`, '--source-commit', execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()])
+    intelligence.observations = fs.readdirSync(`${directory}/strength-history`).filter(name => name.endsWith('.json')).map(name => JSON.parse(fs.readFileSync(`${directory}/strength-history/${name}`))).sort((a,b) => a.report_generated_at.localeCompare(b.report_generated_at))
     const output = `${directory}/team-intelligence.json`
     const staged = `${output}.${process.pid}.tmp`
     fs.writeFileSync(staged, JSON.stringify(intelligence, null, 2)+'\n')

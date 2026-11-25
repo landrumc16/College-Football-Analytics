@@ -1,0 +1,18 @@
+{
+  "release": "V9 owner-authorized intelligence experience",
+  "head_ref": "v9-development",
+  "purpose": "Exact reviewed navigation and favorite briefing integration; preserves models, production data, styles and favorites storage. Owner directive authorizes these two interface edits. Remove after approved release.",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "web/src/Navigation.tsx": {
+      "sha256": "2c7ebd900032686a4eec396880c73ee512d8cddff75e24b2b6e63522593316a9",
+      "reason": "V9 five destinations and evidence-backed favorite briefing using existing components"
+    },
+    "web/src/EditorialHome.tsx": {
+      "sha256": "1a528efa170978b975cc748e72553e8b48ef1df6f7bacba9de810b99619cf4bf",
+      "reason": "V9 five destinations and evidence-backed favorite briefing using existing components"
+    }
+  }
+}

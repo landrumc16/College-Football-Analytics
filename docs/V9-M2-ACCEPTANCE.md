@@ -1,0 +1,50 @@
+# V9 Milestone 2 — implementation and acceptance
+
+November 25, 2026. Base: 4f5df3df15578cc34eaa0e59d1bb3f7bcd1714ba.
+
+## Implemented
+
+- Actual React app, existing masthead, navy/gold editorial styles, statistical tiles, school search, independent saved favorites and model projections retained.
+- Five primary destinations: Home, Rankings, Teams, Playoffs, Research. Market remains accessible within Research and existing game links.
+- Home: first saved school's season/last-three briefing links to its canonical profile; existing favorite matchup, national, poll and postseason stories preserved.
+- Rankings: named strength, current-level, adjusted offense/defense and schedule views. Earned records remain unranked; no unvalidated accomplishment score. Searchable school selection. Existing official ranking, conference views and polls preserved.
+- Teams: source-backed three-perspective summary, unit evidence and explicit four/three-game windows, retained-observation chart and observation selector. Matchup context compares existing evidence without manufacturing a forecast. Historical program profiles and Official/Standard/Momentum remain available.
+- Playoffs: existing simulations preserved; interpretation explains simplified selection and why quantified rooting advice remains withheld.
+- Research: intelligence methodology and accountability caveats alongside existing forecast research; Market is a research tool.
+- Offline review builder stages current repository report/polls/research plus the V9 contract and exact retained observations. Disables analytics; makes no CFBD calls. Development-only workflow uploads actual React review output, with no Pages publication or production schedule changes.
+
+## Validation
+
+- Full Python suite: 824 passed, 2 skipped before adding the review fixture. New representative-team/observation fixture: 1 passed separately.
+- Foundation edge-case and evidence-path assertions passed.
+- Strength tests: 8 cases, including exact TypeScript/Python parity across all 138 published FBS teams.
+- Existing model-projection explanations: 7 cases, 131 published games.
+- School search: 7 cases, every FBS full-name self-match.
+- Existing takeaways: 4 cases; market calculator: 12 cases.
+- TypeScript and Vite build passed: 77 modules, JS approximately 391 KB / 117.5 KB gzip; CSS 71.1 KB / 13.7 KB gzip. No dependency additions.
+- Protected-path manifest pins exact navigation/home edits under owner-authorized V9 scope; statistical/model files remain byte-identical to base.
+
+## Visual and interaction acceptance
+
+Production homepage inspected in the actual cloud browser before edits. Existing serif masthead, gold rules, slate matchup panels, navigation icons and editorial grid are the design baseline. Source CSS was retained; additions extend existing profile classes. A live comparison is still required before visual acceptance. No screenshot is presented as proof of another viewport.
+
+The local preview daemon reports loopback http://127.0.0.1:4173; that is not an Android-accessible URL. A separate owner-private review site is used for phone review, with public repository datasets only. It does not deploy or modify the GitHub Pages production application.
+
+Review URL: https://college-football-v9-review.orderlykingfisher32.chatgpt.site/ (owner-private; frozen public repository data, analytics disabled).
+
+The cloud browser reached the owner sign-in gate. Automatic approval review rejected Continue with ChatGPT at auth.openai.com because explicit reauthentication authorization was absent. No access controls were changed and no alternate browser path was attempted.
+
+| Acceptance gate | Status |
+| --- | --- |
+| Production baseline | Observed before edits |
+| Private review publication | Succeeded; browser interaction blocked by sign-in |
+| Browser navigation, favorites, search, filters, charts, explanations | Pending access; unit evidence is separate |
+| 375 / 390 / 430 / 768 / 1536 pixel comparison | All pending; no viewport checks claimed |
+| Physical Android / PWA | Pending |
+| Remote development workflow | Pending verification |
+
+These gates are not inferred from passing unit tests.
+
+## Handoff / readiness
+
+Milestone 2 implementation is reviewable, but cannot be declared accepted while requested visual/interaction gates remain unverified. Milestone 3 can proceed with accountability work independently; release acceptance must wait. Accomplishment national ranking and quantified rooting advice remain conditional. Earlier snapshots are unavailable; no trajectory is inferred from one point. Source freshness labels describe the build-time age and expose actual receipts; review hosting is frozen evidence rather than a live refresh service.
