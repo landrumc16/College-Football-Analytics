@@ -1,0 +1,27 @@
+name: V9 isolated intelligence publication
+on:
+  push:
+    branches: [v9-development]
+    paths: ['scripts/v9*', 'tests/test_v9*', '.github/workflows/v9-foundation.yml']
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: pip install -e '.[dev]'
+      - run: npm install --prefix web --no-package-lock
+      - run: python -m pytest -q tests/test_v9_strength_snapshot.py tests/test_v9_intelligence.py
+      - run: node tests/v9-contract-cases.mjs
+      - run: node scripts/v9_intelligence.mjs /tmp/v9-publication
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v9-intelligence-foundation
+          path: /tmp/v9-publication
