@@ -94,7 +94,7 @@ def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
     assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development"]
-    release = _manifest("v7-development")
+    release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
     for head_ref, same_repo in (("v8-development", True), ("dual-projection-development", True), ("beta-rankings-usability", True),
