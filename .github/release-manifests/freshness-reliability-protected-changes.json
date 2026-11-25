@@ -1,0 +1,25 @@
+{
+  "release": "Permanent data freshness reliability (November 24 CFP incident follow-up)",
+  "head_ref": "freshness-reliability",
+  "purpose": "Narrow exception to the V6 protected-path guard for the reviewed freshness reliability change. Applies only to pull requests from freshness-reliability in this repository; every other branch keeps the strict byte-identical guard. Edited files are pinned to the exact reviewed content. No model, rating, prediction, data or published file changes. Remove after this release is merged.",
+  "added_files": {
+    "src/cfb_analytics/freshness_monitor.py": "Freshness monitor: missed schedules, stopped watcher chain, unpublished releases, games awaiting publication, CFBD budget, failed deployments; one alert issue and monitor-status.json for the site (no CFBD calls)",
+    "src/cfb_analytics/watch_keeper.py": "Keeper run from other workflows: restarts a stopped watcher chain (never a second concurrent watcher) and runs one monitor pass"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/event_watcher.py": {
+      "reason": "Watcher: official CFP page detection without CFBD, priority release allowance, confirmation back-off, per-stage latency, chained runs with duplicate and crash-loop guards, monitor hook. No model, rating or prediction change",
+      "sha256": "e207c39feeef75fd9f65a351204f7106e9e5fe44cc271da2c29e32257cbb5037"
+    },
+    "src/cfb_analytics/event_calendar.py": {
+      "reason": "Monitoring horizon for the watcher chain (pure calendar function); documentation of the official CFP page reading",
+      "sha256": "a8e268e784b363905e1a809596f52fa5d3e4feded97b89f2f9d55fc347b47add"
+    },
+    "src/cfb_analytics/poll_refresh.py": {
+      "reason": "Scheduled poll runs skip the CFBD call unless an AP/Coaches poll can change (quota); publication rules unchanged",
+      "sha256": "79e51c32c657cd2bad95c8f3e72f65cb72edb7be1c05c5ef0d334a58934d594b"
+    }
+  }
+}

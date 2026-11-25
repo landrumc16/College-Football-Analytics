@@ -69,9 +69,26 @@ def retained_verified_cfp(existing):
     return {k: existing[k] for k in ("cfp_top25", "cfp_published_at", "cfp_source", "cfp_week") if k in existing}
 
 
+def poll_check_needed(now, snapshot, games):
+    """Whether a scheduled run needs CFBD at all: AP/Coaches polls are released on Sunday (late ones on Monday), and
+    only a poll week behind the week just played can change. CFP-evening runs only need cfp_publish."""
+    if now.astimezone(ZoneInfo("America/Chicago")).weekday() not in (6, 0):
+        return False
+    weeks = [g["week"] for g in games.get("games", []) if isinstance(g.get("week"), int) and g.get("start_date")
+             and datetime.fromisoformat(str(g["start_date"]).replace("Z", "+00:00")) <= now]
+    expected = max(weeks) + 1 if weeks else None
+    published = (snapshot or {}).get("poll_weeks", {})
+    return expected is None or any((published.get(k) or 0) < expected for k in ("ap_top25", "coaches_top25"))
+
+
 def main():
     if os.getenv("GITHUB_EVENT_NAME") == "schedule" and not release_window(datetime.now(timezone.utc)):
         print("Outside verified announcement window")
+        return
+    games_path, snapshot_path = Path("data/cfbd-2026-games.json"), Path("data/poll-2026-snapshot.json")
+    if (os.getenv("GITHUB_EVENT_NAME") == "schedule" and games_path.exists() and snapshot_path.exists()
+            and not poll_check_needed(datetime.now(timezone.utc), json.loads(snapshot_path.read_text()), json.loads(games_path.read_text()))):
+        print("AP and Coaches polls already current for the week played (or not a poll day); no CFBD call")
         return
     api_key = os.environ["CFBD_API_KEY"]
     req = Request("https://api.collegefootballdata.com/rankings?year=2026&seasonType=regular",

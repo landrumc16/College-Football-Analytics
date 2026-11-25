@@ -11,7 +11,10 @@ Windows (all derived from published kickoff times and the official release calen
 - AP and Coaches polls: Sunday 11:00-16:00 US Central for the week just completed; if not published by then they stay
   overdue through Monday, then fall back to the existing daily poll schedule.
 - CFP rankings: the published 2026 release dates (`poll_refresh.CFP_DATES`), 17:00-21:00 Central (selection Sunday
-  10:00-14:00). CFP detection is reported for manual verification; it is never auto-published (see poll_refresh).
+  10:00-14:00). The watcher reads the dated official page directly (no CFBD call) from the announcement time until the
+  release is published; cfp_publish still requires CFBD to confirm every position before anything is published.
+- Monitoring horizon: the watcher chain keeps itself alive while any game of the season is still scheduled or
+  unresolved (or a CFP release is within 48 hours), and lets the chain end once the season is over.
 """
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -25,6 +28,7 @@ LATE_FINISH = timedelta(hours=4, minutes=45)
 OVERDUE_LIMIT = timedelta(hours=36)
 ACTIVE_INTERVAL = 300      # seconds between source checks while an event is due (CFBD call budget; configurable)
 WATCH_INTERVAL = 900       # seconds between checks of overdue (delayed, suspended) games
+CHAIN_HORIZON = timedelta(hours=48)
 
 
 def parse_time(value):
@@ -132,3 +136,26 @@ def plan(snapshot, polls, now, *, active_interval=ACTIVE_INTERVAL, watch_interva
     starts = sorted(t for t in upcoming if t > now)
     p.next_event_at = starts[0] if starts else None
     return p
+
+
+def cfp_release_days(year=2026):
+    from datetime import date
+    return sorted(date(year, m, d) for m, d in CFP_DATES)
+
+
+def horizon_active(snapshot, now, horizon=CHAIN_HORIZON):
+    """True while monitoring is needed: any game of the season is still scheduled or unresolved inside its overdue
+    period (so the chain also covers the quiet days between game days, Sunday polls included), or a CFP release date
+    falls within the horizon or the last 24 hours. Idle watcher time costs no CFBD calls; the chain ends when the
+    season's games are all resolved."""
+    for g in snapshot.get("games", []):
+        k = parse_time(g.get("start_date"))
+        if k is None or g.get("completed"):
+            continue
+        if k >= now - (LATE_FINISH + OVERDUE_LIMIT):
+            return True
+    for day in cfp_release_days(now.year):
+        release = datetime(day.year, day.month, day.day, 17, tzinfo=CENTRAL)
+        if now - timedelta(hours=24) <= release <= now + horizon:
+            return True
+    return False

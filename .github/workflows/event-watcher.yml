@@ -17,8 +17,11 @@ on:
 
 permissions:
   contents: read
-  actions: write      # workflow_dispatch of the existing refresh workflows (allowed from GITHUB_TOKEN)
+  actions: write      # workflow_dispatch of the refresh workflows and of the next watcher run (allowed from GITHUB_TOKEN)
+  issues: write       # freshness alert issue
 
+# One running and at most one queued run: each run queues its successor when it starts (watcher chain), so chained,
+# scheduled and keeper-started runs never overlap. The schedule above is only a backup for a stopped chain.
 concurrency:
   group: event-watcher
   cancel-in-progress: false
@@ -43,6 +46,14 @@ jobs:
           else
             python -m cfb_analytics.event_watcher --minutes 350
           fi
+      - name: Keep the event watcher running and report freshness problems
+        # GitHub can start scheduled runs hours late, so every run of this workflow also restarts a stopped watcher
+        # chain (never a second concurrent watcher) and runs one freshness monitor pass. No CFBD calls.
+        if: always() && github.ref == 'refs/heads/main' && inputs.dry_run != true
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: PYTHONPATH=src python -m cfb_analytics.watch_keeper
       - name: Keep the event ledger
         if: always()
         uses: actions/upload-artifact@v4

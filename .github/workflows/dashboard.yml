@@ -29,6 +29,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read        # monitor-status.json: event watcher run state
+  issues: read         # monitor-status.json: the freshness monitor's open alert issue
 
 concurrency:
   group: github-pages
@@ -206,6 +208,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2        # the validated-refresh skip below compares HEAD's parent with the refresh's start commit
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -521,6 +525,13 @@ jobs:
           path: web/mobile-evidence/*.png
           if-no-files-found: warn
           retention-days: 14
+      - name: Publish automatic monitoring status for the Data status footer
+        # Watcher state and the freshness monitor's open alerts, served next to the app (the site contacts no third
+        # party). The monitor redeploys whenever its alerts change. Never blocks a deployment.
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: PYTHONPATH=src python -m cfb_analytics.freshness_monitor --site-status web/dist/monitor-status.json
       - uses: actions/configure-pages@v5
         with:
           enablement: true
@@ -681,3 +692,26 @@ jobs:
           path: web/mobile-evidence/
           if-no-files-found: warn
           retention-days: 30
+
+  freshness-keeper:
+    # After every deployment attempt: restart a stopped watcher chain and run one freshness monitor pass (it also
+    # reports a failed deployment). Separate job so the Pages deployment keeps its narrow permissions.
+    if: always() && github.ref == 'refs/heads/main'
+    needs: deploy
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Keep the event watcher running and report freshness problems
+        # GitHub can start scheduled runs hours late, so every run of this workflow also restarts a stopped watcher
+        # chain (never a second concurrent watcher) and runs one freshness monitor pass. No CFBD calls.
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: PYTHONPATH=src python -m cfb_analytics.watch_keeper
