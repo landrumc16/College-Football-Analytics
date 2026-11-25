@@ -1,0 +1,143 @@
+{
+ "kind": "official_current_cfp_publication",
+ "season": 2026,
+ "week": 13,
+ "published_at": "2026-11-24",
+ "source_url": "https://collegefootballplayoff.com/news/2026/11/24/rankings",
+ "source_title": "CFP Selection Committee Issues Fourth Rankings of 2026",
+ "verification": "Automatically published: the dated official release parsed to ranks 1-25 of known FBS programs and matched CFBD's Playoff Committee Rankings for the same week at every position.",
+ "verified_at": "2026-11-25T01:37:54+00:00",
+ "canonical_rank_team_sha256": "8d8de6624f0dc5d175e3e5a160e0aceed0f5a9e947d9d049634de59e04c04418",
+ "rankings": [
+  {
+   "team": "Georgia",
+   "rank": 1,
+   "record": "10-1"
+  },
+  {
+   "team": "Utah",
+   "rank": 2,
+   "record": "11-0"
+  },
+  {
+   "team": "Texas",
+   "rank": 3,
+   "record": "9-2"
+  },
+  {
+   "team": "Notre Dame",
+   "rank": 4,
+   "record": "10-1"
+  },
+  {
+   "team": "Tennessee",
+   "rank": 5,
+   "record": "9-2"
+  },
+  {
+   "team": "Alabama",
+   "rank": 6,
+   "record": "9-2"
+  },
+  {
+   "team": "Miami (FL)",
+   "rank": 7,
+   "record": "10-1"
+  },
+  {
+   "team": "Wake Forest",
+   "rank": 8,
+   "record": "10-1"
+  },
+  {
+   "team": "UCLA",
+   "rank": 9,
+   "record": "10-1"
+  },
+  {
+   "team": "BYU",
+   "rank": 10,
+   "record": "9-2"
+  },
+  {
+   "team": "Texas Tech",
+   "rank": 11,
+   "record": "10-1"
+  },
+  {
+   "team": "Oregon",
+   "rank": 12,
+   "record": "8-3"
+  },
+  {
+   "team": "Iowa",
+   "rank": 13,
+   "record": "9-2"
+  },
+  {
+   "team": "Indiana",
+   "rank": 14,
+   "record": "9-2"
+  },
+  {
+   "team": "USC",
+   "rank": 15,
+   "record": "8-3"
+  },
+  {
+   "team": "Arizona",
+   "rank": 16,
+   "record": "8-3"
+  },
+  {
+   "team": "Oklahoma",
+   "rank": 17,
+   "record": "7-4"
+  },
+  {
+   "team": "Houston",
+   "rank": 18,
+   "record": "8-3"
+  },
+  {
+   "team": "Louisville",
+   "rank": 19,
+   "record": "8-3"
+  },
+  {
+   "team": "Florida",
+   "rank": 20,
+   "record": "7-4"
+  },
+  {
+   "team": "Ohio State",
+   "rank": 21,
+   "record": "7-4"
+  },
+  {
+   "team": "Ole Miss",
+   "rank": 22,
+   "record": "7-4"
+  },
+  {
+   "team": "Missouri",
+   "rank": 23,
+   "record": "7-4"
+  },
+  {
+   "team": "Washington",
+   "rank": 24,
+   "record": "7-4"
+  },
+  {
+   "team": "Nebraska",
+   "rank": 25,
+   "record": "7-4"
+  }
+ ],
+ "unchanged": [
+  "AP poll",
+  "Coaches poll",
+  "model rankings"
+ ]
+}
