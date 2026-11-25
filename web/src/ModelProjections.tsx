@@ -116,8 +116,8 @@ export default function ModelProjections({ initialTeam = '', onTeam, onResearch 
         <tbody>{shownTeams.map(([name, t]) => <tr key={name}>
           <th scope="row">{name}<small className="mp-sub">{t.wins}–{t.losses} now · {t.remaining} left</small>{view === 'compare' && tiebreakNote(name, t) && <small className="mp-sub mp-note">{tiebreakNote(name, t)}</small>}</th>
           {models.map(k => { const r = likelyRecord(t, k); return <td key={k}>
-            <b>{t[k].expected_wins.toFixed(1)}–{t[k].expected_losses.toFixed(1)}</b><small className="mp-sub">most likely <span className="mp-nowrap">{r.wins}–{r.losses} ({pct(r.probability)})</span></small>
-            <small className="mp-sub"><span className="mp-nowrap">CFP {pct(t[k].cfp_field)}</span> · <span className="mp-nowrap">conf. title {pct(t[k].conference_title)}</span></small></td> })}
+            <b>{t[k].expected_wins.toFixed(1)}–{t[k].expected_losses.toFixed(1)}</b><small className="mp-sub">Most Likely <span className="mp-nowrap">{r.wins}–{r.losses} ({pct(r.probability)})</span></small>
+            <small className="mp-sub"><span className="mp-nowrap">CFP {pct(t[k].cfp_field)}</span> · <span className="mp-nowrap">Conf. Title {pct(t[k].conference_title)}</span></small></td> })}
         </tr>)}</tbody>
       </table></div>
       {!team && teamRows.length > 25 && <button type="button" className="mp-more" onClick={() => setShowAllTeams(!showAllTeams)}>{titleCase(showAllTeams ? 'Show top 25' : `Show all ${teamRows.length} teams`)}</button>}

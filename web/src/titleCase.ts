@@ -13,6 +13,8 @@ export function titleCase(text: string, first = true, last = true): string {
     // Keep established mixed-case names, e.g. McNeese, UConn and OpenAI.
     if (/[a-z].*[A-Z]|^[A-Z]{2,}[a-z]/.test(word)) return word
     const lower = word.toLowerCase()
+    // Over/Under is a named market metric, rather than the preposition 'over'.
+    if (lower === 'over' && text.slice(offset, offset + 10).toLowerCase() === 'over/under') return 'Over'
     const boundary = (current === 0 && first) || (current === words.length - 1 && last) || /[:—–]\s*$/.test(text.slice(0, offset))
     return !boundary && minorWords.has(lower) ? lower : lower[0].toUpperCase() + lower.slice(1)
   })

@@ -4,7 +4,7 @@ The owner approved the current professional collegiate design. This pass closes 
 
 ## Executive Decision
 
-The candidate is ready for independent engineering review, **not authorization to deploy**. Offline implementation and statistical acceptance can be verified locally; browser, five-width, PWA lifecycle, accessibility/performance and physical-device acceptance remain open. The earlier browser auto-review denied entry to auth.openai.com absent explicit reauthentication authorization. No bypass, alternative authentication path or physical-device claim was used. The owner's visual approval is recorded separately from unperformed browser tests.
+The candidate is ready for independent engineering review, **not authorization to deploy**. Offline implementation and statistical acceptance can be verified locally; browser, five-width, PWA lifecycle, accessibility/performance and physical-device acceptance remain open. The owner subsequently authorized reauthentication and sign-in succeeded. Core browser journeys now pass at 1363×936; the exposed browser APIs cannot complete the requested viewport, scanner, performance-profiling and PWA lifecycle gates. See V9-BROWSER-ACCEPTANCE.md. No bypass or physical-device claim was used. The owner's visual approval is recorded separately from unperformed browser tests.
 
 ## Roadmap Acceptance
 
@@ -16,14 +16,14 @@ The candidate is ready for independent engineering review, **not authorization t
 | Immutable authentic strength history | Content-addressed observations; no retrospective points | Passed local |
 | Five destinations and approved design | Existing React components preserved; no new prototype | Owner design approved; viewport gates pending |
 | Home briefing / rankings / team diagnostics / matchup | Existing M2 integration retained | Local tests/build passed; browser pending |
-| Playoffs and scenario integrity | Existing simulator unchanged; exact report/packet pairing | Offline integration passed; actual interaction pending |
+| Playoffs and scenario integrity | Existing simulator unchanged; exact report/packet pairing | Runtime baseline/override/exact reset passed at 1363×936; requested widths pending |
 | Research consolidation | Authentic retained cohorts, verified publication subset and replay studies separately labelled; historical model comparison moved from Teams to Research | Implemented; browser pending |
 | Authentic three-model archiving | Atomic first retention per game/model, timestamps before kickoff, source hashes, versions, immutable first-bundle receipt | Tested; future publication hooks prepared |
 | Accuracy / calibration / identical-game comparison | Reuses v5_forecast_evaluation strict scorer; counts, empty-bin nulls and common-game cohort | Tested; insufficient settled dual data honestly suppressed |
 | Historical reporting | Existing independent publication evidence and chronological studies retained | Reused; no invented historical predictions |
 | Production reliability reconciliation | Main b204bd6 is a data-only refresh; PR #56 remains open/unmerged | No newly merged reliability code to reconcile; recheck before merge |
-| Browser widths 375 / 390 / 430 / 768 / 1536 | Authentication blocked | All outstanding |
-| Search / favorites / navigation / charts / dropdowns | Existing controls and unit checks; no new browser verification | Outstanding browser acceptance |
+| Browser widths 375 / 390 / 430 / 768 / 1536 | No supported viewport control exposed | All outstanding; Claude handoff |
+| Search / favorites / navigation / charts / dropdowns | Actual core journeys passed at 1363×936; see browser receipt | Requested-width checks remain outstanding |
 | Title Case | Full source audit plus acronym, school identity and paragraph checks | Local passed; visual check pending |
 | Accessibility / performance / PWA | Semantic tables/labels/disclosures and existing assets preserved; artifact checks distinct from runtime behavior | Runtime acceptance pending |
 | Physical Android / iPhone | No physical test performed | Outstanding |
@@ -57,7 +57,7 @@ The private preview is a frozen review build, not an event-driven live service. 
 
 ## Remaining Release Blockers
 
-Browser authentication and five-width functional/visual verification; runtime accessibility, performance and PWA lifecycle; physical-device testing; current-main/data reconciliation immediately before promotion; independent review of candidate workflow hooks; final owner approval. Quantified rooting advice, new accomplishment ranking and model promotion remain deliberately conditional and are not release promises.
+Five-width functional/visual verification in a browser with supported viewport control; runtime accessibility, performance and PWA lifecycle; physical-device testing; current-main/data reconciliation immediately before promotion; independent review of candidate workflow hooks; final owner approval. Quantified rooting advice, new accomplishment ranking and model promotion remain deliberately conditional and are not release promises.
 
 Generated-data guard policy: exact published-JSON pins are validated against actual HEAD on v9-development. Main's ordinary post-release data refreshes must not be frozen to release-day JSON; guard-unit fixtures use the frozen reviewed hashes outside the release branch while still testing rejection of all unauthorized branches/forks/tampering. The guard implementation itself is unchanged. Snapshot regression now verifies the complete retained hash set rather than assuming history contains only one observation.
 
@@ -68,3 +68,5 @@ Full Python regression: **836 passed, 1 skipped**, 27.18 seconds; one external a
 Static artifact checks verify exact scenario/report SHA-256 and receipt identity, PWA manifest/icon dimensions and shell presence, and unchanged model-code hashes. These checks do not establish browser accessibility, responsive fit, physical-device behavior, runtime performance or PWA lifecycle acceptance. Main JavaScript: approximately 402.5 KB raw / 122.1 KB gzip; CSS approximately 71.1 KB / 13.8 KB gzip. No Lighthouse or runtime performance result is claimed.
 
 Updated private preview publication succeeded: hosted source ee0607151666bd7c00eee5b6871d54eb43ef0a34, deployment appgdep_6b075a5ec9fc8191b607b6f9ca45ae38. URL: https://college-football-v9-review.orderlykingfisher32.chatgpt.site/ . GitHub CI must be checked for the final exact candidate SHA; local evidence is not a claim that remote CI already ran.
+
+Authorized browser pass: authentication succeeded and actual core journeys/Playoffs reset were verified on candidate 31e8a445 at 1363×936. See V9-BROWSER-ACCEPTANCE.md for exact observations, small label corrections and remaining environment gates transferred to Claude. This supersedes earlier authentication-blocked statements in historical progress entries.

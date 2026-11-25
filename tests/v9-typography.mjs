@@ -23,6 +23,7 @@ const examples=[
  ['SCENARIO SNAPSHOT','Scenario Snapshot'],
  ['THE CFP AND THE AP POLL','The CFP and the AP Poll'],
  ['SP+ and FPI','SP+ and FPI'],
+ ['historical ATS and over/under records','Historical ATS and Over/Under Records'],
  ['what’s changing at Texas Tech','What’s Changing at Texas Tech'],
  ['standings: the next game','Standings: The Next Game'],
  ['the team we root for','The Team We Root For'],

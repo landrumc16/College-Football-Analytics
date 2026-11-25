@@ -37,7 +37,7 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
       <MarketCalculator key={`${game.game_id}|${game.home}|${game.away}`} headingLevel="h3" home={game.home} away={game.away}
         homeProbability={game.home_win_probability} homeMargin={game.home_margin} source={sourceFor(game)} />
       <details className="market-history" onToggle={e => setHistoryOpen((e.target as HTMLDetailsElement).open)}>
-        <summary>Historical ATS and over/Under Records for {game.away} and {game.home}</summary>
+        <summary>Historical ATS and Over/Under Records for {game.away} and {game.home}</summary>
         {historyOpen && <MarketHistory teams={[game.away, game.home]} />}
       </details>
     </>}
