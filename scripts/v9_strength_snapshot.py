@@ -46,7 +46,10 @@ def archive(report_path, archive_dir, source_commit):
     try:
         os.link(temporary, target)
     except FileExistsError:
-        if json.loads(target.read_text())['source_sha256'] != digest:
+        existing = json.loads(target.read_text())
+        expected = {key: value for key, value in payload.items() if key not in ('retained_at', 'source_commit')}
+        actual = {key: value for key, value in existing.items() if key not in ('retained_at', 'source_commit')}
+        if actual != expected:
             raise ValueError('Archive identity conflict')
     finally:
         temporary.unlink()

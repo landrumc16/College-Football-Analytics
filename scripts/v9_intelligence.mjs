@@ -5,15 +5,27 @@ import os from 'node:os'
 import { pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
 
-export function buildIntelligence(report, stats, strengthScores) {
+export function sourceAge(timestamp, now, maxAgeHours = 24) {
+  if (!timestamp) return { status: 'missing', age_hours: null }
+  if (!/(Z|[+-]\d\d:\d\d)$/.test(timestamp) || !Number.isFinite(Date.parse(timestamp))) return { status: 'invalid', age_hours: null }
+  const age = (now - Date.parse(timestamp)) / 3600000
+  return { status: age < 0 ? 'future' : age > maxAgeHours ? 'stale' : 'current', age_hours: age }
+}
+
+export function buildIntelligence(report, stats, strengthScores, now = Date.now()) {
   if (!Array.isArray(report.rankings) || !report.rankings.length) throw Error('Missing rankings')
   const ratings = Object.fromEntries(report.rankings.map(row => [row.team, row.rating]))
   if (Object.keys(ratings).length !== report.rankings.length) throw Error('Duplicate teams')
   const fields = stats?.fields ?? []
   const adjusted = fields.indexOf('adjusted'), sample = fields.indexOf('n')
   const receipt = report.retrieved_at ?? null
+  const statReceipt = stats?.generated_at ?? null
+  const period = { season: report.season, through: receipt }
   const wrap = (value, units, population, games, source, limitations = []) => ({
     value, units, population, sample: games, source, limitations,
+    period: source === 'v8-team-stats.json' ? { season: report.season, through: statReceipt } : period,
+    source_receipt: source === 'v8-team-stats.json' ? statReceipt : receipt,
+    freshness: sourceAge(source === 'v8-team-stats.json' ? statReceipt : receipt, now),
     status: value === null ? 'unavailable' : 'available',
   })
   const teams = report.rankings.map(row => {
@@ -34,7 +46,7 @@ export function buildIntelligence(report, stats, strengthScores) {
         'v8-team-stats.json', ['Last-four preferred; inherited last-three fallback', 'Descriptive approximate trend rule']),
       requested_window: 4, actual_window: trend?.games ?? null,
     }]))
-    return {
+    const team = {
       team: row.team,
       period: { season: report.season, through: receipt },
       accomplishment: { wins: row.wins, losses: row.losses, national_metric: null,
@@ -46,7 +58,7 @@ export function buildIntelligence(report, stats, strengthScores) {
         'opponent rating points', 'played opponents with published ratings', opponents.length,
         'season-report.json', ['FCS and unrated opponents excluded from this summary', 'Current-knowledge context']),
       units: metrics, trends, consistency: wrap(unit?.volatility ?? null, 'SD of opponent-adjusted game values', 'eligible FBS games; minimum five', null, 'v8-team-stats.json', ['Sample sizes are retained per metric']),
-      power_opponents: { games: unit?.power_games ?? null, definition: stats?.method?.power ?? null, source: 'v8-team-stats.json', population: 'season-specific power opponents', units: 'games' },
+      power_opponents: { games: unit?.power_games ?? null, definition: stats?.method?.power ?? null, source: 'v8-team-stats.json', population: 'season-specific power opponents', units: 'games', period: { season: report.season, through: statReceipt }, source_receipt: statReceipt },
       findings: [ {
         id: 'season-strength', rule_version: 1,
         takeaway: `${row.team} has a season strength rating of ${row.rating.toFixed(1)}.`,
@@ -54,9 +66,17 @@ export function buildIntelligence(report, stats, strengthScores) {
         explanation: 'The existing season rating summarizes the published model. Model rank also includes projected wins.',
       } ],
     }
+    const finding = (id, takeaway, evidence_paths, source_receipt, explanation) => ({ id, rule_version: 1, takeaway, evidence_paths, source_receipt, explanation })
+    team.findings.push(finding('earned-record', `${row.team} has earned ${row.wins} wins and ${row.losses} losses.`, ['accomplishment.wins', 'accomplishment.losses'], receipt, 'Observed results. An accomplishment national metric remains unvalidated.'))
+    if (level?.momentum !== null && Number.isFinite(level?.momentum)) team.findings.push(finding('current-level', `Last-three playing level is ${level.momentum.toFixed(1)} versus season strength ${row.rating.toFixed(1)}.`, ['current_level.value','strength.value'], receipt, 'Uses the released three-game function and current opponent ratings. A short sample does not establish future improvement.'))
+    for (const side of ['offense', 'defense']) {
+      if (metrics[side].status === 'available') team.findings.push(finding(`${side}-efficiency`, `${side === 'offense' ? 'Offense generated' : 'Defense allowed'} ${metrics[side].value.toFixed(3)} opponent-adjusted EPA per play.`, [`units.${side}.value`], statReceipt, `Eligible FBS sample ${metrics[side].sample} plays. Lower allowed EPA is better on defense. Descriptive evidence does not identify a causal coaching or personnel effect.`))
+    }
+    if (team.schedule.status === 'available') team.findings.push(finding('schedule-context', `Rated opponents averaged ${team.schedule.value.toFixed(1)} strength points across ${opponents.length} completed games.`, ['schedule.value','schedule.sample'], receipt, 'Current-knowledge schedule context excludes unrated and FCS opponents and applies no extra conference multiplier.'))
+    return team
   })
   return { schema_version: 1, season: report.season, model_metadata: report.model_metadata,
-    sources: { report: receipt, statistics: stats?.generated_at ?? null, actual_publication_at: null, freshness: 'consumer_must_evaluate_source_age', missing_statistics: !stats?.teams },
+    sources: { report: receipt, statistics: stats?.generated_at ?? null, actual_publication_at: null, freshness: { report: sourceAge(receipt, now), statistics: sourceAge(statReceipt, now) }, missing_statistics: !stats?.teams },
     teams, history_semantics: 'retained observations; earlier snapshots unavailable' }
 }
 
@@ -72,9 +92,14 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     const stats = JSON.parse(fs.readFileSync('web/public/v8-team-stats.json'))
     const intelligence = buildIntelligence(report, stats, strengthScores)
     fs.mkdirSync(directory, { recursive: true })
+    const retained = 'docs/evidence/v9/strength-history'
+    if (fs.existsSync(retained)) fs.cpSync(retained, `${directory}/strength-history`, { recursive: true })
     execFileSync('python', ['scripts/v9_strength_snapshot.py', '--report', 'data/season-2026-report.json',
       '--archive', `${directory}/strength-history`, '--source-commit', execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()])
-    fs.writeFileSync(`${directory}/team-intelligence.json`, JSON.stringify(intelligence, null, 2)+'\n')
+    const output = `${directory}/team-intelligence.json`
+    const staged = `${output}.${process.pid}.tmp`
+    fs.writeFileSync(staged, JSON.stringify(intelligence, null, 2)+'\n')
+    fs.renameSync(staged, output)
     console.log(`Published ${intelligence.teams.length} teams to ${directory}`)
   } finally { fs.rmSync(temporary, { recursive: true, force: true }) }
 }

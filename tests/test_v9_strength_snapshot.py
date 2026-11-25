@@ -23,3 +23,14 @@ def test_invalid_commit_creates_no_archive(tmp_path):
     with pytest.raises(ValueError):
         module.archive('missing.json', tmp_path / 'archive', 'main')
     assert not (tmp_path / 'archive').exists()
+
+
+def test_tampered_existing_snapshot_is_rejected(tmp_path):
+    report = Path(__file__).parents[1] / 'data/season-2026-report.json'
+    target = module.archive(report, tmp_path, 'a' * 40)
+    value = json.loads(target.read_text())
+    value['teams'][0]['rating'] += 1
+    target.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match='identity conflict'):
+        module.archive(report, tmp_path, 'a' * 40)
+    assert json.loads(target.read_text()) == value
