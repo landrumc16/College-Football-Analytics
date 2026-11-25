@@ -12,6 +12,11 @@ jobs:
           python-version: '3.12'
       - name: Install package
         run: python -m pip install -e '.[dev]'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install offline intelligence test dependencies
+        run: npm install --prefix web --no-package-lock
       - name: Run tests
         run: python -m pytest -q
   dashboard-build:

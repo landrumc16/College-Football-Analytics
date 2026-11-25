@@ -89,11 +89,11 @@ def _manifest(head_ref):
     return next(m for m in guard.load_manifests(MANIFEST_DIR) if m["head_ref"] == head_ref)
 
 
-def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_per_branch():
+def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -118,10 +118,26 @@ def test_event_driven_manifest_lists_exactly_the_new_protected_files():
     assert listed == present, {"unlisted": sorted(present - listed), "missing": sorted(listed - present)}
 
 
-def test_released_v7_navigation_matches_the_reviewed_pins():
-    # Production still carries exactly the owner-reviewed V7 navigation; any future edit needs a new review.
-    for path, entry in MANIFEST["modified_exact"].items():
+def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
+    # The V7 fixture above remains unchanged; V9 is a separately authorized interface release.
+    m = _manifest("v9-development")
+    paths = {"web/src/Navigation.tsx", "web/src/EditorialHome.tsx"}
+    assert set(m["modified_exact"]) == paths
+    assert m["added_files"] == m["added_file_patterns"] == m["modified_additive_only"] == {}
+    for path, entry in m["modified_exact"].items():
         assert guard.head_sha256(path) == entry["sha256"], path
+    rows = [("M", path) for path in paths]
+    approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
+    assert len(approved) == 2 and not rejected
+    for branch, same_repo in [("main", True), ("v9-development", False), ("freshness-reliability", True)]:
+        approved, rejected = guard.evaluate(rows, m, branch, same_repo, none_removed)
+        assert not approved and len(rejected) == 2
+    _, rejected = guard.evaluate([("M", "src/cfb_analytics/model.py"), ("M", "web/public/dual-projections.json")],
+                                m, "v9-development", True, none_removed)
+    assert len(rejected) == 2
+    monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)
+    approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
+    assert not approved and len(rejected) == 2
 
 
 def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content():

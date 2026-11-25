@@ -21,7 +21,7 @@ November 25, 2026. Base: 4f5df3df15578cc34eaa0e59d1bb3f7bcd1714ba.
 - Existing model-projection explanations: 7 cases, 131 published games.
 - School search: 7 cases, every FBS full-name self-match.
 - Existing takeaways: 4 cases; market calculator: 12 cases.
-- TypeScript and Vite build passed: 77 modules, JS approximately 391 KB / 117.5 KB gzip; CSS 71.1 KB / 13.7 KB gzip. No dependency additions.
+- TypeScript and Vite build passed: 77 modules, JS approximately 395 KB / 118.6 KB gzip; CSS 71.1 KB / 13.7 KB gzip. No dependency additions.
 - Protected-path manifest pins exact navigation/home edits under owner-authorized V9 scope; statistical/model files remain byte-identical to base.
 
 ## Visual and interaction acceptance
@@ -48,3 +48,9 @@ These gates are not inferred from passing unit tests.
 ## Handoff / readiness
 
 Milestone 2 implementation is reviewable, but cannot be declared accepted while requested visual/interaction gates remain unverified. Milestone 3 can proceed with accountability work independently; release acceptance must wait. Accomplishment national ranking and quantified rooting advice remain conditional. Earlier snapshots are unavailable; no trajectory is inferred from one point. Source freshness labels describe the build-time age and expose actual receipts; review hosting is frozen evidence rather than a live refresh service.
+
+Remote baseline investigation: the M1 foundation workflow passed (45700559659), while its general pytest job failed (45700559620). The general job installed Python only despite M1 publication tests requiring frontend esbuild. Added the existing Node/frontend dependency installation to that job; tests are not skipped or relaxed. Current remote runs must be checked after this harness correction.
+
+Final regression correction: updated the legacy V7-only manifest inventory/current-navigation assertions for the separately owner-authorized V9 manifest. Added explicit rejection checks for main, forks, reliability branch, model/data edits and tampered hashes. The guard implementation and old V7 fixture are unchanged. The initial pre-commit suite did not exercise committed V9 pin changes; final post-commit suite is the acceptance result.
+
+Final local acceptance after guard/harness corrections: **825 passed, 2 skipped**, 22.73 seconds. One external anyio/pytest deprecation warning. Development publication run [45703267216](https://github.com/landrumc16/College-Football-Analytics/actions/runs/45703267216) succeeded for implementation commit f6972043c57aa8664f5e35528531c89b06086f40. General CI for that commit failed before the documented harness/legacy-assertion corrections; final correction commit must pass remote CI separately.
