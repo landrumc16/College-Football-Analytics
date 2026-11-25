@@ -88,12 +88,12 @@ try {
     assert.equal(await status(school), 'Selected: Texas Tech');
     assert.equal(await statusBox(), editingHeight, 'status keeps one constant line, so controls below never move mid-click');
     assert.equal(await list.count(), 0, 'list closes after a choice');
-    await page.getByRole('region', { name: 'Strength breakdown', exact: true }).waitFor();
+    await page.getByRole('region', { name: 'Strength Breakdown', exact: true }).waitFor();
     assert.match(await page.locator('.team-profile').innerText(), /Texas Tech/);
     if (width === 390 || width === 1536) await page.screenshot({ path: `${evidence}/profile-selected-${width}.png` });
 
     // Narrow phones: "Compare this school" sits beneath the search, full search width available.
-    const compareButton = page.getByRole('button', { name: 'Compare this school', exact: true });
+    const compareButton = page.getByRole('button', { name: 'Compare This School', exact: true });
     const searchBox = await page.locator('.team-profile .profile-tools .school-search').boundingBox(), buttonBox = await compareButton.boundingBox();
     if (phone) assert.ok(buttonBox.y >= searchBox.y + searchBox.height - 1, 'Compare button below search on phones');
     else assert.ok(Math.abs(buttonBox.y - searchBox.y) < searchBox.height, 'Compare button beside search on wider screens');
@@ -140,7 +140,7 @@ try {
     assert.ok(result.includes('Texas Tech') && result.includes('TCU') && !result.includes('LSU'), result);
     await assertNoOverflow(page, `Compare at ${width}`);
     if (width === 390) await page.locator('.matchup-inputs').screenshot({ path: `${evidence}/compare-selected-390.png` });
-    await page.getByRole('button', { name: 'Compare this matchup with a market line in Market Analysis' }).click();
+    await page.getByRole('button', { name: 'Compare This Matchup with a Market Line in Market Analysis' }).click();
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
     const selectedGame = await page.locator('.market-selected-game').innerText();
     assert.ok(selectedGame.includes('Texas Tech') && selectedGame.includes('TCU'), selectedGame);
@@ -168,9 +168,9 @@ try {
 
     // Game Predictions keeps its own search, now ranked the same way.
     await openDestination(page, 'Home');
-    await page.getByRole('button', { name: 'All games', exact: false }).click();
+    await page.getByRole('button', { name: 'All Games', exact: false }).click();
     await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-    const predictions = page.getByLabel('Search teams', { exact: true });
+    const predictions = page.getByLabel('Search Teams', { exact: true });
     await predictions.fill('TTU');
     const predicted = page.locator('#team-search-suggestions').getByRole('option');
     assert.equal(await predicted.first().innerText(), 'Texas Tech', 'Game Predictions abbreviation ranking');

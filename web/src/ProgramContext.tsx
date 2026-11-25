@@ -20,17 +20,17 @@ function ProgramContextBody({ team }: { team: string }) {
   },[])
   const p=data?.programs.find(p=>p.team===team)
   return <section className="accuracy-summary program-context" aria-label={`Program context for ${team}`}>
-    <p className="section-kicker">THE PROGRAM FILE</p><h3>What’s changing at {team}</h3>
+    <p className="section-kicker">THE PROGRAM FILE</p><h3>What’s Changing at {team}</h3>
     {!p ? <p role="status">{failed || data ? 'Sourced program context is unavailable.' : 'Loading sourced program context…'}</p> : <>
       <p className="section-deck">Results, recruiting and continuity, side by side.</p>
       <div className="team-profile-grid">
-        <div className="team-profile-tile"><small>FBS win-rate change</small><strong>{change(p.win_rate_change)}</strong></div>
-        <div className="team-profile-tile"><small>Blue-chip recruiting change</small><strong>{change(p.blue_chip_share_change)}</strong></div>
-        <div className="team-profile-tile"><small>{p.season} roster carryover</small><strong>{percentage(p.roster?.retained_share_of_prior_roster)}</strong></div>
-        <div className="team-profile-tile"><small>Head-coach continuity</small><strong>{p.coaching?.unambiguous_dominant_coach && p.coaching.consecutive_observed_seasons ? `${p.coaching.consecutive_observed_seasons} seasons` : 'Unavailable / ambiguous'}</strong></div>
+        <div className="team-profile-tile"><small>FBS Win-Rate Change</small><strong>{change(p.win_rate_change)}</strong></div>
+        <div className="team-profile-tile"><small>Blue-Chip Recruiting Change</small><strong>{change(p.blue_chip_share_change)}</strong></div>
+        <div className="team-profile-tile"><small>{p.season} Roster Carryover</small><strong>{percentage(p.roster?.retained_share_of_prior_roster)}</strong></div>
+        <div className="team-profile-tile"><small>Head-Coach Continuity</small><strong>{p.coaching?.unambiguous_dominant_coach && p.coaching.consecutive_observed_seasons ? `${p.coaching.consecutive_observed_seasons} seasons` : 'Unavailable / ambiguous'}</strong></div>
       </div>
       <p className="metric-note">Changes are percentage points (pp) between two three-season windows; 2020 is excluded. Blue-chip recruits have four or five stars. These records describe the program, not why it changed or how we predict games.</p>
-      <details><summary>Periods, sources and limits</summary>
+      <details><summary>Periods, Sources and Limits</summary>
         <p>Source snapshot checked {new Date(data!.knowledge_as_of).toLocaleDateString()}.</p>
         <p>Recent completed seasons: {p.recent.seasons.join(', ') || 'Unavailable'} ({p.recent.games} FBS games, win rate {percentage(p.recent.fbs_win_rate)}). Prior: {p.prior.seasons.join(', ') || 'Unavailable'} ({p.prior.games} games, {percentage(p.prior.fbs_win_rate)}). 2020 excluded. Changes require two complete three-season windows.</p>
         <p>Recent recruiting: {p.recent.rated_recruits} rated recruits in {p.recent.recruiting_seasons} classes; prior: {p.prior.rated_recruits} in {p.prior.recruiting_seasons}. Blue-chip means four/five-star share among rated recruits; missing stars are excluded, never zero. These are signed recruiting classes, not proof of enrollment or development. {p.season} class: {p.recruiting?.players ?? 'unavailable'} recruits, {p.recruiting?.star_rated ?? 'unavailable'} rated.</p>

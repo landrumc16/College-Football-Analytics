@@ -95,11 +95,11 @@ export function explain(g: ExplainedGame, data: ExplanationData): Explanation | 
     : `${g.home} is at home, worth ${data.official_home_field.toFixed(1)} points in the official model and ${data.dual_home_field.toFixed(1)} in Standard and Momentum.`
 
   const factors: Factor[] = [
-    { key: 'strength', title: 'Team strength (opponent-adjusted)', text: strength },
-    { key: 'schedule', title: 'Schedule and quality of opponents', text: schedule },
-    { key: 'matchup', title: 'Offense vs. defense', text: matchup },
-    { key: 'recent', title: 'Recent performance', text: recent },
-    { key: 'home', title: 'Home field', text: home },
+    { key: 'strength', title: 'Team Strength (Opponent-Adjusted)', text: strength },
+    { key: 'schedule', title: 'Schedule and Quality of Opponents', text: schedule },
+    { key: 'matchup', title: 'Offense vs. Defense', text: matchup },
+    { key: 'recent', title: 'Recent Performance', text: recent },
+    { key: 'home', title: 'Home Field', text: home },
   ]
   const models: ModelRow[] = [
     { model: 'Official', ...o }, { model: 'Standard', ...s }, { model: 'Momentum', ...m },

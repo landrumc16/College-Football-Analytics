@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { analyticsStatus, analyticsConsentUndecided, setAnalyticsConsent, type Consent } from './analytics'
@@ -9,18 +10,18 @@ export default function AnalyticsPrivacy(){
   const choose=(mode:Consent)=>{setAnalyticsConsent(mode);setStatus(analyticsStatus());setPrompt(false)}
   // While the first-visit choice is open, the page behind it is inert so keyboard and screen-reader focus stays in the dialog.
   useEffect(()=>{const root=document.getElementById('root');if(!root||!prompt)return;root.setAttribute('inert','');return()=>root.removeAttribute('inert')},[prompt])
-  return <>{prompt && createPortal(<div className="analytics-prompt-backdrop"><section className="analytics-prompt" role="dialog" aria-modal="true" aria-labelledby="analytics-prompt-title" aria-describedby="analytics-prompt-description"><h2 id="analytics-prompt-title">Help improve College Football Analytics</h2><p id="analytics-prompt-description">I'm testing the app with college football fans. Would you share usage analytics for this visit so I can see what works and what needs fixing?</p><p>No account, names, emails, or screen recordings. You can change this anytime under Menu → Usage analytics.</p><div className="analytics-prompt-actions"><button type="button" autoFocus onClick={()=>choose('session')}>Allow analytics for this visit</button><button type="button" onClick={()=>choose('off')}>No thanks</button></div><p className="analytics-prompt-note">Tracking stays off until you choose. Browser privacy settings are respected.</p></section></div>,document.body)}<details className="install-guide analytics-privacy" aria-label="Optional usage analytics"><summary>Usage analytics: {status.mode==='off'?'off':'on'}</summary><div className="install-guide-content">
+  return <>{prompt && createPortal(<div className="analytics-prompt-backdrop"><section className="analytics-prompt" role="dialog" aria-modal="true" aria-labelledby="analytics-prompt-title" aria-describedby="analytics-prompt-description"><h2 id="analytics-prompt-title">Help Improve College Football Analytics</h2><p id="analytics-prompt-description">I'm testing the app with college football fans. Would you share usage analytics for this visit so I can see what works and what needs fixing?</p><p>No account, names, emails, or screen recordings. You can change this anytime under Menu → Usage analytics.</p><div className="analytics-prompt-actions"><button type="button" autoFocus onClick={()=>choose('session')}>Allow Analytics for This Visit</button><button type="button" onClick={()=>choose('off')}>No Thanks</button></div><p className="analytics-prompt-note">Tracking stays off until you choose. Browser privacy settings are respected.</p></section></div>,document.body)}<details className="install-guide analytics-privacy" aria-label="Optional usage analytics"><summary>Usage Analytics: {titleCase(status.mode==='off'?'off':'on')}</summary><div className="install-guide-content">
     <p>Help improve the fan beta. Share sections and schools opened, comparisons, simulator use and broad error categories with PostHog. This starts only if you allow it.</p>
     <p>No names, email, search text, favorite lists, full URLs, error messages, recordings or automatic click tracking.</p>
     {!status.configured&&<p role="status">Analytics is not configured. No analytics events are being sent.</p>}
     {status.privacyRequested&&<p role="status">Your browser privacy preference blocks analytics (Global Privacy Control or Do Not Track).</p>}
     <div className="analytics-choices">
-      <button type="button" disabled={!status.configured||status.privacyRequested||status.mode==='session'} onClick={()=>choose('session')}>Allow this visit only</button>
-      <button type="button" disabled={!status.configured||status.privacyRequested||status.mode==='returning'} onClick={()=>choose('returning')}>Allow repeat-visit measurement</button>
-      <button type="button" disabled={status.mode==='off'} onClick={()=>choose('off')}>Turn analytics off</button>
+      <button type="button" disabled={!status.configured||status.privacyRequested||status.mode==='session'} onClick={()=>choose('session')}>Allow This Visit Only</button>
+      <button type="button" disabled={!status.configured||status.privacyRequested||status.mode==='returning'} onClick={()=>choose('returning')}>Allow Repeat-Visit Measurement</button>
+      <button type="button" disabled={status.mode==='off'} onClick={()=>choose('off')}>Turn Analytics Off</button>
     </div>
     <p>Visit-only uses a temporary tab ID. Repeat measurement separately allows a random browser ID for up to 30 days. Neither is linked to an account.</p>
-    <details><summary>Privacy details</summary>
+    <details><summary>Privacy Details</summary>
       <p>Visit IDs change after 30 minutes of inactivity. Turning analytics off deletes these IDs and stops future collection, but does not erase events already received by PostHog. Your saved teams are unaffected.</p>
       <p>School names come only from published football data. PostHog receives normal network connection information. Counts cover consenting browsers, not every fan.</p>
       <p><a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">PostHog privacy policy</a></p>

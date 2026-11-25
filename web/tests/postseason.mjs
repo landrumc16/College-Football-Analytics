@@ -16,7 +16,7 @@ const DATA = { season: 2026, retrieved_at: '2026-12-20T03:00:00Z', games: [
 async function open(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await openDestination(page, 'Home');
-  await page.getByRole('button', { name: 'All games', exact: false }).click();
+  await page.getByRole('button', { name: 'All Games', exact: false }).click();
   await page.getByRole('heading', { name: 'Game Predictions', level: 2 }).waitFor();
 }
 

@@ -37,12 +37,12 @@ async function contrast(root) {
 async function openPredictions(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await openDestination(page, 'Home');
-  await page.getByRole('button', { name: 'All games', exact: false }).click();
+  await page.getByRole('button', { name: 'All Games', exact: false }).click();
   await page.getByRole('heading', { name: 'Game Predictions', level: 2 }).waitFor();
 }
 
 async function cardFor(page, g) {
-  const search = page.getByLabel('Search teams');
+  const search = page.getByLabel('Search Teams');
   await search.fill(g.away);
   const card = page.locator('article.prediction-card').filter({ hasText: g.away }).filter({ hasText: g.home }).first();
   await card.waitFor();

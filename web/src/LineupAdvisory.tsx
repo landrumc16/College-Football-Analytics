@@ -33,7 +33,7 @@ export function LineupAdvisoryNotice({ advisory, team, asOf }: {
 }) {
   if (!validLineupAdvisory(advisory, team, asOf)) return null
   return <aside role="note" aria-label="Lineup change prediction advisory" className="notice lineup-change-advisory">
-    <strong>Lineup change — prediction uncertainty elevated</strong>
+    <strong>Lineup Change — Prediction Uncertainty Elevated</strong>
     <p>A verified change at {advisory.position} means this forecast may be less reliable
       until more games show how the current lineup performs. This notice does not
       automatically change the projected score.</p>

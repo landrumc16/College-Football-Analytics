@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import type { ReactNode } from 'react'
 import './stat-explain.css'
 
@@ -7,6 +8,6 @@ export function Takeaway({ children }: { children: ReactNode }) {
 }
 
 /** The standard collapsed explanation shown below a group of statistics. */
-export function StatExplain({ children, label = 'What do these numbers mean?' }: { children: ReactNode; label?: string }) {
-  return <details className="stat-explain"><summary>{label}</summary><div className="stat-explain-body">{children}</div></details>
+export function StatExplain({ children, label = 'What Do These Numbers Mean?' }: { children: ReactNode; label?: string }) {
+  return <details className="stat-explain"><summary>{titleCase(label)}</summary><div className="stat-explain-body">{children}</div></details>
 }

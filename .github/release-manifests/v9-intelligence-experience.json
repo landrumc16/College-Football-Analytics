@@ -7,12 +7,12 @@
   "modified_additive_only": {},
   "modified_exact": {
     "web/src/Navigation.tsx": {
-      "sha256": "2c7ebd900032686a4eec396880c73ee512d8cddff75e24b2b6e63522593316a9",
-      "reason": "V9 five destinations and evidence-backed favorite briefing using existing components"
+      "sha256": "97291acc3000284185bdc9f050a0071d4c86121c4f529d45c7d4c0ff3d58574e",
+      "reason": "Owner-authorized V9 intelligence integration and application-wide Title Case acceptance correction"
     },
     "web/src/EditorialHome.tsx": {
-      "sha256": "1a528efa170978b975cc748e72553e8b48ef1df6f7bacba9de810b99619cf4bf",
-      "reason": "V9 five destinations and evidence-backed favorite briefing using existing components"
+      "sha256": "0561e0a618b043ef150b06ca4f7dac1d154ae216e26ebe02ce40f8dc984a9b3c",
+      "reason": "Owner-authorized V9 intelligence integration and application-wide Title Case acceptance correction"
     }
   }
 }

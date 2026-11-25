@@ -2,7 +2,7 @@ name: V9 isolated intelligence publication
 on:
   push:
     branches: [v9-development]
-    paths: ['scripts/v9*', 'tests/test_v9*', 'web/src/**', '.github/workflows/v9-foundation.yml']
+    paths: ['scripts/v9*', 'scripts/audit_ui_titles.mjs', 'tests/v9-typography.mjs', 'tests/test_v9*', 'web/src/**', '.github/workflows/v9-foundation.yml']
 permissions:
   contents: write
 jobs:
@@ -20,6 +20,7 @@ jobs:
       - run: npm install --prefix web --no-package-lock
       - run: python -m pytest -q tests/test_v9_strength_snapshot.py tests/test_v9_intelligence.py
       - run: node tests/v9-contract-cases.mjs
+      - run: node tests/v9-typography.mjs
       - run: node scripts/v9_intelligence.mjs /tmp/v9-publication
       - name: Retain development observations
         run: |

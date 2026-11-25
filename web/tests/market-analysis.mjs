@@ -56,9 +56,9 @@ try {
     if (width === 390 || width === 1536) await page.screenshot({ path: `${evidence}/home-entry-${width}.png` });
 
     // One tap opens the calculator with an upcoming published forecast already selected.
-    await entry.getByRole('button', { name: 'Open calculator' }).click();
+    await entry.getByRole('button', { name: 'Open Calculator' }).click();
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
-    const search = page.getByLabel('Find a game by team name', { exact: true });
+    const search = page.getByLabel('Find a Game by Team Name', { exact: true });
     assert.equal(await page.locator('#market-game').count(), 0, 'the long dropdown is no longer the selector');
     const calc = page.locator('.market-calculator');
     await calc.getByRole('radio').first().waitFor();
@@ -141,13 +141,13 @@ try {
     }
 
     // Other entry points: "Other matchup" opens Compare; a prediction card opens this game directly.
-    await page.getByRole('button', { name: 'Other matchup' }).click();
+    await page.getByRole('button', { name: 'Other Matchup' }).click();
     await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
     await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: 'Home', exact: true }).click();
-    await page.getByRole('button', { name: 'All games', exact: false }).click();
-    const card = page.locator('.prediction-card').filter({ has: page.getByRole('button', { name: 'Market analysis' }) }).first();
+    await page.getByRole('button', { name: 'All Games', exact: false }).click();
+    const card = page.locator('.prediction-card').filter({ has: page.getByRole('button', { name: 'Market Analysis' }) }).first();
     const cardText = (await card.locator('.prediction-matchup').textContent()).replace(/\s+/g, ' ');
-    await card.getByRole('button', { name: 'Market analysis' }).click();
+    await card.getByRole('button', { name: 'Market Analysis' }).click();
     await page.locator('.market-calculator').getByRole('radio').first().waitFor();
     const opened = await currentGame(page);
     assert.ok(cardText.includes(opened.home) && cardText.includes(opened.away), 'card opens its own game');

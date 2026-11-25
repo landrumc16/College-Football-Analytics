@@ -3,11 +3,13 @@
   "preview_url": "https://college-football-v9-review.orderlykingfisher32.chatgpt.site/",
   "analytics": "disabled in review build",
   "artifacts": {
-    "assets/index-DAXGvoCP.css": "0f848b566aa1069aa9f44dc03c236e7cb1996a0481769ae28abbcca07e3fba25",
-    "assets/index-DpBkCbjz.js": "740467f9e44018e5f45df36592ae0f2e58dbdbc3575eb4e7c0bd8524e5d2d7e4",
+    "assets/index-CYUYChVp.js": "4b749ef3bd2dc2d3c89e55624cb6392dbff911aebda2ab8a5fe57489dd814a27",
     "assets/scenario.worker-Ccc6b3Ak.js": "350dcf694cf6e3c240ba4bcc6a66cb6396a4adc527bb5c6ea8d53ece5ab29f42",
+    "assets/index-CW9h1ngf.css": "ece48f036b31467cb889eae59945154d193601618ed15a5b18247ed21db59257",
     "season-report.json": "f9819610f47e61414ebecbb2022763bfcc9df82bfaded6b9098cc49598101ed7",
-    "team-intelligence.json": "01f437a4083eac9af85b59ee9e6130a1ce8e136004752488474180f9f5b6c083"
+    "team-intelligence.json": "65fd6e12e333ada873e9f986cdcd982e76329f88f9a99aa0c47c227d587815a0",
+    "v6-scenario-input.json": "1707a77c297ceb746136c5f0a06282848dbe30646f97f89f1c16a2a668cc14a1"
   },
-  "browser_verification": "blocked at owner authentication; no interaction/viewport/device claims"
+  "browser_verification": "blocked at owner authentication; no interaction/viewport/device claims",
+  "acceptance_correction": "Application-wide Title Case and exact report/scenario pairing; no statistical changes"
 }

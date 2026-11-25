@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { useEffect, useState } from 'react'
 import MarketCalculator, { type ModelSource } from './MarketCalculator'
 
@@ -16,9 +17,9 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
   return <section className="market-analysis" aria-labelledby="market-analysis-title">
     <h2 id="market-analysis-title">Market Analysis</h2>
     <p className="page-deck">Pick a game, type the spread, probability or moneyline you see, and compare it with our model instantly. Educational only: not betting advice.</p>
-    {!game ? <div className="notice"><p>No upcoming FBS-vs-FBS game has a published forecast right now.</p><button type="button" onClick={onCustom}>Compare any two schools</button></div> : <>
+    {!game ? <div className="notice"><p>No upcoming FBS-vs-FBS game has a published forecast right now.</p><button type="button" onClick={onCustom}>Compare Any Two Schools</button></div> : <>
       <div className="market-game-row">
-        <label htmlFor="market-team-search">Find a game by team name</label>
+        <label htmlFor="market-team-search">Find a Game by Team Name</label>
         <input id="market-team-search" type="search" autoComplete="off" value={teamQuery}
           placeholder="Search Texas Tech, Baylor, TCU…" aria-describedby="market-team-search-status" onChange={e => setTeamQuery(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && matches.length) { e.preventDefault(); choose(matches[0].game_id) } else if (e.key === 'Escape') setTeamQuery('') }} />
@@ -27,16 +28,16 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
           {matches.length ? matches.slice(0, 12).map(g => <button key={g.game_id} type="button"
             aria-current={game.game_id === g.game_id ? 'true' : undefined}
             onClick={() => choose(g.game_id)}>
-            {g.game_id < 0 ? 'Your matchup' : `Week ${g.week}`} · {g.away} {g.neutral_site ? 'vs.' : 'at'} {g.home}
+            {titleCase(g.game_id < 0 ? 'Your matchup' : `Week ${g.week}`)} · {g.away} {g.neutral_site ? 'vs.' : 'at'} {g.home}
           </button>) : <p>No matching games. Try another team name.</p>}
           {matches.length > 12 && <p>{matches.length} matches. Type more of the team name to narrow the list.</p>}
         </div> : <p className="market-selected-game">Selected game: {game.away} {game.neutral_site ? 'vs.' : 'at'} {game.home} ({game.game_id < 0 ? 'your hypothetical matchup' : `Week ${game.week}`})</p>}
-        <button type="button" className="market-custom" onClick={onCustom}>Other matchup</button>
+        <button type="button" className="market-custom" onClick={onCustom}>Other Matchup</button>
       </div>
       <MarketCalculator key={`${game.game_id}|${game.home}|${game.away}`} headingLevel="h3" home={game.home} away={game.away}
         homeProbability={game.home_win_probability} homeMargin={game.home_margin} source={sourceFor(game)} />
       <details className="market-history" onToggle={e => setHistoryOpen((e.target as HTMLDetailsElement).open)}>
-        <summary>Historical ATS and over/under records for {game.away} and {game.home}</summary>
+        <summary>Historical ATS and over/Under Records for {game.away} and {game.home}</summary>
         {historyOpen && <MarketHistory teams={[game.away, game.home]} />}
       </details>
     </>}
@@ -60,8 +61,8 @@ function MarketHistory({ teams }: { teams: string[] }) {
   const rate = (r: Rate) => r.rate == null ? `N/A (${r.sample} sample)` : `${(r.rate * 100).toFixed(1)}% (95% CI ${(r.ci95![0] * 100).toFixed(0)}–${(r.ci95![1] * 100).toFixed(0)}%)`
   return <div className="table-wrap">
     <table>
-      <caption>Records against the selected provider's closing line, 2016 to date. Pushes excluded from rates.</caption>
-      <thead><tr><th scope="col">Team</th><th scope="col">ATS W-L-P</th><th scope="col">Cover rate</th><th scope="col">O/U O-U-P</th><th scope="col">Over rate</th></tr></thead>
+      <caption>Records Against the Selected Provider's Closing Line, 2016 to Date. Pushes Excluded from Rates.</caption>
+      <thead><tr><th scope="col">Team</th><th scope="col">ATS W-L-P</th><th scope="col">Cover Rate</th><th scope="col">O/U O-U-P</th><th scope="col">Over Rate</th></tr></thead>
       <tbody>{teams.map(team => { const t = metrics.teams[team]?.overall; return <tr key={team}><th scope="row">{team}</th>
         {t ? <><td>{t.ats.w}-{t.ats.l}-{t.ats.p}</td><td>{rate(t.ats)}</td><td>{t.ou.o}-{t.ou.u}-{t.ou.p}</td><td>{rate(t.ou)}</td></> : <td colSpan={4}>No closing-line history for this program.</td>}</tr> })}</tbody>
     </table>

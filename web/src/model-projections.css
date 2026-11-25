@@ -18,7 +18,7 @@
 .mp-game-head .mp-muted{font-size:13px}
 .mp-models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .mp-model{display:flex;flex-direction:column;gap:4px;background:#142238;border:1px solid #34445a;border-radius:10px;padding:10px;min-width:0}
-.mp-model-name{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#f2d3a2}
+.mp-model-name{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:none;color:#f2d3a2}
 .mp-score{font-size:16px;color:#f5f0e6;overflow-wrap:anywhere}
 .mp-prob{font-size:14px;color:#dbe5f1}
 .mp-prob b{font-size:18px;color:#8be5c8}

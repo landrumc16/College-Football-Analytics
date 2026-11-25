@@ -28,8 +28,8 @@ try {
     await page.goto(base, { waitUntil: 'networkidle' });
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await chooseSchool(page, 'Choose school', TEAM);
-    const panel = page.getByRole('region', { name: 'Strength breakdown', exact: true });
+    await chooseSchool(page, 'Choose School', TEAM);
+    const panel = page.getByRole('region', { name: 'Strength Breakdown', exact: true });
     await panel.waitFor();
     // Headline: one badge + plain sentence with FBS ranks; details closed by default (compact on phones).
     const word = { rising: 'Rising', steady: 'Steady', declining: 'Declining' }[expected.direction];
@@ -70,7 +70,7 @@ try {
     await summary.focus(); await page.keyboard.press('Enter');                       // keyboard opens it
     assert.equal(await more.evaluate(d => d.open), true);
     const form = more.locator('.profile-more-form');
-    await form.getByRole('heading', { name: 'Form and forecasts' }).waitFor();
+    await form.getByRole('heading', { name: 'Form and Forecasts' }).waitFor();
     assert.match(await form.innerText(), /Against forecasts:/);
     assert.equal(await more.locator('.team-profile-tile').filter({ hasText: 'Last Five Completed Games' }).count(), 1, 'last-five record remains available');
     const howTo = form.locator('details').filter({ hasText: 'How to read form and forecasts' });

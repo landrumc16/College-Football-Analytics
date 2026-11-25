@@ -20,9 +20,9 @@ export type View = 'raw' | 'power' | 'adjusted'
 export type Side = 'offense' | 'defense'
 
 export const GROUPS: { id: string; label: string; metrics: string[] }[] = [
-  { id: 'scoring', label: 'Scoring and efficiency', metrics: ['ppd', 'epa', 'sr', 'ypp', 'expl'] },
-  { id: 'rushing', label: 'Running game', metrics: ['rush_sr', 'rush_ypc', 'rush_expl', 'stuff'] },
-  { id: 'passing', label: 'Passing game', metrics: ['pass_sr', 'pass_ypd', 'pass_expl', 'sack'] },
+  { id: 'scoring', label: 'Scoring and Efficiency', metrics: ['ppd', 'epa', 'sr', 'ypp', 'expl'] },
+  { id: 'rushing', label: 'Running Game', metrics: ['rush_sr', 'rush_ypc', 'rush_expl', 'stuff'] },
+  { id: 'passing', label: 'Passing Game', metrics: ['pass_sr', 'pass_ypd', 'pass_expl', 'sack'] },
   { id: 'situational', label: 'Situational', metrics: ['third', 'rz_td', 'rz_pts', 'late', 'to'] },
 ]
 const RATE = new Set(['sr', 'expl', 'rush_sr', 'rush_expl', 'stuff', 'pass_sr', 'pass_expl', 'sack', 'third', 'rz_td', 'late'])

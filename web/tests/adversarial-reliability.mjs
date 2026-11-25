@@ -39,12 +39,12 @@ try{
   const names=[...PRIMARY,'Research']
   for(let i=0;i<100;i++)await nav(p,names[i%names.length])
   await nav(p,'Rankings')
-  for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search teams',{exact:true}).fill(text);await healthy(p)}
-  await p.getByLabel('Search teams',{exact:true}).fill('')
+  for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search Teams',{exact:true}).fill(text);await healthy(p)}
+  await p.getByLabel('Search Teams',{exact:true}).fill('')
   await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles')
-  for(let i=0;i<30;i++)await chooseSchool(p, 'Choose school', ['Texas Tech','Georgia','Texas A&M',''][i%4])
-  await chooseSchool(p, 'Choose school', 'Texas Tech')
-  for(let i=0;i<16;i++)await chooseSection(p,'Team Profile sections',['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card'][i%4])
+  for(let i=0;i<30;i++)await chooseSchool(p, 'Choose School', ['Texas Tech','Georgia','Texas A&M',''][i%4])
+  await chooseSchool(p, 'Choose School', 'Texas Tech')
+  for(let i=0;i<16;i++)await chooseSection(p,'Team Profile Sections',['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card'][i%4])
   await healthy(p);return {destinationChanges:100,schoolChanges:31,profileChanges:16,searchInputs:9}
  }))
  for(const [label,stored] of [['invalid-json','{'],['wrong-type','42'],['hostile-strings',JSON.stringify(['<img src=x onerror=alert(1)>','🦅'.repeat(500),'Unknown school'])],['mixed-types',JSON.stringify(['Texas Tech',{},null,'Georgia'])]])await run('storage-'+label,()=>withPage(async(p,c)=>{
@@ -53,33 +53,33 @@ try{
  await run('storage-blocked',()=>withPage(async(p,c)=>{await c.addInitScript(()=>{Storage.prototype.getItem=()=>{throw new DOMException('Blocked','SecurityError')};Storage.prototype.setItem=()=>{throw new DOMException('Quota exceeded','QuotaExceededError')}});await home(p);await healthy(p);await nav(p,'Teams');await healthy(p)}))
  await run('favorite-invalid-save-and-repetition',()=>withPage(async p=>{
   await home(p);await p.locator('.editorial-favorite-editor > summary').click();await p.locator('.favorite-add > summary').click()
-  await p.getByLabel('Add favorite team').fill('Not a real school');assert.ok(await p.getByRole('button',{name:'Save Team',exact:true}).isDisabled())
+  await p.getByLabel('Add Favorite Team').fill('Not a real school');assert.ok(await p.getByRole('button',{name:'Save Team',exact:true}).isDisabled())
   for(let i=0;i<20;i++){
-   const input=p.getByLabel('Add favorite team');await input.fill('Texas Tech');await p.getByRole('button',{name:'Save Team',exact:true}).click();await p.getByRole('button',{name:'Remove Texas Tech from favorites',exact:true}).click()
+   const input=p.getByLabel('Add Favorite Team');await input.fill('Texas Tech');await p.getByRole('button',{name:'Save Team',exact:true}).click();await p.getByRole('button',{name:'Remove Texas Tech from favorites',exact:true}).click()
   }
-  await p.getByLabel('Add favorite team').fill('Texas Tech');await p.getByRole('button',{name:'Save Team',exact:true}).click();await p.reload({waitUntil:'networkidle'});assert.equal(await p.locator('.editorial-team-row').count(),1);await healthy(p)
+  await p.getByLabel('Add Favorite Team').fill('Texas Tech');await p.getByRole('button',{name:'Save Team',exact:true}).click();await p.reload({waitUntil:'networkidle'});assert.equal(await p.locator('.editorial-team-row').count(),1);await healthy(p)
  }))
  await run('favorites-independent-profiles',async()=>{
   const sessions=[]
-  try{for(const team of ['Texas Tech','Georgia']){const c=await context();sessions.push(c);const p=await pageIn(c);await home(p);await p.locator('.editorial-favorite-editor > summary').click();await p.locator('.favorite-add > summary').click();await p.getByLabel('Add favorite team').fill(team);await p.getByRole('button',{name:'Save Team',exact:true}).click()}
+  try{for(const team of ['Texas Tech','Georgia']){const c=await context();sessions.push(c);const p=await pageIn(c);await home(p);await p.locator('.editorial-favorite-editor > summary').click();await p.locator('.favorite-add > summary').click();await p.getByLabel('Add Favorite Team').fill(team);await p.getByRole('button',{name:'Save Team',exact:true}).click()}
    for(let i=0;i<sessions.length;i++){const p=sessions[i].pages()[0];await p.reload({waitUntil:'networkidle'});const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem('cfba-favorites-v1')).filter(Boolean));assert.deepEqual(saved,[['Texas Tech','Georgia'][i]]);await healthy(p)}
    return {profiles:2,distinctFavorites:['Texas Tech','Georgia'],reload:'independent'}
   }finally{await Promise.all(sessions.map(c=>c.close()))}
  })
  await run('comparison-empty-same-and-repeated',()=>withPage(async p=>{
   await home(p);await nav(p,'Teams');await chooseSection(p,'Teams sections','Compare & What If')
-  for(let i=0;i<30;i++){await chooseSchool(p, 'First school', ['','Texas Tech','Georgia'][i%3]);await chooseSchool(p, 'Second school', ['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
-  await chooseSchool(p, 'First school', 'Texas Tech');await chooseSchool(p, 'Second school', 'Texas A&M');await p.locator('.matchup-result').waitFor();await healthy(p)
+  for(let i=0;i<30;i++){await chooseSchool(p, 'First School', ['','Texas Tech','Georgia'][i%3]);await chooseSchool(p, 'Second School', ['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game Location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
+  await chooseSchool(p, 'First School', 'Texas Tech');await chooseSchool(p, 'Second School', 'Texas A&M');await p.locator('.matchup-result').waitFor();await healthy(p)
  }))
- await run('predictions-unusual-search-reload',()=>withPage(async p=>{await home(p);await p.getByRole('button',{name:/All games/}).click();for(const s of ['Texas Tech','unknown',"' OR 1=1 --",'🦅'.repeat(300),'']){await p.getByLabel('Search teams',{exact:true}).fill(s);await healthy(p)}await p.reload({waitUntil:'networkidle'});await healthy(p)}))
+ await run('predictions-unusual-search-reload',()=>withPage(async p=>{await home(p);await p.getByRole('button',{name:/All games/}).click();for(const s of ['Texas Tech','unknown',"' OR 1=1 --",'🦅'.repeat(300),'']){await p.getByLabel('Search Teams',{exact:true}).fill(s);await healthy(p)}await p.reload({waitUntil:'networkidle'});await healthy(p)}))
  await run('scenario-races-unmount-reset',()=>withPage(async p=>{
   await home(p);let workers=0,peak=0;p.on('worker',w=>{workers++;peak=Math.max(peak,workers);w.on('close',()=>workers--)})
   const section=()=>p.getByRole('region',{name:'Playoff what-if scenarios',exact:true})
-  for(let i=0;i<8;i++){await nav(p,'Playoffs');await section().getByRole('button',{name:'Explore scenarios',exact:true}).click();await nav(p,'Home')}
-  await nav(p,'Playoffs');await section().getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
+  for(let i=0;i<8;i++){await nav(p,'Playoffs');await section().getByRole('button',{name:'Explore Scenarios',exact:true}).click();await nav(p,'Home')}
+  await nav(p,'Playoffs');await section().getByRole('button',{name:'Explore Scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
   const base=await section().locator('tbody').textContent(),g=realPacket.games.find(g=>g.home==='Army'&&g.start_date&&Date.parse(g.start_date)>Date.now())
   assert.ok(g);await p.getByLabel('Scenario matchup',{exact:true}).selectOption(String(g.game_id))
-  await p.getByLabel('Scenario winner',{exact:true}).selectOption(g.away);await section().getByRole('button',{name:'Reset to baseline',exact:true}).click();await section().getByRole('button',{name:'Reset to baseline',exact:true}).click()
+  await p.getByLabel('Scenario winner',{exact:true}).selectOption(g.away);await section().getByRole('button',{name:'Reset to Baseline',exact:true}).click();await section().getByRole('button',{name:'Reset to Baseline',exact:true}).click()
   await p.waitForFunction(base=>{const r=document.querySelector('[aria-label="Playoff what-if scenarios"]');return r.querySelector('[aria-busy="false"]')&&r.querySelector('tbody').textContent===base},base)
   await nav(p,'Home');await delay(150);assert.equal(workers,0,'Orphaned scenario workers');await healthy(p);return {workerPeak:peak,workersAfterUnmount:workers,reset:'exact'}
  }))
@@ -106,24 +106,24 @@ try{
   const response=p.waitForResponse(r=>r.url().endsWith('/'+f.path),{timeout:10000})
   let intercept=true;await p.route('**/'+f.path,route=>intercept?route.fulfill({status:f.status||200,contentType:'application/json',body:f.body}):route.continue())
   await p.goto(url,{waitUntil:'networkidle'});await delay(100)
-  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose school', 'Texas Tech');await chooseSection(p,'Team Profile sections','Historical Intelligence')}
+  if(f.program){await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose School', 'Texas Tech');await chooseSection(p,'Team Profile Sections','Historical Intelligence')}
   if(f.research){await nav(p,'Research');await p.waitForLoadState('networkidle')}
   if(f.poll){await nav(p,'Rankings');await p.waitForLoadState('networkidle')}
   if(f.scenario)await nav(p,'Playoffs')
   await response;await delay(150)
-  if(f.scenario){await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
-  if(f.core&&!f.stale){await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor({timeout:2500})}
+  if(f.scenario){await p.getByRole('button',{name:'Explore Scenarios',exact:true}).click();await delay(900);const r=p.getByRole('region',{name:'Playoff what-if scenarios',exact:true});await r.getByRole('alert').waitFor({timeout:2500});assert.equal(await r.locator('tbody').count(),0,'Invalid packet displayed plausible probabilities')}
+  if(f.core&&!f.stale){await p.getByRole('button',{name:'Retry Loading Data',exact:true}).waitFor({timeout:2500})}
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
   const errors=[...p.errors];assert.deepEqual(errors,[],'Malformed input crashed the page')
   if(f.name.includes('wrong-shape')||f.name.includes('malformed-scale'))await p.screenshot({path:`${out}/fixture-${f.name}-contained.png`,fullPage:true})
-  intercept=false;const retry=p.getByRole('button',{name:'Retry loading data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await healthy(p);await home(p);await healthy(p)
+  intercept=false;const retry=p.getByRole('button',{name:'Retry Loading Data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await healthy(p);await home(p);await healthy(p)
   return {injectedPath:f.path,payload:f.body.length<400?f.body:'See named mutation in test source',recovery:'healthy after restoring original bytes'}
  }))
  await run('pwa-disconnect-poisoned-cache-recovery',()=>withPage(async(p,c)=>{
   await home(p);await p.evaluate(()=>navigator.serviceWorker.ready);await p.reload({waitUntil:'networkidle'});await p.waitForFunction(()=>!!navigator.serviceWorker.controller)
   await p.evaluate(async()=>{const cache=await caches.open('cfb-shell-v341');await cache.put('./season-report.json',new Response(JSON.stringify({season:1999,rankings:[],predictions:[]})));await cache.put('./index.html',new Response('<h1>STALE CACHE SENTINEL</h1>'))})
   await p.reload({waitUntil:'networkidle'});await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();assert.ok(!(await p.locator('body').innerText()).includes('STALE CACHE SENTINEL'))
-  failJson=true;await p.reload({waitUntil:'networkidle'});await p.getByRole('button',{name:'Retry loading data',exact:true}).waitFor();failJson=false;await p.getByRole('button',{name:'Retry loading data',exact:true}).click();await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()
+  failJson=true;await p.reload({waitUntil:'networkidle'});await p.getByRole('button',{name:'Retry Loading Data',exact:true}).waitFor();failJson=false;await p.getByRole('button',{name:'Retry Loading Data',exact:true}).click();await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor()
   disconnect=true;await p.reload({waitUntil:'load'});await p.getByRole('heading',{name:'You are offline',exact:true}).waitFor();disconnect=false;await p.getByRole('link',{name:'Try again',exact:true}).click();await p.getByRole('heading',{name:'Featured Matchups',exact:true}).waitFor();await healthy(p)
  },{serviceWorkers:'allow'}));failJson=false;disconnect=false
  await run('memory-navigation-worker-soak',()=>withPage(async(p,c)=>{
@@ -138,8 +138,8 @@ try{
  for(const count of [1,10,25,50])await run('concurrent-visitors-'+count,async()=>{
   const start=performance.now(),begin=requests.length;const sessions=[]
   try{await Promise.all(Array.from({length:count},async(_,i)=>{
-   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose school', 'Texas Tech');await healthy(p)
-   if(i%10===0){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false,{},{timeout:60000});await healthy(p)}
+   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search Teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose School', 'Texas Tech');await healthy(p)
+   if(i%10===0){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore Scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false,{},{timeout:60000});await healthy(p)}
   }));return {visitors:count,elapsedMs:performance.now()-start,servedRequests:requests.length-begin,conditions:'one Chromium process, independent browser contexts, 10% run 2000-draw scenarios; isolated static server, no public traffic'}}finally{await Promise.all(sessions.map(c=>c.close()))}
  })
  await run('repeated-local-requests',async()=>{

@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { useLayoutEffect, useRef, useState } from 'react'
 import './secondary-navigation.css'
 
@@ -42,9 +43,9 @@ export function SectionTabs({ label, items, value, onChange, panelId, onDropdown
   return <div className="secondary-navigation" ref={container}>
     <span className="secondary-selection" id={`${panelId}-selection`}>{items.find(item => item.id === value)?.label}</span>
     <label className="secondary-picker" hidden={!dropdown}>
-      <span className="secondary-selection">{label}</span>
+      <span className="secondary-selection">{titleCase(label)}</span>
       <select aria-label={label} aria-controls={panelId} value={value} onChange={event => onChange(event.target.value)}>
-        {items.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
+        {items.map(item => <option key={item.id} value={item.id}>{titleCase(item.label)}</option>)}
       </select>
     </label>
     <div className="section-tabs" ref={tabs} role="tablist" aria-label={label} aria-hidden={dropdown || undefined} data-measuring={dropdown || undefined}>
@@ -60,7 +61,7 @@ export function SectionTabs({ label, items, value, onChange, panelId, onDropdown
         const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
         buttons?.[next].focus()
         onChange(items[next].id)
-      }}>{item.label}</button>)}
+      }}>{titleCase(item.label)}</button>)}
     </div>
   </div>
 }

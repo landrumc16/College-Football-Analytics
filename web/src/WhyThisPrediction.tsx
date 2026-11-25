@@ -29,10 +29,10 @@ export default function WhyThisPrediction({ gameId, homeMargin, fallback }: { ga
     <p className="wp-muted">{e.headline}</p>
     <dl className="wp-factors">{e.factors.map(f => <div key={f.key}><dt>{f.title}</dt><dd>{f.text}</dd></div>)}</dl>
     {e.notes.map(n => <p key={n} className="wp-note">{n}</p>)}
-    <details className="wp-numbers"><summary>See how each forecast adds up</summary>
+    <details className="wp-numbers"><summary>See How Each Forecast Adds Up</summary>
       <div className="table-wrap"><table>
-        <caption>Points toward {e.favourite} (negative favors {e.underdog})</caption>
-        <thead><tr><th scope="col">Forecast</th><th scope="col">This season</th><th scope="col">Last season</th><th scope="col">Home field</th><th scope="col">Total</th></tr></thead>
+        <caption>Points Toward {e.favourite} (Negative Favors {e.underdog})</caption>
+        <thead><tr><th scope="col">Forecast</th><th scope="col">This Season</th><th scope="col">Last Season</th><th scope="col">Home Field</th><th scope="col">Total</th></tr></thead>
         <tbody>{e.models.map(r => <tr key={r.model}><th scope="row">{r.model}</th><td>{pts(r.season)}</td><td>{pts(r.prior)}</td><td>{pts(r.home)}</td><td><b>{pts(r.total)}</b></td></tr>)}</tbody>
       </table></div>
       <p>{e.modelDifference}</p>

@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { IntelligenceBrief } from './Intelligence'
 import type { ReactNode } from 'react'
 import { primaryDestinations } from './Navigation'
@@ -36,7 +37,7 @@ export function EditorialMasthead({ children }: { children: ReactNode }) {
 export function EditorialNavigation({ destination, onChange }: { destination: string; onChange: (id: string) => void }) {
   return <nav className="editorial-navigation" aria-label="Main navigation">
     {primaryDestinations.map(item => <button key={item.id} type="button" aria-current={destination === item.id ? 'page' : undefined} onClick={() => onChange(item.id)}>
-      <DestinationIcon destination={item.id} /><span>{item.label}</span>
+      <DestinationIcon destination={item.id} /><span>{titleCase(item.label)}</span>
     </button>)}
   </nav>
 }
@@ -64,11 +65,11 @@ export default function EditorialHome({ report, games, favorites, poll, favorite
     .sort((a,b) => Number(favorites.includes(b.team))-Number(favorites.includes(a.team)) || (b.trajectory?.value ?? 0)-(a.trajectory?.value ?? 0))[0] : null
   const saved = favorites.filter((team): team is string => team !== null)
   return <div className="editorial-home">
-    <div className="editorial-lede"><p className="editorial-kicker">THE WEEK AHEAD</p><h2>This week in college football.</h2>
+    <div className="editorial-lede"><p className="editorial-kicker">THE WEEK AHEAD</p><h2>This Week in College Football.</h2>
       <p>{report.season} season{nextWeek !== null ? ` · Week ${nextWeek}` : ''}{report.retrieved_at ? ` · Checked ${new Date(report.retrieved_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}` : ''}</p>
     </div>
     <section className="editorial-featured" aria-labelledby="featured-heading">
-      <div className="editorial-section-heading"><h2 id="featured-heading">Featured Matchups</h2><button type="button" onClick={onAllGames}>All games <span aria-hidden="true">↗</span></button></div>
+      <div className="editorial-section-heading"><h2 id="featured-heading">Featured Matchups</h2><button type="button" onClick={onAllGames}>All Games <span aria-hidden="true">↗</span></button></div>
       <div className="editorial-game-grid">{featured.map((game,index) => <button className={`editorial-game ${index === 2 ? 'editorial-third-game' : ''}`} key={game.game_id} onClick={() => onGame(game)}>
         <span className="editorial-game-kicker">{rank(game.home) && rank(game.home)! <= 25 && rank(game.away) && rank(game.away)! <= 25 ? 'MODEL TOP 25 MATCHUP' : `WEEK ${game.week}`}</span>
         <strong><span>#{rank(game.away) ?? '—'} {game.away}</span><small>at</small><span>#{rank(game.home) ?? '—'} {game.home}</span></strong>
@@ -78,7 +79,7 @@ export default function EditorialHome({ report, games, favorites, poll, favorite
       {!featured.length && <p>No upcoming games in the published report.</p>}
     </section>
     <div className="editorial-news-grid">
-      <section className="editorial-my-teams" aria-labelledby="my-teams-heading"><div className="editorial-section-heading"><h2 id="my-teams-heading">My Teams</h2><details className="editorial-favorite-editor"><summary>Edit teams</summary><div>{favoriteControls}</div></details></div>
+      <section className="editorial-my-teams" aria-labelledby="my-teams-heading"><div className="editorial-section-heading"><h2 id="my-teams-heading">My Teams</h2><details className="editorial-favorite-editor"><summary>Edit Teams</summary><div>{favoriteControls}</div></details></div>
         {saved[0] && <IntelligenceBrief team={saved[0]} onOpen={() => onTeam(saved[0])} />}<div>{saved.map(name => {
           const team = report.rankings.find(team => team.team === name)
           const game = games.filter(game => game.home === name || game.away === name).sort((a,b) => a.week-b.week)[0]
@@ -90,11 +91,11 @@ export default function EditorialHome({ report, games, favorites, poll, favorite
         })}</div>
         {!saved.length && <p className="editorial-empty">Save up to three schools using Edit teams.</p>}
       </section>
-      <section className="editorial-rankings" aria-labelledby="rankings-heading"><div className="editorial-section-heading"><h2 id="rankings-heading">Rankings Snapshot</h2><button onClick={onRankings}>Full rankings ↗</button></div>
+      <section className="editorial-rankings" aria-labelledby="rankings-heading"><div className="editorial-section-heading"><h2 id="rankings-heading">Rankings Snapshot</h2><button onClick={onRankings}>Full Rankings ↗</button></div>
         <ol>{topFive.map(team => <li key={team.team}><button onClick={() => onTeam(team.team)}><span className="editorial-rank">{team.rank}</span><strong>{team.team}</strong><span>{team.wins}–{team.losses}</span></button></li>)}</ol>
         {disagreement && <p className="editorial-disagreement"><strong>Different reads.</strong> {disagreement.team}: AP #{disagreement.rank}, model #{disagreement.model}.</p>}
       </section>
-      <section className="editorial-playoffs" aria-labelledby="playoffs-heading"><div className="editorial-section-heading"><h2 id="playoffs-heading">Playoff Watch</h2><button onClick={onPlayoffs}>CFP outlook ↗</button></div>
+      <section className="editorial-playoffs" aria-labelledby="playoffs-heading"><div className="editorial-section-heading"><h2 id="playoffs-heading">Playoff Watch</h2><button onClick={onPlayoffs}>CFP Outlook ↗</button></div>
         <button className="editorial-story-link" onClick={onPlayoffs}><small>PROJECTED LEADING SEEDS</small><strong>{seeds.slice(0,4).map(seed => seed.team).join(' · ') || 'Projection unavailable'}</strong>
           {bubble && <span>{bubble.team} leads teams outside the projected field at {percent(bubble.cfp_field)} to qualify.</span>}</button>
       </section>

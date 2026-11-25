@@ -11,7 +11,7 @@ export function startAsDeclinedVisitor(browser) {
   return browser;
 }
 
-export const consentDialog = page => page.getByRole('dialog', { name: 'Help improve College Football Analytics', exact: true });
+export const consentDialog = page => page.getByRole('dialog', { name: 'Help Improve College Football Analytics', exact: true });
 export async function answerConsentPrompt(page, allow) {
   const dialog = consentDialog(page);
   await dialog.waitFor();

@@ -29,7 +29,7 @@ export default function PostseasonGames() {
         return <article key={g.game_id} className="prediction-card">
           <div className="prediction-meta">{(g.label || 'Postseason').toUpperCase()} · {when(g.start_date)}</div>
           <div className="prediction-matchup"><span>{g.away}</span><span className="prediction-at">{g.neutral_site ? 'vs' : '@'}</span><span>{g.home}</span></div>
-          {p && prob != null ? <div className="prediction-metrics"><div><small>Model pick</small><strong>{p.predicted_winner}</strong></div><div><small>Win probability</small><strong>{pct(prob)}</strong></div></div>
+          {p && prob != null ? <div className="prediction-metrics"><div><small>Model Pick</small><strong>{p.predicted_winner}</strong></div><div><small>Win Probability</small><strong>{pct(prob)}</strong></div></div>
             : <p className="muted">No model pick: one team is outside the rated FBS field.</p>}
         </article> })}
       {finals.map(g => <article key={g.game_id} className="prediction-card">

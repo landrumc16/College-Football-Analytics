@@ -41,8 +41,8 @@ try {
     const homeLabels = await homeSections.isVisible() ? await homeSections.locator('option').allTextContents()
       : await page.getByRole('tablist', { name: 'Home sections', exact: true }).getByRole('tab').allTextContents();
     assert.ok(!homeLabels.includes('Model Projections'), `Home sections still list Model Projections: ${homeLabels}`);
-    await page.getByRole('button', { name: 'All games', exact: false }).click();
-    await page.getByRole('button', { name: 'Compare the Standard and Momentum projections' }).click();
+    await page.getByRole('button', { name: 'All Games', exact: false }).click();
+    await page.getByRole('button', { name: 'Compare the Standard and Momentum Projections' }).click();
     const mp = page.locator('.model-projections');
     await mp.getByRole('heading', { name: 'Model Projections', level: 2 }).waitFor();
     assert.ok(page.url().endsWith('#/projections'));
@@ -91,7 +91,7 @@ try {
     await mp.locator('.mp-views label', { hasText: 'Compare' }).click();   // a tap on the visible option
     assert.ok(await mp.getByRole('radio', { name: 'Compare' }).isChecked());
     // Team search: every remaining Texas Tech game across weeks, and its projected record in both models.
-    await chooseSchool(page, 'Find a team', TEAM);
+    await chooseSchool(page, 'Find a Team', TEAM);
     assert.equal(await cards.count(), ttGames.length);
     // Records: mobile shows a team heading and one separated block per model; desktop keeps the table.
     const mobile = width < 768;
@@ -125,7 +125,7 @@ try {
       await mp.locator('#mp-records-title').evaluate(e => window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 60));
       await page.screenshot({ path: `${evidence}/records-${width}.png` });
     }
-    await mp.getByRole('button', { name: 'Show every team' }).click();
+    await mp.getByRole('button', { name: 'Show Every Team' }).click();
     assert.equal(await (mobile ? mp.locator('.mp-team-card') : mp.locator('.mp-records tbody tr')).count(), 25);
     // Methodology and validation behind a keyboard-operable expander.
     const info = mp.locator('details.mp-more-info');

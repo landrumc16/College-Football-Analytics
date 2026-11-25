@@ -47,13 +47,13 @@ try {
     // Teams: profile overview tiles stay visible with their takeaway and explainer.
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await chooseSchool(page, 'Choose school', TEAM);
+    await chooseSchool(page, 'Choose School', TEAM);
     const profile = page.locator('.team-profile');
     const tile = profile.locator('.team-profile-tile').filter({ hasText: 'Current Model Rank' }).first();
     assert.equal((await tile.locator('strong').innerText()).trim(), `#${row.rank}`);
     assert.match(await standard(page, profile, 'profile overview'), new RegExp(`No\\. ${row.rank}`));
     // Schedule & Predictions: Performance vs. Expectations (approved reference design) and the season outlook.
-    await chooseSection(page, 'Team Profile sections', 'Schedule & Predictions');
+    await chooseSection(page, 'Team Profile Sections', 'Schedule & Predictions');
     const panel = page.locator('.performance-panel');
     await panel.waitFor();
     if (perf?.games_with_forecasts) {

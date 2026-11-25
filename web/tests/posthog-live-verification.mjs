@@ -49,10 +49,10 @@ try{
  if(observed)fail('capture_before_consent')
  await answerConsentPrompt(page,true);await delay(600)
  await nav('Rankings');await delay(600)
- await nav('Teams');await chooseSchool(page, 'Choose school', 'Texas Tech');await chooseSection(page,'Team Profile sections','Schedule & Predictions');await delay(600)
- await chooseSection(page,'Teams sections','Compare & What If');await chooseSchool(page, 'First school', 'Texas Tech');await chooseSchool(page, 'Second school', 'Georgia');await delay(600)
+ await nav('Teams');await chooseSchool(page, 'Choose School', 'Texas Tech');await chooseSection(page,'Team Profile Sections','Schedule & Predictions');await delay(600)
+ await chooseSection(page,'Teams sections','Compare & What If');await chooseSchool(page, 'First School', 'Texas Tech');await chooseSchool(page, 'Second School', 'Georgia');await delay(600)
  await nav('Home');await page.getByRole('button',{name:/All games/}).click();await delay(600)
- await nav('Playoffs');await page.getByRole('button',{name:'Explore scenarios',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
+ await nav('Playoffs');await page.getByRole('button',{name:'Explore Scenarios',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
  await page.evaluate(()=>window.dispatchEvent(new Event('error')))
  for(let i=0;i<40;i++){await delay(500);await Promise.all([...pending]);const names=new Set(receipt.requests.filter(r=>r.acceptedByCaptureApi).flatMap(r=>r.eventNames));if(required.every(n=>names.has(n)))break}
  await Promise.all([...pending])
@@ -61,7 +61,7 @@ try{
  const names=new Set(receipt.requests.flatMap(r=>r.eventNames));if(!required.every(n=>names.has(n)))fail('missing_events')
  const ids=receipt.requests.flatMap(r=>r.insertIds);if(ids.length!==new Set(ids).size)fail('duplicate_events')
  receipt.sessionIds=[...new Set(receipt.requests.flatMap(r=>r.sessionIds))];receipt.acceptedEventCount=ids.length;receipt.verifiedEventNames=[...names];receipt.duplicateInsertIds=0
- await page.locator('.editorial-menu > summary').click();const privacy=page.locator('.analytics-privacy');if(await privacy.getAttribute('open')===null)await privacy.locator(':scope > summary').click();await page.getByRole('button',{name:'Turn analytics off',exact:true}).click();const before=observed
+ await page.locator('.editorial-menu > summary').click();const privacy=page.locator('.analytics-privacy');if(await privacy.getAttribute('open')===null)await privacy.locator(':scope > summary').click();await page.getByRole('button',{name:'Turn Analytics Off',exact:true}).click();const before=observed
  await page.locator('.editorial-menu > summary').click();await nav('Home');await nav('Rankings');await delay(900)
  if(observed!==before)fail('capture_after_opt_out')
  if(liveUrl){

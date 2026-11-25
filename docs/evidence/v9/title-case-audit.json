@@ -1,0 +1,1782 @@
+{
+  "files_scanned": 42,
+  "labels_inspected": 567,
+  "changes": [
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 12,
+      "before": "Help improve College Football Analytics",
+      "after": "Help Improve College Football Analytics"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 12,
+      "before": "Allow analytics for this visit",
+      "after": "Allow Analytics for This Visit"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 12,
+      "before": "No thanks",
+      "after": "No Thanks"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 12,
+      "before": "Usage analytics: ",
+      "after": "Usage Analytics: "
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 18,
+      "before": "Allow this visit only",
+      "after": "Allow This Visit Only"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 19,
+      "before": "Allow repeat-visit measurement",
+      "after": "Allow Repeat-Visit Measurement"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 20,
+      "before": "Turn analytics off",
+      "after": "Turn Analytics Off"
+    },
+    {
+      "file": "web/src/AnalyticsPrivacy.tsx",
+      "line": 23,
+      "before": "Privacy details",
+      "after": "Privacy Details"
+    },
+    {
+      "file": "web/src/DataBoundary.tsx",
+      "line": 11,
+      "before": "Retry loading data",
+      "after": "Retry Loading Data"
+    },
+    {
+      "file": "web/src/EditorialHome.tsx",
+      "line": 67,
+      "before": "This week in college football.",
+      "after": "This Week in College Football."
+    },
+    {
+      "file": "web/src/EditorialHome.tsx",
+      "line": 71,
+      "before": "All games ",
+      "after": "All Games "
+    },
+    {
+      "file": "web/src/EditorialHome.tsx",
+      "line": 81,
+      "before": "Edit teams",
+      "after": "Edit Teams"
+    },
+    {
+      "file": "web/src/EditorialHome.tsx",
+      "line": 93,
+      "before": "Full rankings ↗",
+      "after": "Full Rankings ↗"
+    },
+    {
+      "file": "web/src/EditorialHome.tsx",
+      "line": 97,
+      "before": "CFP outlook ↗",
+      "after": "CFP Outlook ↗"
+    },
+    {
+      "file": "web/src/ForecastEvidence.tsx",
+      "line": 19,
+      "before": "Verified pregame picks",
+      "after": "Verified Pregame Picks"
+    },
+    {
+      "file": "web/src/ForecastEvidence.tsx",
+      "line": 23,
+      "before": "Scores, sample and publication record",
+      "after": "Scores, Sample and Publication Record"
+    },
+    {
+      "file": "web/src/ForecastEvidence.tsx",
+      "line": 27,
+      "before": "Predicted winner confidence",
+      "after": "Predicted Winner Confidence"
+    },
+    {
+      "file": "web/src/ForecastEvidence.tsx",
+      "line": 27,
+      "before": "Winner accuracy",
+      "after": "Winner Accuracy"
+    },
+    {
+      "file": "web/src/HistoricalGameCoverage.tsx",
+      "line": 31,
+      "before": "Historical FBS game coverage · 2016–2025",
+      "after": "Historical FBS Game Coverage · 2016–2025"
+    },
+    {
+      "file": "web/src/HistoricalGameCoverage.tsx",
+      "line": 34,
+      "before": "2016–2019 games",
+      "after": "2016–2019 Games"
+    },
+    {
+      "file": "web/src/HistoricalGameCoverage.tsx",
+      "line": 34,
+      "before": "2020 games",
+      "after": "2020 Games"
+    },
+    {
+      "file": "web/src/HistoricalGameCoverage.tsx",
+      "line": 34,
+      "before": "2021–2025 games",
+      "after": "2021–2025 Games"
+    },
+    {
+      "file": "web/src/HistoricalGameCoverage.tsx",
+      "line": 34,
+      "before": "All 10 seasons",
+      "after": "All 10 Seasons"
+    },
+    {
+      "file": "web/src/HistoricalResults.tsx",
+      "line": 42,
+      "before": "3 years",
+      "after": "3 Years"
+    },
+    {
+      "file": "web/src/HistoricalResults.tsx",
+      "line": 42,
+      "before": "5 years",
+      "after": "5 Years"
+    },
+    {
+      "file": "web/src/HistoricalResults.tsx",
+      "line": 42,
+      "before": "10 years (2020 excluded)",
+      "after": "10 Years (2020 Excluded)"
+    },
+    {
+      "file": "web/src/HistoricalResults.tsx",
+      "line": 44,
+      "before": "FBS wins",
+      "after": "FBS Wins"
+    },
+    {
+      "file": "web/src/HistoricalResults.tsx",
+      "line": 44,
+      "before": "FBS losses",
+      "after": "FBS Losses"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 38,
+      "before": "Evidence, freshness & limitations",
+      "after": "Evidence, Freshness & Limitations"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 43,
+      "before": "Understand this team",
+      "after": "Understand This Team"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 52,
+      "before": "Understand this team",
+      "after": "Understand This Team"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 55,
+      "before": "Three perspectives, different questions",
+      "after": "Three Perspectives, Different Questions"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 56,
+      "before": "Offense, defense & recent trends",
+      "after": "Offense, Defense & Recent Trends"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 56,
+      "before": "Opponent-adjusted ",
+      "after": "Opponent-Adjusted "
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 57,
+      "before": "Team trajectory · retained observations",
+      "after": "Team Trajectory · Retained Observations"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 57,
+      "before": "Inspect retained observation ",
+      "after": "Inspect Retained Observation "
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 57,
+      "before": "Trajectory sources & interpretation",
+      "after": "Trajectory Sources & Interpretation"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 58,
+      "before": "Supporting findings & source receipts",
+      "after": "Supporting Findings & Source Receipts"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 66,
+      "before": "National intelligence",
+      "after": "National Intelligence"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 66,
+      "before": "Find school in intelligence",
+      "after": "Find School in Intelligence"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 66,
+      "before": "All schools",
+      "after": "All Schools"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 66,
+      "before": "schools",
+      "after": "Schools"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 72,
+      "before": "Matchup intelligence · ",
+      "after": "Matchup Intelligence · "
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 72,
+      "before": "Season strength",
+      "after": "Season Strength"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 72,
+      "before": "Last-three level",
+      "after": "Last-Three Level"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 72,
+      "before": "Rated schedule",
+      "after": "Rated Schedule"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 72,
+      "before": "Matchup evidence & limitations",
+      "after": "Matchup Evidence & Limitations"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 76,
+      "before": "Intelligence & accountability",
+      "after": "Intelligence & Accountability"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 76,
+      "before": "What is validated, and what remains conditional?",
+      "after": "What Is Validated, and What Remains Conditional?"
+    },
+    {
+      "file": "web/src/Intelligence.tsx",
+      "line": 79,
+      "before": "How to interpret postseason implications",
+      "after": "How to Interpret Postseason Implications"
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 19,
+      "before": "Compare any two schools",
+      "after": "Compare Any Two Schools"
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 21,
+      "before": "Find a game by team name",
+      "after": "Find a Game by Team Name"
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 34,
+      "before": "Other matchup",
+      "after": "Other Matchup"
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 39,
+      "before": "Historical ATS and over/under records for ",
+      "after": "Historical ATS and over/Under Records for "
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 63,
+      "before": "Records against the selected provider's closing line, 2016 to date. Pushes excluded from rates.",
+      "after": "Records Against the Selected Provider's Closing Line, 2016 to Date. Pushes Excluded from Rates."
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 64,
+      "before": "Cover rate",
+      "after": "Cover Rate"
+    },
+    {
+      "file": "web/src/MarketAnalysis.tsx",
+      "line": 64,
+      "before": "Over rate",
+      "after": "Over Rate"
+    },
+    {
+      "file": "web/src/MarketCalculator.tsx",
+      "line": 49,
+      "before": "1. Analyze for",
+      "after": "1. Analyze For"
+    },
+    {
+      "file": "web/src/MarketCalculator.tsx",
+      "line": 56,
+      "before": "point spread",
+      "after": "Point Spread"
+    },
+    {
+      "file": "web/src/MarketCalculator.tsx",
+      "line": 79,
+      "before": "prediction-market win probability (%)",
+      "after": "Prediction-Market Win Probability (%)"
+    },
+    {
+      "file": "web/src/MarketCalculator.tsx",
+      "line": 93,
+      "before": "American moneyline",
+      "after": "American Moneyline"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 35,
+      "before": "How this is calculated",
+      "after": "How This Is Calculated"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 47,
+      "before": "Expected record",
+      "after": "Expected Record"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 48,
+      "before": "Most likely",
+      "after": "Most Likely"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 49,
+      "before": "Conference title",
+      "after": "Conference Title"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 100,
+      "before": "All remaining weeks",
+      "after": "All Remaining Weeks"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 101,
+      "before": "Find a team",
+      "after": "Find a Team"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 103,
+      "before": "Show every team",
+      "after": "Show Every Team"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 104,
+      "before": "Upcoming games",
+      "after": "Upcoming Games"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 109,
+      "before": "Projected records and playoff odds",
+      "after": "Projected Records and Playoff Odds"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 115,
+      "before": "· sorted by CFP chance",
+      "after": "· Sorted by CFP Chance"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 126,
+      "before": "How the models work and how accurate they have been",
+      "after": "How the Models Work and How Accurate They Have Been"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 133,
+      "before": "Historical accuracy on identical games (Brier score: lower is better)",
+      "after": "Historical Accuracy on Identical Games (Brier Score: Lower Is Better)"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 134,
+      "before": "Existing method*",
+      "after": "Existing Method*"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 137,
+      "before": "Second half of seasons",
+      "after": "Second Half of Seasons"
+    },
+    {
+      "file": "web/src/ModelProjections.tsx",
+      "line": 139,
+      "before": "2026 so far (",
+      "after": "2026 So Far ("
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 9,
+      "before": "Power Four only",
+      "after": "Power Four Only"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 10,
+      "before": "Opponent-adjusted",
+      "after": "Opponent-Adjusted"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 64,
+      "before": ": running, passing and situational",
+      "after": ": Running, Passing and Situational"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 66,
+      "before": "detail · ",
+      "after": "Detail · "
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 76,
+      "before": "Recent form and consistency",
+      "after": "Recent Form and Consistency"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 91,
+      "before": "match up",
+      "after": "Match Up"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 98,
+      "before": "How this is calculated",
+      "after": "How This Is Calculated"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 103,
+      "before": "All matchup factors",
+      "after": "All Matchup Factors"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 106,
+      "before": "offense vs ",
+      "after": "Offense vs "
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 106,
+      "before": "defense",
+      "after": "Defense"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 137,
+      "before": "Choose team",
+      "after": "Choose Team"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 143,
+      "before": "How to read these numbers",
+      "after": "How to Read These Numbers"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 156,
+      "before": "Recent form",
+      "after": "Recent Form"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 167,
+      "before": "Compare a matchup",
+      "after": "Compare a Matchup"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 168,
+      "before": "Choose opponent",
+      "after": "Choose Opponent"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 175,
+      "before": "National leaders",
+      "after": "National Leaders"
+    },
+    {
+      "file": "web/src/OffenseDefense.tsx",
+      "line": 190,
+      "before": "How these numbers work",
+      "after": "How These Numbers Work"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 43,
+      "before": "Playoff what-if",
+      "after": "Playoff What-If"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 45,
+      "before": "Explore scenarios",
+      "after": "Explore Scenarios"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 49,
+      "before": "Choose a game",
+      "after": "Choose a Game"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 50,
+      "before": "Your winner",
+      "after": "Your Winner"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 50,
+      "before": "Model probabilities",
+      "after": "Model Probabilities"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 51,
+      "before": "Reset to baseline",
+      "after": "Reset to Baseline"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 54,
+      "before": "Chance to make the CFP",
+      "after": "Chance to Make the CFP"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 54,
+      "before": "No picks",
+      "after": "No Picks"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 54,
+      "before": "With your picks",
+      "after": "With Your Picks"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 54,
+      "before": "Conference title",
+      "after": "Conference Title"
+    },
+    {
+      "file": "web/src/PlayoffScenarios.tsx",
+      "line": 56,
+      "before": "How these scenarios work",
+      "after": "How These Scenarios Work"
+    },
+    {
+      "file": "web/src/PollRankings.tsx",
+      "line": 50,
+      "before": "Search teams ",
+      "after": "Search Teams "
+    },
+    {
+      "file": "web/src/PollRankings.tsx",
+      "line": 52,
+      "before": "All conferences",
+      "after": "All Conferences"
+    },
+    {
+      "file": "web/src/PollRankings.tsx",
+      "line": 59,
+      "before": "AP and Coaches Poll rankings, sorted by ",
+      "after": "AP and Coaches Poll Rankings, Sorted by "
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 12,
+      "before": "Experimental prediction research",
+      "after": "Experimental Prediction Research"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 14,
+      "before": "Season / sample",
+      "after": "Season / Sample"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 14,
+      "before": "Reference error",
+      "after": "Reference Error"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 14,
+      "before": "Challenger error",
+      "after": "Challenger Error"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 14,
+      "before": "Correct winners",
+      "after": "Correct Winners"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 14,
+      "before": "Log loss",
+      "after": "Log Loss"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 15,
+      "before": "Why we kept the current model",
+      "after": "Why We Kept the Current Model"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 19,
+      "before": "How the comparison was tested",
+      "after": "How the Comparison Was Tested"
+    },
+    {
+      "file": "web/src/PredictionResearch.tsx",
+      "line": 21,
+      "before": "Coverage, calibration and conference results",
+      "after": "Coverage, Calibration and Conference Results"
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 23,
+      "before": "What’s changing at ",
+      "after": "What’s Changing at "
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 27,
+      "before": "FBS win-rate change",
+      "after": "FBS Win-Rate Change"
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 28,
+      "before": "Blue-chip recruiting change",
+      "after": "Blue-Chip Recruiting Change"
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 29,
+      "before": "roster carryover",
+      "after": "Roster Carryover"
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 30,
+      "before": "Head-coach continuity",
+      "after": "Head-Coach Continuity"
+    },
+    {
+      "file": "web/src/ProgramContext.tsx",
+      "line": 33,
+      "before": "Periods, sources and limits",
+      "after": "Periods, Sources and Limits"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 122,
+      "before": "How to read these comparisons",
+      "after": "How to Read These Comparisons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 128,
+      "before": "Find a program ",
+      "after": "Find a Program "
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 129,
+      "before": "All conferences",
+      "after": "All Conferences"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 130,
+      "before": "Model ranking",
+      "after": "Model Ranking"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 130,
+      "before": "Recent win rate",
+      "after": "Recent Win Rate"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 130,
+      "before": "Wins above tracked forecasts",
+      "after": "Wins Above Tracked Forecasts"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 130,
+      "before": "CFP probability",
+      "after": "CFP Probability"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "Model rank",
+      "after": "Model Rank"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "Conf. record",
+      "after": "Conf. Record"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "Top 25 wins",
+      "after": "Top 25 Wins"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "Season trend",
+      "after": "Season Trend"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "Vs forecast",
+      "after": "Vs Forecast"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "CFP chance",
+      "after": "CFP Chance"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 133,
+      "before": "3-year direction",
+      "after": "3-Year Direction"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 142,
+      "before": "View team",
+      "after": "View Team"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 145,
+      "before": "Verified historical program development",
+      "after": "Verified Historical Program Development"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 147,
+      "before": "Choose historical program",
+      "after": "Choose Historical Program"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 164,
+      "before": "Current-season poll disagreement",
+      "after": "Current-Season Poll Disagreement"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 164,
+      "before": "Current-season poll perception vs. Our Model",
+      "after": "Current-Season Poll Perception vs. Our Model"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 164,
+      "before": "Poll rank",
+      "after": "Poll Rank"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 164,
+      "before": "Largest absolute disagreement",
+      "after": "Largest Absolute Disagreement"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 164,
+      "before": "All conferences",
+      "after": "All Conferences"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 165,
+      "before": "Historical FBS results and coverage",
+      "after": "Historical FBS Results and Coverage"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "All programs",
+      "after": "All Programs"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Rapidly rising",
+      "after": "Rapidly Rising"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Steadily improving",
+      "after": "Steadily Improving"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Steadily declining",
+      "after": "Steadily Declining"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Rapidly declining",
+      "after": "Rapidly Declining"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Insufficient data",
+      "after": "Insufficient Data"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Strength window ",
+      "after": "Strength Window "
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "10 seasons",
+      "after": "10 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "5 seasons",
+      "after": "5 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "3 seasons",
+      "after": "3 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Most preseason Top 25 dropouts",
+      "after": "Most Preseason Top 25 Dropouts"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Most unranked-to-Top-25 entries",
+      "after": "Most Unranked-to-Top-25 Entries"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Most preseason Top 25 appearances",
+      "after": "Most Preseason Top 25 Appearances"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "Ranking window ",
+      "after": "Ranking Window "
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "10 seasons",
+      "after": "10 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "5 seasons",
+      "after": "5 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 170,
+      "before": "3 seasons",
+      "after": "3 Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 171,
+      "before": "All conferences",
+      "after": "All Conferences"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 173,
+      "before": "Program strength history",
+      "after": "Program Strength History"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 173,
+      "before": "Chart program strength",
+      "after": "Chart Program Strength"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "10-year trajectory",
+      "after": "10-Year Trajectory"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "5-year direction",
+      "after": "5-Year Direction"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "3-year momentum",
+      "after": "3-Year Momentum"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "10-year rank",
+      "after": "10-Year Rank"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "5-year rank",
+      "after": "5-Year Rank"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "3-year rank",
+      "after": "3-Year Rank"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "AP + trajectory",
+      "after": "AP + Trajectory"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Coaches + trajectory",
+      "after": "Coaches + Trajectory"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Historical tendency",
+      "after": "Historical Tendency"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Dropped out",
+      "after": "Dropped Out"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Verified seasons",
+      "after": "Verified Seasons"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Source details",
+      "after": "Source Details"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "10-year trajectory",
+      "after": "10-Year Trajectory"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "3-year momentum",
+      "after": "3-Year Momentum"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "AP hype",
+      "after": "AP Hype"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 175,
+      "before": "Coaches hype",
+      "after": "Coaches Hype"
+    },
+    {
+      "file": "web/src/ProgramIntelligence.tsx",
+      "line": 177,
+      "before": "sources",
+      "after": "Sources"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 52,
+      "before": "· CFA Program Report Card",
+      "after": "· Cfa Program Report Card"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 64,
+      "before": "Report Card methods and sources",
+      "after": "Report Card Methods and Sources"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 81,
+      "before": "All conferences",
+      "after": "All Conferences"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 83,
+      "before": "Choose historical program",
+      "after": "Choose Historical Program"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 85,
+      "before": "Dropped out",
+      "after": "Dropped Out"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 85,
+      "before": "New entrants",
+      "after": "New Entrants"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 85,
+      "before": "3-year win %",
+      "after": "3-Year Win %"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 85,
+      "before": "5-year win %",
+      "after": "5-Year Win %"
+    },
+    {
+      "file": "web/src/ProgramReportCard.tsx",
+      "line": 85,
+      "before": "10-year win %",
+      "after": "10-Year Win %"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 102,
+      "before": "Choose school",
+      "after": "Choose School"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 102,
+      "before": "Compare this school",
+      "after": "Compare This School"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 104,
+      "before": "Team Profile sections",
+      "after": "Team Profile Sections"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 114,
+      "before": "Existing strength rankings & blended score",
+      "after": "Existing Strength Rankings & Blended Score"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 114,
+      "before": "Form, conference and postseason details",
+      "after": "Form, Conference and Postseason Details"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 129,
+      "before": "Form and forecasts",
+      "after": "Form and Forecasts"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 131,
+      "before": "How to read form and forecasts",
+      "after": "How to Read Form and Forecasts"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 134,
+      "before": "Coaching, roster and matchup data availability",
+      "after": "Coaching, Roster and Matchup Data Availability"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 135,
+      "before": "CFP outlook and confidence methodology",
+      "after": "CFP Outlook and Confidence Methodology"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 136,
+      "before": "Stock Watch and results versus forecast",
+      "after": "Stock Watch and Results Versus Forecast"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 138,
+      "before": "Remaining opponent strength",
+      "after": "Remaining Opponent Strength"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 139,
+      "before": "Upcoming prediction explanations",
+      "after": "Upcoming Prediction Explanations"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 141,
+      "before": "Team win probability",
+      "after": "Team Win Probability"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 141,
+      "before": "Current rating gap",
+      "after": "Current Rating Gap"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 154,
+      "before": "Program development and historical expectations",
+      "after": "Program Development and Historical Expectations"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 156,
+      "before": "Historical program ranking coverage and sources",
+      "after": "Historical Program Ranking Coverage and Sources"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 159,
+      "before": "Years available",
+      "after": "Years Available"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 159,
+      "before": "Source evidence",
+      "after": "Source Evidence"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 161,
+      "before": "sourced seasons",
+      "after": "Sourced Seasons"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 180,
+      "before": "Strength breakdown",
+      "after": "Strength Breakdown"
+    },
+    {
+      "file": "web/src/TeamProfile.tsx",
+      "line": 182,
+      "before": "Show the three strength scores",
+      "after": "Show the Three Strength Scores"
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 32,
+      "before": "See how each forecast adds up",
+      "after": "See How Each Forecast Adds Up"
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 34,
+      "before": "Points toward ",
+      "after": "Points Toward "
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 34,
+      "before": "(negative favors ",
+      "after": "(Negative Favors "
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 35,
+      "before": "This season",
+      "after": "This Season"
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 35,
+      "before": "Last season",
+      "after": "Last Season"
+    },
+    {
+      "file": "web/src/WhyThisPrediction.tsx",
+      "line": 35,
+      "before": "Home field",
+      "after": "Home Field"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 229,
+      "before": "College Football Analytics prediction",
+      "after": "College Football Analytics Prediction"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 290,
+      "before": "No game between these schools is scheduled at this location in the current feed, so this uses the model\\'s current-ratings matchup calculation, not a published game forecast.",
+      "after": "No Game Between These Schools Is Scheduled at This Location in the Current Feed, so This Uses the Model\\'s Current-Ratings Matchup Calculation, Not a Published Game Forecast."
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 298,
+      "before": "Result / prediction",
+      "after": "Result / Prediction"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 298,
+      "before": "Win chance",
+      "after": "Win Chance"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 299,
+      "before": "About &amp; privacy",
+      "after": "About &amp; Privacy"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 300,
+      "before": "Install app",
+      "after": "Install App"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 303,
+      "before": "Saved schools",
+      "after": "Saved Schools"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 320,
+      "before": "Add favorite team",
+      "after": "Add Favorite Team"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 329,
+      "before": "Reload app",
+      "after": "Reload App"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 330,
+      "before": "Retry loading data",
+      "after": "Retry Loading Data"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 343,
+      "before": "Offense and defense rankings",
+      "after": "Offense and Defense Rankings"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 347,
+      "before": "Open calculator",
+      "after": "Open Calculator"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 362,
+      "before": "Full tracked-season results",
+      "after": "Full Tracked-Season Results"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 364,
+      "before": "Held-out seasons",
+      "after": "Held-out Seasons"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 364,
+      "before": "Avg. wins above recruiting baseline",
+      "after": "Avg. Wins Above Recruiting Baseline"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 365,
+      "before": "Multi-season Historical Research",
+      "after": "Multi-Season Historical Research"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 365,
+      "before": "Winner accuracy",
+      "after": "Winner Accuracy"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 367,
+      "before": "Model accuracy",
+      "after": "Model Accuracy"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 367,
+      "before": "Weekly prediction diagnostics (",
+      "after": "Weekly Prediction Diagnostics ("
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 367,
+      "before": "weeks)",
+      "after": "Weeks)"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 367,
+      "before": "Model accuracy",
+      "after": "Model Accuracy"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 369,
+      "before": "Model and historical methods",
+      "after": "Model and Historical Methods"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 375,
+      "before": "Published data and provenance",
+      "after": "Published Data and Provenance"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "First school",
+      "after": "First School"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Second school",
+      "after": "Second School"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Game location",
+      "after": "Game Location"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Compare this matchup with a market line in Market Analysis",
+      "after": "Compare This Matchup with a Market Line in Market Analysis"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "See how these offenses and defenses match up",
+      "after": "See How These Offenses and Defenses Match Up"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Side-by-side team comparison",
+      "after": "Side-by-Side Team Comparison"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Program histories and report cards",
+      "after": "Program Histories and Report Cards"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Model rank",
+      "after": "Model Rank"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Strength rating",
+      "after": "Strength Rating"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Projected wins",
+      "after": "Projected Wins"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "CFP qualification chance",
+      "after": "CFP Qualification Chance"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "profile",
+      "after": "Profile"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "profile",
+      "after": "Profile"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Swap schools",
+      "after": "Swap Schools"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 383,
+      "before": "Reset matchup",
+      "after": "Reset Matchup"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 385,
+      "before": "Compare the Standard and Momentum projections",
+      "after": "Compare the Standard and Momentum Projections"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 387,
+      "before": "Our rank",
+      "after": "Our Rank"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 387,
+      "before": "Official CFP rank",
+      "after": "Official CFP Rank"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 388,
+      "before": "Model rank",
+      "after": "Model Rank"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 388,
+      "before": "Playoff chance",
+      "after": "Playoff Chance"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Team / rank",
+      "after": "Team / Rank"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Projected wins",
+      "after": "Projected Wins"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Conf. wins",
+      "after": "Conf. Wins"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Rank drivers",
+      "after": "Rank Drivers"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "View team",
+      "after": "View Team"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Why this prediction?",
+      "after": "Why This Prediction?"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Share prediction",
+      "after": "Share Prediction"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Compare teams",
+      "after": "Compare Teams"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Market analysis",
+      "after": "Market Analysis"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Conf. record",
+      "after": "Conf. Record"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Projected conf. wins",
+      "after": "Projected Conf. Wins"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Title odds",
+      "after": "Title Odds"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "CFP odds",
+      "after": "CFP Odds"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Avg wins",
+      "after": "Avg Wins"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "80% wins range",
+      "after": "80% Wins Range"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "Bowl eligible",
+      "after": "Bowl Eligible"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "CFP field",
+      "after": "CFP Field"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 391,
+      "before": "National title",
+      "after": "National Title"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 392,
+      "before": "Seed / team",
+      "after": "Seed / Team"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 392,
+      "before": "First round",
+      "after": "First Round"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 392,
+      "before": "Higher seed",
+      "after": "Higher Seed"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 392,
+      "before": "Lower seed",
+      "after": "Lower Seed"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 393,
+      "before": "Projected finalists",
+      "after": "Projected Finalists"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 393,
+      "before": "Model favorite",
+      "after": "Model Favorite"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 395,
+      "before": "Average rating",
+      "after": "Average Rating"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 395,
+      "before": "Best team",
+      "after": "Best Team"
+    },
+    {
+      "file": "web/src/main.tsx",
+      "line": 403,
+      "before": "Data status: ",
+      "after": "Data Status: "
+    },
+    {
+      "file": "web/src/predictionExplanations.ts",
+      "line": 98,
+      "before": "Team strength (opponent-adjusted)",
+      "after": "Team Strength (Opponent-Adjusted)"
+    },
+    {
+      "file": "web/src/predictionExplanations.ts",
+      "line": 99,
+      "before": "Schedule and quality of opponents",
+      "after": "Schedule and Quality of Opponents"
+    },
+    {
+      "file": "web/src/predictionExplanations.ts",
+      "line": 100,
+      "before": "Offense vs. defense",
+      "after": "Offense vs. Defense"
+    },
+    {
+      "file": "web/src/predictionExplanations.ts",
+      "line": 101,
+      "before": "Recent performance",
+      "after": "Recent Performance"
+    },
+    {
+      "file": "web/src/predictionExplanations.ts",
+      "line": 102,
+      "before": "Home field",
+      "after": "Home Field"
+    },
+    {
+      "file": "web/src/v8Stats.ts",
+      "line": 23,
+      "before": "Scoring and efficiency",
+      "after": "Scoring and Efficiency"
+    },
+    {
+      "file": "web/src/v8Stats.ts",
+      "line": 24,
+      "before": "Running game",
+      "after": "Running Game"
+    },
+    {
+      "file": "web/src/v8Stats.ts",
+      "line": 25,
+      "before": "Passing game",
+      "after": "Passing Game"
+    }
+  ]
+}
