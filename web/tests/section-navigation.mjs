@@ -33,16 +33,17 @@ export async function assertNavigationFits(page, group, width) {
   return dropdown;
 }
 
-// Bottom navigation is Home | Rankings | Teams | Playoffs | Market; Research & Data opens from the top menu.
-export const PRIMARY = ['Home', 'Rankings', 'Teams', 'Playoffs', 'Market'];
+// Bottom navigation (V9) is Home | Rankings | Teams | Playoffs | Research. Market Intelligence is a Research section,
+// so 'Market' opens Research and selects it. 'Research & Data' also remains in the top menu.
+export const PRIMARY = ['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'];
 export async function openDestination(page, name) {
-  if (name === 'Research') {
-    const menu = page.locator('details.editorial-menu');
-    if (!(await menu.evaluate(d => d.open))) await page.getByLabel('App menu', { exact: true }).click();
-    await menu.getByRole('button', { name: 'Research & Data', exact: true }).click();
+  const nav = page.getByRole('navigation', { name: 'Main navigation', exact: true });
+  if (name === 'Market') {
+    await nav.getByRole('button', { name: 'Research', exact: true }).click();
+    await chooseSection(page, 'Research sections', 'Market Intelligence');
     return;
   }
-  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name, exact: true }).click();
+  await nav.getByRole('button', { name, exact: true }).click();
 }
 
 // Choose a school in either the released <select> or the shared SchoolSearch combobox (type, then pick the suggestion).

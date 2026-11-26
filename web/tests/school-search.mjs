@@ -54,7 +54,7 @@ try {
     await chooseSection(page, 'Teams sections', 'Team Profiles');
 
     // Team Profile: prominent search, placeholder, combobox semantics, empty state.
-    const school = field(page, 'Choose school');
+    const school = field(page, 'Choose School');
     assert.equal(await school.getAttribute('role'), 'combobox');
     assert.equal(await school.getAttribute('aria-autocomplete'), 'list');
     assert.ok((await school.boundingBox()).height >= 44, 'touch-sized input');
@@ -88,7 +88,7 @@ try {
     assert.equal(await status(school), 'Selected: Texas Tech');
     assert.equal(await statusBox(), editingHeight, 'status keeps one constant line, so controls below never move mid-click');
     assert.equal(await list.count(), 0, 'list closes after a choice');
-    await page.getByRole('region', { name: 'Strength Breakdown', exact: true }).waitFor();
+    await (async () => { const s = page.locator('details.profile-more > summary', { hasText: 'Existing Strength Rankings & Blended Score' }).first(); if (!(await s.evaluate(e => e.parentElement.open))) await s.click(); })(); await page.getByRole('region', { name: 'Strength Breakdown', exact: true }).waitFor();
     assert.match(await page.locator('.team-profile').innerText(), /Texas Tech/);
     if (width === 390 || width === 1536) await page.screenshot({ path: `${evidence}/profile-selected-${width}.png` });
 
@@ -120,12 +120,12 @@ try {
     await openDestination(page, 'Home');
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    assert.equal(await field(page, 'Choose school').inputValue(), 'LSU', 'selection preserved across navigation');
+    assert.equal(await field(page, 'Choose School').inputValue(), 'LSU', 'selection preserved across navigation');
 
     // Compare: choose and change both schools; hand the matchup to Market Analysis.
     await compareButton.click();
     await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
-    const first = field(page, 'First school'), second = field(page, 'Second school');
+    const first = field(page, 'First School'), second = field(page, 'Second School');
     assert.equal(await first.inputValue(), 'LSU', 'Compare this school carries the school over');
     await first.focus(); await page.keyboard.type('TTU'); await page.keyboard.press('Enter');
     await second.focus(); await second.pressSequentially('LS');
@@ -145,7 +145,7 @@ try {
     const selectedGame = await page.locator('.market-selected-game').innerText();
     assert.ok(selectedGame.includes('Texas Tech') && selectedGame.includes('TCU'), selectedGame);
     await page.goBack();
-    assert.equal(await field(page, 'Second school').inputValue(), 'TCU', 'Back keeps the Compare selection');
+    assert.equal(await field(page, 'Second School').inputValue(), 'TCU', 'Back keeps the Compare selection');
 
     // Report Card pickers (Hype Index, Program Trajectory) use the same search.
     const pickIn = async (label, query, team, scope = page) => {
@@ -158,10 +158,10 @@ try {
     };
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Hype Index');
-    await pickIn('Choose historical program', 'TTU', 'Texas Tech');
+    await pickIn('Choose Historical Program', 'TTU', 'Texas Tech');
     await page.getByRole('region', { name: 'CFA Program Report Card for Texas Tech', exact: true }).waitFor();
     await chooseSection(page, 'Teams sections', 'Program Trajectory');
-    await pickIn('Choose historical program', 'lsu', 'LSU');
+    await pickIn('Choose Historical Program', 'lsu', 'LSU');
     await page.getByRole('region', { name: 'CFA Program Report Card for LSU', exact: true }).waitFor();
     // The strength-history chart pickers render only when v4-program-intelligence.json is published (it fails closed, as before).
     await assertNoOverflow(page, `Program Intelligence at ${width}`);
@@ -170,7 +170,7 @@ try {
     await openDestination(page, 'Home');
     await page.getByRole('button', { name: 'All Games', exact: false }).click();
     await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-    const predictions = page.getByLabel('Search Teams', { exact: true });
+    const predictions = page.getByLabel('Search teams', { exact: true });
     await predictions.fill('TTU');
     const predicted = page.locator('#team-search-suggestions').getByRole('option');
     assert.equal(await predicted.first().innerText(), 'Texas Tech', 'Game Predictions abbreviation ranking');
@@ -183,7 +183,7 @@ try {
     await page.reload({ waitUntil: 'networkidle' });
     await page.locator('.editorial-favorite-editor > summary').click();
     await page.getByText('+ Add Team', { exact: true }).first().click();
-    const fav = field(page, 'Add favorite team');
+    const fav = field(page, 'Add Favorite Team');
     await fav.focus(); await fav.pressSequentially('TTU');
     const favList = await listFor(page, fav);
     await assertListVisible(page, favList, `Favorites at ${width}`);

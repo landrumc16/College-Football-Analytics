@@ -108,7 +108,7 @@ try {
       assert.equal(await blocks.count(), 2);
       for (const [i, k] of [[0, 'standard'], [1, 'momentum']]) {
         const b = (await blocks.nth(i).innerText()).replace(/\s+/g, ' ');
-        assert.ok(b.includes(exp(k)) && b.includes(`CFP ${Math.round(100 * t[k].cfp_field)}%`) && b.includes(`Conference title ${Math.round(100 * t[k].conference_title)}%`) && /Most likely \d+–\d+/.test(b), b);
+        assert.ok(b.includes(exp(k)) && b.includes(`CFP ${Math.round(100 * t[k].cfp_field)}%`) && b.includes(`Conference Title ${Math.round(100 * t[k].conference_title)}%`) && /Most Likely \d+–\d+/.test(b), b);
       }
     } else assert.ok(rowText.includes(`CFP ${Math.round(100 * t.standard.cfp_field)}%`) && rowText.includes(`CFP ${Math.round(100 * t.momentum.cfp_field)}%`), rowText);
     // Large playoff-odds gaps caused by a tiebreak swap are explained in plain language.
@@ -116,7 +116,8 @@ try {
     // The view selection drives games and records alike (Standard only, then back to Compare).
     await mp.locator('.mp-views label', { hasText: 'Standard' }).click();
     const stdText = (await record.innerText()).replace(/\s+/g, ' ');
-    assert.ok(stdText.includes(exp('standard')) && !stdText.includes(exp('momentum')) && !/higher-rated team/.test(stdText), stdText);
+    // Standard and Momentum can share the same expected record, so check the Momentum block itself is gone.
+    assert.ok(stdText.includes(exp('standard')) && !/Momentum/.test(stdText) && !/higher-rated team/.test(stdText), stdText);
     assert.equal(await cards.first().locator('.mp-model').count(), 1);
     await mp.locator('.mp-views label', { hasText: 'Compare' }).click();
     if (width === 390 || width === 1536) {
@@ -131,7 +132,8 @@ try {
     const info = mp.locator('details.mp-more-info');
     await info.locator('summary').focus(); await page.keyboard.press('Enter');
     const infoText = await info.innerText();
-    assert.ok(/Brier score: lower is better/.test(infoText) && /not archived forecasts/.test(infoText) && /published before kickoff/.test(infoText), infoText);
+    // V9: methods stay here; the historical accuracy comparison moved to Research (linked from this expander).
+    assert.ok(/every completed game counts equally/.test(infoText) && /newest game counts most/.test(infoText) && /Model Accountability in Research/.test(infoText), infoText);
     // Layout and accessibility.
     const overflow = await page.evaluate(() => ({ page: document.documentElement.scrollWidth - innerWidth,
       tables: [...document.querySelectorAll('.model-projections .table-wrap')].map(e => e.scrollWidth - e.clientWidth).filter(v => v > 1) }));

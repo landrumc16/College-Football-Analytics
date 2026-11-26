@@ -51,7 +51,7 @@ try{
  await nav('Rankings');await delay(600)
  await nav('Teams');await chooseSchool(page, 'Choose School', 'Texas Tech');await chooseSection(page,'Team Profile Sections','Schedule & Predictions');await delay(600)
  await chooseSection(page,'Teams sections','Compare & What If');await chooseSchool(page, 'First School', 'Texas Tech');await chooseSchool(page, 'Second School', 'Georgia');await delay(600)
- await nav('Home');await page.getByRole('button',{name:/All games/}).click();await delay(600)
+ await nav('Home');await page.getByRole('button',{name:/All Games/}).click();await delay(600)
  await nav('Playoffs');await page.getByRole('button',{name:'Explore Scenarios',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false)
  await page.evaluate(()=>window.dispatchEvent(new Event('error')))
  for(let i=0;i<40;i++){await delay(500);await Promise.all([...pending]);const names=new Set(receipt.requests.filter(r=>r.acceptedByCaptureApi).flatMap(r=>r.eventNames));if(required.every(n=>names.has(n)))break}

@@ -52,7 +52,7 @@ async function waitForPreview() {
 const sections = {
   home: ['Home', 'This Week'], predictions: ['Home', 'Game Predictions'],
   rankings: ['Rankings', 'Model Rankings'], ap: ['Rankings', 'Poll Rankings'], stock: ['Rankings', 'Team Stock Watch'],
-  market: ['Market', 'Market Analysis'],
+  market: ['Market', 'Market Intelligence'],
   profile: ['Teams', 'Team Profiles'], compare: ['Teams', 'Compare & What If'], programs: ['Teams', 'Program Directory'], hype: ['Teams', 'Hype Index'], trajectory: ['Teams', 'Program Trajectory'],
   cfp: ['Playoffs', 'CFP Projections'], conferences: ['Playoffs', 'Conference Races'], contenders: ['Playoffs', 'Contenders & Pretenders'],
   research: ['Research', 'Prediction Accuracy'], history: ['Research', 'Historical Research'], methods: ['Research', 'Methodology'], sources: ['Research', 'Data Sources'], validation: ['Research', 'Model Validation'],
@@ -124,7 +124,7 @@ try {
       await assertSection(page, 'Teams sections', 'Team Profiles');
       await navigate(page, 'rankings');
     }
-    await page.getByLabel('Search Teams').fill('Georgia');
+    await page.getByLabel('Search teams').fill('Georgia');
     const rankingNames = await page.locator('table tbody tr td:first-child').allTextContents();
     if (!rankingNames.length || rankingNames.some(name => !name.includes('Georgia'))) throw new Error('Model ranking search failed');
     await navigate(page, 'home');
@@ -138,7 +138,7 @@ try {
     if (!(await feedback.getAttribute('href'))?.endsWith('/issues/new')) throw new Error('Public feedback destination missing');
     await about.locator('summary').click();
 
-    if (await page.getByText('Waiting for live data').count()) throw new Error('Dashboard failed to load season report');
+    if (await page.getByText('Waiting for Live Data').count()) throw new Error('Dashboard failed to load season report');
     await page.locator('summary[aria-label="App menu"]').click();
     // Guard the approved five concise editorial sections.
     for (const title of ['My Teams', 'Featured Matchups', 'Rankings Snapshot', 'Playoff Watch', 'Program Spotlight']) {
@@ -180,7 +180,7 @@ try {
     await profileTab(page, 'Schedule & Predictions');
     await page.getByRole('heading', { name: 'Full Season Schedule and Model Outlook', exact: true }).waitFor();
     if (await page.getByLabel('Choose School').inputValue() !== firstTeam) throw new Error('Favorite schedule shortcut lost its school');
-    await assertSection(page, 'Team Profile sections', 'Schedule & Predictions');
+    await assertSection(page, 'Team Profile Sections', 'Schedule & Predictions');
     await profileTab(page, 'Historical Intelligence');
     await page.getByRole('region', { name: 'Historical FBS results', exact: true }).waitFor();
     await navigate(page, 'home');
@@ -236,10 +236,10 @@ try {
       }
       if (section === 'predictions') {
         await page.getByRole('heading', { name: 'Game Predictions' }).waitFor();
-        await page.getByLabel('Search Teams').fill('Georg');
+        await page.getByLabel('Search teams').fill('Georg');
         await page.getByRole('listbox', { name: 'Suggested schools' }).getByRole('option', { name: 'Georgia', exact: true }).click();
         if (!(await page.locator('.prediction-card').count()) || (await page.locator('.prediction-matchup').allTextContents()).some(name => !name.includes('Georgia'))) throw new Error('Prediction autocomplete failed');
-        await page.getByLabel('Search Teams').fill('');
+        await page.getByLabel('Search teams').fill('');
         // Compare is offered only when both schools are rated FBS programs; use the first such card.
         const fbsNames = new Set(report.rankings.map(t => t.team));
         const cardTexts = await page.locator('.prediction-matchup').allInnerTexts();
@@ -288,10 +288,10 @@ try {
       if (['programs', 'stock', 'contenders'].includes(section)) {
         await page.getByRole('heading', { name: section === 'stock' ? 'Team Stock Watch' : section === 'contenders' ? 'Contenders & Pretenders' : 'Program Intelligence', exact: true }).waitFor();
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Last 5' }).waitFor({ state: 'attached' });
-        await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs forecast' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Vs Forecast' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Top 25 wins' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Rating' }).waitFor({ state: 'attached' });
-        await page.locator('.program-intelligence-table th').filter({ hasText: 'Conf. record' }).waitFor({ state: 'attached' });
+        await page.locator('.program-intelligence-table th').filter({ hasText: 'Conf. Record' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Season trend' }).waitFor({ state: 'attached' });
         await page.locator('.program-intelligence-table th').filter({ hasText: 'Coaches Poll' }).waitFor({ state: 'attached' });
         if (await page.locator('.program-intelligence-table tbody tr:first-child td').count() !== await page.locator('.program-intelligence-table thead th').count()) {
@@ -317,7 +317,7 @@ try {
         await page.getByLabel('Sort program intelligence').selectOption('rank');
         await page.getByLabel('Filter programs by conference').selectOption('all');
         const scrollBefore = await page.evaluate(() => window.scrollY);
-        await page.getByLabel('Find a Program').fill(firstTeam);
+        await page.getByLabel('Find a program').fill(firstTeam);
         await assertReportCard(page, firstTeam);
         // Selected team appears directly below the controls and above the full rankings list, without a scroll jump.
         const order = await page.evaluate(() => {
@@ -337,13 +337,14 @@ try {
         await page.getByRole('heading', { name: 'Compare Teams', exact: true }).waitFor();
         if (await page.getByLabel('First School').inputValue() !== firstTeam) throw new Error('Program-to-comparison navigation lost the selected team');
         await navigate(page, 'programs');
-        await page.getByLabel('Find a Program').fill(firstTeam);
+        await page.getByLabel('Find a program').fill(firstTeam);
         await page.getByRole('row').filter({ hasText: firstTeam }).first().getByRole('button', { name: 'View Team' }).click();
         await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
         await page.getByText('Form, Conference and Postseason Details', { exact: true }).click();
         // Owner-approved (PR #38): the Team Profile shows ONE trend label, the opponent-adjusted strength indicator.
         // The win-based season trend remains on Program Intelligence (checked above via overviewTrend).
         if (!overviewTrend) throw new Error(`Program Intelligence season trend missing for ${firstTeam}`);
+        { const s = page.locator('details.profile-more > summary', { hasText: 'Existing Strength Rankings & Blended Score' }).first(); if (!(await s.evaluate(e => e.parentElement.open))) await s.click(); }   // V9: collapsed by design
         await page.getByRole('region', { name: 'Strength Breakdown', exact: true }).locator('.strength-headline').waitFor();
         if (await page.locator('.team-profile-tile').filter({ hasText: 'Current-Season Form Trend' }).count() !== 0) {
           throw new Error('Team Profile must not show a second, win-based trend label');
@@ -373,7 +374,7 @@ try {
         const explanations = page.locator('details').filter({ has: page.locator('summary').getByText('Upcoming Prediction Explanations', { exact: true }) });
         if (!(await explanations.evaluate(element => element.open))) await explanations.locator('summary').click();
         try {
-          await explanations.getByRole('columnheader').filter({ hasText: 'Team win probability' }).waitFor();
+          await explanations.getByRole('columnheader').filter({ hasText: 'Team Win Probability' }).waitFor();
         } catch (error) {
           console.log('Schedule disclosure diagnostic:', await explanations.evaluate(element => ({ open: element.open, headers: [...element.querySelectorAll('th')].map(th => ({ text: th.textContent, display: getComputedStyle(th).display, visibility: getComputedStyle(th).visibility })) })));
           console.log('Exposed header roles:', await explanations.getByRole('columnheader').allTextContents());
@@ -448,8 +449,8 @@ try {
         if (await page.getByLabel('Choose School').inputValue() !== firstTeam) throw new Error('Compare-to-profile navigation lost team selection');
         await navigate(page, 'compare');
       }
-      // Market is a single-view destination: no section tab; it must be the current bottom-navigation item instead.
-      if (section === 'market' ? await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: 'Market', exact: true }).getAttribute('aria-current') !== 'page'
+      // V9: Market Intelligence is a Research section; Research must be the current bottom-navigation item.
+      if (section === 'market' ? await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('button', { name: 'Research', exact: true }).getAttribute('aria-current') !== 'page'
           : await page.locator(`#dashboard-panel-${section}`).getAttribute('aria-selected') !== 'true') {
         throw new Error(`Navigation failed for ${section} at ${width}px`);
       }
@@ -528,12 +529,12 @@ try {
     const failedPage = await browser.newPage({ viewport: { width, height: 844 } });
     await failedPage.route('**/season-report.json', route => route.fulfill({ status: 503, body: 'Unavailable' }));
     await failedPage.goto(baseUrl);
-    await failedPage.getByText('Waiting for live data').waitFor();
+    await failedPage.getByText('Waiting for Live Data').waitFor();
     // A transient refresh failure must recover without requiring an app reinstall.
     await failedPage.unroute('**/season-report.json');
     await failedPage.getByRole('button', { name: 'Retry Loading Data' }).click();
     await failedPage.getByRole('heading', { name: 'My Teams' }).waitFor();
-    if (await failedPage.getByText('Waiting for live data').count()) throw new Error('Refresh retry did not clear the failure');
+    if (await failedPage.getByText('Waiting for Live Data').count()) throw new Error('Refresh retry did not clear the failure');
     await failedPage.close();
   }
   const android = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true,
@@ -551,7 +552,7 @@ try {
   await app.evaluate(async () => {
     await navigator.serviceWorker.register('./sw.js?acceptance-update', { scope: './' });
   });
-  await app.getByText('App update available', { exact: true }).waitFor();
+  await app.getByText('App Update Available', { exact: true }).waitFor();
   await app.getByRole('button', { name: 'Reload App', exact: true }).click();
   await app.getByRole('heading', { name: 'My Teams' }).waitFor();
   await app.waitForFunction(async () => {

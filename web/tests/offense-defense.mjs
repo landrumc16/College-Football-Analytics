@@ -43,22 +43,22 @@ try {
     await od.getByRole('heading', { name: 'Offense & Defense', level: 2 }).waitFor();
     assert.ok(page.url().endsWith('#/stats'));
     await chooseSchool(page, 'Choose Team', TEAM);
-    const offense = od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Opponent-adjusted' }) });
+    const offense = od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Opponent\-adjusted/i }) });
     await offense.waitFor();
-    const epaRow = offense.locator('tr', { has: page.getByRole('rowheader', { name: /^Expected points added per play/ }) });
+    const epaRow = offense.locator('tr', { has: page.getByRole('rowheader', { name: /^Expected points added per play/i }) });
     const epaText = (await epaRow.innerText()).replace(/\s+/g, ' ');
     assert.ok(epaText.includes(ttEpa[5].toFixed(2)) && epaText.includes(`#${ttEpa[7]} of ${stats.fbs_teams}`), epaText);
     // Keyboard switch to Traditional, then Power Four only (arrow keys move within the radio group).
     await od.getByRole('radio', { name: 'Opponent-Adjusted' }).focus();
     await page.keyboard.press('ArrowLeft');
     assert.ok(await od.getByRole('radio', { name: 'Power Four Only' }).isChecked());
-    const p4Text = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Power Four only' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
+    const p4Text = (await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Power\ Four\ only/i }) }).locator('tr', { hasText: /Expected points added per play/i }).innerText()).replace(/\s+/g, ' ');
     assert.ok(p4Text.includes(`#${ttEpa[3]} of ${stats.power_teams}`) && p4Text.includes(`${ttEpa[4]} games`), p4Text);
     await od.getByRole('radio', { name: 'Traditional' }).check();
-    const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
+    const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Traditional/i }) }).locator('tr', { hasText: /Expected points added per play/i }).innerText()).replace(/\s+/g, ' ');
     assert.ok(rawText.includes(`#${ttEpa[1]} of ${stats.fbs_teams}`), rawText);
     // Core statistics visible; detail tables collapsed until requested.
-    assert.ok(await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Points per drive' }).isVisible());
+    assert.ok(await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Traditional/i }) }).locator('tr', { hasText: 'Points per drive' }).isVisible());
     const detail = od.locator('details.od-unit-more', { hasText: 'Offense: running, passing and situational' });
     assert.equal(await detail.getAttribute('open'), null);
     assert.ok(!(await detail.locator('tr', { hasText: 'Third-down conversion rate' }).isVisible()));
@@ -98,7 +98,7 @@ try {
     await page.keyboard.press('Enter');
     assert.match(await calc.innerText(), /Against average opponents, .* offense posts .* defense allows .*national standard deviations/s);
     // Detailed factors stay available behind a keyboard-operable expander.
-    const factors = od.locator('details.od-more', { hasText: 'All matchup factors' });
+    const factors = od.locator('details.od-more', { hasText: 'All Matchup Factors' });
     assert.equal(await factors.getAttribute('open'), null);
     await factors.locator('summary').focus();
     await page.keyboard.press('Enter');
@@ -120,7 +120,7 @@ try {
     assert.equal(await leaders.getAttribute('open') !== null, width >= 768, `leaders open state at ${width}`);
     if (width < 768) { await leaders.locator('summary').focus(); await page.keyboard.press('Enter'); }
     const first = Object.entries(stats.teams).find(([, t]) => t.offense.epa[7] === 1)[0];
-    const board = od.locator('table', { has: page.locator('caption', { hasText: 'Offense: Expected points added per play · Opponent-adjusted' }) });
+    const board = od.locator('table', { has: page.locator('caption', { hasText: /Offense:\ Expected\ points\ added\ per\ play\ ·\ Opponent\-adjusted/i }) });
     assert.equal((await board.locator('tbody tr').first().innerText()).split(/\s+/)[0], '1');
     await board.getByRole('button', { name: first, exact: true }).click();
     assert.equal(await page.getByLabel('Choose Team', { exact: true }).inputValue(), first);

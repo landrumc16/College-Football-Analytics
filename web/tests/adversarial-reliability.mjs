@@ -39,8 +39,8 @@ try{
   const names=[...PRIMARY,'Research']
   for(let i=0;i<100;i++)await nav(p,names[i%names.length])
   await nav(p,'Rankings')
-  for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search Teams',{exact:true}).fill(text);await healthy(p)}
-  await p.getByLabel('Search Teams',{exact:true}).fill('')
+  for(const text of ['','Texas Tech','<script>alert(1)</script>','\u0000','🦅'.repeat(500),'x'.repeat(10000),' texas  tech ','Texas A&M','\u202Eabc']){await p.getByLabel('Search teams',{exact:true}).fill(text);await healthy(p)}
+  await p.getByLabel('Search teams',{exact:true}).fill('')
   await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles')
   for(let i=0;i<30;i++)await chooseSchool(p, 'Choose School', ['Texas Tech','Georgia','Texas A&M',''][i%4])
   await chooseSchool(p, 'Choose School', 'Texas Tech')
@@ -68,10 +68,10 @@ try{
  })
  await run('comparison-empty-same-and-repeated',()=>withPage(async p=>{
   await home(p);await nav(p,'Teams');await chooseSection(p,'Teams sections','Compare & What If')
-  for(let i=0;i<30;i++){await chooseSchool(p, 'First School', ['','Texas Tech','Georgia'][i%3]);await chooseSchool(p, 'Second School', ['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game Location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
+  for(let i=0;i<30;i++){await chooseSchool(p, 'First School', ['','Texas Tech','Georgia'][i%3]);await chooseSchool(p, 'Second School', ['Texas Tech','Texas Tech',''][i%3]);await p.getByLabel('Game location',{exact:true}).selectOption(['home','neutral','away'][i%3]);await healthy(p)}
   await chooseSchool(p, 'First School', 'Texas Tech');await chooseSchool(p, 'Second School', 'Texas A&M');await p.locator('.matchup-result').waitFor();await healthy(p)
  }))
- await run('predictions-unusual-search-reload',()=>withPage(async p=>{await home(p);await p.getByRole('button',{name:/All games/}).click();for(const s of ['Texas Tech','unknown',"' OR 1=1 --",'🦅'.repeat(300),'']){await p.getByLabel('Search Teams',{exact:true}).fill(s);await healthy(p)}await p.reload({waitUntil:'networkidle'});await healthy(p)}))
+ await run('predictions-unusual-search-reload',()=>withPage(async p=>{await home(p);await p.getByRole('button',{name:/All Games/}).click();for(const s of ['Texas Tech','unknown',"' OR 1=1 --",'🦅'.repeat(300),'']){await p.getByLabel('Search teams',{exact:true}).fill(s);await healthy(p)}await p.reload({waitUntil:'networkidle'});await healthy(p)}))
  await run('scenario-races-unmount-reset',()=>withPage(async p=>{
   await home(p);let workers=0,peak=0;p.on('worker',w=>{workers++;peak=Math.max(peak,workers);w.on('close',()=>workers--)})
   const section=()=>p.getByRole('region',{name:'Playoff what-if scenarios',exact:true})
@@ -116,7 +116,7 @@ try{
   else{await healthy(p);if(f.stale)assert.ok(/stale|old|out.of.date|refresh|outdated/i.test(await p.locator('body').innerText()),'Missing freshness warning')}
   const errors=[...p.errors];assert.deepEqual(errors,[],'Malformed input crashed the page')
   if(f.name.includes('wrong-shape')||f.name.includes('malformed-scale'))await p.screenshot({path:`${out}/fixture-${f.name}-contained.png`,fullPage:true})
-  intercept=false;const retry=p.getByRole('button',{name:'Retry Loading Data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This section is unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await healthy(p);await home(p);await healthy(p)
+  intercept=false;const retry=p.getByRole('button',{name:'Retry Loading Data',exact:true});if(await retry.count()){await retry.first().click();await p.waitForLoadState('networkidle');await delay(150);assert.equal(await p.getByText('This Section Is Unavailable',{exact:true}).count(),0,'Section retry did not recover')}await p.reload({waitUntil:'networkidle'});p.errors=[];await healthy(p);await home(p);await healthy(p)
   return {injectedPath:f.path,payload:f.body.length<400?f.body:'See named mutation in test source',recovery:'healthy after restoring original bytes'}
  }))
  await run('pwa-disconnect-poisoned-cache-recovery',()=>withPage(async(p,c)=>{
@@ -138,7 +138,7 @@ try{
  for(const count of [1,10,25,50])await run('concurrent-visitors-'+count,async()=>{
   const start=performance.now(),begin=requests.length;const sessions=[]
   try{await Promise.all(Array.from({length:count},async(_,i)=>{
-   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search Teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose School', 'Texas Tech');await healthy(p)
+   const c=await context({viewport:{width:[375,390,430,768,1536][i%5],height:844}});sessions.push(c);const p=await c.newPage();p.setDefaultTimeout(60000);p.errors=[];p.on('pageerror',e=>p.errors.push(e.message));await home(p);await nav(p,'Rankings');await p.getByLabel('Search teams',{exact:true}).fill(i%2?'Texas Tech':'Georgia');await nav(p,'Teams');await chooseSection(p,'Teams sections','Team Profiles');await chooseSchool(p, 'Choose School', 'Texas Tech');await healthy(p)
    if(i%10===0){await nav(p,'Playoffs');await p.getByRole('button',{name:'Explore Scenarios',exact:true}).click();await p.waitForFunction(()=>document.querySelector('[aria-label="Scenario matchup"]')?.disabled===false,{},{timeout:60000});await healthy(p)}
   }));return {visitors:count,elapsedMs:performance.now()-start,servedRequests:requests.length-begin,conditions:'one Chromium process, independent browser contexts, 10% run 2000-draw scenarios; isolated static server, no public traffic'}}finally{await Promise.all(sessions.map(c=>c.close()))}
  })

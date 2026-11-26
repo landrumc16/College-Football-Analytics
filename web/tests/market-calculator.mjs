@@ -68,7 +68,7 @@ try {
     const results = calc.locator('.market-result');
     await assert.doesNotReject(results.nth(2).waitFor());
     const text = async i => (await results.nth(i).textContent()).replace(/\s+/g, ' ');
-    assert.ok((await text(0)).includes('Our prediction') && (await text(0)).includes('What this means') && (await text(0)).includes('Our take'), await text(0));
+    assert.ok((await text(0)).includes('Our Prediction') && (await text(0)).includes('What This Means') && (await text(0)).includes('Our Take'), await text(0));
     assert.ok((await text(1)).includes(`Difference${homeProbDiff} percentage points`), await text(1));
     assert.ok((await text(2)).includes(`Difference${homeLineDiff} percentage points`), await text(2));
     assert.ok((await text(2)).includes('42.2% raw implied'));
@@ -85,7 +85,7 @@ try {
     assert.equal(await calc.getByLabel(`${game.away} prediction-market win probability (%)`).inputValue(), '58.7');
     assert.equal(await calc.getByLabel(`${game.away} American moneyline`).inputValue(), '');
     await calc.getByText(`Moneyline cleared: enter ${game.away}'s own moneyline`, { exact: false }).waitFor();
-    assert.ok((await text(0)).includes('Our take'), await text(0));
+    assert.ok((await text(0)).includes('Our Take'), await text(0));
     assert.ok((await text(1)).includes(`Difference${awayProbDiff} percentage points`), await text(1));
     if (width === 390 || width === 1536) await calc.screenshot({ path: `${evidence}/calculator-${width}.png` });
 

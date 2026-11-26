@@ -35,7 +35,7 @@ try {
     const section = page.getByRole('region', { name: 'Bowls and College Football Playoff' });
     await section.waitFor();
     const text = (await section.innerText()).replace(/\s+/g, ' ');
-    assert.match(text, /ROSE BOWL - CFP QUARTERFINAL/); assert.match(text, /Model pick Georgia/); assert.match(text, /Win probability 58%/);
+    assert.match(text, /ROSE BOWL - CFP QUARTERFINAL/); assert.match(text, /Model Pick Georgia/); assert.match(text, /Win Probability 58%/);
     assert.match(text, /CFP FIRST ROUND · FINAL/); assert.match(text, /Utah 24 @ Texas Tech 31/);
     assert.match(text, /No model pick: one team is outside the rated FBS field/);
     assert.match(text, /do not change the ratings/);

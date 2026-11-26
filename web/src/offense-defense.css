@@ -110,3 +110,4 @@
  .od-summary small{letter-spacing:0;text-transform:none;font-size:13px}
  .offense-defense .od-table td small{display:block;white-space:nowrap}
 }
+.od-board-controls label{min-width:0;max-width:100%}.od-board-controls select{max-width:100%}

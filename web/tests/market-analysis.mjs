@@ -77,7 +77,7 @@ try {
     assert.equal(await spread.inputValue(), '-6.5');
     const result = calc.locator('.market-result').first();
     const story = (await result.innerText()).replace(/\s+/g, ' ');
-    for (const heading of ['Our prediction', 'Your entered betting line', 'What this means', 'Our take']) assert.ok(story.includes(heading), heading);
+    for (const heading of ['Our Prediction', 'Your Entered Betting Line', 'What This Means', 'Our Take']) assert.ok(story.includes(heading), heading);
     assert.equal(await result.locator('.market-headline').innerText(), expectedTitle(first.home_margin, -6.5));
     assert.ok(story.includes(`${first.home} is favored by 6.5 points.`), story);
     assert.ok(story.includes('not a verified live market line'), 'entered-line provenance shown');
@@ -163,21 +163,25 @@ try {
     await nav.getByRole('button', { name: 'Home', exact: true }).waitFor();
     assert.deepEqual(await nav.getByRole('button').allTextContents(), PRIMARY);
     assert.equal(await page.locator('.market-calculator').count(), 0, 'homepage links to the calculator but never embeds it');
-    await nav.getByRole('button', { name: 'Market', exact: true }).click();
+    // V9: Market Intelligence is a Research section (Research is the fifth bottom-navigation destination).
+    await openDestination(page, 'Market');
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
-    assert.equal(await nav.getByRole('button', { name: 'Market', exact: true }).getAttribute('aria-current'), 'page');
+    assert.equal(await nav.getByRole('button', { name: 'Research', exact: true }).getAttribute('aria-current'), 'page');
     assert.ok(page.url().endsWith('#/market'));
     await page.getByLabel('App menu', { exact: true }).click();
     await page.locator('details.editorial-menu').getByRole('button', { name: 'Research & Data', exact: true }).waitFor();
     await page.screenshot({ path: `${evidence}/menu-research-${width}.png` });
-    await openDestination(page, 'Research');
+    await page.locator('details.editorial-menu').getByRole('button', { name: 'Research & Data', exact: true }).click();
     await page.getByRole('region', { name: 'Independent pregame forecast verification', exact: true }).waitFor();
     assert.ok(page.url().endsWith('#/research'));
     assert.equal(await page.locator('details.editorial-menu').evaluate(d => d.open), false, 'menu closes after choosing Research & Data');
     await page.goBack();
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
+    await page.goBack();                               // V9: Research, then its Market Intelligence section
+    await page.getByRole('region', { name: 'Independent pregame forecast verification', exact: true }).waitFor();
     await page.goBack();
     await page.getByRole('heading', { name: 'Featured Matchups', exact: true }).waitFor();
+    await page.goForward();
     await page.goForward();
     await page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 }).waitFor();
     for (const [hash, check] of [['#/market', () => page.getByRole('heading', { name: 'Market Analysis', exact: true, level: 2 })],
