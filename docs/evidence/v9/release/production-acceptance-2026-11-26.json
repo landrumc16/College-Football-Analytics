@@ -1,0 +1,162 @@
+{
+  "date": "2026-11-26",
+  "status": "production_acceptance_passed",
+  "approved_candidate": "7c29544764643689753c695fa332329a9154c8c7",
+  "merge_commit": "283677f44915120d505beeedee29a71d3efe795f",
+  "deployed_commit": "0cf736108d39b7d612c6a370c782d6a66a83c411",
+  "production_run": 45891686912,
+  "premerge_ci": {
+    "success": 17,
+    "expected_skipped": 2
+  },
+  "production_regression": {
+    "passed": 839,
+    "skipped": 2
+  },
+  "targeted_archive_guard_reliability_tests": 51,
+  "live_widths": [
+    375,
+    390,
+    430,
+    768,
+    1536
+  ],
+  "live_page_errors": 0,
+  "browser": "Playwright 1.56.1 Chromium; viewport/touch emulation, not physical hardware",
+  "journey_receipt": "production-five-width-journeys.json",
+  "packets": {
+    "team-intelligence.json": {
+      "sha256": "7a46b8a3db13c7c8db41790e99c399d2ef11336ce1f63f399bd915f1ed931ffa",
+      "bytes": 1965326,
+      "generated_at": null,
+      "retrieved_at": null,
+      "report_sha256": null,
+      "keys": [
+        "schema_version",
+        "season",
+        "model_metadata",
+        "sources",
+        "teams",
+        "history_semantics",
+        "observations"
+      ]
+    },
+    "v9-accountability.json": {
+      "sha256": "e8b6329801251b085193f1a58bc7cbf50a8439e483ec7c002787df392b69f73c",
+      "bytes": 90572,
+      "generated_at": null,
+      "retrieved_at": null,
+      "report_sha256": null,
+      "keys": [
+        "common_games",
+        "common_models",
+        "eligible_completed_games",
+        "evidence_counts",
+        "exclusions",
+        "limitations",
+        "model_versions",
+        "models",
+        "outcome_as_of",
+        "retained_forecasts",
+        "schema_version",
+        "scored_rows"
+      ]
+    },
+    "season-report.json": {
+      "sha256": "5e2cea2c53c2d91f468c1552e494193dcd6f23474ebdbc7d73121a2bcfe76f81",
+      "bytes": 473101,
+      "generated_at": "2026-11-26T20:33:19.361261+00:00",
+      "retrieved_at": "2026-11-26T20:28:19.258116+00:00",
+      "report_sha256": null,
+      "keys": [
+        "model_metadata",
+        "conference_standings",
+        "conference_strength",
+        "cfp",
+        "projected_bracket",
+        "season",
+        "source",
+        "retrieved_at",
+        "data_changed_at",
+        "summary",
+        "schedule",
+        "rankings"
+      ]
+    },
+    "v6-scenario-input.json": {
+      "sha256": "21e9db9a0326ed75f9ebc268625ccd8b80a65ac7dd4292486cffa146a5ef6494",
+      "bytes": 26514,
+      "generated_at": null,
+      "retrieved_at": "2026-11-26T20:28:19.258116+00:00",
+      "report_sha256": "5e2cea2c53c2d91f468c1552e494193dcd6f23474ebdbc7d73121a2bcfe76f81",
+      "keys": [
+        "draws",
+        "fcs_rating",
+        "games",
+        "home_edge",
+        "report_sha256",
+        "retrieved_at",
+        "scale",
+        "schema_version",
+        "season",
+        "seed",
+        "teams"
+      ]
+    },
+    "monitor-status.json": {
+      "sha256": "d79487094f4a149734810f483886aa0ec4b9908271c97101995fad469103f001",
+      "bytes": 851,
+      "generated_at": "2026-11-26T20:34:32+00:00",
+      "retrieved_at": null,
+      "report_sha256": null,
+      "keys": [
+        "generated_at",
+        "watcher",
+        "alerts"
+      ]
+    },
+    "dual-projections.json": {
+      "sha256": "d97e7bac9fd1d3c90fff10239b71c21b0c7bffa52e465eb536577e52d57b8b05",
+      "bytes": 107993,
+      "generated_at": "2026-11-26T20:33:08+00:00",
+      "retrieved_at": null,
+      "report_sha256": null,
+      "keys": [
+        "data_retrieved_at",
+        "games",
+        "generated_at",
+        "home_field_points",
+        "method",
+        "models",
+        "scales",
+        "schema_version",
+        "season",
+        "status",
+        "teams",
+        "validation"
+      ]
+    }
+  },
+  "posthog": {
+    "project": 737110,
+    "observed_from": "2026-11-26T20:34:00Z",
+    "observed_to_approx": "2026-11-26T20:38:00Z",
+    "non_test_application_errors": 0,
+    "non_test_exceptions": 0,
+    "controlled_test_visits": 3,
+    "controlled_test_page_views": 27,
+    "limitation": "Short partial observation window and ingestion latency; not proof of future absence. Controlled tests excluded from beta behavior."
+  },
+  "immutable_retention": {
+    "pregame_files": 240,
+    "committed_strength_observations": 3,
+    "prior_pregame_and_historical_archives": "unchanged; only strength observation appended during normal refresh"
+  },
+  "operational_limitations": [
+    "Physical Android/iPhone not tested; accepted by owner.",
+    "WebKit offline/update headless Linux limitation retained.",
+    "Quota and GitHub scheduling constraints remain monitored.",
+    "Unit-statistics source November 22 is stale and explicitly labeled.",
+    "Settled Standard/Momentum/common-game evidence unavailable; not zero-filled."
+  ]
+}

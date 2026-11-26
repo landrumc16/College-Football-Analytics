@@ -1,0 +1,230 @@
+{
+  "results": {
+    "viewport-375": {
+      "engine": "chromium",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "destinations": {
+        "Home": {
+          "overflow": 0
+        },
+        "Rankings": {
+          "overflow": 0
+        },
+        "Teams": {
+          "overflow": 0
+        },
+        "Playoffs": {
+          "overflow": 0
+        },
+        "Research": {
+          "overflow": 0
+        }
+      },
+      "journeys": {
+        "favoritePersistsAndIndependent": true,
+        "rankingsFilter": true,
+        "trajectory": true,
+        "matchup": true,
+        "projections": true,
+        "offenseDefenseNoOverflow": true,
+        "calibration": true,
+        "market": true,
+        "scenarioOverrideAndExactReset": true
+      },
+      "trajectoryObservations": 4,
+      "scenarioDebug": {
+        "status": "1 pick applied",
+        "baselineHead": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t100",
+        "changedHead": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t10",
+        "techBaseline": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%",
+        "techChanged": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%"
+      },
+      "smallTargets": 0,
+      "errors": []
+    },
+    "viewport-390": {
+      "engine": "chromium",
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "destinations": {
+        "Home": {
+          "overflow": 0
+        },
+        "Rankings": {
+          "overflow": 0
+        },
+        "Teams": {
+          "overflow": 0
+        },
+        "Playoffs": {
+          "overflow": 0
+        },
+        "Research": {
+          "overflow": 0
+        }
+      },
+      "journeys": {
+        "favoritePersistsAndIndependent": true,
+        "rankingsFilter": true,
+        "trajectory": true,
+        "matchup": true,
+        "projections": true,
+        "offenseDefenseNoOverflow": true,
+        "calibration": true,
+        "market": true,
+        "scenarioOverrideAndExactReset": true
+      },
+      "trajectoryObservations": 4,
+      "scenarioDebug": {
+        "status": "1 pick applied",
+        "baselineHead": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t100",
+        "changedHead": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t10",
+        "techBaseline": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%",
+        "techChanged": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%"
+      },
+      "smallTargets": 0,
+      "errors": []
+    },
+    "viewport-430": {
+      "engine": "chromium",
+      "viewport": {
+        "width": 430,
+        "height": 900
+      },
+      "destinations": {
+        "Home": {
+          "overflow": 0
+        },
+        "Rankings": {
+          "overflow": 0
+        },
+        "Teams": {
+          "overflow": 0
+        },
+        "Playoffs": {
+          "overflow": 0
+        },
+        "Research": {
+          "overflow": 0
+        }
+      },
+      "journeys": {
+        "favoritePersistsAndIndependent": true,
+        "rankingsFilter": true,
+        "trajectory": true,
+        "matchup": true,
+        "projections": true,
+        "offenseDefenseNoOverflow": true,
+        "calibration": true,
+        "market": true,
+        "scenarioOverrideAndExactReset": true
+      },
+      "trajectoryObservations": 4,
+      "scenarioDebug": {
+        "status": "1 pick applied",
+        "baselineHead": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t100",
+        "changedHead": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t10",
+        "techBaseline": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%",
+        "techChanged": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%"
+      },
+      "smallTargets": 0,
+      "errors": []
+    },
+    "viewport-768": {
+      "engine": "chromium",
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "destinations": {
+        "Home": {
+          "overflow": 0
+        },
+        "Rankings": {
+          "overflow": 0
+        },
+        "Teams": {
+          "overflow": 0
+        },
+        "Playoffs": {
+          "overflow": 0
+        },
+        "Research": {
+          "overflow": 0
+        }
+      },
+      "journeys": {
+        "favoritePersistsAndIndependent": true,
+        "rankingsFilter": true,
+        "trajectory": true,
+        "matchup": true,
+        "projections": true,
+        "offenseDefenseNoOverflow": true,
+        "calibration": true,
+        "market": true,
+        "scenarioOverrideAndExactReset": true
+      },
+      "trajectoryObservations": 4,
+      "scenarioDebug": {
+        "status": "1 pick applied",
+        "baselineHead": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t100",
+        "changedHead": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t10",
+        "techBaseline": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%",
+        "techChanged": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%"
+      },
+      "smallTargets": 0,
+      "errors": []
+    },
+    "viewport-1536": {
+      "engine": "chromium",
+      "viewport": {
+        "width": 1536,
+        "height": 900
+      },
+      "destinations": {
+        "Home": {
+          "overflow": 0
+        },
+        "Rankings": {
+          "overflow": 0
+        },
+        "Teams": {
+          "overflow": 0
+        },
+        "Playoffs": {
+          "overflow": 0
+        },
+        "Research": {
+          "overflow": 0
+        }
+      },
+      "journeys": {
+        "favoritePersistsAndIndependent": true,
+        "rankingsFilter": true,
+        "trajectory": true,
+        "matchup": true,
+        "projections": true,
+        "offenseDefenseNoOverflow": true,
+        "calibration": true,
+        "market": true,
+        "scenarioOverrideAndExactReset": true
+      },
+      "trajectoryObservations": 4,
+      "scenarioDebug": {
+        "status": "1 pick applied",
+        "baselineHead": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t100",
+        "changedHead": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%\nAlabama\t100.0%\t100.0%\t0.0 pp\t31.1%\nGeorgia\t100.0%\t100.0%\t0.0 pp\t65.1%\nMiami (FL)\t10",
+        "techBaseline": "Texas Tech\t98.1%\t98.1%\t0.0 pp\t44.2%",
+        "techChanged": "Texas Tech\t98.1%\t91.1%\t-7.0 pp\t44.2%"
+      },
+      "smallTargets": 0,
+      "errors": []
+    }
+  },
+  "defects": []
+}

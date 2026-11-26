@@ -1,10 +1,12 @@
-# Version 9 roadmap
+# Version 9 Roadmap — Released and Closed
+
+**November 26, 2026:** all three milestones and production acceptance are complete. Owner-approved candidate `7c29544764643689753c695fa332329a9154c8c7` merged as `283677f44915120d505beeedee29a71d3efe795f`; verified production `0cf736108d39b7d612c6a370c782d6a66a83c411`. See [V9-PRODUCTION-ACCEPTANCE.md](V9-PRODUCTION-ACCEPTANCE.md) for the acceptance matrix, actual test evidence, operational constraints and accepted physical-device limitations. No new version, feature or model promotion is authorized.
 
 Owner authorization is the November 25 master development directive. Baseline is main at 13fb09a924e7906aa6db474fc291a8544e1da3a0. ChatGPT Work/Codex leads implementation. Claude provides independent verification and continuity capacity.
 
 ## Design and production contract
 
-Production is the visual baseline. Preserve navy/gold, typography, cards, editorial hierarchy, school search, favorites, mobile controls, visible numbers and collapsed explanations. The owner rejected the standalone prototype. All subsequent previews use the real React application. Main, watchers, refresh schedules and production quota remain protected. PR56 freshness-alert-flapping is outstanding and must be reconciled after its independent approval.
+Production is the visual baseline. Preserve navy/gold, typography, cards, editorial hierarchy, school search, favorites, mobile controls, visible numbers and collapsed explanations. The owner rejected the standalone prototype. All subsequent previews use the real React application. Watchers, refresh schedules and production quota remain protected. Independently approved PR #56 merged as 79a3b1bf42236a852caf11b15c78b12b5a636a7e and is preserved in the V9 release. Main was modified only under the owner’s explicit release/closeout authorization.
 
 ## Milestone 1 — Intelligence foundation
 

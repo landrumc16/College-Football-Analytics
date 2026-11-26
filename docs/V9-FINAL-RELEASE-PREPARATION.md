@@ -1,5 +1,7 @@
 # V9 Final Release Preparation — November 26, 2026
 
+> **Released and closed November 26, 2026.** [V9-PRODUCTION-ACCEPTANCE.md](V9-PRODUCTION-ACCEPTANCE.md) supersedes the historical pending gates below. The owner approved release; production and live acceptance passed.
+
 ## Decision and Exact State
 
 The owner explicitly approved PR #56 at its verified head. It merged as `79a3b1bf42236a852caf11b15c78b12b5a636a7e`. V9 is reconciled with that main revision. PR #63 still requires separate explicit owner approval; do not merge or deploy it automatically.
