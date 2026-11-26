@@ -6,9 +6,13 @@ deployed or merged.
 
 ## Verdict
 
-**Ready for owner approval, with the conditions below.** All three milestones are implemented and their acceptance
-gates pass in a real Chromium browser at all five widths. Physical-device testing is still owed by the owner
-(`docs/V9-ANDROID-CHECKLIST.md`). PR #56 should be merged first, followed by one guard-test reconciliation commit on V9.
+**Ready for owner approval, with one owner decision and the conditions below.** All three milestones are implemented,
+and their acceptance gates pass in a real Chromium browser at all five widths.
+
+Every PR check passes except `privacy-and-browser`, whose visual-identity guard has no release exception (see Owner
+decision). Also outstanding:
+- physical-device testing by the owner (`docs/V9-ANDROID-CHECKLIST.md`);
+- merging PR #56 first, followed by a one-line guard-test reconciliation on V9.
 
 ## Pass A — engineering audit
 
@@ -59,6 +63,39 @@ earlier). The simulator is byte-identical to main, so GitHub CI is authoritative
 3. **Accountability tables not keyboard-reachable.** They are now focusable named regions, and the receipts link meets
    the 24 px target size.
 4. **Non-blocking evidence retention** in `refresh-data.yml` (see Pass A).
+5. **V9 build tests broke every full-suite workflow without the frontend toolchain.** That includes the production data
+   refresh's pre-commit validation, so score updates would have stopped after merge. These three tests now skip only
+   where the toolchain is absent. `tests.yml` and the V9 foundation workflow set `REQUIRE_WEB_BUILD=1`, so a missing
+   toolchain fails there instead.
+6. **editorial-polish phase-aware labels:** the released V6 "before" source predates Title Case. Parity assertions are
+   unchanged.
+
+## CI on the release PR (#63)
+
+All checks pass on the final head except `privacy-and-browser`:
+- **Passing:** `pytest` (2), `python`, `python-tests`, `historical` (2), `historical-replay`, `regression` (V5 browser
+  acceptance), `visual` (editorial before/after), `frontend`, `dashboard`, `dashboard-build` (2), `foundation`,
+  `research-tests`, `strength-blend-screen`.
+- **Skipped as usual:** `refresh-evidence`, `deployment-secret-and-live-capture`.
+
+## Owner decision required: `privacy-and-browser` guard
+
+`beta-analytics.yml` runs because V9 touches analytics files (Title Case in `AnalyticsPrivacy.tsx` and its test). Its
+first step is a strict `git diff --exit-code` over visual-identity paths. Unlike every other guard in the repository,
+it has no reviewed-manifest exception. It fails on exactly the five owner-approved V9 files:
+- `web/public/dual-projections.json` and `web/public/prediction-explanations.json`;
+- `web/src/Navigation.tsx` and `web/src/EditorialHome.tsx`;
+- `web/src/style.css` (section labels no longer forced uppercase).
+
+All later steps are skipped. The privacy suite itself (`beta-analytics.mjs`, with its analytics build) passes locally.
+
+I prepared a change making this guard use the same reviewed manifest mechanism as the others. The session's safety
+policy blocked it as a change to a release guard, and the roadmap says never to relax guards. Owner options:
+- **(a)** Authorize that guard change (manifest-aware, other branches stay strict) plus a `style.css` pin in the V9
+  manifest.
+- **(b)** Accept this one failing check for the V9 merge.
+
+Either way, the privacy tests should be confirmed to run green on CI afterwards.
 
 Design, models, data and calculations are unchanged.
 
