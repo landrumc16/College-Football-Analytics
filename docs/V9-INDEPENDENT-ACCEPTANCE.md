@@ -78,26 +78,50 @@ All checks pass on the final head except `privacy-and-browser`:
   `research-tests`, `strength-blend-screen`.
 - **Skipped as usual:** `refresh-evidence`, `deployment-secret-and-live-capture`.
 
-## Owner decision required: `privacy-and-browser` guard
+## `privacy-and-browser`: guard resolved (Option A); size budget needs a decision
 
-`beta-analytics.yml` runs because V9 touches analytics files (Title Case in `AnalyticsPrivacy.tsx` and its test). Its
-first step is a strict `git diff --exit-code` over visual-identity paths. Unlike every other guard in the repository,
-it has no reviewed-manifest exception. It fails on exactly the five owner-approved V9 files:
-- `web/public/dual-projections.json` and `web/public/prediction-explanations.json`;
-- `web/src/Navigation.tsx` and `web/src/EditorialHome.tsx`;
-- `web/src/style.css` (section labels no longer forced uppercase).
+**Guard (owner chose Option A, implemented):**
+- The visual-identity step now uses the reviewed-manifest mechanism over its exact former 13-path list, evaluated on
+  the PR head commit.
+- The V9 manifest pins `web/src/style.css` (five pinned files in total).
+- New guard tests verify the path list is preserved and that unpinned files, altered content, deletions, additions
+  and other branches still fail.
+- On CI, the guard now approves exactly the five V9 files. Every privacy and browser step behind it passes, including
+  consent and events at five widths with intercepted ingestion, the secret-key rejection, and the browser/PWA
+  regressions.
 
-All later steps are skipped. The privacy suite itself (`beta-analytics.mjs`, with its analytics build) passes locally.
+**Remaining failing step: "Compare gzip JavaScript against the current production source".** It compares with a
+fixed baseline, production `474c72d` (November 17), with a 10,240-byte limit. Measured with the same build:
 
-I prepared a change making this guard use the same reviewed manifest mechanism as the others. The session's safety
-policy blocked it as a change to a release guard, and the roadmap says never to relax guards. Owner options:
-- **(a)** Authorize that guard change (manifest-aware, other branches stay strict) plus a `style.css` pin in the V9
-  manifest.
-- **(b)** Accept this one failing check for the V9 merge.
+| Build | Compressed JS | Versus `474c72d` |
+| --- | --- | --- |
+| `474c72d` (November 17 production) | 97,734 bytes | — |
+| Current main / production `b204bd6` | 115,434 bytes | +17,700, already over the limit through released PRs #47–#54 |
+| V9 | 123,162 bytes | +25,428 (V9's own share: +7,728 over current production) |
 
-Either way, the privacy tests should be confirmed to run green on CI afterwards.
+The step runs only when analytics files change, so main's earlier growth went unnoticed. Its comment records one
+earlier re-baseline to the then-current production for the same reason, with the limit unchanged.
 
-Design, models, data and calculations are unchanged.
+I prepared re-baselining it to current production (`b204bd6`) with the 10,240-byte limit unchanged. The session's
+safety policy blocked it as a budget change, so it needs explicit owner authorization. Options:
+- **(c)** Authorize the re-baseline. V9's 7,728 bytes would pass the unchanged limit.
+- **(d)** Accept this one failing budget step for the V9 merge.
+
+## PR #56 and reconciliation (rehearsed locally, nothing pushed)
+
+| | |
+| --- | --- |
+| PR #56 | Head `edc9598`; one commit; 4 files (`freshness_monitor.py`, its tests, its manifest, the guard test) |
+| CI | All required checks green |
+| Mergeability | Clean |
+| Production urgency | Still churning: 97 dashboard runs since PR #54 (67 cancelled); alert issues #57 (172 comments) and #62 (50, still open) |
+
+**Rehearsal:**
+1. Merge PR #56 into a copy of main.
+2. Merge V9 into that. `tests/test_protected_guard.py` conflicts in two hunks:
+   - the manifest list becomes `["freshness-alert-flapping", "freshness-reliability", "v7-development", "v9-development"]`;
+   - both sides' appended tests are kept.
+3. Result: full suite 839 passed, 2 skipped; guard and freshness tests 42 of 42.
 
 ## Remaining limitations
 
