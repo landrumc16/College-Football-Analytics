@@ -1,0 +1,518 @@
+{
+ "widths": {
+  "375": {
+   "destinations": {
+    "Home": {
+     "heading": "This Week in College Football.",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Rankings": {
+     "heading": "National Intelligence",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Teams": {
+     "heading": "Team Profile",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Playoffs": {
+     "heading": "Playoff What-If",
+     "overflow": 0,
+     "axeViolations": 5
+    },
+    "Research": {
+     "heading": "Prediction Accuracy",
+     "overflow": 0,
+     "axeViolations": 1
+    }
+   },
+   "journeys": {
+    "favoriteSaved": true,
+    "browsedBaylor": true,
+    "homeKeepsFavorite": true,
+    "favoritePersistsReload": true,
+    "rankingsCurrentLevelTexasTech": true,
+    "trajectoryOneObservationNoTrend": true,
+    "matchupNeutral": "MODEL PROJECTED WINNER Texas Tech Likely \u00b7 5.12-point projected margin Texas Tech 65.8% Baylor 34.2% Neutral Site: no ho",
+    "projectionsMomentum": true,
+    "calibrationOfficialHasDenominators": true,
+    "calibrationStandardUnavailable": true,
+    "marketInResearch": true
+   },
+   "errors": []
+  },
+  "390": {
+   "destinations": {
+    "Home": {
+     "heading": "This Week in College Football.",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Rankings": {
+     "heading": "National Intelligence",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Teams": {
+     "heading": "Team Profile",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Playoffs": {
+     "heading": "Playoff What-If",
+     "overflow": 0,
+     "axeViolations": 3
+    },
+    "Research": {
+     "heading": "Prediction Accuracy",
+     "overflow": 0,
+     "axeViolations": 1
+    }
+   },
+   "journeys": {
+    "favoriteSaved": true,
+    "browsedBaylor": true,
+    "homeKeepsFavorite": true,
+    "favoritePersistsReload": true,
+    "rankingsCurrentLevelTexasTech": true,
+    "trajectoryOneObservationNoTrend": true,
+    "matchupNeutral": "MODEL PROJECTED WINNER Texas Tech Likely \u00b7 5.12-point projected margin Texas Tech 65.8% Baylor 34.2% Neutral Site: no ho",
+    "projectionsMomentum": true,
+    "calibrationOfficialHasDenominators": true,
+    "calibrationStandardUnavailable": true,
+    "marketInResearch": true
+   },
+   "errors": []
+  },
+  "430": {
+   "destinations": {
+    "Home": {
+     "heading": "This Week in College Football.",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Rankings": {
+     "heading": "National Intelligence",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Teams": {
+     "heading": "Team Profile",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Playoffs": {
+     "heading": "Playoff What-If",
+     "overflow": 0,
+     "axeViolations": 3
+    },
+    "Research": {
+     "heading": "Prediction Accuracy",
+     "overflow": 0,
+     "axeViolations": 1
+    }
+   },
+   "journeys": {
+    "favoriteSaved": true,
+    "browsedBaylor": true,
+    "homeKeepsFavorite": true,
+    "favoritePersistsReload": true,
+    "rankingsCurrentLevelTexasTech": true,
+    "trajectoryOneObservationNoTrend": true,
+    "matchupNeutral": "MODEL PROJECTED WINNER Texas Tech Likely \u00b7 5.12-point projected margin Texas Tech 65.8% Baylor 34.2% Neutral Site: no ho",
+    "projectionsMomentum": true,
+    "calibrationOfficialHasDenominators": true,
+    "calibrationStandardUnavailable": true,
+    "marketInResearch": true
+   },
+   "errors": []
+  },
+  "768": {
+   "destinations": {
+    "Home": {
+     "heading": "This Week in College Football.",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Rankings": {
+     "heading": "National Intelligence",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Teams": {
+     "heading": "Team Profile",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Playoffs": {
+     "heading": "Playoff What-If",
+     "overflow": 0,
+     "axeViolations": 1
+    },
+    "Research": {
+     "heading": "Prediction Accuracy",
+     "overflow": 0,
+     "axeViolations": 0
+    }
+   },
+   "journeys": {
+    "favoriteSaved": true,
+    "browsedBaylor": true,
+    "homeKeepsFavorite": true,
+    "favoritePersistsReload": true,
+    "rankingsCurrentLevelTexasTech": true,
+    "trajectoryOneObservationNoTrend": true,
+    "matchupNeutral": "MODEL PROJECTED WINNER Texas Tech Likely \u00b7 5.12-point projected margin Texas Tech 65.8% Baylor 34.2% Neutral Site: no ho",
+    "projectionsMomentum": true,
+    "calibrationOfficialHasDenominators": true,
+    "calibrationStandardUnavailable": true,
+    "marketInResearch": true
+   },
+   "errors": []
+  },
+  "1536": {
+   "destinations": {
+    "Home": {
+     "heading": "This Week in College Football.",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Rankings": {
+     "heading": "National Intelligence",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Teams": {
+     "heading": "Team Profile",
+     "overflow": 0,
+     "axeViolations": 0
+    },
+    "Playoffs": {
+     "heading": "Playoff What-If",
+     "overflow": 0,
+     "axeViolations": 1
+    },
+    "Research": {
+     "heading": "Prediction Accuracy",
+     "overflow": 0,
+     "axeViolations": 0
+    }
+   },
+   "journeys": {
+    "favoriteSaved": true,
+    "browsedBaylor": true,
+    "homeKeepsFavorite": true,
+    "favoritePersistsReload": true,
+    "rankingsCurrentLevelTexasTech": true,
+    "trajectoryOneObservationNoTrend": true,
+    "matchupNeutral": "MODEL PROJECTED WINNER Texas Tech Likely \u00b7 5.12-point projected margin Texas Tech 65.8% Baylor 34.2% Neutral Site: no ho",
+    "projectionsMomentum": true,
+    "calibrationOfficialHasDenominators": true,
+    "calibrationStandardUnavailable": true,
+    "marketInResearch": true
+   },
+   "errors": []
+  }
+ },
+ "scenario": {
+  "375": {
+   "mismatchNotices": 0,
+   "overrideChangedTable": true,
+   "resetExact": true,
+   "completedWeeksOfferedForOverride": 0,
+   "overrideToTableMs": 833,
+   "overflow": 0
+  },
+  "390": {
+   "mismatchNotices": 0,
+   "overrideChangedTable": true,
+   "resetExact": true,
+   "completedWeeksOfferedForOverride": 0,
+   "overrideToTableMs": 932,
+   "overflow": 0
+  },
+  "430": {
+   "mismatchNotices": 0,
+   "overrideChangedTable": true,
+   "resetExact": true,
+   "completedWeeksOfferedForOverride": 0,
+   "overrideToTableMs": 882,
+   "overflow": 0
+  },
+  "768": {
+   "mismatchNotices": 0,
+   "overrideChangedTable": true,
+   "resetExact": true,
+   "completedWeeksOfferedForOverride": 0,
+   "overrideToTableMs": 844,
+   "overflow": 0
+  },
+  "1536": {
+   "mismatchNotices": 0,
+   "overrideChangedTable": true,
+   "resetExact": true,
+   "completedWeeksOfferedForOverride": 0,
+   "overrideToTableMs": 832,
+   "overflow": 0
+  }
+ },
+ "keyboard": {
+  "tabStops": 44,
+  "uniqueStops": 22,
+  "sample": [
+   "SUMMARY:App menu",
+   "BUTTON:Home",
+   "BUTTON:Rankings",
+   "BUTTON:Teams",
+   "BUTTON:Playoffs",
+   "BUTTON:Research",
+   "BUTTON:Open Calculator",
+   "BUTTON:All Games \u2197",
+   "BUTTON:MODEL TOP 25 MATCHUP\n#21 USC\nat\n#11 UCLA",
+   "BUTTON:WEEK 13\n#56 Virginia\nat\n#63 Virginia Tec",
+   "BUTTON:WEEK 13\n#102 Kennesaw State\nat\n#114 West",
+   "SUMMARY:Edit Teams",
+   "BUTTON:Full Rankings \u2197",
+   "BUTTON:1\nGeorgia\n10\u20131",
+   "BUTTON:2\nNotre Dame\n10\u20131",
+   "BUTTON:3\nMiami (FL)\n10\u20131",
+   "BUTTON:4\nUtah\n11\u20130",
+   "BUTTON:5\nAlabama\n9\u20132"
+  ],
+  "withoutVisibleFocus": [],
+  "rankingsByKeyboard": true,
+  "disclosureOpens": true
+ },
+ "reflow": {
+  "320px text x1": {
+   "Home": 0,
+   "Rankings": 0,
+   "Teams": 0,
+   "Playoffs": 0,
+   "Research": 0
+  },
+  "390px text x2": {
+   "Home": 0,
+   "Rankings": 0,
+   "Teams": 0,
+   "Playoffs": 0,
+   "Research": 0
+  }
+ },
+ "perf": {
+  "mobile 390 (4x CPU, Fast 4G)": {
+   "ttfb": 1.9,
+   "domContentLoaded": 363.7,
+   "load": 365,
+   "fcp": 452,
+   "lcp": 828,
+   "cls": 0,
+   "totalBlocking": 71,
+   "jsKB": 119.31,
+   "jsonKB": 68.79,
+   "teamsNavMs": 266
+  },
+  "desktop 1536": {
+   "ttfb": 1.9,
+   "domContentLoaded": 33.9,
+   "load": 34.1,
+   "fcp": 68,
+   "lcp": 128,
+   "cls": 0,
+   "totalBlocking": 0,
+   "jsKB": 119.31,
+   "jsonKB": 68.79,
+   "teamsNavMs": 82
+  }
+ },
+ "pwa": {
+  "manifest": {
+   "name": "College Football Analytics",
+   "display": "standalone",
+   "start_url": "./",
+   "scope": "./",
+   "icons": [
+    "192x192",
+    "512x512",
+    "192x192",
+    "512x512"
+   ]
+  },
+  "registered": {
+   "scope": "http://127.0.0.1:4377/",
+   "state": "activated"
+  },
+  "controlledAfterReload": true,
+  "cachedEntries": [
+   "/offline.html"
+  ],
+  "footballJsonCached": [],
+  "offlineText": "College Football Analytics You are offline Connect to the internet and reopen or refresh the app for current rankings, scores, predictions, and playoff forecast",
+  "onlineRecovered": true,
+  "updateNotice": true,
+  "cachesAfterUpdate": [
+   "cfb-shell-v341-acceptance"
+  ],
+  "oldCacheRemoved": true
+ },
+ "missing": {
+  "V9 evidence unavailable": {
+   "pageErrors": [],
+   "messages": [
+    "Home: undefined",
+    "Rankings: not published",
+    "Teams: not published",
+    "Playoffs: undefined",
+    "Research: not published"
+   ]
+  },
+  "scenario packet unavailable": {
+   "pageErrors": [],
+   "messages": [
+    "Home: undefined",
+    "Rankings: undefined",
+    "Teams: unavailable when no current snapshot is published",
+    "Playoffs: unavailable Our Top 25 vs",
+    "Research: cannot establish the accuracy of live picks"
+   ]
+  },
+  "season report unavailable": {
+   "pageErrors": [],
+   "messages": [
+    "Home: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - w",
+    "Rankings: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - w",
+    "Teams: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - w",
+    "Playoffs: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - w",
+    "Research: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - w"
+   ]
+  }
+ },
+ "defects": [],
+ "axe": {
+  "Home@375": [],
+  "Rankings@375": [],
+  "Teams@375": [],
+  "Playoffs@375": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 5,
+    "sample": [
+     ".predictions-intro:nth-child(4) > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Research@375": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 1,
+    "sample": [
+     ".prediction-research > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Home@390": [],
+  "Rankings@390": [],
+  "Teams@390": [],
+  "Playoffs@390": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 3,
+    "sample": [
+     ".predictions-intro:nth-child(4) > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Research@390": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 1,
+    "sample": [
+     ".prediction-research > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Home@430": [],
+  "Rankings@430": [],
+  "Teams@430": [],
+  "Playoffs@430": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 3,
+    "sample": [
+     ".predictions-intro:nth-child(4) > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Research@430": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 1,
+    "sample": [
+     ".prediction-research > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Home@768": [],
+  "Rankings@768": [],
+  "Teams@768": [],
+  "Playoffs@768": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 1,
+    "sample": [
+     "#dashboard-panel > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Research@768": [],
+  "Home@1536": [],
+  "Rankings@1536": [],
+  "Teams@1536": [],
+  "Playoffs@1536": [
+   {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "count": 1,
+    "sample": [
+     "#dashboard-panel > .table-wrap :: Element should have focusable content"
+    ]
+   }
+  ],
+  "Research@1536": []
+ },
+ "touch_under_24px": {
+  "Home@375": [
+   "summary \"\" 3x90",
+   "button \"\" 19x49"
+  ],
+  "Rankings@375": [],
+  "Teams@375": [],
+  "Playoffs@375": [],
+  "Research@375": [],
+  "Home@390": [
+   "summary \"\" 3x90",
+   "button \"\" 19x49"
+  ],
+  "Rankings@390": [],
+  "Teams@390": [],
+  "Playoffs@390": [],
+  "Research@390": [],
+  "Home@430": [
+   "summary \"\" 3x90",
+   "button \"\" 19x49"
+  ],
+  "Rankings@430": [],
+  "Teams@430": [],
+  "Playoffs@430": [],
+  "Research@430": []
+ }
+}
