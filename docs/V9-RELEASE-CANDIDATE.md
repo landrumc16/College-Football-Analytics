@@ -1,5 +1,7 @@
 # Version 9 Release Candidate — Conditional Acceptance
 
+> Current release status: [V9-FINAL-RELEASE-PREPARATION.md](V9-FINAL-RELEASE-PREPARATION.md) supersedes the historical open browser/device gates below. Claude completed acceptance; physical hardware limitations are owner-accepted. PR #56 merge approval and final reconciled-candidate CI/approval remain required.
+
 The owner approved the current professional collegiate design. This pass closes implementation gaps without redesign. Engineering base: b2ee4bc8ec94b0becbdf34a19a9c965e3e48ee52. An exact final candidate is identified by the GitHub commit containing this document and its checks, not an untested future branch tip.
 
 ## Executive Decision
