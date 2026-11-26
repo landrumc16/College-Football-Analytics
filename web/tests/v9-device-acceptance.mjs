@@ -87,8 +87,11 @@ try {
     const baseline = await sc.locator('tbody').innerText();
     await page.getByRole('combobox', { name: 'Scenario matchup', exact: true }).selectOption({ label: 'W13: TCU at Texas Tech' });
     await page.getByRole('combobox', { name: 'Scenario winner', exact: true }).selectOption('TCU');
-    await page.waitForFunction(() => /1 pick applied/.test(document.querySelector('[aria-label="Playoff what-if scenarios"]').innerText), null, { timeout: 60000 });
+    await page.waitForFunction(() => { const s = document.querySelector('[aria-label="Playoff what-if scenarios"]'); return /1 pick applied/.test(s.innerText) && s.querySelector('.table-wrap[aria-busy="false"]') }, null, { timeout: 60000 });
+    await page.waitForTimeout(500);
     const changed = await sc.locator('tbody').innerText();
+    R.scenarioDebug = { status: (await sc.getByRole('status').first().innerText().catch(() => '')).slice(0, 120), baselineHead: baseline.slice(0, 120), changedHead: changed.slice(0, 120), techBaseline: (baseline.split('\n').find(l => l.includes('Texas Tech')) || '').slice(0, 120), techChanged: (changed.split('\n').find(l => l.includes('Texas Tech')) || '').slice(0, 120) };
+    await sc.scrollIntoViewIfNeeded(); await page.screenshot({ path: `${out}/${name.replace(/\W+/g, '-').toLowerCase()}-scenario.png` });
     await sc.getByRole('button', { name: 'Reset to Baseline', exact: true }).tap();
     await page.waitForFunction(b => document.querySelector('[aria-label="Playoff what-if scenarios"] tbody')?.innerText === b, baseline, { timeout: 60000 });
     J.scenarioOverrideAndExactReset = changed !== baseline;
@@ -97,10 +100,13 @@ try {
     // Offline app: worker, offline page, recovery.
     try {
       R.serviceWorker = await page.evaluate(async () => !!(await Promise.race([navigator.serviceWorker.ready, new Promise(r => setTimeout(() => r(null), 8000))])));
-      await page.reload({ waitUntil: 'networkidle' });
-      R.controlled = await page.evaluate(() => !!navigator.serviceWorker.controller);
-      await ctx.setOffline(true); await page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {}); await page.waitForTimeout(800);
-      R.offlinePage = /offline/i.test(await page.locator('body').innerText().catch(() => ''));
+      await page.goto(base, { waitUntil: 'load' }).catch(e => { R.reloadError = e.message.slice(0, 120) }); await page.waitForTimeout(1000);
+      R.controlled = await page.evaluate(() => !!navigator.serviceWorker.controller).catch(e => { R.controlError = e.message.slice(0, 120); return null });
+      await ctx.setOffline(true);
+      await page.goto(base, { waitUntil: 'domcontentloaded' }).catch(e => { R.offlineNavError = e.message.slice(0, 120) }); await page.waitForTimeout(1500);
+      R.offlineText = (await page.locator('body').innerText().catch(() => '')).replace(/\s+/g, ' ').slice(0, 160);
+      R.offlinePage = /offline/i.test(R.offlineText);
+      await page.screenshot({ path: `${out}/${name.replace(/\W+/g, '-').toLowerCase()}-offline.png` }).catch(() => {});
       await ctx.setOffline(false); await page.goto(base, { waitUntil: 'networkidle' });
       R.onlineRecovered = /College Football/.test(await page.locator('h1').first().innerText());
     } catch (e) { R.pwaError = e.message.slice(0, 160); }
@@ -112,5 +118,5 @@ try {
 } finally {
   try { process.kill(-server.pid, 'SIGTERM'); } catch {}
   await writeFile(`${out}/device-profile-results.json`, JSON.stringify({ results, defects }, null, 1));
-  console.log(JSON.stringify({ defects, summary: Object.fromEntries(Object.entries(results).map(([k, v]) => [k, { engine: v.engine, journeys: v.journeys, sw: v.serviceWorker, controlled: v.controlled, offline: v.offlinePage, recovered: v.onlineRecovered, pwaError: v.pwaError, smallTargets: v.smallTargets }])) }, null, 1));
+  console.log(JSON.stringify({ defects, summary: Object.fromEntries(Object.entries(results).map(([k, v]) => [k, { engine: v.engine, journeys: v.journeys, sw: v.serviceWorker, controlled: v.controlled, offline: v.offlinePage, offlineText: v.offlineText, offlineNavError: v.offlineNavError, reloadError: v.reloadError, recovered: v.onlineRecovered, pwaError: v.pwaError, scenario: v.scenarioDebug }])) }, null, 1));
 }
