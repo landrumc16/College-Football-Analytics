@@ -66,7 +66,11 @@ try {
     await openDestination(page, 'Teams'); await chooseSection(page, 'Teams sections', 'Team Profiles'); await pick(page, 'Choose School', 'Texas Tech');
     const traj = page.locator('details.profile-more', { hasText: 'Team Trajectory' }).first();
     await openDetails(traj.locator(':scope > summary'));
-    J.trajectory = /cannot establish a trend/i.test(await traj.innerText());
+    { // One retained observation: no trend claimed. Several: retained-observation wording, one plotted point each.
+      const n = await traj.locator('select option').count(), text = await traj.innerText();
+      const points = await traj.locator('svg.intelligence-chart circle').count();
+      J.trajectory = n === 1 ? /cannot establish a trend/i.test(text) : n > 1 && /retained model observations, not a reconstructed season/i.test(text) && points === n;
+      R.trajectoryObservations = n; }
     await chooseSection(page, 'Teams sections', 'Compare & What If');
     await pick(page, 'First School', 'Texas Tech'); await pick(page, 'Second School', 'Baylor');
     await page.getByLabel(/^game location$/i).selectOption('neutral'); await page.waitForTimeout(300);
