@@ -150,7 +150,7 @@ def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
     assert len(rejected) == 2
     monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)
     approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
-    assert not approved and len(rejected) == 4
+    assert not approved and len(rejected) == 5
 
 
 def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content():
