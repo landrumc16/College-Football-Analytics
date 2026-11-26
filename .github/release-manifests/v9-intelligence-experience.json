@@ -21,6 +21,10 @@
     "web/public/prediction-explanations.json": {
       "sha256": "0561d32481332905e72f4183bdded688d2cf2ed5d778dfbf90ac42fcefae7864",
       "reason": "Re-publish existing unchanged models and explanation calculations on retained November 25 inputs; no API acquisition"
+    },
+    "web/src/style.css": {
+      "sha256": "6e146ee0c02bfe6cbb0a15915b43455776adc21b75940b47521edabe74477558",
+      "reason": "Owner-approved Title Case: section-navigation labels no longer forced to uppercase (text-transform none); no other style change"
     }
   }
 }

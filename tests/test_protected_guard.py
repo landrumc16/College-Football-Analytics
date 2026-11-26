@@ -123,7 +123,7 @@ def test_event_driven_manifest_lists_exactly_the_new_protected_files():
 def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
     # The V7 fixture above remains unchanged; V9 is a separately authorized interface release.
     m = _manifest("v9-development")
-    paths = {"web/src/Navigation.tsx", "web/src/EditorialHome.tsx", "web/public/dual-projections.json", "web/public/prediction-explanations.json"}
+    paths = {"web/src/Navigation.tsx", "web/src/EditorialHome.tsx", "web/src/style.css", "web/public/dual-projections.json", "web/public/prediction-explanations.json"}
     assert set(m["modified_exact"]) == paths
     assert m["added_files"] == m["added_file_patterns"] == m["modified_additive_only"] == {}
     # Published JSON legitimately changes on main's existing data refreshes.
@@ -141,10 +141,10 @@ def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
         monkeypatch.setattr(guard, "file_sha256", lambda path: frozen_data_fixture.get(path) or actual_hash(path))
     rows = [("M", path) for path in paths]
     approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
-    assert len(approved) == 4 and not rejected
+    assert len(approved) == 5 and not rejected
     for branch, same_repo in [("main", True), ("v9-development", False), ("freshness-reliability", True)]:
         approved, rejected = guard.evaluate(rows, m, branch, same_repo, none_removed)
-        assert not approved and len(rejected) == 4
+        assert not approved and len(rejected) == 5
     _, rejected = guard.evaluate([("M", "src/cfb_analytics/model.py"), ("M", "web/public/v6-scenario-input.json")],
                                 m, "v9-development", True, none_removed)
     assert len(rejected) == 2
@@ -167,3 +167,36 @@ def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content(
                                   ("M", "web/public/sw.js"), ("D", "src/cfb_analytics/cfp_publish.py")],
                                  m, "freshness-reliability", True, none_removed)
     assert len(rejected) == 4
+
+
+BETA_PATHS = ["src", "data", "research", "web/public", "web/package.json", "web/src/scenarios.ts", "web/src/scenario.worker.ts",
+              "web/src/programMetrics.ts", "web/src/Navigation.tsx", "web/src/EditorialHome.tsx", "web/src/style.css",
+              "web/src/editorial-polish.css", "web/src/secondary-navigation.css"]
+
+
+def test_beta_analytics_guard_is_manifest_aware_over_its_full_original_path_list():
+    # Owner-authorized (V9): the privacy workflow's visual-identity guard uses the reviewed-manifest mechanism, with
+    # the same 13 protected paths as the former strict diff, evaluated on the PR head commit.
+    workflow = (ROOT / ".github/workflows/beta-analytics.yml").read_text()
+    step = workflow[workflow.index("Preserve the analytics platform and existing visual identity"):workflow.index("mkdir -p web/analytics-evidence")]
+    assert "verify_protected_changes.py" in step and '"$CANDIDATE_SHA"' in step and "git diff --exit-code" not in step
+    assert step.split("-- ", 1)[1].split(")")[0].split() == BETA_PATHS
+
+
+def test_v9_exception_covers_only_pinned_files_and_unauthorized_changes_still_fail(monkeypatch):
+    m = _manifest("v9-development")
+    pinned = {p: e["sha256"] for p, e in m["modified_exact"].items()}
+    monkeypatch.setattr(guard, "file_sha256", lambda path: pinned.get(path, "f" * 64))
+    approved, rejected = guard.evaluate([("M", p) for p in pinned], m, "v9-development", True, none_removed)
+    assert len(approved) == len(pinned) == 5 and not rejected
+    # Anything else in the beta path list, a different style.css, a deletion, or another branch is rejected.
+    unauthorized = [("M", "web/src/editorial-polish.css"), ("M", "web/src/secondary-navigation.css"), ("M", "src/cfb_analytics/model.py"),
+                    ("M", "data/season-2026-report.json"), ("D", "web/src/style.css"), ("A", "web/public/new-data.json")]
+    _, rejected = guard.evaluate(unauthorized, m, "v9-development", True, none_removed)
+    assert len(rejected) == len(unauthorized)
+    monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)      # style.css edited after review
+    _, rejected = guard.evaluate([("M", "web/src/style.css")], m, "v9-development", True, none_removed)
+    assert len(rejected) == 1
+    for branch, same_repo in (("main", True), ("public-beta-analytics", True), ("v9-development", False)):
+        _, rejected = guard.evaluate([("M", "web/src/style.css")], m, branch, same_repo, none_removed)
+        assert len(rejected) == 1

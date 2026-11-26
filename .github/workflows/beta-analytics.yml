@@ -32,10 +32,19 @@ jobs:
         with:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           guard_base="$(git merge-base "$GUARD_BASE_SHA" "$CANDIDATE_SHA")"
           echo "Guard baseline: $guard_base"
-          git diff --exit-code "$guard_base" "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          # Owner-authorized (V9 release preparation): the same reviewed per-release manifest mechanism every other
+          # guard uses. Byte-identical on every branch; only a same-repository PR whose head branch a manifest in
+          # .github/release-manifests/ names may make exactly that manifest's pinned changes. Same path list as before.
+          git worktree add -q --detach /tmp/guard-candidate "$CANDIDATE_SHA"
+          (cd /tmp/guard-candidate && python3 scripts/verify_protected_changes.py "$guard_base" "$HEAD_REF" "$SAME_REPO" \
+            -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css)
+          git worktree remove --force /tmp/guard-candidate
           mkdir -p web/analytics-evidence
           printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
           git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
