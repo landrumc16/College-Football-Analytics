@@ -123,6 +123,14 @@ safety policy blocked it as a budget change, so it needs explicit owner authoriz
    - both sides' appended tests are kept.
 3. Result: full suite 839 passed, 2 skipped; guard and freshness tests 42 of 42.
 
+## Owner decision: device testing (November 26)
+
+The owner accepted the automated device evidence (`docs/V9-DEVICE-TESTING.md`) in place of manual owner testing.
+Physical-device testing and iPhone offline-app lifecycle verification are **known limitations, not release
+blockers**. The automation is preserved as `web/tests/device-profiles.mjs` and
+`.github/workflows/device-profiles.yml`: WebKit iPhone/iPad and Chromium Android profiles, run on web pull requests and
+on demand. `docs/V9-ANDROID-CHECKLIST.md` remains optional reference material only.
+
 ## Remaining limitations
 
 - **Physical devices:** Android and iPhone not tested; use `docs/V9-ANDROID-CHECKLIST.md`.
