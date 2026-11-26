@@ -95,13 +95,13 @@ def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-reliability", "v7-development", "v9-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
     for head_ref, same_repo in (("v8-development", True), ("dual-projection-development", True), ("beta-rankings-usability", True),
                                 ("main", True), ("", True), ("prediction-explanations", True), ("v7-development", False),
-                                ("freshness-reliability", False)):
+                                ("freshness-reliability", False), ("freshness-alert-flapping", False)):
         assert guard.select_manifest(manifests, head_ref, same_repo) is None
         _, rejected = guard.evaluate(V7_ROWS + [("M", "web/src/Navigation.tsx")], None, head_ref, same_repo,
                                      none_removed)
@@ -200,3 +200,14 @@ def test_v9_exception_covers_only_pinned_files_and_unauthorized_changes_still_fa
     for branch, same_repo in (("main", True), ("public-beta-analytics", True), ("v9-development", False)):
         _, rejected = guard.evaluate([("M", "web/src/style.css")], m, branch, same_repo, none_removed)
         assert len(rejected) == 1
+
+
+def test_freshness_alert_flapping_manifest_pins_only_the_monitor():
+    m = _manifest("freshness-alert-flapping")
+    assert m["added_files"] == {} and m["added_file_patterns"] == {} and m["modified_additive_only"] == {}
+    assert set(m["modified_exact"]) == {"src/cfb_analytics/freshness_monitor.py"}
+    approved, rejected = guard.evaluate([("M", "src/cfb_analytics/freshness_monitor.py")], m, "freshness-alert-flapping", True, none_removed)
+    assert rejected == [] and len(approved) == 1
+    _, rejected = guard.evaluate([("M", "src/cfb_analytics/event_watcher.py"), ("M", "data/season-2026-report.json")],
+                                 m, "freshness-alert-flapping", True, none_removed)
+    assert len(rejected) == 2

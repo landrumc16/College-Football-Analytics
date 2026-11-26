@@ -1,0 +1,14 @@
+{
+  "release": "Freshness alert flapping hotfix (PR #54 follow-up)",
+  "head_ref": "freshness-alert-flapping",
+  "purpose": "Narrow exception for one reviewed edit to the freshness monitor: alerts a caller cannot evaluate are carried over and only critical-alert changes redeploy the site. Applies only to pull requests from freshness-alert-flapping in this repository. Remove after merge.",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/freshness_monitor.py": {
+      "reason": "Keepers carry over quota and watcher alerts they cannot evaluate; the site is redeployed only when critical alerts change (stops issue flapping and redeploy churn). No model, data or rating change",
+      "sha256": "bea90fa39a656de940a2b2732d7c3d540ef07b2270cdb1e1d3b0996ee40e1595"
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Decision and Exact State
 
-Do not merge either PR without explicit owner approval. PR #56 must be approved and released first; then reconcile V9 with actual main and obtain separate approval of the final tested V9 head. This preparation does not authorize production changes.
+The owner explicitly approved PR #56 at its verified head. It merged as `79a3b1bf42236a852caf11b15c78b12b5a636a7e`. V9 is reconciled with that main revision. PR #63 still requires separate explicit owner approval; do not merge or deploy it automatically.
 
 - PR #56: `edc9598aab01b625ad68144e93feea9f999a3a61`, open, mergeable, 11 successful checks and one expected skip at inspection.
 - PR #63 input head: `52c477e8d19e23f4008ef68b68f85bd6669ae5e1`, open, mergeable; only failing check was the stale JavaScript baseline.
@@ -42,8 +42,14 @@ If critical acceptance fails, halt release sign-off. Prefer restoration of the r
 
 ## Outstanding Gates
 
-- Owner approval and actual production verification of PR #56.
-- Reconciliation with resulting main and all final exact-head CI results.
+- Confirm successful PR #56 production run `45885177456` and retain its live verification evidence.
+- Inspect all final exact-head CI results for the reconciled candidate.
 - Final V9 approval, then authorized deployment and live verification.
 
 No new feature, model promotion, quantified rooting guide, accomplishment ranking, redesign or subscription is included. Existing small-sample dual-model accountability limitations remain honestly unavailable until authentic games settle. Previous private preview and completed automated-device evidence remain valid for the unchanged approved interface.
+
+## Post-Hotfix Reconciliation
+
+PR #56 head and 11 successful/one expected skipped checks were reconfirmed before the SHA-guarded authorized merge. Its production run is https://github.com/landrumc16/College-Football-Analytics/actions/runs/45885177456. Current production data and the exact monitor change are integrated. The sole conflict in tests/test_protected_guard.py retains all four reviewed manifest branches and both sets of negative tests. No frontend or device-test files changed from approved head fac98f8. All src files are byte-identical to post-hotfix main.
+
+Reconciled full Python regression with REQUIRE_WEB_BUILD=1: **839 passed, 2 skipped**, 26.78 seconds. The real offline React review build passes, including paired report/scenario and V9 packets. The first pre-commit test attempt correctly rejected the monitor because the guard hashes committed HEAD; rerunning against the committed merge passes without weakening the guard. Exact final remote CI results and live hotfix verification must be checked before owner release approval; this document does not predeclare those asynchronous results. Prior browser/device acceptance is reused for unchanged UI, alongside automatically triggered CI.

@@ -415,3 +415,26 @@ def test_monitor_pass_alerts_redeploys_the_status_and_the_site_status_reflects_i
     # Season over: an ended chain is idle, not interrupted.
     p.runs["event-watcher.yml"] = stopped
     assert fm.site_status(p, now, {"season": 2026, "games": []})["watcher"]["state"] in ("idle", "stopped")
+
+
+def test_watcher_and_keeper_passes_do_not_flip_the_issue_or_redeploy_on_warnings():
+    """Production 25 November: the watcher pass (with a quota reading) added a quota warning, the keeper pass (without
+    one) removed it, and every flip commented and redeployed. Callers now keep what they cannot evaluate, and only a
+    change in critical alerts redeploys the site."""
+    now = datetime(2026, 11, 25, 4, 0, tzinfo=timezone.utc)
+    snapshot = {"season": 2026, "games": [game(9, datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc), week=14)]}
+    running = [{"id": 2, "status": "in_progress", "updated_at": iso(now), "created_at": iso(now)}]
+    p = MonitorProviders(now, running, {"poll_weeks": {"ap_top25": 13, "coaches_top25": 13}, "cfp_published_at": "2026-11-24", "cfp_week": 13})
+    quota = {"remaining": 29, "spendable": 0, "days_to_reset": 6}
+    quiet = lambda *_: None
+    fm.run_pass(p, now=now, snapshot=snapshot, quota=quota, watcher_alerts=[], log=quiet, crons={})      # watcher
+    assert p.issues[1]["state"] == "open" and fm.keys_of(p.issues[1]["body"]) == ["quota-discretionary"]
+    comments = len(p.comments)
+    for _ in range(3):
+        fm.run_pass(p, now=now, snapshot=snapshot, log=quiet, crons={})                                   # keeper
+        fm.run_pass(p, now=now, snapshot=snapshot, quota=quota, watcher_alerts=[], log=quiet, crons={})   # watcher
+    assert fm.keys_of(p.issues[1]["body"]) == ["quota-discretionary"] and len(p.comments) == comments
+    assert p.dispatched == []                                     # warnings never redeploy the site
+    # The watcher, which can evaluate quota, clears it once the budget recovers; the issue closes.
+    fm.run_pass(p, now=now, snapshot=snapshot, quota={"remaining": 900, "spendable": 300, "days_to_reset": 6}, watcher_alerts=[], log=quiet, crons={})
+    assert p.issues[1]["state"] == "closed" and p.dispatched == []
