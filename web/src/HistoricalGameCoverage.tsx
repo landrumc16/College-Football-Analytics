@@ -28,10 +28,10 @@ export default function HistoricalGameCoverage({ onTeam }: { onTeam: (team: stri
     return () => { active = false }
   }, [])
   return <section className="accuracy-summary" aria-label="Historical FBS game coverage research">
-    <h3>Historical FBS game coverage · 2016–2025</h3>
+    <h3>Historical FBS Game Coverage · 2016–2025</h3>
     <p>Archived completed FBS-versus-FBS game counts for the documented research cohort. These are <strong>games played, not wins</strong>. This descriptive research has not received independent source-review attestation; it is not a Hype Index, strength ranking, trajectory grade, or prediction evaluation.</p>
     {data ? <><p>{data.programs.length} documented programs · 2020 shown separately because schedules were disrupted.</p>
-      <div className="table-wrap"><table><thead><tr><th>Program</th><th>2016–2019 games</th><th>2020 games</th><th>2021–2025 games</th><th>All 10 seasons</th></tr></thead><tbody>
+      <div className="table-wrap"><table><thead><tr><th>Program</th><th>2016–2019 Games</th><th>2020 Games</th><th>2021–2025 Games</th><th>All 10 Seasons</th></tr></thead><tbody>
       {data.programs.map(p => <tr key={p.team}><td><button type="button" onClick={() => onTeam(p.team)}>{p.team}</button></td><td>{p.completed_fbs_games_by_season.slice(0, 4).reduce((a,b)=>a+b,0)}</td><td>{p.completed_fbs_games_by_season[4]}</td><td>{p.completed_fbs_games_by_season.slice(5).reduce((a,b)=>a+b,0)}</td><td>{p.total_completed_fbs_games}</td></tr>)}
       </tbody></table></div></> : <p role="status">{error || 'Loading historical game coverage…'}</p>}
     <p><small>Source: archived V4 historical game artifacts. Independent source verification and national peer coverage are required before publishing grades.</small></p>

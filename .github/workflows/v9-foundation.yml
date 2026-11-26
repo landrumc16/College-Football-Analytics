@@ -1,0 +1,47 @@
+name: V9 isolated intelligence publication
+on:
+  push:
+    branches: [v9-development]
+    paths: ['scripts/v9*', 'scripts/audit_ui_titles.mjs', 'tests/v9-typography.mjs', 'tests/test_v9*', 'web/src/**', 'data/season-2026-report.json', 'data/cfbd-2026-games.json', 'web/public/dual-projections.json', '.github/workflows/v9-foundation.yml']
+permissions:
+  contents: write
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: pip install -e '.[dev]'
+      - run: npm install --prefix web --no-package-lock
+      - run: python -m pytest -q tests/test_v9_strength_snapshot.py tests/test_v9_intelligence.py
+        env:
+          REQUIRE_WEB_BUILD: '1'
+      - run: node tests/v9-contract-cases.mjs
+      - run: node tests/v9-typography.mjs
+      - run: node scripts/v9_intelligence.mjs /tmp/v9-publication
+      - run: python -m scripts.v9_accountability --retain --output /tmp/v9-publication/v9-accountability.json
+      - name: Retain development observations
+        run: |
+          mkdir -p docs/evidence/v9/strength-history
+          cp /tmp/v9-publication/strength-history/*.json docs/evidence/v9/strength-history/
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/evidence/v9/strength-history docs/evidence/v9/pregame
+          if ! git diff --cached --quiet; then
+            git commit -m "Retain V9 development strength observation"
+            git push origin HEAD:v9-development
+          fi
+      - run: node scripts/v9_preview.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v9-react-review
+          path: web/dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v9-intelligence-foundation
+          path: /tmp/v9-publication

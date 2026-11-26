@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { useLayoutEffect, useRef, useState } from 'react'
 import './secondary-navigation.css'
 
@@ -6,12 +7,11 @@ export const destinations = [
   { id: 'rankings', label: 'Rankings', views: [{ id: 'rankings', label: 'Model Rankings' }, { id: 'ap', label: 'Poll Rankings' }, { id: 'stock', label: 'Team Stock Watch' }] },
   { id: 'teams', label: 'Teams', views: [{ id: 'profile', label: 'Team Profiles' }, { id: 'compare', label: 'Compare & What If' }, { id: 'programs', label: 'Program Directory' }, { id: 'hype', label: 'Hype Index' }, { id: 'trajectory', label: 'Program Trajectory' }] },
   { id: 'playoffs', label: 'Playoffs', views: [{ id: 'cfp', label: 'CFP Projections' }, { id: 'conferences', label: 'Conference Races' }, { id: 'contenders', label: 'Contenders & Pretenders' }] },
-  { id: 'market', label: 'Market', views: [{ id: 'market', label: 'Market Analysis' }] },
-  { id: 'research', label: 'Research', views: [{ id: 'research', label: 'Prediction Accuracy' }, { id: 'history', label: 'Historical Research' }, { id: 'methods', label: 'Methodology' }, { id: 'sources', label: 'Data Sources' }, { id: 'validation', label: 'Model Validation' }] },
+  { id: 'research', label: 'Research', views: [{ id: 'research', label: 'Prediction Accuracy' }, { id: 'market', label: 'Market Intelligence' }, { id: 'history', label: 'Historical Research' }, { id: 'methods', label: 'Methodology' }, { id: 'sources', label: 'Data Sources' }, { id: 'validation', label: 'Model Validation' }] },
 ] as const
 
-/** Bottom navigation: five destinations. Research & Data stays a full destination, reached from the top menu. */
-export const primaryDestinations = destinations.filter(destination => destination.id !== 'research')
+/** Five primary destinations; Market remains a tool within Research. */
+export const primaryDestinations = destinations
 
 export type View = typeof destinations[number]['views'][number]['id']
 
@@ -43,9 +43,9 @@ export function SectionTabs({ label, items, value, onChange, panelId, onDropdown
   return <div className="secondary-navigation" ref={container}>
     <span className="secondary-selection" id={`${panelId}-selection`}>{items.find(item => item.id === value)?.label}</span>
     <label className="secondary-picker" hidden={!dropdown}>
-      <span className="secondary-selection">{label}</span>
+      <span className="secondary-selection">{titleCase(label)}</span>
       <select aria-label={label} aria-controls={panelId} value={value} onChange={event => onChange(event.target.value)}>
-        {items.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
+        {items.map(item => <option key={item.id} value={item.id}>{titleCase(item.label)}</option>)}
       </select>
     </label>
     <div className="section-tabs" ref={tabs} role="tablist" aria-label={label} aria-hidden={dropdown || undefined} data-measuring={dropdown || undefined}>
@@ -61,7 +61,7 @@ export function SectionTabs({ label, items, value, onChange, panelId, onDropdown
         const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
         buttons?.[next].focus()
         onChange(items[next].id)
-      }}>{item.label}</button>)}
+      }}>{titleCase(item.label)}</button>)}
     </div>
   </div>
 }

@@ -1,4 +1,4 @@
-// "Why this prediction?" helper: exact sums, Texas Tech at Baylor audit case, worse-record and neutral cases, no filler.
+// "Why This Prediction?" helper: exact sums, Texas Tech at Baylor audit case, worse-record and neutral cases, no filler.
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import vm from 'node:vm'

@@ -46,14 +46,14 @@ export default function MarketCalculator({ home, away, homeProbability, homeMarg
     <Heading id={`${id}-title`}>Market Analysis Calculator</Heading>
     <p className="market-source"><span className={`market-badge ${source.kind}`}>{source.kind === 'published' ? 'Published forecast' : 'Hypothetical matchup'}</span> {source.label}</p>
     <fieldset className="market-team">
-      <legend>1. Analyze for</legend>
+      <legend>1. Analyze For</legend>
       {[home, away].map(t => <label key={t} className={selected === t ? 'selected' : undefined}><input type="radio" name={`${id}-team`} value={t} checked={selected === t} onChange={() => choose(t)} />{t}</label>)}
     </fieldset>
     <p className="market-step">2. Type a market number for <strong>{selected}</strong>. Results update as you type. Numbers stay in this browser: nothing is retrieved, verified, saved or sent.</p>
     {moneylineCleared && <p className="market-note" role="status">Moneyline cleared: enter {selected}'s own moneyline. The other side cannot be derived because bookmaker margins differ by side.</p>}
     <div className="market-grid">
       <div className="market-card">
-        <label htmlFor={`${id}-spread`}>{selected} point spread</label>
+        <label htmlFor={`${id}-spread`}>{selected} Point Spread</label>
         <div className="market-input-row">
           <input id={`${id}-spread`} inputMode="decimal" autoComplete="off" placeholder="e.g. -7 or +3.5" value={spread}
             onChange={e => setSpread(e.target.value)} aria-describedby={`${id}-spread-help ${id}-spread-out`} aria-invalid={!!error(spreadParsed)} />
@@ -66,17 +66,17 @@ export default function MarketCalculator({ home, away, homeProbability, homeMarg
             const story = spreadStory(selected, opponent, model.margin, spreadParsed.value)
             return <div className="market-result">
               <p className="market-headline"><strong>{story.title}</strong></p>
-              <p><strong>Our prediction</strong></p><p>{story.modelText}</p>
-              <p><strong>Your entered betting line</strong></p><p>{story.lineText}</p>
-              <p><strong>What this means</strong></p><p>{story.meaning}</p>
-              <p><strong>Our take</strong></p><p>{story.take}</p>
+              <p><strong>Our Prediction</strong></p><p>{story.modelText}</p>
+              <p><strong>Your Entered Betting Line</strong></p><p>{story.lineText}</p>
+              <p><strong>What This Means</strong></p><p>{story.meaning}</p>
+              <p><strong>Our Take</strong></p><p>{story.take}</p>
               <small>Based on our model and the betting line you entered, not a verified live market line. Educational comparison only.</small>
             </div>
           })()}
         </div>
       </div>
       <div className="market-card">
-        <label htmlFor={`${id}-probability`}>{selected} prediction-market win probability (%)</label>
+        <label htmlFor={`${id}-probability`}>{selected} Prediction-Market Win Probability (%)</label>
         <input id={`${id}-probability`} inputMode="decimal" autoComplete="off" placeholder="0 to 100, e.g. 62" value={probability}
           onChange={e => setProbability(e.target.value)} aria-describedby={`${id}-probability-help ${id}-probability-out`} aria-invalid={!!error(probabilityParsed)} />
         <small id={`${id}-probability-help`}>The chance the market gives {selected} to win, as you read it.</small>
@@ -90,7 +90,7 @@ export default function MarketCalculator({ home, away, homeProbability, homeMarg
         </div>
       </div>
       <div className="market-card">
-        <label htmlFor={`${id}-moneyline`}>{selected} American moneyline</label>
+        <label htmlFor={`${id}-moneyline`}>{selected} American Moneyline</label>
         <div className="market-input-row">
           <input id={`${id}-moneyline`} inputMode="decimal" autoComplete="off" placeholder="e.g. -150 or +130" value={moneyline}
             onChange={e => { setMoneyline(e.target.value); setMoneylineCleared(false) }} aria-describedby={`${id}-moneyline-help ${id}-moneyline-out`} aria-invalid={!!error(moneylineParsed)} />

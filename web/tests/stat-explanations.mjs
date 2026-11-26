@@ -1,4 +1,4 @@
-// Browser acceptance: visible numbers -> plain-English takeaway -> collapsed "What do these numbers mean?" explanation,
+// Browser acceptance: visible numbers -> plain-English takeaway -> collapsed "What Do These Numbers Mean?" explanation,
 // across Teams, Rankings, Polls and Playoffs at five widths. Numbers must equal the published report.
 import assert from 'node:assert/strict';
 import { mkdir, readFile } from 'node:fs/promises';
@@ -18,15 +18,17 @@ const perf = report.performance?.[TEAM];
 const num = v => v.toFixed(2);
 
 // The standard: a takeaway, then the numbers, then a collapsed explainer that opens and closes from the keyboard.
-async function standard(page, scope, label) {
-  const takeaway = scope.locator('.stat-takeaway').first();
+async function standard(page, scope, label, exclude = '') {
+  const not = exclude ? `:not(${exclude} *)` : '';
+  const takeaway = scope.locator(`.stat-takeaway${not}`).first();
   assert.ok(await takeaway.isVisible(), `${label}: takeaway visible`);
   const text = (await takeaway.innerText()).trim();
   assert.ok(text.length > 20 && !/undefined|NaN|null/.test(text), `${label}: ${text}`);
-  const explain = scope.locator('details.stat-explain').first();
+  // The standard explainer is identified by its label (V9 adds other labelled explainers, e.g. postseason implications).
+  const explain = scope.locator(`details.stat-explain${not}`).filter({ has: page.locator(':scope > summary', { hasText: /^What Do These Numbers Mean\?$/ }) }).first();
   assert.equal(await explain.evaluate(d => d.open), false, `${label}: collapsed by default`);
   const summary = explain.locator(':scope > summary');
-  assert.equal((await summary.innerText()).trim(), 'What do these numbers mean?');
+  assert.equal((await summary.innerText()).trim(), 'What Do These Numbers Mean?');
   await summary.focus(); await page.keyboard.press('Enter');
   assert.equal(await explain.evaluate(d => d.open), true, `${label}: opens with Enter`);
   assert.ok((await explain.locator('.stat-explain-body').innerText()).length > 80, `${label}: explanation present`);
@@ -47,13 +49,13 @@ try {
     // Teams: profile overview tiles stay visible with their takeaway and explainer.
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await chooseSchool(page, 'Choose school', TEAM);
+    await chooseSchool(page, 'Choose School', TEAM);
     const profile = page.locator('.team-profile');
     const tile = profile.locator('.team-profile-tile').filter({ hasText: 'Current Model Rank' }).first();
     assert.equal((await tile.locator('strong').innerText()).trim(), `#${row.rank}`);
     assert.match(await standard(page, profile, 'profile overview'), new RegExp(`No\\. ${row.rank}`));
     // Schedule & Predictions: Performance vs. Expectations (approved reference design) and the season outlook.
-    await chooseSection(page, 'Team Profile sections', 'Schedule & Predictions');
+    await chooseSection(page, 'Team Profile Sections', 'Schedule & Predictions');
     const panel = page.locator('.performance-panel');
     await panel.waitFor();
     if (perf?.games_with_forecasts) {
@@ -76,8 +78,9 @@ try {
     await openDestination(page, 'Rankings');
     await chooseSection(page, 'Rankings sections', 'Model Rankings');
     const top = [...report.rankings].sort((a, b) => a.rank - b.rank)[0];
-    assert.match(await standard(page, page.locator('main'), 'model rankings'), new RegExp(`^${top.team} leads our rankings`));
-    assert.equal(await page.locator('main details.stat-explain').count(), 1, 'one explanation for the rankings group');
+    // V9 places the National Intelligence block (its own takeaway and explanation) above Model Rankings.
+    assert.match(await standard(page, page.locator('main'), 'model rankings', 'section.notice'), new RegExp(`^${top.team} leads our rankings`));
+    assert.equal(await page.locator('main details.stat-explain:not(section.notice *)').count(), 1, 'one explanation for the rankings group');
     // Polls.
     await chooseSection(page, 'Rankings sections', 'Poll Rankings');
     assert.match(await standard(page, page.locator('.poll-rankings'), 'poll rankings'), /AP and Coaches polls share/);

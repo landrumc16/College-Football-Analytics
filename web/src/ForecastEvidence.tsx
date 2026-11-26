@@ -16,15 +16,15 @@ export default function ForecastEvidence() {
   const baseline = data?.models.neutral_50_50
   return data && score ? <section aria-label="Independent pregame forecast verification" className="accuracy-summary verified-picks">
     <p className="section-kicker">THE TRACK RECORD</p>
-    <h3>Verified pregame picks</h3>
+    <h3>Verified Pregame Picks</h3>
     <Takeaway>{forecastTakeaway(score.games, score.brier, baseline?.brier)}</Takeaway>
-    <div className="research-scoreline"><div><strong>{(score.accuracy * 100).toFixed(1)}%</strong><span>Correct winners</span></div><p>{score.games} predictions checked against independent final scores. Picks were published before kickoff.</p></div>
+    <div className="research-scoreline"><div><strong>{(score.accuracy * 100).toFixed(1)}%</strong><span>Correct Winners</span></div><p>{score.games} predictions checked against independent final scores. Picks were published before kickoff.</p></div>
     <p className="metric-note">A small sample from parts of two weeks—not a full season or a promise of future accuracy. {score.games} of {data.eligible_completed_games} eligible games are covered ({(data.forecast_coverage * 100).toFixed(1)}%).</p>
-    <details><summary>Scores, sample and publication record</summary>
+    <details><summary>Scores, Sample and Publication Record</summary>
     <p>Scope: {data.evaluation_scope}. These {score.games} picks were published before kickoff and matched to independent NCAA final scores. Outcomes as of {data.outcome_as_of}.</p>
     <p>Correct winners {(score.accuracy * 100).toFixed(1)}% · Brier {score.brier.toFixed(4)} · log loss {score.logloss.toFixed(4)}. Coverage: {score.games} of {data.eligible_completed_games} eligible completed games ({(data.forecast_coverage * 100).toFixed(1)}%). This covers two partial weeks, not full-season or future accuracy.</p>
     {baseline && <p>Same-game neutral 50/50 reference: Brier {baseline.brier.toFixed(4)} · log loss {baseline.logloss.toFixed(4)}. Lower is better; this reference is not a competing forecast model.</p>}
-    <div className="table-wrap"><table><thead><tr><th>Predicted winner confidence</th><th>Games</th><th>Winner accuracy</th><th>Brier</th></tr></thead><tbody>{Object.entries(score.confidence_segments).map(([segment, s]) => <tr key={segment}><td>{segment === 'low' ? '50–60%' : segment === 'medium' ? '60–75%' : '75–100%'}</td><td>{s.games}</td><td>{s.accuracy == null ? 'N/A' : `${(100 * s.accuracy).toFixed(1)}%`}</td><td>{s.brier?.toFixed(4) ?? 'N/A'}</td></tr>)}</tbody></table></div>
+    <div className="table-wrap"><table><thead><tr><th>Predicted Winner Confidence</th><th>Games</th><th>Winner Accuracy</th><th>Brier</th></tr></thead><tbody>{Object.entries(score.confidence_segments).map(([segment, s]) => <tr key={segment}><td>{segment === 'low' ? '50–60%' : segment === 'medium' ? '60–75%' : '75–100%'}</td><td>{s.games}</td><td>{s.accuracy == null ? 'N/A' : `${(100 * s.accuracy).toFixed(1)}%`}</td><td>{s.brier?.toFixed(4) ?? 'N/A'}</td></tr>)}</tbody></table></div>
     <p><a href={data.forecast_publication.workflow_url} target="_blank" rel="noreferrer">Original pre-kickoff publication</a>. Retrospective studies and incomplete legacy records are excluded.</p>
     </details>
   </section> : null

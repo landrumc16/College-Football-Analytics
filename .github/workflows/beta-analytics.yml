@@ -32,10 +32,19 @@ jobs:
         with:
           fetch-depth: 0
       - name: Preserve the analytics platform and existing visual identity
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           guard_base="$(git merge-base "$GUARD_BASE_SHA" "$CANDIDATE_SHA")"
           echo "Guard baseline: $guard_base"
-          git diff --exit-code "$guard_base" "$CANDIDATE_SHA" -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css
+          # Owner-authorized (V9 release preparation): the same reviewed per-release manifest mechanism every other
+          # guard uses. Byte-identical on every branch; only a same-repository PR whose head branch a manifest in
+          # .github/release-manifests/ names may make exactly that manifest's pinned changes. Same path list as before.
+          git worktree add -q --detach /tmp/guard-candidate "$CANDIDATE_SHA"
+          (cd /tmp/guard-candidate && python3 scripts/verify_protected_changes.py "$guard_base" "$HEAD_REF" "$SAME_REPO" \
+            -- src data research web/public web/package.json web/src/scenarios.ts web/src/scenario.worker.ts web/src/programMetrics.ts web/src/Navigation.tsx web/src/EditorialHome.tsx web/src/style.css web/src/editorial-polish.css web/src/secondary-navigation.css)
+          git worktree remove --force /tmp/guard-candidate
           mkdir -p web/analytics-evidence
           printf '%s\n' "$CANDIDATE_SHA" > web/analytics-evidence/tested-sha.txt
           git rev-parse HEAD > web/analytics-evidence/checkout-sha.txt
@@ -91,12 +100,12 @@ jobs:
           node web/tests/editorial-home.mjs
           node web/tests/v6-browser.mjs
       - name: Compare gzip JavaScript against the current production source
-        # Baseline: production deployment 474c72d (2026-11-17, PR #38), built with the same env.
-        # Re-baselined from the pre-analytics 451f610 because released V7 work already used 11,046
-        # bytes of the allowance; the 10,240-byte growth limit is unchanged. See docs/PUBLIC-BETA-READINESS.md.
+        # Owner-authorized Option C: current production main b204bd6 (2026-11-26).
+        # Build both revisions with the same environment and dependencies.
+        # Preserve the 10,240-byte growth allowance and every privacy/browser safeguard.
         run: |
           cp -a web/dist /tmp/analytics-dist
-          git worktree add --detach /tmp/cfa-without-analytics 474c72d09c0e9beaf0e4c2988f6fc9dac8fb14c8
+          git worktree add --detach /tmp/cfa-without-analytics b204bd6f38629540d45bfb4a885b20909b7f2c0b
           ln -s "$GITHUB_WORKSPACE/web/node_modules" /tmp/cfa-without-analytics/web/node_modules
           cp web/public/*.json /tmp/cfa-without-analytics/web/public/
           npm --prefix /tmp/cfa-without-analytics/web run build

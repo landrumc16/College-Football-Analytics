@@ -1,0 +1,33 @@
+{
+  "kind": "static_artifact_checks_not_browser_acceptance",
+  "scenario_report_identity": "passed",
+  "pwa_manifest_icons_shell": "passed_static_only",
+  "browser_viewports": {
+    "375": "not_verified_no_supported_viewport_control",
+    "390": "not_verified_no_supported_viewport_control",
+    "430": "not_verified_no_supported_viewport_control",
+    "768": "not_verified_no_supported_viewport_control",
+    "1536": "not_verified_no_supported_viewport_control",
+    "1363x936": "core_journeys_observed; requested five widths remain unverified"
+  },
+  "model_code": {
+    "src/cfb_analytics/model.py": "2b09c584e722a4f34cb7afe0436a5c7c717fecaff0f8db8ef807e54310bb6266",
+    "src/cfb_analytics/ratings.py": "1dc8a8622fc92268189cd23995fe33bed7f79d00ede0cf2a31f0fb2a7ed78d37",
+    "src/cfb_analytics/dual_projection.py": "42adef29bd023fef17a2181e81cc8df9795b93ce53bc07d370d2d8f7a0e06b69"
+  },
+  "artifacts": {
+    "assets/index-qa18nLWu.js": "ae2eec3917b012bcc910be3b33001e671cdb8c5f1c70dc2ee5ca4c2ed4dd0c97",
+    "assets/index-DdhtErqf.css": "665595e9e789038cbae0be50d7ee45d4ab8c80e4d7f324512dbd67a946cf153c",
+    "assets/scenario.worker-Ccc6b3Ak.js": "350dcf694cf6e3c240ba4bcc6a66cb6396a4adc527bb5c6ea8d53ece5ab29f42",
+    "team-intelligence.json": "541c314636a3f026a99b43edb38566cffc091aebe4d71e8728013f74edb25148",
+    "v9-accountability.json": "8828516c6b88604e29e2e5b5f5d4034b3b183646ec70c66e794d16646040b07b",
+    "season-report.json": "f9819610f47e61414ebecbb2022763bfcc9df82bfaded6b9098cc49598101ed7",
+    "v6-scenario-input.json": "1707a77c297ceb746136c5f0a06282848dbe30646f97f89f1c16a2a668cc14a1"
+  },
+  "gzip_bytes": {
+    "index-qa18nLWu.js": 121572,
+    "index-DdhtErqf.css": 13745,
+    "scenario.worker-Ccc6b3Ak.js": 1543
+  },
+  "browser_acceptance_receipt": "docs/V9-BROWSER-ACCEPTANCE.md"
+}

@@ -42,23 +42,23 @@ try {
     const od = page.locator('.offense-defense');
     await od.getByRole('heading', { name: 'Offense & Defense', level: 2 }).waitFor();
     assert.ok(page.url().endsWith('#/stats'));
-    await chooseSchool(page, 'Choose team', TEAM);
-    const offense = od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Opponent-adjusted' }) });
+    await chooseSchool(page, 'Choose Team', TEAM);
+    const offense = od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Opponent\-adjusted/i }) });
     await offense.waitFor();
-    const epaRow = offense.locator('tr', { has: page.getByRole('rowheader', { name: /^Expected points added per play/ }) });
+    const epaRow = offense.locator('tr', { has: page.getByRole('rowheader', { name: /^Expected points added per play/i }) });
     const epaText = (await epaRow.innerText()).replace(/\s+/g, ' ');
     assert.ok(epaText.includes(ttEpa[5].toFixed(2)) && epaText.includes(`#${ttEpa[7]} of ${stats.fbs_teams}`), epaText);
     // Keyboard switch to Traditional, then Power Four only (arrow keys move within the radio group).
-    await od.getByRole('radio', { name: 'Opponent-adjusted' }).focus();
+    await od.getByRole('radio', { name: 'Opponent-Adjusted' }).focus();
     await page.keyboard.press('ArrowLeft');
-    assert.ok(await od.getByRole('radio', { name: 'Power Four only' }).isChecked());
-    const p4Text = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Power Four only' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
+    assert.ok(await od.getByRole('radio', { name: 'Power Four Only' }).isChecked());
+    const p4Text = (await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Power\ Four\ only/i }) }).locator('tr', { hasText: /Expected points added per play/i }).innerText()).replace(/\s+/g, ' ');
     assert.ok(p4Text.includes(`#${ttEpa[3]} of ${stats.power_teams}`) && p4Text.includes(`${ttEpa[4]} games`), p4Text);
     await od.getByRole('radio', { name: 'Traditional' }).check();
-    const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Expected points added per play' }).innerText()).replace(/\s+/g, ' ');
+    const rawText = (await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Traditional/i }) }).locator('tr', { hasText: /Expected points added per play/i }).innerText()).replace(/\s+/g, ' ');
     assert.ok(rawText.includes(`#${ttEpa[1]} of ${stats.fbs_teams}`), rawText);
     // Core statistics visible; detail tables collapsed until requested.
-    assert.ok(await od.locator('table', { has: page.locator('caption', { hasText: 'Offense · Traditional' }) }).locator('tr', { hasText: 'Points per drive' }).isVisible());
+    assert.ok(await od.locator('table', { has: page.locator('caption', { hasText: /Offense\ ·\ Traditional/i }) }).locator('tr', { hasText: 'Points per drive' }).isVisible());
     const detail = od.locator('details.od-unit-more', { hasText: 'Offense: running, passing and situational' });
     assert.equal(await detail.getAttribute('open'), null);
     assert.ok(!(await detail.locator('tr', { hasText: 'Third-down conversion rate' }).isVisible()));
@@ -76,9 +76,9 @@ try {
     await guide.locator('summary').click();
     if (width === 390 || width === 1536) await page.screenshot({ path: `${evidence}/profile-top-${width}.png` });
     // Recent form and consistency are present with uncertainty-gated labels.
-    await od.getByRole('heading', { name: 'Recent form and consistency' }).waitFor();
+    await od.getByRole('heading', { name: 'Recent Form and Consistency' }).waitFor();
     // Matchup panel against an opponent.
-    await chooseSchool(page, 'Choose opponent', OPP);
+    await chooseSchool(page, 'Choose Opponent', OPP);
     await od.getByRole('heading', { name: `How ${TEAM} and ${OPP} match up` }).waitFor();
     // Hierarchy: at most three advantage cards first, each naming who benefits with the statistic and comparison.
     const cards = od.getByRole('list', { name: 'Biggest matchup advantages' }).getByRole('listitem');
@@ -98,7 +98,7 @@ try {
     await page.keyboard.press('Enter');
     assert.match(await calc.innerText(), /Against average opponents, .* offense posts .* defense allows .*national standard deviations/s);
     // Detailed factors stay available behind a keyboard-operable expander.
-    const factors = od.locator('details.od-more', { hasText: 'All matchup factors' });
+    const factors = od.locator('details.od-more', { hasText: 'All Matchup Factors' });
     assert.equal(await factors.getAttribute('open'), null);
     await factors.locator('summary').focus();
     await page.keyboard.press('Enter');
@@ -111,19 +111,19 @@ try {
       await od.screenshot({ path: `${evidence}/offense-defense-${width}.png` });
     }
     // Non-power team: Power Four view explains why it does not apply.
-    await chooseSchool(page, 'Choose team', nonPower);
-    await od.getByRole('radio', { name: 'Power Four only' }).check();
+    await chooseSchool(page, 'Choose Team', nonPower);
+    await od.getByRole('radio', { name: 'Power Four Only' }).check();
     await od.getByText('is not in a power conference', { exact: false }).waitFor();
     // Leaderboard ranks match the data and selecting a row changes the team (collapsed by default on phones).
-    await od.getByRole('radio', { name: 'Opponent-adjusted' }).check();
+    await od.getByRole('radio', { name: 'Opponent-Adjusted' }).check();
     const leaders = od.locator('details.od-leaders');
     assert.equal(await leaders.getAttribute('open') !== null, width >= 768, `leaders open state at ${width}`);
     if (width < 768) { await leaders.locator('summary').focus(); await page.keyboard.press('Enter'); }
     const first = Object.entries(stats.teams).find(([, t]) => t.offense.epa[7] === 1)[0];
-    const board = od.locator('table', { has: page.locator('caption', { hasText: 'Offense: Expected points added per play · Opponent-adjusted' }) });
+    const board = od.locator('table', { has: page.locator('caption', { hasText: /Offense:\ Expected\ points\ added\ per\ play\ ·\ Opponent\-adjusted/i }) });
     assert.equal((await board.locator('tbody tr').first().innerText()).split(/\s+/)[0], '1');
     await board.getByRole('button', { name: first, exact: true }).click();
-    assert.equal(await page.getByLabel('Choose team', { exact: true }).inputValue(), first);
+    assert.equal(await page.getByLabel('Choose Team', { exact: true }).inputValue(), first);
     // Fixed bottom navigation never covers the end of the page.
     if (width < 768) {
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -142,18 +142,18 @@ try {
     // Contextual entry points: Team Profile, Rankings, Compare.
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await chooseSchool(page, 'Choose school', TEAM);
+    await chooseSchool(page, 'Choose School', TEAM);
     await page.getByRole('button', { name: 'Offense & Defense', exact: true }).click();
-    assert.equal(await page.getByLabel('Choose team', { exact: true }).inputValue(), TEAM);
+    assert.equal(await page.getByLabel('Choose Team', { exact: true }).inputValue(), TEAM);
     await openDestination(page, 'Rankings');
-    await page.getByRole('button', { name: 'Offense and defense rankings' }).click();
-    await od.getByRole('heading', { name: 'National leaders' }).waitFor();
+    await page.getByRole('button', { name: 'Offense and Defense Rankings' }).click();
+    await od.getByRole('heading', { name: 'National Leaders' }).waitFor();
     assert.notEqual(await od.locator('details.od-leaders').getAttribute('open'), null, 'Rankings link opens the leaders');
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Compare & What If');
-    await chooseSchool(page, 'First school', TEAM);
-    await chooseSchool(page, 'Second school', OPP);
-    await page.getByRole('button', { name: 'See how these offenses and defenses match up' }).click();
+    await chooseSchool(page, 'First School', TEAM);
+    await chooseSchool(page, 'Second School', OPP);
+    await page.getByRole('button', { name: 'See How These Offenses and Defenses Match Up' }).click();
     await od.getByRole('heading', { name: `How ${TEAM} and ${OPP} match up` }).waitFor();
     assert.deepEqual(errors, [], `page errors at ${width}`);
     await page.close();

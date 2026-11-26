@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 type PollEntry = { team: string; rank: number }
 import { StatExplain, Takeaway } from './StatExplain'
 import { pollTakeaway } from './statTakeaways'
@@ -37,7 +38,7 @@ export default function PollRankings({ snapshot, conferenceTeams, search, onSear
   const header = (key: PollSortKey) => (
     <th scope="col" aria-sort={sort === key ? 'ascending' : 'none'}>
       <button type="button" className="poll-sort-button" onClick={() => onSort(key)} aria-label={`Sort by ${LABELS[key]} Poll ranking`}>
-        {LABELS[key]}<span aria-hidden="true">{sort === key ? ' ▲' : ''}</span>
+        {titleCase(LABELS[key])}<span aria-hidden="true">{sort === key ? ' ▲' : ''}</span>
       </button>
     </th>
   )
@@ -47,16 +48,16 @@ export default function PollRankings({ snapshot, conferenceTeams, search, onSear
     <p>Poll season {snapshot.season} · Week {snapshot.week} · Source: {snapshot.source}.</p>
     {pollTakeaway(snapshot.ap_top25, snapshot.coaches_top25) && <Takeaway>{pollTakeaway(snapshot.ap_top25, snapshot.coaches_top25)}</Takeaway>}
     <div className="poll-filters">
-      <label>Search teams <input aria-label="Search poll teams" placeholder="Search teams…" value={search} onChange={e => onSearch(e.target.value)} /></label>
+      <label>Search Teams <input aria-label="Search poll teams" placeholder="Search teams…" value={search} onChange={e => onSearch(e.target.value)} /></label>
       <label>Conference <select aria-label="Filter polls by conference" value={conference} onChange={e => onConference(e.target.value)}>
-        <option value="all">All conferences</option>
+        <option value="all">All Conferences</option>
         {Object.keys(conferenceTeams).sort().map(name => <option key={name} value={name}>{name}</option>)}
       </select></label>
     </div>
     <p className="visually-hidden" role="status" aria-live="polite">Sorted by {LABELS[sort]} Poll ranking</p>
     <div className="table-wrap poll-rankings-table">
       <table>
-        <caption className="visually-hidden">AP and Coaches Poll rankings, sorted by {LABELS[sort]} Poll</caption>
+        <caption className="visually-hidden">AP and Coaches Poll Rankings, Sorted by {LABELS[sort]} Poll</caption>
         <thead><tr><th scope="col">Team</th>{header('ap')}{header('coaches')}</tr></thead>
         <tbody>{visible.map(row => <tr key={row.team}>
           <th scope="row" className="team">{row.team}</th>

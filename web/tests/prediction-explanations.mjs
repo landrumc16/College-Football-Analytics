@@ -1,4 +1,4 @@
-// Browser acceptance: "Why this prediction?" inside Game Predictions cards, five widths plus an Android-sized phone.
+// Browser acceptance: "Why This Prediction?" inside Game Predictions cards, five widths plus an Android-sized phone.
 import assert from 'node:assert/strict';
 import { mkdir, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -37,7 +37,7 @@ async function contrast(root) {
 async function openPredictions(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await openDestination(page, 'Home');
-  await page.getByRole('button', { name: 'All games', exact: false }).click();
+  await page.getByRole('button', { name: 'All Games', exact: false }).click();
   await page.getByRole('heading', { name: 'Game Predictions', level: 2 }).waitFor();
 }
 
@@ -73,7 +73,7 @@ try {
     const fav = tt.official.home_margin >= 0 ? tt.home : tt.away;
     assert.equal((await card.locator('.prediction-pick strong').innerText()).trim(), fav);
     const why = await openWhy(page, card);
-    assert.equal(await why.locator(':scope > summary').innerText(), 'Why this prediction?');
+    assert.equal(await why.locator(':scope > summary').innerText(), 'Why This Prediction?');
     const text = (await why.innerText()).replace(/\s+/g, ' ');
     assert.ok(text.includes(`Official forecast: ${fav} by ${Math.abs(tt.official.home_margin).toFixed(1)} points.`), text);
     if (auditCase) {
@@ -81,7 +81,7 @@ try {
       assert.match(text, /Official forecast: Texas Tech by 1\.1 points\. Standard: Texas Tech by 0\.9\. Momentum: Texas Tech by 2\.3\./);
       assert.match(text, /win over FCS Abilene Christian counts as its weakest game/);
     }
-    for (const title of ['Team strength', 'Schedule and quality of opponents', 'Offense vs. defense', 'Recent performance', 'Home field'])
+    for (const title of ['Team Strength', 'Schedule and Quality of Opponents', 'Offense vs. Defense', 'Recent Performance', 'Home Field'])
       assert.ok(new RegExp(title, 'i').test(text), `${title} at ${label}`);
     assert.match(text, /Not included in any model: Quarterback changes/);
     // The numbers sit behind a second expander; each row adds up to its forecast.
@@ -111,7 +111,7 @@ try {
     assert.ok(text2.includes(other.home) || text2.includes(other.away), text2);
     assert.notEqual(text2, (await why.locator('.wp-bottom').count()) ? await why.locator('.wp-bottom').innerText() : '', 'explanations differ');
     // Existing card features remain.
-    for (const name of ['Share prediction', 'Compare teams', 'Market analysis']) assert.equal(await card2.getByRole('button', { name }).count(), 1, name);
+    for (const name of ['Share Prediction', 'Compare Teams', 'Market Analysis']) assert.equal(await card2.getByRole('button', { name }).count(), 1, name);
     assert.deepEqual(errors, [], `page errors at ${label}`);
     await ctx.close();
     console.log(`Why this prediction passed at ${label}`);

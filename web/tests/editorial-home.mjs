@@ -29,7 +29,7 @@ try {
     for (const team of ['Texas Tech','Texas A&M','Georgia']) {
       const add = editor.locator('.favorite-add');
       if (!(await add.evaluate(element => element.open))) await add.locator('summary').click();
-      await editor.getByLabel('Add favorite team').fill(team);
+      await editor.getByLabel('Add Favorite Team').fill(team);
       await editor.getByRole('button', { name: 'Save Team', exact: true }).click();
       await editor.getByRole('button', { name: `Remove ${team} from favorites`, exact: true }).waitFor();
     }
@@ -75,8 +75,8 @@ try {
     await assertSection(page, 'Rankings sections', 'Model Rankings');
     await nav.getByRole('button', { name: 'Teams', exact: true }).click();
     for (const label of ['Overview','Schedule & Predictions','Historical Intelligence','Program Report Card']) {
-      await chooseSection(page, 'Team Profile sections', label);
-      await assertNavigationFits(page, 'Team Profile sections', width);
+      await chooseSection(page, 'Team Profile Sections', label);
+      await assertNavigationFits(page, 'Team Profile Sections', width);
       await page.screenshot({ path: `web/editorial-evidence/profile-${label.split(' ')[0].toLowerCase()}-${width}.png`, fullPage: true });
     }
     for (const destination of ['Rankings','Teams','Playoffs','Research']) {
@@ -100,35 +100,35 @@ try {
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.getByRole('button', { name: 'Open Texas Tech Team Profile', exact: true }).click();
     await page.getByRole('heading', { name: 'Team Profile', exact: true }).waitFor();
-    assert.equal(await page.getByLabel('Choose school').inputValue(), 'Texas Tech');
+    assert.equal(await page.getByLabel('Choose School').inputValue(), 'Texas Tech');
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
-    await page.getByRole('button', { name: 'Full rankings', exact: false }).click();
+    await page.getByRole('button', { name: 'Full Rankings', exact: false }).click();
     await page.getByRole('heading', { name: 'Model Rankings', exact: true }).waitFor();
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
-    await page.getByRole('button', { name: 'CFP outlook', exact: false }).click();
+    await page.getByRole('button', { name: 'CFP Outlook', exact: false }).click();
     await page.getByRole('heading', { name: 'Projected 12-Team CFP Field', exact: true }).waitFor();
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.locator('.editorial-spotlight button').click();
-    await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+    await assertSection(page, 'Team Profile Sections', 'Historical Intelligence');
     if (width === 390) {
       await page.setViewportSize({ width: 1536, height: 900 });
-      await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).waitFor();
-      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+      await page.getByRole('tablist', { name: 'Team Profile Sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile Sections', 'Historical Intelligence');
       await page.setViewportSize({ width: 390, height: 844 });
-      await page.getByRole('combobox', { name: 'Team Profile sections', exact: true }).waitFor();
-      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+      await page.getByRole('combobox', { name: 'Team Profile Sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile Sections', 'Historical Intelligence');
     }
-    assert.equal(await page.getByLabel('Choose school').inputValue(), 'Texas Tech');
+    assert.equal(await page.getByLabel('Choose School').inputValue(), 'Texas Tech');
     if (width === 1536) {
       // Constrained desktop containers must also use a picker, regardless of viewport.
       const constrained = await page.addStyleTag({ content: '.team-profile{max-width:420px}' });
-      await page.getByRole('combobox', { name: 'Team Profile sections', exact: true }).waitFor();
-      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
-      await assertNavigationFits(page, 'Team Profile sections', width);
+      await page.getByRole('combobox', { name: 'Team Profile Sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile Sections', 'Historical Intelligence');
+      await assertNavigationFits(page, 'Team Profile Sections', width);
       await page.screenshot({ path: 'web/editorial-evidence/secondary-narrow-container-1536.png' });
       await constrained.evaluate(element => element.remove());
-      await page.getByRole('tablist', { name: 'Team Profile sections', exact: true }).waitFor();
-      await assertSection(page, 'Team Profile sections', 'Historical Intelligence');
+      await page.getByRole('tablist', { name: 'Team Profile Sections', exact: true }).waitFor();
+      await assertSection(page, 'Team Profile Sections', 'Historical Intelligence');
     }
     await nav.getByRole('button', { name: 'Home', exact: true }).click();
     await page.locator('summary[aria-label="App menu"]').click();

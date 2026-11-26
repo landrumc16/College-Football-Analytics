@@ -4,6 +4,8 @@ Earlier releases' manifests were removed after merge (the prediction-explanation
 manifest now is the temporary, additions-only v7-development event-driven manifest; it must be removed after that merge. The exception mechanism stays tested
 with a fixture copy of the reviewed V7 manifest."""
 import importlib.util
+import os
+import subprocess
 import json
 from pathlib import Path
 
@@ -89,11 +91,11 @@ def _manifest(head_ref):
     return next(m for m in guard.load_manifests(MANIFEST_DIR) if m["head_ref"] == head_ref)
 
 
-def test_only_the_additions_only_event_driven_manifest_remains_and_selection_is_per_branch():
+def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "v7-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -118,10 +120,37 @@ def test_event_driven_manifest_lists_exactly_the_new_protected_files():
     assert listed == present, {"unlisted": sorted(present - listed), "missing": sorted(listed - present)}
 
 
-def test_released_v7_navigation_matches_the_reviewed_pins():
-    # Production still carries exactly the owner-reviewed V7 navigation; any future edit needs a new review.
-    for path, entry in MANIFEST["modified_exact"].items():
-        assert guard.head_sha256(path) == entry["sha256"], path
+def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
+    # The V7 fixture above remains unchanged; V9 is a separately authorized interface release.
+    m = _manifest("v9-development")
+    paths = {"web/src/Navigation.tsx", "web/src/EditorialHome.tsx", "web/src/style.css", "web/public/dual-projections.json", "web/public/prediction-explanations.json"}
+    assert set(m["modified_exact"]) == paths
+    assert m["added_files"] == m["added_file_patterns"] == m["modified_additive_only"] == {}
+    # Published JSON legitimately changes on main's existing data refreshes.
+    # Exact live pins are a V9 release-branch gate, not a permanent freeze of production data.
+    branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME") or subprocess.check_output(
+        ["git", "branch", "--show-current"], text=True).strip()
+    frozen_data_fixture = {}
+    for path, entry in m["modified_exact"].items():
+        if path.startswith("web/public/") and branch != "v9-development":
+            frozen_data_fixture[path] = entry["sha256"]
+        else:
+            assert guard.head_sha256(path) == entry["sha256"], path
+    if frozen_data_fixture:
+        actual_hash = guard.file_sha256
+        monkeypatch.setattr(guard, "file_sha256", lambda path: frozen_data_fixture.get(path) or actual_hash(path))
+    rows = [("M", path) for path in paths]
+    approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
+    assert len(approved) == 5 and not rejected
+    for branch, same_repo in [("main", True), ("v9-development", False), ("freshness-reliability", True)]:
+        approved, rejected = guard.evaluate(rows, m, branch, same_repo, none_removed)
+        assert not approved and len(rejected) == 5
+    _, rejected = guard.evaluate([("M", "src/cfb_analytics/model.py"), ("M", "web/public/v6-scenario-input.json")],
+                                m, "v9-development", True, none_removed)
+    assert len(rejected) == 2
+    monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)
+    approved, rejected = guard.evaluate(rows, m, "v9-development", True, none_removed)
+    assert not approved and len(rejected) == 5
 
 
 def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content():
@@ -138,6 +167,39 @@ def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content(
                                   ("M", "web/public/sw.js"), ("D", "src/cfb_analytics/cfp_publish.py")],
                                  m, "freshness-reliability", True, none_removed)
     assert len(rejected) == 4
+
+
+BETA_PATHS = ["src", "data", "research", "web/public", "web/package.json", "web/src/scenarios.ts", "web/src/scenario.worker.ts",
+              "web/src/programMetrics.ts", "web/src/Navigation.tsx", "web/src/EditorialHome.tsx", "web/src/style.css",
+              "web/src/editorial-polish.css", "web/src/secondary-navigation.css"]
+
+
+def test_beta_analytics_guard_is_manifest_aware_over_its_full_original_path_list():
+    # Owner-authorized (V9): the privacy workflow's visual-identity guard uses the reviewed-manifest mechanism, with
+    # the same 13 protected paths as the former strict diff, evaluated on the PR head commit.
+    workflow = (ROOT / ".github/workflows/beta-analytics.yml").read_text()
+    step = workflow[workflow.index("Preserve the analytics platform and existing visual identity"):workflow.index("mkdir -p web/analytics-evidence")]
+    assert "verify_protected_changes.py" in step and '"$CANDIDATE_SHA"' in step and "git diff --exit-code" not in step
+    assert step.split("-- ", 1)[1].split(")")[0].split() == BETA_PATHS
+
+
+def test_v9_exception_covers_only_pinned_files_and_unauthorized_changes_still_fail(monkeypatch):
+    m = _manifest("v9-development")
+    pinned = {p: e["sha256"] for p, e in m["modified_exact"].items()}
+    monkeypatch.setattr(guard, "file_sha256", lambda path: pinned.get(path, "f" * 64))
+    approved, rejected = guard.evaluate([("M", p) for p in pinned], m, "v9-development", True, none_removed)
+    assert len(approved) == len(pinned) == 5 and not rejected
+    # Anything else in the beta path list, a different style.css, a deletion, or another branch is rejected.
+    unauthorized = [("M", "web/src/editorial-polish.css"), ("M", "web/src/secondary-navigation.css"), ("M", "src/cfb_analytics/model.py"),
+                    ("M", "data/season-2026-report.json"), ("D", "web/src/style.css"), ("A", "web/public/new-data.json")]
+    _, rejected = guard.evaluate(unauthorized, m, "v9-development", True, none_removed)
+    assert len(rejected) == len(unauthorized)
+    monkeypatch.setattr(guard, "file_sha256", lambda path: "0" * 64)      # style.css edited after review
+    _, rejected = guard.evaluate([("M", "web/src/style.css")], m, "v9-development", True, none_removed)
+    assert len(rejected) == 1
+    for branch, same_repo in (("main", True), ("public-beta-analytics", True), ("v9-development", False)):
+        _, rejected = guard.evaluate([("M", "web/src/style.css")], m, branch, same_repo, none_removed)
+        assert len(rejected) == 1
 
 
 def test_freshness_alert_flapping_manifest_pins_only_the_monitor():

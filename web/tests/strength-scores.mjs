@@ -28,8 +28,10 @@ try {
     await page.goto(base, { waitUntil: 'networkidle' });
     await openDestination(page, 'Teams');
     await chooseSection(page, 'Teams sections', 'Team Profiles');
-    await chooseSchool(page, 'Choose school', TEAM);
-    const panel = page.getByRole('region', { name: 'Strength breakdown', exact: true });
+    await chooseSchool(page, 'Choose School', TEAM);
+    // V9 keeps the existing strength panel inside a collapsed disclosure on the profile.
+    await (async () => { const s = page.locator('details.profile-more > summary', { hasText: 'Existing Strength Rankings & Blended Score' }).first(); if (!(await s.evaluate(e => e.parentElement.open))) await s.click(); })();
+    const panel = page.getByRole('region', { name: 'Strength Breakdown', exact: true });
     await panel.waitFor();
     // Headline: one badge + plain sentence with FBS ranks; details closed by default (compact on phones).
     const word = { rising: 'Rising', steady: 'Steady', declining: 'Declining' }[expected.direction];
@@ -59,7 +61,7 @@ try {
     assert.equal(await page.locator('#profile-panel > .team-profile-grid .team-profile-tile').count(), 6, 'released overview grid unchanged');
     // Recent form consolidated: no separate card in the default flow; everything reachable inside the collapsed details.
     assert.equal(await page.locator('#profile-panel .recent-form').count(), 0, 'no separate Recent form card');
-    const more = page.locator('#profile-panel details.profile-more');
+    const more = page.locator('#profile-panel details.profile-more', { has: page.locator(':scope > summary', { hasText: 'Form, Conference and Postseason Details' }) });
     assert.equal(await more.evaluate(d => d.open), false, 'Form, conference and postseason details collapsed by default');
     assert.equal(await more.locator('.profile-more-form').isVisible(), false);
     const summary = more.locator('summary').first();
@@ -70,10 +72,10 @@ try {
     await summary.focus(); await page.keyboard.press('Enter');                       // keyboard opens it
     assert.equal(await more.evaluate(d => d.open), true);
     const form = more.locator('.profile-more-form');
-    await form.getByRole('heading', { name: 'Form and forecasts' }).waitFor();
+    await form.getByRole('heading', { name: 'Form and Forecasts' }).waitFor();
     assert.match(await form.innerText(), /Against forecasts:/);
     assert.equal(await more.locator('.team-profile-tile').filter({ hasText: 'Last Five Completed Games' }).count(), 1, 'last-five record remains available');
-    const howTo = form.locator('details').filter({ hasText: 'How to read form and forecasts' });
+    const howTo = form.locator('details').filter({ hasText: 'How to Read Form and Forecasts' });
     await howTo.locator('summary').click();
     assert.match(await howTo.innerText(), /Last five completed games:/);
     await summary.focus(); await page.keyboard.press('Enter');                       // and closes it

@@ -1,0 +1,30 @@
+{
+  "release": "V9 owner-authorized intelligence experience",
+  "head_ref": "v9-development",
+  "purpose": "Exact reviewed navigation and favorite briefing integration; preserves models, production data, styles and favorites storage. Owner directive authorizes these two interface edits. Remove after approved release.",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "web/src/Navigation.tsx": {
+      "sha256": "97291acc3000284185bdc9f050a0071d4c86121c4f529d45c7d4c0ff3d58574e",
+      "reason": "Owner-authorized V9 intelligence integration and application-wide Title Case acceptance correction"
+    },
+    "web/src/EditorialHome.tsx": {
+      "sha256": "0561e0a618b043ef150b06ca4f7dac1d154ae216e26ebe02ce40f8dc984a9b3c",
+      "reason": "Owner-authorized V9 intelligence integration and application-wide Title Case acceptance correction"
+    },
+    "web/public/dual-projections.json": {
+      "sha256": "8c3f3a664b0dcb50237fd5f200d9722084ab8d263e6d0d1146c2ba29a877893b",
+      "reason": "Re-publish existing unchanged models and explanation calculations on retained November 25 inputs; no API acquisition"
+    },
+    "web/public/prediction-explanations.json": {
+      "sha256": "0561d32481332905e72f4183bdded688d2cf2ed5d778dfbf90ac42fcefae7864",
+      "reason": "Re-publish existing unchanged models and explanation calculations on retained November 25 inputs; no API acquisition"
+    },
+    "web/src/style.css": {
+      "sha256": "6e146ee0c02bfe6cbb0a15915b43455776adc21b75940b47521edabe74477558",
+      "reason": "Owner-approved Title Case: section-navigation labels no longer forced to uppercase (text-transform none); no other style change"
+    }
+  }
+}

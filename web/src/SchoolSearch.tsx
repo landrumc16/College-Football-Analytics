@@ -1,3 +1,4 @@
+import { titleCase } from './titleCase'
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { exactSchool, rankSchools } from './schoolSearch'
 import './school-search.css'
@@ -13,7 +14,8 @@ type Props = {
 }
 
 /** Accessible combobox for choosing one school: type, see ranked suggestions, pick by touch, Enter or arrows. */
-export default function SchoolSearch({ label, schools, value, onChange, placeholder = 'Search for a school...', commitOnExactMatch = false, className }: Props) {
+export default function SchoolSearch({ label: suppliedLabel, schools, value, onChange, placeholder = 'Search for a school...', commitOnExactMatch = false, className }: Props) {
+  const label = titleCase(suppliedLabel)
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
   const [editing, setEditing] = useState(false)
@@ -44,7 +46,7 @@ export default function SchoolSearch({ label, schools, value, onChange, placehol
   }, [open, matches.length])
   const stop = () => { setEditing(false); setQuery(''); setActive(0) }
   return <div className={`school-search${className ? ' ' + className : ''}`}>
-    <label htmlFor={`${id}-input`}>{label}</label>
+    <label htmlFor={`${id}-input`}>{titleCase(label)}</label>
     <div className="school-search-field">
       <input ref={input} id={`${id}-input`} type="text" role="combobox" autoComplete="off" spellCheck={false}
         aria-autocomplete="list" aria-expanded={open && matches.length > 0} aria-controls={listId}

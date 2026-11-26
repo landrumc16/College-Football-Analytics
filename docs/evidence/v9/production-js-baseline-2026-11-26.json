@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-26",
+  "candidateBase": "52c477e8d19e23f4008ef68b68f85bd6669ae5e1",
+  "productionSource": "b204bd6f38629540d45bfb4a885b20909b7f2c0b",
+  "node": "24.22.3",
+  "npm": "11.19.1",
+  "environment": {
+    "VITE_POSTHOG_PUBLIC_KEY": "phc_00000000000000000000000000000000",
+    "VITE_POSTHOG_HOST": "https://us.i.posthog.com",
+    "VITE_POSTHOG_TRAFFIC": "test"
+  },
+  "measurement": "Sum of gzip.compress(asset, mtime=0) for dist/assets/*.js; same installed dependencies and environment in both builds",
+  "beforeGzipJsBytes": 115358,
+  "afterGzipJsBytes": 123076,
+  "increaseBytes": 7718,
+  "limitBytes": 10240,
+  "remainingBytes": 2522,
+  "localRegression": {
+    "passed": 838,
+    "skipped": 1
+  },
+  "productionHttpMainScript": [
+    {
+      "url": "https://landrumc16.github.io/College-Football-Analytics/assets/index-BIf211nS.js",
+      "sha256": "8cc3c969d0d4e7a309031202858540422df75baccb67d1156ddc9f9feab1e144",
+      "raw_bytes": 381704,
+      "gzip_bytes": 113940
+    }
+  ],
+  "caveats": [
+    "HTTP entry script alone excludes worker chunks and uses production build configuration; it is not the like-for-like all-JavaScript budget measurement.",
+    "CI uses Node 20 and independently rebuilds both revisions; CI bytes may differ from this Node 24 local receipt.",
+    "No production deployment or API acquisition performed."
+  ]
+}
