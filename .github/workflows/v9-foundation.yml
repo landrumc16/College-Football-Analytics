@@ -19,6 +19,8 @@ jobs:
       - run: pip install -e '.[dev]'
       - run: npm install --prefix web --no-package-lock
       - run: python -m pytest -q tests/test_v9_strength_snapshot.py tests/test_v9_intelligence.py
+        env:
+          REQUIRE_WEB_BUILD: '1'
       - run: node tests/v9-contract-cases.mjs
       - run: node tests/v9-typography.mjs
       - run: node scripts/v9_intelligence.mjs /tmp/v9-publication

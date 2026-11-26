@@ -18,6 +18,8 @@ jobs:
       - name: Install offline intelligence test dependencies
         run: npm install --prefix web --no-package-lock
       - name: Run tests
+        env:
+          REQUIRE_WEB_BUILD: '1'   # the frontend toolchain is installed above, so V9 build tests must run here
         run: python -m pytest -q
   dashboard-build:
     runs-on: ubuntu-latest

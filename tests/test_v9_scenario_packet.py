@@ -6,6 +6,15 @@ from pathlib import Path
 import pytest
 from scripts.v9_scenario_packet import build_packet
 from cfb_analytics.v6_scenarios import scenario_input
+import os
+import pytest
+
+# These tests build with the frontend toolchain. Workflows that install it (tests.yml, the V9 foundation workflow) set
+# REQUIRE_WEB_BUILD=1 so a missing toolchain fails there; elsewhere (for example the production data refresh, which
+# validates data before committing it) they are skipped rather than blocking publication.
+requires_web_build = pytest.mark.skipif(not Path('web/node_modules/.bin/esbuild').exists() and not os.environ.get('REQUIRE_WEB_BUILD'),
+                                        reason='needs npm install --prefix web (run by tests.yml and the V9 foundation workflow)')
+
 
 REPORT = Path('data/season-2026-report.json')
 GAMES = Path('data/cfbd-2026-games.json')
@@ -39,6 +48,7 @@ def test_source_identity_mismatch_is_rejected():
         build_packet(REPORT.read_bytes(), json.dumps(games).encode())
 
 
+@requires_web_build
 def test_complete_review_build_has_matching_report_and_scenario():
     protected = [REPORT, Path('web/public/v6-scenario-input.json'), Path('web/public/dual-projections.json')]
     before = [p.read_bytes() for p in protected]

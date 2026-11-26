@@ -3,6 +3,16 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+import os
+import pytest
+
+# These tests build with the frontend toolchain. Workflows that install it (tests.yml, the V9 foundation workflow) set
+# REQUIRE_WEB_BUILD=1 so a missing toolchain fails there; elsewhere (for example the production data refresh, which
+# validates data before committing it) they are skipped rather than blocking publication.
+requires_web_build = pytest.mark.skipif(not Path('web/node_modules/.bin/esbuild').exists() and not os.environ.get('REQUIRE_WEB_BUILD'),
+                                        reason='needs npm install --prefix web (run by tests.yml and the V9 foundation workflow)')
+pytestmark = requires_web_build
+
 
 
 def test_review_observations_and_real_team_values():
