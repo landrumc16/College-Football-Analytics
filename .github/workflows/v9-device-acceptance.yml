@@ -1,0 +1,37 @@
+name: V9 device-profile acceptance (temporary)
+# Runs only on pushes to the temporary v9-device-acceptance branch. Not part of main or the V9 release PR.
+on:
+  push:
+    branches: [v9-device-acceptance]
+permissions:
+  contents: read
+jobs:
+  devices:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies and real WebKit/Chromium engines
+        run: |
+          python -m pip install -e '.[dev]'
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          cd web && npx playwright install --with-deps webkit chromium
+      - name: Build the offline V9 review app (no API calls)
+        run: node scripts/v9_preview.mjs
+      - name: Checklist automation on iPhone/iPad (WebKit) and Android (Chromium) profiles
+        run: |
+          mkdir -p web/device-evidence
+          node web/tests/v9-device-acceptance.mjs web/device-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v9-device-profile-evidence
+          path: web/device-evidence/
+          retention-days: 30
