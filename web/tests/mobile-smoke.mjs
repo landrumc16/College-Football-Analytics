@@ -125,7 +125,8 @@ try {
       await navigate(page, 'rankings');
     }
     await page.getByLabel('Search teams').fill('Georgia');
-    const rankingNames = await page.locator('table tbody tr td:first-child').allTextContents();
+    // The V9 intelligence table is independent of the legacy ranking search.
+    const rankingNames = await page.locator('.rankings-table table tbody tr td:first-child').allTextContents();
     if (!rankingNames.length || rankingNames.some(name => !name.includes('Georgia'))) throw new Error('Model ranking search failed');
     await navigate(page, 'home');
     // V5 public onboarding and privacy disclosure must be available at every viewport.
