@@ -42,7 +42,7 @@ If critical acceptance fails, halt release sign-off. Prefer restoration of the r
 
 ## Outstanding Gates
 
-- Confirm successful PR #56 production run `45885177456` and retain its live verification evidence.
+- Confirm completion of live browser/analytics verification in PR #56 replacement production run `45885414932`; Pages deployment and published-dashboard smoke have passed.
 - Inspect all final exact-head CI results for the reconciled candidate.
 - Final V9 approval, then authorized deployment and live verification.
 
@@ -50,6 +50,8 @@ No new feature, model promotion, quantified rooting guide, accomplishment rankin
 
 ## Post-Hotfix Reconciliation
 
-PR #56 head and 11 successful/one expected skipped checks were reconfirmed before the SHA-guarded authorized merge. Its production run is https://github.com/landrumc16/College-Football-Analytics/actions/runs/45885177456. Current production data and the exact monitor change are integrated. The sole conflict in tests/test_protected_guard.py retains all four reviewed manifest branches and both sets of negative tests. No frontend or device-test files changed from approved head fac98f8. All src files are byte-identical to post-hotfix main.
+PR #56 head and 11 successful/one expected skipped checks were reconfirmed before the SHA-guarded authorized merge. Initial production run 45885177456 was superseded by the automatic recovery deployment at the same approved SHA: https://github.com/landrumc16/College-Football-Analytics/actions/runs/45885414932. Its production build, pre-deployment mobile smoke, Pages deployment and published-dashboard smoke passed. Live browser/analytics verification is tracked in that run. Current production data and the exact monitor change are integrated. The sole conflict in tests/test_protected_guard.py retains all four reviewed manifest branches and both sets of negative tests. No frontend or device-test files changed from approved head fac98f8. All src files are byte-identical to post-hotfix main.
 
 Reconciled full Python regression with REQUIRE_WEB_BUILD=1: **839 passed, 2 skipped**, 26.78 seconds. The real offline React review build passes, including paired report/scenario and V9 packets. The first pre-commit test attempt correctly rejected the monitor because the guard hashes committed HEAD; rerunning against the committed merge passes without weakening the guard. Exact final remote CI results and live hotfix verification must be checked before owner release approval; this document does not predeclare those asynchronous results. Prior browser/device acceptance is reused for unchanged UI, alongside automatically triggered CI.
+
+The existing foundation pipeline then committed one immutable retained observation as `90271db665c706525501315348730094381ee39b`, parent `92c91ad62ce197b892ba27ef35472a5201b9ff5d`. It adds only docs/evidence/v9/strength-history/2055f65365b82280f7f1c711706a00e9b3c07facf2a4770b842edb4cdcfdfef4.json. Its report-generated and actual retention timestamps remain distinct. Full regression including that observation: **839 passed, 2 skipped**, 27.34 seconds. The final approval candidate is the commit containing this update; require its own CI checks, not only the successful preceding candidate.
