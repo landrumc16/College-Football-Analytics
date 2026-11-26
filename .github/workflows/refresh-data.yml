@@ -105,6 +105,9 @@ jobs:
           python -m cfb_analytics.dual_publish --out /tmp/v9-dual-projections.json
           cp /tmp/v9-dual-projections.json web/public/dual-projections.json
       - name: Retain V9 issued forecasts and strength observation offline
+        # Evidence archiving must never block publication of scores and rankings; a failure is reported as a warning
+        # and the next refresh retries (first observations are never rewritten).
+        continue-on-error: true
         run: |
           python -m scripts.v9_accountability --retain --output /tmp/v9-accountability.json
           python scripts/v9_strength_snapshot.py --report data/season-2026-report.json --archive docs/evidence/v9/strength-history --source-commit "$(git rev-parse HEAD)"
