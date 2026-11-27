@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "before": {
+    "at": "2026-11-27T03:15:08.065Z",
+    "asset": "https://landrumc16.github.io/College-Football-Analytics/assets/index-CBZ_fw7I.js",
+    "favorites": [
+      "Texas Tech",
+      "Baylor",
+      null
+    ],
+    "team": "Georgia",
+    "controlled": true
+  },
+  "after": {
+    "at": "2026-11-27T03:16:16.673Z",
+    "asset": "https://landrumc16.github.io/College-Football-Analytics/assets/index-F0FUwkAK.js",
+    "favorites": [
+      "Texas Tech",
+      "Baylor",
+      null
+    ],
+    "team": "Texas Tech",
+    "controlled": true
+  },
+  "errors": [],
+  "reinstall": false,
+  "storageCleared": false,
+  "serviceWorkerUnregistered": false,
+  "scope": "same isolated Chromium context with existing local favorites and worker; browser/PWA emulation, not physical hardware"
+}

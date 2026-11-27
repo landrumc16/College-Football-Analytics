@@ -1,0 +1,95 @@
+{
+  "status": "released_and_closed",
+  "date_local": "2026-11-26",
+  "timezone": "America/Chicago",
+  "approved_head": "364d948d4914f4a6b50a8d87f094f790af0c65b5",
+  "merge_commit": "a3d5d79221f4c544d0a4fc5dd9c93215bfb75e55",
+  "production_run": 45932815678,
+  "approved_ci": {
+    "passed": 13,
+    "expected_skipped": 1
+  },
+  "production_python": {
+    "passed": 839,
+    "skipped": 2
+  },
+  "policy_assertions": 37,
+  "live_browser_cases": 12,
+  "viewports": [
+    375,
+    390,
+    430,
+    768,
+    1536
+  ],
+  "live_browser_clock": "actual wall clock; no fixture-clock override",
+  "existing_user_update": "same context, unchanged favorites, changed JavaScript asset, active service worker; no reinstall/storage clear/worker unregister",
+  "packets": {
+    "season-report.json": {
+      "sha256": "4d4f23d727d557ac6c7ecc5dc9fb5681eb93eb930fb10bce8f511583a0649e56",
+      "bytes": 473101,
+      "retrieved_at": "2026-11-26T20:28:19.258116+00:00",
+      "generated_at": "2026-11-27T03:13:39.547885+00:00",
+      "report_sha256": null
+    },
+    "v6-scenario-input.json": {
+      "sha256": "aab742a2d36f53f9e6f660dd20c1b8d5b2c5b4781eabc97e85126fb0266442df",
+      "bytes": 26514,
+      "retrieved_at": "2026-11-26T20:28:19.258116+00:00",
+      "generated_at": null,
+      "report_sha256": "4d4f23d727d557ac6c7ecc5dc9fb5681eb93eb930fb10bce8f511583a0649e56"
+    },
+    "team-intelligence.json": {
+      "sha256": "a7cca6eaa7f83db0777248dcee3bd33fd4173fe43f628f576c5a86cf8096bde3",
+      "bytes": 1966130,
+      "retrieved_at": null,
+      "generated_at": null,
+      "report_sha256": null
+    },
+    "v9-accountability.json": {
+      "sha256": "c77e77b723ae63e0b0fa2c1f4e0aa8140e28bb8a59e21cae14f66158b09adea6",
+      "bytes": 90572,
+      "retrieved_at": null,
+      "generated_at": null,
+      "report_sha256": null
+    },
+    "dual-projections.json": {
+      "sha256": "7630ce654e628d4d9144724940f619fae560b3d93b49129e8a1c2c89ccdff2db",
+      "bytes": 107993,
+      "retrieved_at": null,
+      "generated_at": "2026-11-27T03:13:28+00:00",
+      "report_sha256": null
+    },
+    "monitor-status.json": {
+      "sha256": "e5d43a48b5f2e23382063317dceeebc862a88664ca9c358f84e720fe6bed2d4e",
+      "bytes": 405,
+      "retrieved_at": null,
+      "generated_at": "2026-11-27T03:14:55+00:00",
+      "report_sha256": null
+    },
+    "poll-snapshot.json": {
+      "sha256": "529d3d2aae0f9373dbeeacae4ea0b5402a9f1d199f2e610718c512f37bb356d2",
+      "bytes": 4518,
+      "retrieved_at": "2026-11-22T21:33:05+00:00",
+      "generated_at": null,
+      "report_sha256": null
+    }
+  },
+  "posthog": {
+    "project": 737110,
+    "observed_from_utc": "2026-11-27T03:15:00Z",
+    "observed_until_approx_utc": "2026-11-27T03:19:00Z",
+    "non_test_application_errors": 0,
+    "non_test_exceptions": 0,
+    "controlled_test_visits": 1,
+    "controlled_test_page_views": 9,
+    "limitation": "Short partial window and ingestion latency; not a guarantee of future error absence."
+  },
+  "accepted_limits": [
+    "Browser and Android/standalone emulation, no physical-device claim.",
+    "Existing headless WebKit offline/update limitation.",
+    "Discretionary quota warning: 20 calls left, 4 days to reset at acceptance.",
+    "Unit-statistics source remains November 22 and is explicitly stale.",
+    "Already-open pages keep their loaded JavaScript until normal reload/relaunch."
+  ]
+}

@@ -29,6 +29,10 @@ Use these rules for all implementation and review work in this repository.
 - Make routine engineering decisions without interrupting for minor approvals.
 - Document only decisions, setup, and operational details needed to maintain or use the system.
 
+## V9 Global Personalization Maintenance — Released and Closed (2026-11-26)
+
+Owner-approved PR #72 head `364d948d4914f4a6b50a8d87f094f790af0c65b5` merged as `a3d5d79221f4c544d0a4fc5dd9c93215bfb75e55`. Production run 45932815678 and actual live five-width personalization, PWA, analytics and existing-user update acceptance passed. See `docs/V9-FAVORITE-DEFAULTS.md`. Preserve shared favorite-selection precedence, explicit choices, unchanged favorite storage, verified school aliases, national populations and permanent test coverage. The improvement is closed; no additional feature/version work is authorized. Existing operational and physical-device limitations remain documented.
+
 ## Version 9 — Released and Closed (2026-11-26)
 
 The owner explicitly approved PR #63 at `7c29544764643689753c695fa332329a9154c8c7`. It merged as `283677f44915120d505beeedee29a71d3efe795f`; final verified production, including a narrow browser-test selector correction, is `0cf736108d39b7d612c6a370c782d6a66a83c411`. All three milestones and live five-width/PWA/analytics acceptance passed. See `docs/V9-PRODUCTION-ACCEPTANCE.md` for evidence and accepted limitations. Preserve the approved React design, all prediction calculations, immutable archives, privacy/budget safeguards, PR56 reliability fix and permanent automated device infrastructure. Normal operational monitoring continues. Do not reopen V9, initiate another version, add features or promote models without a new owner instruction. Physical-device and WebKit lifecycle limitations are accepted; no manual owner testing is required.
