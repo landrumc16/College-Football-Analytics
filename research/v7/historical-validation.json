@@ -8,13 +8,13 @@
    "data/cfbd-2026-games.json (2026 completed)"
   ],
   "status": "passed",
-  "team_game_rows_checked": 17739
+  "team_game_rows_checked": 17741
  },
  "frozen_inputs_sha256": {
-  "comparison_dir": "41c9e30c25c72163c5eed2b5f47923f480ba8342b6f6b071eeb5e355491036cf",
-  "current_results": "abb7df0de54989dbff59c74c36580b55c2d0709d3ba8be93eb8188bd9a2ad0f2",
+  "comparison_dir": "e0b166903cbcde2f8b034bc01e0f36ef4ed90c7b27650dff029e442cf4376bdb",
+  "current_results": "16030420a370dd1c10954449e8ea5c4ff12680dcb6c073fb3c3611b88ab7e4e5",
   "forecast_ledger": "819235e79f2a39c3b475c1809904e51288dbf7ca3e397a7da1fb0d6ca493912d",
-  "lines_dir": "aa29e85b1e54f15d9e95da46789087bf9ecbbd353810edd4828f402ca167a5d6",
+  "lines_dir": "a5c4b32cbcff53c03f89ca4f64d8589dac376d1d23700b778c9eb8caf411a75e",
   "verified_publication_rows": "d95350dbbadd28d15d41fd916b9c84c2bdedce70cde786f06f596aade6dd80c4",
   "verified_results_archive": "281f1b2a2c838efb4e1f5b9f4058c0e5090cfc48ad41c44516840e8fdd580d4e"
  },
@@ -37,7 +37,7 @@
   "all_authentic": {
    "average_minus_market_brier": {
     "ci95": [
-     -0.0029,
+     -0.0031,
      0.0101
     ],
     "mean": 0.0035
@@ -90,13 +90,13 @@
      },
      {
       "ci95": [
-       0.718,
-       0.924
+       0.723,
+       0.926
       ],
-      "games": 46,
+      "games": 47,
       "lower": 0.8,
-      "mean_predicted": 0.895,
-      "observed_home_win_rate": 0.848,
+      "mean_predicted": 0.893,
+      "observed_home_win_rate": 0.851,
       "upper": 1.0
      }
     ],
@@ -147,13 +147,13 @@
      },
      {
       "ci95": [
-       0.697,
-       0.904
+       0.703,
+       0.906
       ],
-      "games": 51,
+      "games": 52,
       "lower": 0.8,
-      "mean_predicted": 0.88,
-      "observed_home_win_rate": 0.824,
+      "mean_predicted": 0.878,
+      "observed_home_win_rate": 0.827,
       "upper": 1.0
      }
     ]
@@ -161,16 +161,16 @@
    "conclusion": "Inconclusive: the Brier difference between model and market is not distinguishable from zero on this sample. No evidence that model-market disagreement carried information beyond the market (interval includes zero).",
    "disagreement_information": {
     "games_model_above_market": 113,
-    "games_model_below_market": 84,
+    "games_model_below_market": 85,
     "mean_outcome_minus_market_when_model_above": 0.002,
-    "mean_outcome_minus_market_when_model_below": -0.093,
+    "mean_outcome_minus_market_when_model_below": -0.09,
     "reading": "Positive would mean outcomes moved, on average, in the direction the model disagreed with the market.",
     "signed_residual_toward_model": {
      "ci95": [
-      -0.0204,
-      0.1003
+      -0.0195,
+      0.0989
      ],
-     "mean": 0.0407
+     "mean": 0.0397
     }
    },
    "favorite_disagreements": {
@@ -182,25 +182,25 @@
     "model_favorite_win_rate": 0.419,
     "model_favorite_won": 13
    },
-   "games": 197,
+   "games": 198,
    "margin_mae_points": {
-    "market": 12.28,
-    "model": 13.09
+    "market": 12.26,
+    "model": 13.07
    },
    "market_spread_implied": {
-    "brier": 0.1878,
-    "log_loss": 0.5568,
-    "winner_accuracy": 0.7005
+    "brier": 0.187,
+    "log_loss": 0.5549,
+    "winner_accuracy": 0.702
    },
    "model": {
-    "brier": 0.2001,
-    "log_loss": 0.5797,
-    "winner_accuracy": 0.6751
+    "brier": 0.1993,
+    "log_loss": 0.5779,
+    "winner_accuracy": 0.6768
    },
    "model_market_average": {
-    "brier": 0.1914,
-    "log_loss": 0.5615,
-    "winner_accuracy": 0.6802
+    "brier": 0.1906,
+    "log_loss": 0.5597,
+    "winner_accuracy": 0.6818
    },
    "neutral_50_50": {
     "brier": 0.25,
@@ -210,24 +210,24 @@
    "paired_differences_model_minus_market": {
     "brier": {
      "ci95": [
-      -0.001,
-      0.0257
+      -0.0011,
+      0.0256
      ],
      "mean": 0.0123
     },
     "log_loss": {
      "ci95": [
-      -0.0094,
-      0.055
+      -0.0097,
+      0.0546
      ],
-     "mean": 0.0229
+     "mean": 0.023
     },
     "margin_absolute_error_points": {
      "ci95": [
-      0.2371,
-      1.3898
+      0.2505,
+      1.3879
      ],
-     "mean": 0.81
+     "mean": 0.82
     }
    },
    "population": "all forecasts recorded before kickoff with a non-disputed closing spread"
@@ -249,9 +249,9 @@
     "model_brier": 0.1826
    },
    "13": {
-    "games": 2,
-    "market_brier": 0.236,
-    "model_brier": 0.3526
+    "games": 3,
+    "market_brier": 0.1668,
+    "model_brier": 0.2482
    }
   },
   "forecast_kind": "authentic_pregame",
@@ -460,8 +460,8 @@
   "retrospective_replays": "not used: no 2016-2025 model forecasts were archived before kickoff",
   "timing": {
    "earliest_kickoff": "2026-11-06T00:30:00.000Z",
-   "latest_kickoff": "2026-11-25T00:00:00.000Z",
-   "median_hours_forecast_before_kickoff": 219.7,
+   "latest_kickoff": "2026-11-27T01:00:00.000Z",
+   "median_hours_forecast_before_kickoff": 219.8,
    "note": "The market value is the closing spread, observed at kickoff, after the model forecast was recorded; the market therefore had later information (injuries, weather, line moves)."
   }
  },
@@ -471,9 +471,9 @@
     0.484,
     0.504
    ],
-   "n": 9173,
+   "n": 9174,
    "pushes": 169,
-   "rate": 0.4939
+   "rate": 0.494
   },
   "favorite_cover_by_season": {
    "2016": {
@@ -558,22 +558,22 @@
    },
    "2026": {
     "ci95": [
-     0.473,
+     0.474,
      0.542
     ],
-    "n": 810,
-    "rate": 0.5074
+    "n": 811,
+    "rate": 0.508
    }
   },
-  "games": 9456,
+  "games": 9457,
   "home_cover_non_neutral": {
    "ci95": [
     0.487,
     0.508
    ],
-   "n": 8561,
+   "n": 8562,
    "pushes": 159,
-   "rate": 0.4978
+   "rate": 0.4979
   },
   "interpretation": "Rates near 50% are what an efficient closing market implies. These are descriptive checks of the archive, not betting strategies; the published rates exclude pushes and ignore bookmaker margin.",
   "over": {
@@ -581,9 +581,9 @@
     0.483,
     0.504
    ],
-   "n": 9053,
+   "n": 9054,
    "pushes": 94,
-   "rate": 0.4936
+   "rate": 0.4937
   }
  },
  "schema_version": 1
