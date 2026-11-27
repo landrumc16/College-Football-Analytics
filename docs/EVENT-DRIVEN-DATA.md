@@ -3,6 +3,27 @@
 **Principle:** the calendar tells us when to look, the event tells us when to act, and the authoritative source tells
 us when to verify. No prediction formula, weight or methodology changes.
 
+## November 26 Game-Final Correction (PR #73; Pending Owner Merge Approval)
+
+Production score recovery used the existing current-main workflow and is complete. The
+following reliability code is proposed, not yet deployed; see
+[the incident and acceptance record](INCIDENT-2026-11-26-GAME-FRESHNESS.md).
+
+- Quota-pressure detection reads free ESPN final status every two minutes during completion
+  windows on any weekday. Exact event id/kickoff, completed status and valid scores are required.
+  ESPN only wakes authoritative CFBD confirmation; its scores never enter model inputs.
+- Tomorrow's games cannot delay today's timed fallback. Late-starting sessions recover overdue games.
+- Confirmed finals share the priority allowance above the unchanged eight-call floor. Healthy
+  publication costs five calls; at most three signal confirmations plus two refresh attempts
+  may be funded (11 calls). Failed calls count. Insufficient funds stop retries and alert.
+- Known waiting finals force an immediate critical monitoring pass; time-only overdue checks
+  explicitly say completion was not verified. Provider/API availability remains a real constraint.
+- Refresh reruns check out current main. The tested publication script refuses any staged path
+  changed upstream, retains non-overlapping fixes, aborts rebase conflicts and never force-pushes.
+  Recover with a fresh current-main refresh rather than rerunning an old historical SHA.
+- Historical pacing estimates below describe earlier states, not a present quota guarantee.
+  Scheduled/large play-by-play refreshes must not be mistaken for result-source freshness.
+
 ## Reliability after the November 24 CFP incident
 
 **What failed (verified from run logs):** the November 24 CFP rankings reached the site only after the owner reported

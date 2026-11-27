@@ -174,7 +174,7 @@ def assess(now, *, runs, crons, snapshot, live_report=None, live_polls=None, off
             alerts.append(_alert("deploy-failed", "Publishing", "critical",
                                  f"The latest site deployment failed ({latest.get('html_url', 'run ' + str(latest.get('id')))})"))
     for text in watcher_alerts:
-        severity = "critical" if text.startswith("ESPN reports a final") else "warning"
+        severity = "critical" if text.startswith(("ESPN reports a final", "Publication quota")) else "warning"
         alerts.append(_alert(f"watcher:{text[:60]}", "Live monitoring", severity, text))
     return alerts
 

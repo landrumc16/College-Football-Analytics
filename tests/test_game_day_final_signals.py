@@ -1,5 +1,6 @@
 """Quota-pressure regression for the November 26 Texas Tech/TCU incident."""
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
+import pytest
 
 from test_event_driven import T0, game, setup
 from cfb_analytics import event_calendar as cal
@@ -72,7 +73,7 @@ def test_late_start_still_funds_authoritative_confirmation_above_floor():
     now = T0 + timedelta(hours=5)
     snapshot = {"season": 2026, "games": [game(1, T0)]}
     q = ew.quota_plan({"remainingCalls": 20, "resetAt": "2026-12-01T00:00:00Z"}, snapshot, now)
-    assert q["budget"] == 0 and q["priority_budget"] == 7
+    assert q["budget"] == 0 and q["priority_budget"] == 11
     assert cal.parse_time(q["wave_at"]) == now
     q = ew.quota_plan({"remainingCalls": 8, "resetAt": "2026-12-01T00:00:00Z"}, snapshot, now)
     assert q["priority_budget"] == 0
@@ -89,6 +90,62 @@ def test_actual_final_without_confirmation_is_a_critical_monitor_alert():
     alerts = assess(T0, runs={}, crons={}, snapshot={"season": 2026, "games": []},
                     watcher_alerts=["ESPN reports a final awaiting CFBD confirmation; no secondary-source score was published"])
     assert any(a["severity"] == "critical" and "ESPN reports" in a["text"] for a in alerts)
+
+
+@pytest.mark.parametrize("day", [26, 27, 28], ids=["Thursday", "Friday", "Saturday"])
+def test_weekday_finals_receive_the_same_priority_latency_and_quota_protection(day):
+    kickoff = datetime(2026, 11, day, 23, tzinfo=timezone.utc)
+    snapshot = {"season": 2026, "games": [game(1, kickoff), game(2, kickoff + timedelta(hours=20))]}
+    q = ew.quota_plan({"remainingCalls": 20, "resetAt": "2026-12-01T00:00:00Z"}, snapshot, kickoff)
+    clock, p, w = setup(snapshot["games"], start=kickoff, budget=q["budget"],
+                        release_budget=q["priority_budget"], deploy_minutes=3)
+    w.wave_at = cal.parse_time(q["wave_at"])
+    final = kickoff + timedelta(hours=3, minutes=30)
+    p.finals[1] = (final, 48, 27)
+    p.final_signals = lambda games: {1} if clock() >= final else set()
+    w.run(kickoff + timedelta(hours=5))
+    e, = [e for e in w.events if e.kind == "final"]
+    assert e.status == "published" and e.published_at - final <= timedelta(minutes=5)
+    assert w.release_spent == 5 and w.release_spent <= q["priority_budget"] <= 20 - ew.RELEASE_FLOOR
+    assert w.wave_at == kickoff + cal.LATE_FINISH
+
+
+def test_observed_final_forces_immediate_monitor_pass_instead_of_ten_minute_wait():
+    clock, p, w = signal_setup()
+    reported = []
+    w.monitor = lambda watcher: reported.append((clock(), list(watcher.alerts)))
+    clock.t = T0 + timedelta(hours=3, minutes=1)
+    w._last_monitor = clock.t - timedelta(minutes=1)
+    w.step()
+    assert reported and reported[-1][0] == clock()
+    assert any("awaiting CFBD" in a for a in reported[-1][1])
+
+
+@pytest.mark.parametrize("priority", [False, True])
+def test_failed_publication_cannot_spend_an_unfunded_retry(priority):
+    clock, p, w = setup([game(1, T0 - timedelta(hours=3))], budget=0 if priority else 5,
+                        release_budget=5 if priority else 0, deploy_minutes=10000)
+    if priority:
+        w.wave_at = T0
+    p.finals[1] = (T0, 48, 27)
+    w.run(T0 + timedelta(hours=2))
+    assert len(p.dispatches) == 1 and w.spent == 5
+    assert w.events[0].status == "alerted" and any("quota exhausted" in a for a in w.alerts)
+
+
+def test_funded_failed_publication_recovers_once_within_priority_cap():
+    clock, p, w = setup([game(1, T0 - timedelta(hours=3))], budget=0, release_budget=11, deploy_minutes=3)
+    w.wave_at = T0
+    p.finals[1] = (T0, 48, 27)
+    dispatch = p.dispatch
+    def fail_first_publication(workflow, inputs=None):
+        dispatch(workflow, inputs)
+        if len(p.dispatches) == 1:
+            p.pending_deploys.clear()  # workflow failed before publication; next fresh dispatch succeeds
+    p.dispatch = fail_first_publication
+    w.run(T0 + timedelta(hours=1))
+    assert w.events[0].status == "published" and len(p.dispatches) == 2
+    assert w.release_spent == 9 <= w.release_budget
 
 
 def test_scoreboard_requires_known_id_kickoff_complete_valid_score(monkeypatch):

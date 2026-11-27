@@ -1,9 +1,52 @@
 # November 26 Game Freshness Incident
 
-## Status: Production Recovery Awaiting Authenticated Workflow Dispatch
+## Status: Production Recovered; PR #73 Awaiting Owner Merge Approval
 
-Production is not yet restored. No code changes have been merged. Production main remains
-`b3b80810b83a2964e0240096bb178ad64d71c4e0`. This record must be completed after recovery.
+Authorized current-main refresh run **45944035791** succeeded. Data commit:
+`771c1d04afaf8002500e2de06b9c0e30b167d80d`. Deployment **45944161131** succeeded,
+including live desktop/mobile/PWA verification. No correction code has been merged.
+
+| Event | Verified timestamp (UTC, November 27) | Central (November 26) |
+| --- | --- | --- |
+| ESPN end-of-fourth-quarter play wallclock | 04:29:20 | 10:29:20 PM |
+| First retained observation of ESPN final | 04:48:23 | 10:48:23 PM |
+| Fresh current-main dispatch | 05:08:56 | 11:08:56 PM |
+| Successful CFBD source receipt containing 48–27 | 05:09:18.287734 | 11:09:18 PM |
+| Production automated HTTP/content smoke passed | 05:12:44 | 11:12:44 PM |
+| First separate public final-score observation | 05:13:08.507081 | 11:13:08 PM |
+| Full live desktop/mobile/PWA verification completed | 05:14:37 | 11:14:37 PM |
+| Deployment job completed | 05:14:53 | 11:14:53 PM |
+
+The ESPN wallclock is a provider-reported end-of-period timestamp, not an independently
+observed stadium clock. CFBD's first availability is unknown; 05:09:18 proves availability
+by that receipt. Publication is proven by the 05:12:44 smoke check; exact first serving time
+is not known. Do not substitute build-generation time for source freshness.
+
+### Production Acceptance
+
+- Public final: Texas Tech 48, TCU 27. Records 11–1 / 5–7; Big 12 records 8–1 / 3–6.
+- Existing model recomputed Texas Tech strength from 18.271705 to 18.747195; model rank
+  remains #8. TCU is #73. Formula/code unchanged.
+- Current last-three level: 30.0793. Schedule and team intelligence use the new receipt.
+- Public report/scenario SHA pair matches. Texas Tech/TCU is excluded from remaining-game
+  options. Real browser team schedule shows W 48–27 Final; scenario baseline renders.
+- Existing CFP simulation includes the final and reports Texas Tech field estimate 100%,
+  conference-title estimate 43.73%. These retain the existing approximate conference/committee
+  assumptions and are not official clinching probabilities; rules/model replacement is out of scope.
+- Other newly completed game: Alabama State 45, Tuskegee 0. No past-due pending FBS games
+  remain in the refreshed source. Fourteen lower-division pending rows remain provider gaps;
+  none is an FBS matchup. They are not falsely filled or asserted to be completed games.
+- All 240 immutable pregame files remain byte-identical; no postgame backfill. Official
+  legacy scorecard evaluated games increased 192 → 193. Separate strict V9 comparison now
+  has one common game: all three models picked Texas Tech. This is insufficient to rank models.
+- Archived first pregame margins: Official 11.9952, Standard 9.47, Momentum 10.76; actual
+  margin 21. Public accountability scores the retained probabilities without rewriting them.
+- Important remaining data limitation: advanced EPA/play, drive and four-game unit trends
+  still carry the November 22 18:02:41 UTC receipt, explicitly stale in team intelligence.
+  The independent V8 refresh costs approximately seven calls with a populated private cache
+  (more if missing). It was not launched while the remaining quota and eight-call reserve
+  cannot be guaranteed. Scores/records/strength freshness must not imply these unit stats updated.
+- Physical-device testing is not claimed; automated browser/PWA checks passed.
 
 ## Verified Evidence
 
@@ -54,16 +97,20 @@ Proposed branch correction:
    complete status and valid scores. Never use secondary scores as published/model inputs.
 2. Wake existing CFBD confirmation, existing data-refresh workflow and live-site verification.
    Cap signal-triggered confirmations at three per session, charge failed calls too, reserve
-   four calls for refresh, and preserve the eight-call floor. Actual provider/deployment latency
+   refresh and one retry when affordable (up to 11 calls in the shared game allowance), and
+   preserve the eight-call floor. A healthy final still spends only five calls. Actual provider/deployment latency
    remains external; bounded retries can exhaust before a lagging provider agrees.
 3. Restrict timed fallback to today's/overdue games; late-starting sessions still fund recovery.
    Retain that fallback when the free signal fails. At the quota floor, alert instead of publishing.
 4. Escalate an observed final awaiting CFBD confirmation/reserve as a critical monitor condition.
    Label time-only overdue checks honestly rather than asserting an unverified final.
 5. Fresh refresh runs/reruns check out the current requested branch head before reading
-   append-only archives. Concurrent data conflicts still fail closed; no force-push or weakened tests.
+   append-only archives. Any staged path changed upstream stops publication before rebase, even for textually mergeable
+   data. Non-overlapping production fixes are rebased safely; rebase failure aborts cleanly.
+   A fresh current-main run re-derives data. Unfunded dispatch retries are withheld and alerted;
+   no force-push, automatic conflict overwrites or weakened checks.
 
-## Recovery Continuation
+## Recovery Procedure (Executed Successfully; Retained as Runbook)
 
 The connector exposes rerun, but no fresh workflow-dispatch operation. GitHub browser is
 signed out and local gh has no authenticated account. Normal GitHub authentication is
@@ -102,3 +149,29 @@ Keep those old manifests unchanged as historical fixtures; new maintenance tests
 actual committed correction and prove branch/fork/content/model/data rejection. The guard
 implementation and protected path lists are unchanged. New exact manifest is pending owner
 review; its presence is not owner merge approval.
+
+### PR #73 Final Acceptance Scope
+
+Thursday/Friday/Saturday simulated clocks must each publish within five minutes when both
+providers are current and the deployment takes three minutes. This is deterministic latency
+validation, not a claim that external providers/GitHub meet an unconditional SLA. At the quota
+floor, provider delay or failed deployment, publish no invented score; emit an immediate
+critical monitor pass, retry only within funded limits and retain a current-day timed fallback.
+
+The actual publication shell script is exercised against local bare Git remotes: preserve
+non-overlapping newer changes and pregame bytes, refuse overlapping data/archives without
+pushing, leave readable JSON, recover through a fresh validated current-main run, and avoid
+no-op commits. Existing full source protections remain in effect via exact proposed-content
+pins. Owner merge approval is still required after acceptance.
+
+### Executed Local Acceptance Results
+
+- Full suite after reconciliation with recovered main: **862 passed, 2 skipped** (28.78 s).
+- Focused watcher/calendar/monitor/publication-recovery suite: **57 passed**.
+- Previously committed PR #73 CI passed before the final weekday/recovery additions.
+  Final remote CI must be checked at the final PR SHA; no earlier green run substitutes for it.
+- Production data refresh: **836 passed, 5 skipped** on its GitHub Python-only runner;
+  dashboard build and live desktop/mobile/PWA verification succeeded. Different runner
+  dependency availability explains the different skips; no skipped check is claimed executed.
+- Remaining constraints: provider-first-availability unknown, advanced unit stats dated
+  November 22, finite CFBD monthly quota, GitHub scheduling/deployment latency, and no physical-device test.

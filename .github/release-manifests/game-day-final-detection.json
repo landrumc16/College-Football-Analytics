@@ -7,15 +7,15 @@
   "modified_additive_only": {},
   "modified_exact": {
     "src/cfb_analytics/event_watcher.py": {
-      "sha256": "b74508037a5f180c8ffc7c81e9dc84c97615c01646b2e2cc69548320bb3765ed",
+      "sha256": "7096879ade1e5412f05ba75162d3912ffc176462c207689826cb489b713ef768",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     "src/cfb_analytics/freshness_monitor.py": {
-      "sha256": "eeddda99224cd85859f704d19c18f1ea9401cb76189d9359bfb59513bb692af5",
+      "sha256": "8a496a448552a928ce0959a0907849348352074ef30616a959545039dcff4bb2",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     ".github/workflows/refresh-data.yml": {
-      "sha256": "e03a28c266382e616cbc1941b57a149b77dbd872d3a4204e3ca241b3a08158a7",
+      "sha256": "f764c50c514b3fe497d2b76e11e822a607c34c1a82bb7c12d395cf356119a90b",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     }
   }
