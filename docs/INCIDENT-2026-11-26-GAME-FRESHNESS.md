@@ -192,3 +192,10 @@ Texas Tech exclusion, and verifies a nonempty selected-school forecast or the tr
 state. No product or prediction code changed. Local Node syntax check passed; local browser
 launch was unavailable because Playwright headless-shell build 1194 was not installed. Final
 CI supplies the actual five-width browser execution rather than claiming local browser success.
+
+The same post-final assumption was also removed from the permanent device-profile and
+dual-projection tests: device scenarios now choose an actually pending, postseason-relevant
+game and still assert a changed outcome and exact reset; a completed team keeps its genuine
+season projections/record while explicitly showing zero remaining game cards. Browser
+engines, device profiles, viewport assertions, performance limits and accessibility checks
+are preserved. Final CI must execute these paths on the fresh data.
