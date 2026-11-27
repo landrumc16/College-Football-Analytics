@@ -21,8 +21,20 @@ concurrency:
   group: v8-stats-refresh
   cancel-in-progress: false
 jobs:
-  refresh:
+  budget:
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      allowed: ${{ steps.quota.outputs.allowed }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: quota
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python scripts/optional_source_budget.py --priority core --cost 7
+  refresh:
+    needs: budget
+    if: needs.budget.outputs.allowed == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:

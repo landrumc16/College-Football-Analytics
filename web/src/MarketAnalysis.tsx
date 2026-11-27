@@ -45,7 +45,7 @@ export default function MarketAnalysis({ games, selectedId, onSelect, onCustom, 
 }
 
 type Rate = { w?: number; l?: number; o?: number; u?: number; p: number; rate: number | null; ci95: [number, number] | null; sample: string; decided: number }
-type Metrics = { attribution: string; teams: Record<string, { overall: { ats: Rate; ou: Rate } }> }
+type Metrics = { generated_at?: string; attribution: string; teams: Record<string, { overall: { ats: Rate; ou: Rate } }> }
 
 function MarketHistory({ teams }: { teams: string[] }) {
   const [metrics, setMetrics] = useState<Metrics | null>(null)
@@ -60,6 +60,7 @@ function MarketHistory({ teams }: { teams: string[] }) {
   if (!metrics) return <p role="status">Loading historical records…</p>
   const rate = (r: Rate) => r.rate == null ? `N/A (${r.sample} sample)` : `${(r.rate * 100).toFixed(1)}% (95% CI ${(r.ci95![0] * 100).toFixed(0)}–${(r.ci95![1] * 100).toFixed(0)}%)`
   return <div className="table-wrap">
+    <p className="metric-note">Market archive last rebuilt: {metrics.generated_at && Number.isFinite(Date.parse(metrics.generated_at)) ? new Date(metrics.generated_at).toLocaleString() : 'unavailable'}. Market retrieval may be deferred to prioritize football results. These records can lag the latest scores; this is not a live betting feed.</p>
     <table>
       <caption>Records Against the Selected Provider's Closing Line, 2016 to Date. Pushes Excluded from Rates.</caption>
       <thead><tr><th scope="col">Team</th><th scope="col">ATS W-L-P</th><th scope="col">Cover Rate</th><th scope="col">O/U O-U-P</th><th scope="col">Over Rate</th></tr></thead>
