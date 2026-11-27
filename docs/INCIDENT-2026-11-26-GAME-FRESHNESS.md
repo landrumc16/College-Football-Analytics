@@ -199,3 +199,63 @@ game and still assert a changed outcome and exact reset; a completed team keeps 
 season projections/record while explicitly showing zero remaining game cards. Browser
 engines, device profiles, viewport assertions, performance limits and accessibility checks
 are preserved. Final CI must execute these paths on the fresh data.
+
+
+## November 27 continuation — replacement candidate; initiative still open
+
+Durable operational acceptance: GitHub issue #74. The previous `8249d2f6`
+candidate passed CI but still reproduced review finding `discussion_r4715979092`:
+three early signals could disable the funded timed fallback before CFBD caught up.
+The new lifecycle tests failed against that candidate before the correction.
+
+Corrections retain the existing watcher and publication path:
+- Early confirmation no longer consumes the timed fallback. No redundant paid
+  fallback runs after all relevant games are completed; tomorrow remains isolated.
+- Confirmation attempts are tracked per game, while all requests still share the
+  bounded session allowance. A later final can wake a batched check after an earlier
+  game's three attempts are exhausted. This does not create extra API quota.
+- Mixed regular/postseason checks reserve every source call plus publication first.
+- The monitor independently checks the existing free final-status adapter against
+  the public application's incomplete games, without CFBD calls. A recent refresh
+  receipt cannot suppress the observed-final alert. This is best-effort secondary
+  evidence, not permission to publish ESPN scores or an availability guarantee.
+
+Verification actually executed in this continuation:
+- 62 focused watcher, monitor, lifecycle and Git publication recovery tests passed.
+- Full local Python regression: **864 passed, 5 skipped**, Python 3.12. The prior
+  candidate's 863/2 was a different environment; skips are reported, not hidden.
+- Public HTTP/content observation at 13:20:53 UTC (7:20:53 AM Central): Texas Tech
+  48–27 TCU; 11–1; rating 18.747195020824705, rank 8; receipt 05:09:18 UTC.
+- Active production watcher job 140525310089 started 13:10:41 UTC on old main;
+  successor 46004875265 pending. No unapproved watcher restart performed.
+- Issue #71 at 12:30 UTC retained a reading of **14 calls left** (six above the
+  eight-call floor), four days to reset. No exploratory paid source calls made.
+- PostHog project 737110 query: `cfa_application_error`, `traffic_type != test`,
+  November 26 06:00 UTC through November 27 13:22 UTC: zero received events.
+  This does not prove absence of all application failures or complete ingestion.
+- Public monitor-status.json was generated 05:12:19 UTC; it is a deployment
+  snapshot, not a current heartbeat. Postseason public JSON returned 404 before
+  postseason games exist; no postseason live acceptance is claimed.
+
+Infrastructure decision (official documentation checked November 27): GitHub cron
+has a five-minute minimum and can be delayed/dropped. The in-process chained
+watcher can poll faster while its runner is alive, but handoff/startup still has
+no tight delivery guarantee. cron-job.org is free with minute-level requests,
+but explicitly gives no punctuality guarantee; calling GitHub dispatch also
+retains GitHub runner queue latency and requires credential setup. No external
+service, credential sharing, subscription or purchase established.
+Sources: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+and https://cron-job.org/en/faq/ .
+
+An hourly independent Work acceptance audit is scheduled for November 27–29,
+ending at midnight Central after Sunday. It records new operational evidence on
+#74 and only notifies for actionable failures, concrete approval requests or
+final findings. It supplements the watcher; it cannot satisfy minute-level checks.
+
+**Not finished:** 95% within five minutes remains unmeasured and cannot be promised
+with the retained quota. AP/Coaches rapid detection, source permissions/stability,
+long postponements, complete official postseason selections, cross-workflow quota
+coordination and durable cross-session source-availability bounds remain open.
+Actual rivalry-weekend behavior is required. Existing postseason results do not
+feed ratings; no model behavior changed in this correction. No merge approval
+has been recorded for this replacement candidate; main remains unchanged.

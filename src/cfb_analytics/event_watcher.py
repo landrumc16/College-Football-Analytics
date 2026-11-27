@@ -366,7 +366,7 @@ class Watcher:
         self._next_poll_check = None
         self._last_monitor = None
         self._next_final_signal = None
-        self._final_signal_attempts = 0
+        self._final_signal_attempts = {}
         self.cfp = {}                 # release day -> {rows, event, last_absent, attempts, next_page, next_confirm}
         self.dispatch_cost = 0
 
@@ -405,6 +405,9 @@ class Watcher:
         now = self.clock()
         h = self.health["games"]
         if not h.ok(now) or not (priority or self.can_check()):
+            return []
+        if priority and not self.priority_room(len(season_types) + REFRESH_COST):
+            self._alert("Publication quota exhausted; multi-source confirmation withheld to preserve the API reserve")
             return []
         try:
             current = {}
@@ -670,27 +673,35 @@ class Watcher:
         plan = cal.plan(self.snapshot, self.polls, now, active_interval=self.active_interval, watch_interval=self.watch_interval)
         due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=max(self.watch_interval, RECONCILE_INTERVAL)))
         timer_ok = self._next_games_check is None or now >= self._next_games_check
-        wave = bool(self.wave_at and not self.wave_done and now >= self.wave_at and self.priority_room(1 + REFRESH_COST))
+        fallback_pending = any((k := cal.parse_time(g.get("start_date")))
+                               and k.astimezone(cal.CENTRAL).date() <= now.astimezone(cal.CENTRAL).date()
+                               for g in plan.games_due + plan.games_overdue)
+        timed_wave = bool(self.wave_at and not self.wave_done and now >= self.wave_at
+                          and fallback_pending and self.priority_room(1 + REFRESH_COST))
         # Under quota pressure, detect actual finals without CFBD polling. The free signal
         # only wakes the existing authoritative confirmation -> refresh -> live verification path.
         signalled = False
         watched = [g for g in plan.games_due + plan.games_overdue if g.get("season_type", "regular") == "regular"]
         if (watched and not self.can_check()
-                and self._final_signal_attempts < 3 and hasattr(self.p, "final_signals")
+                and any(self._final_signal_attempts.get(g["game_id"], 0) < 3 for g in watched)
+                and hasattr(self.p, "final_signals")
                 and (self._next_final_signal is None or now >= self._next_final_signal)):
             self._next_final_signal = now + timedelta(seconds=MIN_INTERVAL)
             try:
-                signalled = bool(self.p.final_signals(watched))
+                signals = self.p.final_signals(watched)
+                eligible_signals = {gid for gid in signals if self._final_signal_attempts.get(gid, 0) < 3}
+                signalled = bool(eligible_signals)
             except Exception as error:
                 self._alert(f"Free final-status detection unavailable; timed CFBD fallback retained: {str(error)[:120]}")
             if signalled:
                 if self.priority_room(1 + REFRESH_COST):
-                    self._final_signal_attempts += 1
+                    for gid in eligible_signals:
+                        self._final_signal_attempts[gid] = self._final_signal_attempts.get(gid, 0) + 1
                     self.log("ESPN final status observed; confirming through CFBD before publication")
                 else:
                     self._alert("ESPN reports a final but CFBD confirmation/publication reserve is unavailable")
                     signalled = False
-        wave = wave or signalled
+        wave = timed_wave or signalled
         finals = []
         if ((plan.monitors_games and timer_ok) or due_reconcile) and self.can_check() or wave:
             self._next_games_check = now + timedelta(seconds=plan.interval or self.watch_interval)
@@ -701,8 +712,9 @@ class Watcher:
             if due_reconcile:
                 kinds |= {e.detail.get("season_type", "regular") for e in self.events if e.kind in ("final", "correction")}
             use_priority = wave and not self.can_check()
+            calls_before = self.p.cfbd_calls
             finals = self.check_games(tuple(sorted(kinds, reverse=True)), priority=use_priority)
-            self.wave_done = self.wave_done or use_priority
+            self.wave_done = self.wave_done or (use_priority and timed_wave and self.p.cfbd_calls > calls_before)
             if signalled and not finals:
                 self._alert("ESPN reports a final awaiting CFBD confirmation; no secondary-source score was published")
             elif signalled and finals:
@@ -736,7 +748,9 @@ class Watcher:
                 waits.append((plan.next_event_at - now).total_seconds())
             if self.wave_at and not self.wave_done and self.wave_at > now:
                 waits.append((self.wave_at - now).total_seconds())
-            if self._next_final_signal and self.priority_room(1 + REFRESH_COST) and self._final_signal_attempts < 3:
+            if (self._next_final_signal and self.priority_room(1 + REFRESH_COST)
+                    and any(not g.get("completed") and self._final_signal_attempts.get(gid, 0) < 3
+                            for gid, g in self.games.items())):
                 waits.append(max(VERIFY_POLL, (self._next_final_signal - now).total_seconds()))
             cfp_wake = self.next_cfp_wake(now)
             if cfp_wake is not None and now + timedelta(seconds=cfp_wake) < deadline:

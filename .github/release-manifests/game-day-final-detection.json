@@ -7,11 +7,11 @@
   "modified_additive_only": {},
   "modified_exact": {
     "src/cfb_analytics/event_watcher.py": {
-      "sha256": "2aa5c74c85f89f6119cbd27a14e08fcf9bf4ae36257d444ed9945244ffba979a",
+      "sha256": "24ca64ac6ac5ac8f9dc006a2c2263b2c341909b8caf658d09ab506a7ad6af93c",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     "src/cfb_analytics/freshness_monitor.py": {
-      "sha256": "8a496a448552a928ce0959a0907849348352074ef30616a959545039dcff4bb2",
+      "sha256": "cd765c5b346dbfd6e59b2348132e4c063e2c224f25f4bd1f690ab0bd0cfe8c36",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     ".github/workflows/refresh-data.yml": {

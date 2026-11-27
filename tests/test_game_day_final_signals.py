@@ -171,3 +171,58 @@ def test_scoreboard_requires_known_id_kickoff_complete_valid_score(monkeypatch):
     event["competitions"][0]["status"]["type"]["completed"] = True
     event["competitions"][0]["competitors"][0]["score"] = "unknown"
     assert not p.final_signals([game(1, T0)])
+
+
+def test_early_signal_exhaustion_preserves_funded_timed_fallback():
+    clock, p, w = signal_setup()
+    w.release_budget = 11
+    p.finals[1] = (T0 + timedelta(hours=3, minutes=10), 48, 27)
+    w.run(T0 + timedelta(hours=5))
+    e, = [e for e in w.events if e.kind == "final"]
+    assert e.status == "published" and e.detected_at >= w.wave_at
+    assert p.cfbd_calls == 4 and w.release_spent == 8
+
+
+def test_later_game_has_independent_confirmation_attempts_and_clears_recovered_alert():
+    clock, p, w = setup([game(1, T0), game(2, T0 + timedelta(hours=1))],
+                        start=T0, budget=0, release_budget=16, deploy_minutes=3)
+    w.wave_at = T0 + timedelta(hours=1) + cal.LATE_FINISH
+    # First provider lags long enough to exhaust early confirmation. A later game
+    # must still wake a new batched check, which also recovers the earlier final.
+    p.finals = {1: (T0 + timedelta(hours=3, minutes=10), 48, 27),
+                2: (T0 + timedelta(hours=4), 31, 24)}
+    p.final_signals = lambda games: {g["game_id"] for g in games
+        if clock() >= T0 + timedelta(hours=3 if g["game_id"] == 1 else 4)}
+    w.run(T0 + timedelta(hours=6))
+    finals = [e for e in w.events if e.kind == "final"]
+    assert len(finals) == 2 and all(e.status == "published" for e in finals)
+    assert max(e.published_at for e in finals) <= T0 + timedelta(hours=4, minutes=5)
+    assert not any("awaiting CFBD" in a for a in w.alerts)
+    assert w.release_spent <= w.release_budget
+
+
+def test_independent_monitor_detects_actual_early_final_with_newer_incomplete_snapshot():
+    from test_freshness_reliability import MonitorProviders
+    from cfb_analytics import freshness_monitor as fm
+    now = T0 + timedelta(hours=3)
+    p = MonitorProviders(now, [], {"poll_weeks": {}}, official=False)
+    # A recent successful refresh is insufficient evidence of current results.
+    p.live_report = lambda: {"retrieved_at": now.isoformat(), "schedule": [{"game_id": 1, "completed": False}]}
+    calls = []
+    p.final_signals = lambda games: calls.append(games) or {1}
+    snapshot = {"season": 2026, "games": [game(1, T0)]}
+    alerts = fm.run_pass(p, now=now, snapshot=snapshot, report=False, crons={}, log=lambda *_: None)
+    assert calls and any(a["key"] == "observed-final-unpublished:1" and a["severity"] == "critical" for a in alerts)
+    p.live_report = lambda: {"schedule": [{"game_id": 1, "completed": True}]}
+    calls.clear()
+    assert not any(a["key"].startswith("observed-final") for a in
+        fm.run_pass(p, now=now, snapshot=snapshot, report=False, crons={}, log=lambda *_: None))
+    assert not calls  # publication ends intensive checking for this event
+
+
+def test_mixed_season_confirmation_reserves_all_source_calls_plus_publication():
+    clock, p, w = signal_setup()
+    w.release_budget = 5  # one source + refresh, insufficient for two sources + refresh
+    assert w.check_games(("regular", "postseason"), priority=True) == []
+    assert p.cfbd_calls == 0 and w.release_spent == 0
+    assert any("multi-source" in a for a in w.alerts)

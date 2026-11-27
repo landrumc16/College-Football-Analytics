@@ -97,7 +97,7 @@ def _alert(key, area, severity, text):
 
 
 def assess(now, *, runs, crons, snapshot, live_report=None, live_polls=None, official_cfp_exists=None, quota=None,
-           watcher_running=False, watcher_alerts=()):
+           watcher_running=False, watcher_alerts=(), observed_finals=()):
     """Alerts for the current state. `runs` maps workflow file -> recent runs (GitHub API rows, newest first)."""
     alerts = []
     # Missed scheduled executions.
@@ -156,6 +156,14 @@ def assess(now, *, runs, crons, snapshot, live_report=None, live_polls=None, off
         alerts.append(_alert("games-awaiting", "Scores and records", "critical",
                              f"{len(waiting)} overdue game result(s) not yet published ({names}{'…' if len(waiting) > 3 else ''}); "
                              "completion is not verified by this time-based check"))
+    # Independent free-source evidence, including when the watcher cannot spend CFBD quota.
+    # This is an alert signal only; no secondary score enters the published data.
+    for gid in sorted(observed_finals):
+        site = live_schedule.get(gid)
+        if not site or not site.get("completed"):
+            alerts.append(_alert(f"observed-final-unpublished:{gid}", "Scores and records", "critical",
+                                 f"Secondary source reports game {gid} final but the public application does not; "
+                                 "authoritative confirmation/publication needs recovery"))
     # CFBD budget.
     if quota and "remaining" in quota:
         if quota["remaining"] <= RELEASE_FLOOR:
@@ -257,6 +265,18 @@ def run_pass(providers, *, now=None, snapshot, quota=None, watcher_alerts=None, 
         live_polls = providers.live_polls()
     except Exception as error:
         log(f"freshness: live polls unavailable: {str(error)[:120]}")
+    observed_finals = set()
+    candidates = [g for g in (live_report or {}).get("schedule", []) if not g.get("completed")]
+    # Public schedules omit kickoff timestamps; use the retained event calendar for identity checks.
+    pending_ids = {g.get("game_id") for g in candidates}
+    candidates = [g for g in snapshot.get("games", []) if g.get("game_id") in pending_ids
+                  and g.get("season_type", "regular") == "regular"
+                  and cal.game_status({**g, "completed": False}, now) in ("due", "overdue")]
+    if candidates and hasattr(providers, "final_signals"):
+        try:
+            observed_finals = providers.final_signals(candidates)
+        except Exception as error:
+            log(f"freshness: independent final-status detection unavailable: {str(error)[:120]}")
     official = None
     published = (live_polls or {}).get("cfp_published_at")
     day = cfp_publish.due_release(now, datetime.fromisoformat(published).date() if published else None)
@@ -266,7 +286,7 @@ def run_pass(providers, *, now=None, snapshot, quota=None, watcher_alerts=None, 
         except Exception as error:
             log(f"freshness: official CFP page unavailable: {str(error)[:120]}")
     alerts = assess(now, runs=runs, crons=workflow_crons() if crons is None else crons, snapshot=snapshot, live_report=live_report, live_polls=live_polls,
-                    official_cfp_exists=official, quota=quota, watcher_running=watcher_running, watcher_alerts=watcher_alerts or ())
+                    official_cfp_exists=official, quota=quota, watcher_running=watcher_running, watcher_alerts=watcher_alerts or (), observed_finals=observed_finals)
     for a in alerts:
         log(f"freshness {a['severity']}: {a['area']}: {a['text']}")
     if report:
