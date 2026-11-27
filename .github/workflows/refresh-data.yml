@@ -33,6 +33,8 @@ jobs:
       run_refresh: ${{ steps.decide.outputs.run_refresh }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # reruns must read current retained data, not the original triggering SHA
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -48,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # preserve current immutable archives before rebuilding and publishing
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -187,13 +191,7 @@ jobs:
           if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then
             git add data/cfbd-recruiting-*.json
           fi
-          if ! git diff --cached --quiet; then
-            git commit -m "Refresh CFBD season snapshot"
-            # Concurrent source updates can advance main while the API is running.
-            # Rebase rather than force-push; fail closed if data conflicts.
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+          bash scripts/publish_refresh_snapshot.sh
       - name: Keep the event watcher running and report freshness problems
         # GitHub can start scheduled runs hours late, so every run of this workflow also restarts a stopped watcher
         # chain (never a second concurrent watcher) and runs one freshness monitor pass. No CFBD calls.

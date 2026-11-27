@@ -95,7 +95,7 @@ def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "v7-development", "v9-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -153,8 +153,11 @@ def test_owner_authorized_v9_navigation_matches_exact_scoped_pins(monkeypatch):
     assert not approved and len(rejected) == 5
 
 
-def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content():
+def test_freshness_reliability_manifest_is_narrow_and_pins_the_reviewed_content(monkeypatch):
     m = _manifest("freshness-reliability")
+    # Archived release fixture: later maintenance legitimately changes these files.
+    # The current maintenance manifest below must pin actual committed content instead.
+    monkeypatch.setattr(guard, "file_sha256", lambda p: m.get("modified_exact", {}).get(p, {}).get("sha256"))
     assert set(m["added_files"]) == {"src/cfb_analytics/freshness_monitor.py", "src/cfb_analytics/watch_keeper.py"}
     assert m["added_file_patterns"] == {} and m["modified_additive_only"] == {}
     assert set(m["modified_exact"]) == {"src/cfb_analytics/event_watcher.py", "src/cfb_analytics/event_calendar.py",
@@ -202,8 +205,9 @@ def test_v9_exception_covers_only_pinned_files_and_unauthorized_changes_still_fa
         assert len(rejected) == 1
 
 
-def test_freshness_alert_flapping_manifest_pins_only_the_monitor():
+def test_freshness_alert_flapping_manifest_pins_only_the_monitor(monkeypatch):
     m = _manifest("freshness-alert-flapping")
+    monkeypatch.setattr(guard, "file_sha256", lambda p: m.get("modified_exact", {}).get(p, {}).get("sha256"))
     assert m["added_files"] == {} and m["added_file_patterns"] == {} and m["modified_additive_only"] == {}
     assert set(m["modified_exact"]) == {"src/cfb_analytics/freshness_monitor.py"}
     approved, rejected = guard.evaluate([("M", "src/cfb_analytics/freshness_monitor.py")], m, "freshness-alert-flapping", True, none_removed)
@@ -211,3 +215,21 @@ def test_freshness_alert_flapping_manifest_pins_only_the_monitor():
     _, rejected = guard.evaluate([("M", "src/cfb_analytics/event_watcher.py"), ("M", "data/season-2026-report.json")],
                                  m, "freshness-alert-flapping", True, none_removed)
     assert len(rejected) == 2
+
+
+def test_game_day_final_detection_pins_current_content_and_preserves_rejection(monkeypatch):
+    m = _manifest("fix/game-day-final-detection")
+    paths = {"src/cfb_analytics/event_watcher.py", "src/cfb_analytics/freshness_monitor.py",
+             ".github/workflows/refresh-data.yml"}
+    assert set(m["modified_exact"]) == paths
+    assert not m["added_files"] and not m["modified_additive_only"] and not m["added_file_patterns"]
+    rows = [("M", p) for p in paths]
+    approved, rejected = guard.evaluate(rows, m, m["head_ref"], True, none_removed)
+    assert len(approved) == 3 and not rejected
+    for branch, same_repo in [("main", True), (m["head_ref"], False), ("v9-development", True)]:
+        assert len(guard.evaluate(rows, m, branch, same_repo, none_removed)[1]) == 3
+    unauthorized = [("M", "src/cfb_analytics/model.py"), ("M", "data/season-2026-report.json"),
+                    ("D", "src/cfb_analytics/event_watcher.py")]
+    assert len(guard.evaluate(unauthorized, m, m["head_ref"], True, none_removed)[1]) == 3
+    monkeypatch.setattr(guard, "file_sha256", lambda p: "0" * 64)
+    assert len(guard.evaluate(rows, m, m["head_ref"], True, none_removed)[1]) == 3

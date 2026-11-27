@@ -118,7 +118,11 @@ try {
     const stdText = (await record.innerText()).replace(/\s+/g, ' ');
     // Standard and Momentum can share the same expected record, so check the Momentum block itself is gone.
     assert.ok(stdText.includes(exp('standard')) && !/Momentum/.test(stdText) && !/higher-rated team/.test(stdText), stdText);
-    assert.equal(await cards.first().locator('.mp-model').count(), 1);
+    if (ttGames.length) assert.equal(await cards.first().locator('.mp-model').count(), 1);
+    else {
+      assert.equal(await cards.count(), 0, 'A completed season has no remaining projection cards');
+      assert.ok(await mp.getByRole('status').filter({ hasText: 'No remaining games match this selection.' }).isVisible());
+    }
     await mp.locator('.mp-views label', { hasText: 'Compare' }).click();
     if (width === 390 || width === 1536) {
       await mp.locator('#mp-games-title').evaluate(e => window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 60));
