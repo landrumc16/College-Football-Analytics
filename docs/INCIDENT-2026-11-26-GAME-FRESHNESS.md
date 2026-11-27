@@ -89,3 +89,16 @@ late starts, next-day window isolation and critical final alerts. Live free-sign
 archives have no changes in this correction.
 
 Physical-device testing is not claimed. No service purchases or new subscriptions.
+
+### Authentication and CI Follow-up
+
+Google sign-in was selected through the secure authentication flow. Google then reported
+that phone approval was declined. No automatic retry or alternative-account switch was
+attempted. Recovery still requires an authorized fresh main workflow dispatch.
+
+Initial remote CI exposed two legacy release-manifest tests hashing current HEAD against
+historical approved-content pins. Local pre-commit execution had hashed the old HEAD.
+Keep those old manifests unchanged as historical fixtures; new maintenance tests pin the
+actual committed correction and prove branch/fork/content/model/data rejection. The guard
+implementation and protected path lists are unchanged. New exact manifest is pending owner
+review; its presence is not owner merge approval.

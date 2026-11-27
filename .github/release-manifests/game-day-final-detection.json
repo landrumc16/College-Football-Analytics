@@ -1,0 +1,22 @@
+{
+  "release": "November 26 game freshness correction \u2014 pending owner merge approval",
+  "head_ref": "fix/game-day-final-detection",
+  "purpose": "Exact proposed incident correction only; no models, data or UI changes. Pending owner review and merge approval.",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/event_watcher.py": {
+      "sha256": "b74508037a5f180c8ffc7c81e9dc84c97615c01646b2e2cc69548320bb3765ed",
+      "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
+    },
+    "src/cfb_analytics/freshness_monitor.py": {
+      "sha256": "eeddda99224cd85859f704d19c18f1ea9401cb76189d9359bfb59513bb692af5",
+      "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
+    },
+    ".github/workflows/refresh-data.yml": {
+      "sha256": "e03a28c266382e616cbc1941b57a149b77dbd872d3a4204e3ca241b3a08158a7",
+      "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
+    }
+  }
+}
