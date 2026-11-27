@@ -437,7 +437,111 @@ class Watcher:
                 elif (src["home_score"], src["away_score"]) != (game.get("home_score"), game.get("away_score")):
                     e = self._add("correction", f"correction:{gid}:{src['home_score']}-{src['away_score']}",
                                   {"game_id": gid, "home": game.get("home"), "away": game.get("away"),
-                                   "from": [game.get("home_score"), game.get("away_score")], …1463 tokens truncated… st["attempts"] += 1
+                                   "from": [game.get("home_score"), game.get("away_score")], "to": [src["home_score"], src["away_score"]]},
+                                  "cfbd/games", previous)
+                    if e:
+                        e.priority = priority
+                        finals.append(e)
+                    game.update(home_score=src["home_score"], away_score=src["away_score"])
+            elif src["completed"] and has_score:
+                e = self._add("final", f"final:{gid}:{src['home_score']}-{src['away_score']}",
+                              {"game_id": gid, "home": game.get("home"), "away": game.get("away"), "score": [src["home_score"], src["away_score"]],
+                               "season_type": game.get("season_type", "regular")}, "cfbd/games", previous)
+                if e:
+                    e.priority = priority
+                    finals.append(e)
+                game.update(completed=True, home_score=src["home_score"], away_score=src["away_score"])
+        return finals
+
+    def check_polls(self, plan):
+        """AP/Coaches releases from CFBD (no reliable machine-readable official source). Paid from the discretionary
+        budget when it can afford it, otherwise from the release allowance, at most every poll_interval."""
+        now = self.clock()
+        h = self.health["rankings"]
+        if not plan.polls_due or not h.ok(now) or (self._next_poll_check and now < self._next_poll_check):
+            return []
+        discretionary = self.discretionary_spent + POLL_REFRESH_COST < self.cfbd_budget
+        priority = not discretionary and self.priority_room(1 + POLL_REFRESH_COST)
+        if not (discretionary or priority):
+            return []
+        self._next_poll_check = now + timedelta(seconds=self.poll_interval if priority else min(self.poll_interval, self.active_interval))
+        try:
+            found = choose_polls(self.p.rankings(self.season))
+        except Exception as error:
+            h.fail(now, error, self.active_interval)
+            self.log(f"rankings source failed ({h.failures}): {h.last_error}")
+            return []
+        finally:
+            if priority:
+                self.release_spent += 1
+        h.recover()
+        published = self.polls.setdefault("poll_weeks", {})
+        out = []
+        for key in plan.polls_due:
+            week = found.get(key, (None,))[0]
+            if week is None:
+                continue
+            if week < (published.get(key) or 0):
+                self.stale_signals.append({"at": now.isoformat(), "source": "rankings", "poll": key, "reason": "older week than published"})
+            elif week > (published.get(key) or 0):
+                e = self._add("poll", f"poll:{key}:{week}", {"poll": key, "week": week}, "cfbd/rankings")
+                if e:
+                    e.priority = priority
+                    out.append(e)
+        return out
+
+    def cfp_due(self, now):
+        """The CFP release whose announcement time has passed, is not yet published and is still being watched."""
+        published = self.polls.get("cfp_published_at")
+        day = cfp_publish.due_release(now, date.fromisoformat(published) if published else None)
+        if day is None or now > cfp_announcement(day) + CFP_WATCH_LIMIT:
+            return None
+        return day
+
+    def check_cfp_official(self):
+        """Read the dated official CFP page (no CFBD call); confirm a complete parse with one CFBD call."""
+        now = self.clock()
+        day = self.cfp_due(now)
+        if day is None:
+            return []
+        st = self.cfp.setdefault(day, {"rows": None, "event": None, "last_absent": None, "attempts": 0,
+                                       "next_page": None, "next_confirm": None})
+        out = []
+        if st["rows"] is None:
+            h = self.health["official"]
+            if not h.ok(now) or (st["next_page"] and now < st["next_page"]):
+                return []
+            st["next_page"] = now + timedelta(seconds=CFP_PAGE_INTERVAL)
+            url = cfp_publish.official_url(day)
+            try:
+                html = self.p.cfp_page(url)
+            except Exception as error:
+                h.fail(now, error, CFP_PAGE_INTERVAL)
+                self.log(f"official CFP page failed ({h.failures}): {h.last_error}")
+                return []
+            h.recover()
+            if html is None:
+                st["last_absent"] = now
+                return []
+            try:
+                st["rows"] = cfp_publish.parse_official(html, day, self.known_teams or set())
+            except cfp_publish.NotPublishable as reason:   # page exists but is not a complete dated release yet
+                st["last_absent"] = now
+                self.stale_signals.append({"at": now.isoformat(), "source": "official", "reason": str(reason)})
+                return []
+            st["event"] = self._add("cfp", f"cfp:{day.isoformat()}", {"release": day.isoformat(), "url": url},
+                                    "official-page", st["last_absent"])
+            if st["event"]:
+                st["event"].priority = True
+                out.append(st["event"])
+        e = st["event"]
+        if e is None or e.confirmed_at or st["attempts"] >= CFP_CONFIRM_MAX or (st["next_confirm"] and now < st["next_confirm"]):
+            return out
+        if not self.priority_room(1 + POLL_REFRESH_COST) and self.discretionary_spent + 1 + POLL_REFRESH_COST >= self.cfbd_budget:
+            self._alert(f"official CFP {day.isoformat()} release found but no CFBD calls are left to confirm it; "
+                        "the scheduled poll workflow will publish it when it runs")
+            return out
+        st["attempts"] += 1
         try:
             weeks = self.p.rankings(self.season)
             self.release_spent += 1
@@ -468,7 +572,7 @@ class Watcher:
             for e in events:
                 e.status = "recorded"
             return
-        if ((priority and not self.priority_room(cost))
+        if workflow == "refresh-data.yml" and ((priority and not self.priority_room(cost))
                 or (not priority and self.discretionary_spent + cost > self.cfbd_budget)):
             self._alert("Publication quota exhausted; refresh/retry withheld to preserve the API reserve")
             for e in events:

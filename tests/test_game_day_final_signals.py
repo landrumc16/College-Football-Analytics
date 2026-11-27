@@ -148,6 +148,15 @@ def test_funded_failed_publication_recovers_once_within_priority_cap():
     assert w.release_spent == 9 <= w.release_budget
 
 
+def test_game_retry_guard_preserves_existing_discretionary_cfp_publication():
+    from test_freshness_reliability import TUESDAY, RELEASED
+    clock, p, w = setup([game(1, T0, True, 1, 0, week=12)], start=TUESDAY,
+                        budget=400, release_budget=0)
+    p.official_at, p.cfp_at = RELEASED, (RELEASED, 13)
+    w.run(TUESDAY + timedelta(hours=2))
+    assert [e.status for e in w.events if e.kind == "cfp"] == ["published"]
+
+
 def test_scoreboard_requires_known_id_kickoff_complete_valid_score(monkeypatch):
     event = {"id": "1", "date": game(1, T0)["start_date"], "competitions": [{
         "status": {"type": {"completed": True}}, "competitors": [

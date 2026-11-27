@@ -7,7 +7,7 @@
   "modified_additive_only": {},
   "modified_exact": {
     "src/cfb_analytics/event_watcher.py": {
-      "sha256": "7096879ade1e5412f05ba75162d3912ffc176462c207689826cb489b713ef768",
+      "sha256": "2aa5c74c85f89f6119cbd27a14e08fcf9bf4ae36257d444ed9945244ffba979a",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     "src/cfb_analytics/freshness_monitor.py": {

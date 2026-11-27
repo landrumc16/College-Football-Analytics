@@ -166,8 +166,8 @@ pins. Owner merge approval is still required after acceptance.
 
 ### Executed Local Acceptance Results
 
-- Full suite after reconciliation with recovered main: **862 passed, 2 skipped** (28.78 s).
-- Focused watcher/calendar/monitor/publication-recovery suite: **57 passed**.
+- Full suite after reconciliation with recovered main: **863 passed, 2 skipped**.
+- Focused watcher/calendar/monitor/publication-recovery suite: **58 passed**.
 - Previously committed PR #73 CI passed before the final weekday/recovery additions.
   Final remote CI must be checked at the final PR SHA; no earlier green run substitutes for it.
 - Production data refresh: **836 passed, 5 skipped** on its GitHub Python-only runner;
@@ -175,3 +175,8 @@ pins. Owner merge approval is still required after acceptance.
   dependency availability explains the different skips; no skipped check is claimed executed.
 - Remaining constraints: provider-first-availability unknown, advanced unit stats dated
   November 22, finite CFBD monthly quota, GitHub scheduling/deployment latency, and no physical-device test.
+
+Final CI additionally caught a source-transfer truncation in the draft branch. It never
+reached main. Final acceptance requires exact Git tree identity between the tested local
+checkout and the GitHub commit, plus fresh CI at that commit. The game retry guard is
+explicitly scoped to game refreshes; the existing discretionary CFP path has a regression test.
