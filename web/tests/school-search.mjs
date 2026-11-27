@@ -1,7 +1,7 @@
 // Browser acceptance: shared school search (combobox) on Team Profile, Compare, Market hand-off and Favorites at five widths.
 // Covers typing, ranking, touch and keyboard selection, ARIA semantics, empty/no-match states, clipping, overflow, persistence.
 import assert from 'node:assert/strict';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright';
@@ -11,6 +11,13 @@ import { chooseSection, openDestination } from './section-navigation.mjs';
 const PORT = 4192, base = `http://127.0.0.1:${PORT}/`;
 const evidence = 'docs/evidence/school-search';
 await mkdir(evidence, { recursive: true });
+// Use the actual staged schedule: a school with a completed regular season must
+// disappear from upcoming prediction choices without breaking search acceptance.
+const testedReport = JSON.parse(await readFile('web/dist/season-report.json', 'utf8'));
+const pendingIds = new Set(testedReport.schedule.filter(g => !g.completed).map(g => g.game_id));
+const predictionSchools = [...new Set(testedReport.predictions.filter(p => pendingIds.has(p.game_id))
+  .flatMap(p => [p.home, p.away]))].sort();
+const predictionSchool = predictionSchools.includes('Texas Tech') ? 'Texas Tech' : predictionSchools[0];
 
 const field = (page, label) => page.getByLabel(label, { exact: true }).locator('visible=true').first();
 const listFor = async (page, input) => page.locator(`[id="${await input.getAttribute('aria-controls')}"]`);
@@ -173,9 +180,19 @@ try {
     const predictions = page.getByLabel('Search teams', { exact: true });
     await predictions.fill('TTU');
     const predicted = page.locator('#team-search-suggestions').getByRole('option');
-    assert.equal(await predicted.first().innerText(), 'Texas Tech', 'Game Predictions abbreviation ranking');
-    await pick(predicted.first());
-    assert.equal(await predictions.inputValue(), 'Texas Tech');
+    if (!predictionSchools.includes('Texas Tech')) {
+      assert.equal(await predicted.count(), 0, 'Completed Texas Tech season is excluded from upcoming choices');
+    }
+    if (predictionSchool) {
+      await predictions.fill(predictionSchool === 'Texas Tech' ? 'TTU' : predictionSchool);
+      assert.equal(await predicted.first().innerText(), predictionSchool, 'Eligible prediction school ranks first');
+      await pick(predicted.first());
+      assert.equal(await predictions.inputValue(), predictionSchool);
+      assert.match(await page.locator('.predictions-intro').innerText(), /Showing [1-9]\d* remaining FBS matchup/);
+    } else {
+      assert.equal(await predicted.count(), 0, 'No upcoming games means no selectable prediction schools');
+      assert.match(await page.locator('.predictions-intro').innerText(), /Showing 0 remaining FBS matchup/);
+    }
 
     // Favorites: find with the same search (abbreviation + touch), save, survive reload, remove.
     await openDestination(page, 'Home');

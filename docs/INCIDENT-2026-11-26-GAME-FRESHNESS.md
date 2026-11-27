@@ -180,3 +180,15 @@ Final CI additionally caught a source-transfer truncation in the draft branch. I
 reached main. Final acceptance requires exact Git tree identity between the tested local
 checkout and the GitHub commit, plus fresh CI at that commit. The game retry guard is
 explicitly scoped to game refreshes; the existing discretionary CFP path has a regression test.
+
+### Post-Final Browser Regression Correction
+
+The final frontend job passed five-width navigation, editorial layout, scenario reset, PWA,
+market and strength checks, then exposed a stale school-search test: it required Texas Tech
+in upcoming predictions after the regular season was complete. Production correctly excludes
+it. The test now derives eligible schools from the actual staged pending schedule, retains
+TTU abbreviation coverage when eligible (and in the other school selectors), checks completed
+Texas Tech exclusion, and verifies a nonempty selected-school forecast or the true empty-season
+state. No product or prediction code changed. Local Node syntax check passed; local browser
+launch was unavailable because Playwright headless-shell build 1194 was not installed. Final
+CI supplies the actual five-width browser execution rather than claiming local browser success.
