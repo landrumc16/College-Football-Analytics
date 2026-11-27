@@ -4507,7 +4507,7 @@
   },
   "season": 2026,
   "source": "collegefootballdata.com/games",
-  "retrieved_at": "2026-11-27T14:21:23.323384+00:00",
+  "retrieved_at": "2026-11-27T16:10:17.460270+00:00",
   "data_changed_at": "2026-11-27T14:02:57.315580+00:00",
   "summary": {
     "teams": 138,
@@ -17571,486 +17571,18 @@
       "confidence": "Lean"
     }
   ],
-  "generated_at": "2026-11-27T14:21:25.038030+00:00",
+  "generated_at": "2026-11-27T16:10:18.862167+00:00",
   "data_freshness": {
     "status": "current",
-    "retrieved_at": "2026-11-27T14:21:23.323384+00:00",
+    "retrieved_at": "2026-11-27T16:10:17.460270+00:00",
     "data_changed_at": "2026-11-27T14:02:57.315580+00:00"
   },
   "performance": {
-    "LSU": {
-      "actual_wins": 0,
-      "expected_wins": 1.611,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.611
-    },
-    "Missouri State": {
-      "actual_wins": 1,
-      "expected_wins": 1.119,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.119
-    },
-    "Sam Houston State": {
-      "actual_wins": 0,
-      "expected_wins": 1.103,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.103
-    },
-    "New Mexico": {
-      "actual_wins": 2,
-      "expected_wins": 2.525,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.525
-    },
-    "Boston College": {
-      "actual_wins": 1,
-      "expected_wins": 0.674,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.326
-    },
-    "Mississippi State": {
-      "actual_wins": 1,
-      "expected_wins": 2.41,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.41
-    },
-    "Wake Forest": {
-      "actual_wins": 3,
-      "expected_wins": 2.394,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.606
-    },
-    "Fresno State": {
-      "actual_wins": 1,
-      "expected_wins": 1.88,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.88
-    },
-    "Buffalo": {
-      "actual_wins": 2,
-      "expected_wins": 0.989,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 1.011
-    },
-    "San Jos\u00e9 State": {
-      "actual_wins": 1,
-      "expected_wins": 1.532,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.532
-    },
-    "Texas Tech": {
-      "actual_wins": 4,
-      "expected_wins": 2.922,
-      "games_with_forecasts": 4,
-      "wins_above_expected": 1.078
-    },
-    "Ohio State": {
-      "actual_wins": 1,
-      "expected_wins": 2.486,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.486
-    },
-    "SMU": {
-      "actual_wins": 1,
-      "expected_wins": 1.274,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.274
-    },
-    "Georgia": {
-      "actual_wins": 3,
-      "expected_wins": 2.135,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.865
-    },
-    "Florida State": {
-      "actual_wins": 2,
-      "expected_wins": 1.829,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.171
-    },
-    "Auburn": {
-      "actual_wins": 3,
-      "expected_wins": 2.174,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.826
-    },
-    "Marshall": {
-      "actual_wins": 1,
-      "expected_wins": 1.18,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.18
-    },
-    "Tennessee": {
-      "actual_wins": 3,
-      "expected_wins": 1.691,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.309
-    },
-    "Memphis": {
-      "actual_wins": 1,
-      "expected_wins": 1.176,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.176
-    },
-    "Indiana": {
-      "actual_wins": 1,
-      "expected_wins": 1.458,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.458
-    },
-    "Oklahoma State": {
-      "actual_wins": 2,
-      "expected_wins": 1.124,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.876
-    },
-    "Houston": {
-      "actual_wins": 2,
-      "expected_wins": 2.313,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.313
-    },
-    "North Texas": {
-      "actual_wins": 1,
-      "expected_wins": 1.947,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.947
-    },
-    "Arizona State": {
-      "actual_wins": 2,
-      "expected_wins": 1.699,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.301
-    },
-    "Louisiana Tech": {
-      "actual_wins": 3,
-      "expected_wins": 2.285,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.715
-    },
-    "Oregon State": {
-      "actual_wins": 1,
-      "expected_wins": 1.689,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.689
-    },
-    "Georgia State": {
-      "actual_wins": 1,
-      "expected_wins": 1.48,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.48
-    },
-    "West Virginia": {
-      "actual_wins": 0,
-      "expected_wins": 0.89,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.89
-    },
-    "Washington State": {
-      "actual_wins": 1,
-      "expected_wins": 0.96,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 0.04
-    },
-    "Syracuse": {
-      "actual_wins": 1,
-      "expected_wins": 1.422,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.422
-    },
-    "Jacksonville State": {
-      "actual_wins": 2,
-      "expected_wins": 2.205,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.205
-    },
-    "Florida Atlantic": {
-      "actual_wins": 2,
-      "expected_wins": 1.0,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.0
-    },
-    "Charlotte": {
-      "actual_wins": 0,
-      "expected_wins": 0.452,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.452
-    },
-    "Oklahoma": {
-      "actual_wins": 3,
-      "expected_wins": 1.211,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.789
-    },
-    "Utah": {
-      "actual_wins": 3,
-      "expected_wins": 1.968,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.032
-    },
-    "Rice": {
-      "actual_wins": 1,
-      "expected_wins": 0.761,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.239
-    },
-    "Hawai'i": {
-      "actual_wins": 1,
-      "expected_wins": 1.551,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.551
-    },
-    "Texas State": {
-      "actual_wins": 3,
-      "expected_wins": 1.787,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.213
-    },
-    "Louisiana": {
-      "actual_wins": 3,
-      "expected_wins": 2.441,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.559
-    },
-    "Arizona": {
-      "actual_wins": 2,
-      "expected_wins": 1.841,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.159
-    },
-    "Minnesota": {
-      "actual_wins": 1,
-      "expected_wins": 1.096,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.096
-    },
-    "Colorado State": {
-      "actual_wins": 0,
-      "expected_wins": 0.5,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.5
-    },
-    "ULM": {
-      "actual_wins": 1,
-      "expected_wins": 0.324,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.676
-    },
-    "Air Force": {
-      "actual_wins": 3,
-      "expected_wins": 1.834,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.166
-    },
-    "Nevada": {
-      "actual_wins": 2,
-      "expected_wins": 1.461,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.539
-    },
-    "Alabama": {
-      "actual_wins": 3,
-      "expected_wins": 2.417,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.583
-    },
-    "South Florida": {
-      "actual_wins": 0,
-      "expected_wins": 1.788,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.788
-    },
-    "Maryland": {
-      "actual_wins": 2,
-      "expected_wins": 0.734,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.266
-    },
-    "Northwestern": {
-      "actual_wins": 0,
-      "expected_wins": 1.205,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.205
-    },
-    "Oregon": {
-      "actual_wins": 3,
-      "expected_wins": 1.829,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.171
-    },
-    "New Mexico State": {
-      "actual_wins": 0,
-      "expected_wins": 0.987,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.987
-    },
-    "Michigan State": {
-      "actual_wins": 1,
-      "expected_wins": 0.6,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.4
-    },
-    "Ole Miss": {
-      "actual_wins": 1,
-      "expected_wins": 2.042,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.042
-    },
-    "Kennesaw State": {
-      "actual_wins": 3,
-      "expected_wins": 1.761,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.239
-    },
-    "UConn": {
-      "actual_wins": 2,
-      "expected_wins": 1.658,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.342
-    },
-    "Old Dominion": {
-      "actual_wins": 1,
-      "expected_wins": 0.45,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 0.55
-    },
-    "Notre Dame": {
-      "actual_wins": 3,
-      "expected_wins": 2.584,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.416
-    },
-    "Kansas": {
-      "actual_wins": 1,
-      "expected_wins": 1.508,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.508
-    },
-    "Kansas State": {
-      "actual_wins": 0,
-      "expected_wins": 1.296,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.296
-    },
-    "California": {
-      "actual_wins": 0,
-      "expected_wins": 0.89,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.89
-    },
-    "UCLA": {
-      "actual_wins": 2,
-      "expected_wins": 1.847,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.153
-    },
-    "Massachusetts": {
-      "actual_wins": 0,
-      "expected_wins": 0.708,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.708
-    },
-    "UCF": {
-      "actual_wins": 2,
-      "expected_wins": 1.565,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.435
-    },
-    "Navy": {
-      "actual_wins": 2,
-      "expected_wins": 0.806,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 1.194
-    },
-    "Sacramento State": {
-      "actual_wins": 0,
-      "expected_wins": 0.153,
-      "games_with_forecasts": 1,
-      "wins_above_expected": -0.153
-    },
-    "Ball State": {
-      "actual_wins": 0,
-      "expected_wins": 0.63,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.63
-    },
-    "UNLV": {
-      "actual_wins": 2,
-      "expected_wins": 1.594,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.406
-    },
-    "Army": {
-      "actual_wins": 0,
-      "expected_wins": 1.331,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -1.331
-    },
-    "Colorado": {
-      "actual_wins": 1,
-      "expected_wins": 0.702,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.298
-    },
-    "BYU": {
-      "actual_wins": 2,
-      "expected_wins": 1.611,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.389
-    },
-    "Wisconsin": {
-      "actual_wins": 2,
-      "expected_wins": 2.1,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.1
-    },
-    "South Carolina": {
-      "actual_wins": 1,
-      "expected_wins": 1.598,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.598
-    },
-    "Iowa": {
-      "actual_wins": 3,
-      "expected_wins": 1.973,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.027
-    },
-    "South Alabama": {
-      "actual_wins": 2,
-      "expected_wins": 1.337,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.663
-    },
-    "Nebraska": {
-      "actual_wins": 2,
-      "expected_wins": 1.577,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.423
-    },
-    "Utah State": {
-      "actual_wins": 1,
-      "expected_wins": 1.006,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.006
-    },
     "Pittsburgh": {
       "actual_wins": 0,
       "expected_wins": 0.918,
       "games_with_forecasts": 2,
       "wins_above_expected": -0.918
-    },
-    "Florida": {
-      "actual_wins": 2,
-      "expected_wins": 2.056,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.056
-    },
-    "Washington": {
-      "actual_wins": 2,
-      "expected_wins": 1.515,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.485
     },
     "Clemson": {
       "actual_wins": 2,
@@ -18058,17 +17590,461 @@
       "games_with_forecasts": 3,
       "wins_above_expected": 0.285
     },
+    "Tennessee": {
+      "actual_wins": 3,
+      "expected_wins": 1.691,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.309
+    },
+    "TCU": {
+      "actual_wins": 1,
+      "expected_wins": 1.4,
+      "games_with_forecasts": 4,
+      "wins_above_expected": -0.4
+    },
+    "Old Dominion": {
+      "actual_wins": 1,
+      "expected_wins": 0.45,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.55
+    },
+    "Appalachian State": {
+      "actual_wins": 2,
+      "expected_wins": 2.019,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.019
+    },
     "Troy": {
       "actual_wins": 0,
       "expected_wins": 1.21,
       "games_with_forecasts": 3,
       "wins_above_expected": -1.21
     },
-    "UTSA": {
+    "Penn State": {
       "actual_wins": 2,
-      "expected_wins": 1.993,
+      "expected_wins": 2.005,
       "games_with_forecasts": 3,
-      "wins_above_expected": 0.007
+      "wins_above_expected": -0.005
+    },
+    "Fresno State": {
+      "actual_wins": 1,
+      "expected_wins": 1.88,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.88
+    },
+    "Kansas": {
+      "actual_wins": 1,
+      "expected_wins": 1.508,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.508
+    },
+    "West Virginia": {
+      "actual_wins": 0,
+      "expected_wins": 0.89,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.89
+    },
+    "Kentucky": {
+      "actual_wins": 0,
+      "expected_wins": 0.934,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.934
+    },
+    "Texas Tech": {
+      "actual_wins": 4,
+      "expected_wins": 2.922,
+      "games_with_forecasts": 4,
+      "wins_above_expected": 1.078
+    },
+    "Navy": {
+      "actual_wins": 2,
+      "expected_wins": 0.806,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 1.194
+    },
+    "South Alabama": {
+      "actual_wins": 2,
+      "expected_wins": 1.337,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.663
+    },
+    "Western Kentucky": {
+      "actual_wins": 1,
+      "expected_wins": 1.101,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.101
+    },
+    "Miami (FL)": {
+      "actual_wins": 2,
+      "expected_wins": 2.171,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.171
+    },
+    "Washington": {
+      "actual_wins": 2,
+      "expected_wins": 1.515,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.485
+    },
+    "San Jos\u00e9 State": {
+      "actual_wins": 1,
+      "expected_wins": 1.532,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.532
+    },
+    "San Diego State": {
+      "actual_wins": 2,
+      "expected_wins": 0.693,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 1.307
+    },
+    "North Carolina": {
+      "actual_wins": 1,
+      "expected_wins": 1.53,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.53
+    },
+    "UConn": {
+      "actual_wins": 2,
+      "expected_wins": 1.658,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.342
+    },
+    "Georgia State": {
+      "actual_wins": 1,
+      "expected_wins": 1.48,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.48
+    },
+    "Minnesota": {
+      "actual_wins": 1,
+      "expected_wins": 1.096,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.096
+    },
+    "Maryland": {
+      "actual_wins": 2,
+      "expected_wins": 0.734,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.266
+    },
+    "Oregon": {
+      "actual_wins": 3,
+      "expected_wins": 1.829,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.171
+    },
+    "Colorado": {
+      "actual_wins": 1,
+      "expected_wins": 0.702,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.298
+    },
+    "Baylor": {
+      "actual_wins": 1,
+      "expected_wins": 1.667,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.667
+    },
+    "Toledo": {
+      "actual_wins": 2,
+      "expected_wins": 1.799,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.201
+    },
+    "Cincinnati": {
+      "actual_wins": 1,
+      "expected_wins": 1.385,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.385
+    },
+    "Temple": {
+      "actual_wins": 0,
+      "expected_wins": 1.782,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.782
+    },
+    "Kent State": {
+      "actual_wins": 0,
+      "expected_wins": 1.063,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.063
+    },
+    "Iowa State": {
+      "actual_wins": 1,
+      "expected_wins": 1.106,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.106
+    },
+    "Ball State": {
+      "actual_wins": 0,
+      "expected_wins": 0.63,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -0.63
+    },
+    "Jacksonville State": {
+      "actual_wins": 2,
+      "expected_wins": 2.205,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.205
+    },
+    "Florida International": {
+      "actual_wins": 1,
+      "expected_wins": 1.429,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.429
+    },
+    "Nebraska": {
+      "actual_wins": 2,
+      "expected_wins": 1.577,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.423
+    },
+    "Louisville": {
+      "actual_wins": 3,
+      "expected_wins": 2.119,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.881
+    },
+    "Stanford": {
+      "actual_wins": 2,
+      "expected_wins": 0.429,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 1.571
+    },
+    "Buffalo": {
+      "actual_wins": 2,
+      "expected_wins": 0.989,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 1.011
+    },
+    "Utah State": {
+      "actual_wins": 1,
+      "expected_wins": 1.006,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.006
+    },
+    "Sacramento State": {
+      "actual_wins": 0,
+      "expected_wins": 0.153,
+      "games_with_forecasts": 1,
+      "wins_above_expected": -0.153
+    },
+    "Iowa": {
+      "actual_wins": 3,
+      "expected_wins": 1.973,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.027
+    },
+    "Marshall": {
+      "actual_wins": 1,
+      "expected_wins": 1.18,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.18
+    },
+    "Syracuse": {
+      "actual_wins": 1,
+      "expected_wins": 1.422,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.422
+    },
+    "Texas": {
+      "actual_wins": 3,
+      "expected_wins": 2.034,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.966
+    },
+    "Arkansas State": {
+      "actual_wins": 0,
+      "expected_wins": 1.624,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.624
+    },
+    "Tulane": {
+      "actual_wins": 2,
+      "expected_wins": 1.598,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.402
+    },
+    "Miami (OH)": {
+      "actual_wins": 3,
+      "expected_wins": 1.404,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.596
+    },
+    "Liberty": {
+      "actual_wins": 3,
+      "expected_wins": 2.637,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.363
+    },
+    "Michigan State": {
+      "actual_wins": 1,
+      "expected_wins": 0.6,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.4
+    },
+    "Eastern Michigan": {
+      "actual_wins": 1,
+      "expected_wins": 0.792,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.208
+    },
+    "UCF": {
+      "actual_wins": 2,
+      "expected_wins": 1.565,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.435
+    },
+    "Boston College": {
+      "actual_wins": 1,
+      "expected_wins": 0.674,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.326
+    },
+    "North Texas": {
+      "actual_wins": 1,
+      "expected_wins": 1.947,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.947
+    },
+    "Washington State": {
+      "actual_wins": 1,
+      "expected_wins": 0.96,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.04
+    },
+    "Auburn": {
+      "actual_wins": 3,
+      "expected_wins": 2.174,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.826
+    },
+    "Florida": {
+      "actual_wins": 2,
+      "expected_wins": 2.056,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.056
+    },
+    "Georgia": {
+      "actual_wins": 3,
+      "expected_wins": 2.135,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.865
+    },
+    "New Mexico State": {
+      "actual_wins": 0,
+      "expected_wins": 0.987,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.987
+    },
+    "Charlotte": {
+      "actual_wins": 0,
+      "expected_wins": 0.452,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.452
+    },
+    "Oregon State": {
+      "actual_wins": 1,
+      "expected_wins": 1.689,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.689
+    },
+    "Mississippi State": {
+      "actual_wins": 1,
+      "expected_wins": 2.41,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.41
+    },
+    "Northwestern": {
+      "actual_wins": 0,
+      "expected_wins": 1.205,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.205
+    },
+    "UCLA": {
+      "actual_wins": 2,
+      "expected_wins": 1.847,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.153
+    },
+    "Rice": {
+      "actual_wins": 1,
+      "expected_wins": 0.761,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.239
+    },
+    "Indiana": {
+      "actual_wins": 1,
+      "expected_wins": 1.458,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -0.458
+    },
+    "Northern Illinois": {
+      "actual_wins": 0,
+      "expected_wins": 0.457,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.457
+    },
+    "Central Michigan": {
+      "actual_wins": 1,
+      "expected_wins": 1.37,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -0.37
+    },
+    "Massachusetts": {
+      "actual_wins": 0,
+      "expected_wins": 0.708,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -0.708
+    },
+    "New Mexico": {
+      "actual_wins": 2,
+      "expected_wins": 2.525,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.525
+    },
+    "Coastal Carolina": {
+      "actual_wins": 1,
+      "expected_wins": 1.388,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.388
+    },
+    "Nevada": {
+      "actual_wins": 2,
+      "expected_wins": 1.461,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.539
+    },
+    "Wyoming": {
+      "actual_wins": 2,
+      "expected_wins": 0.975,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.025
+    },
+    "Kennesaw State": {
+      "actual_wins": 3,
+      "expected_wins": 1.761,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.239
+    },
+    "Georgia Tech": {
+      "actual_wins": 1,
+      "expected_wins": 0.521,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.479
+    },
+    "Sam Houston State": {
+      "actual_wins": 0,
+      "expected_wins": 1.103,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.103
+    },
+    "Western Michigan": {
+      "actual_wins": 2,
+      "expected_wins": 2.463,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.463
     },
     "North Dakota State": {
       "actual_wins": 2,
@@ -18076,11 +18052,113 @@
       "games_with_forecasts": 2,
       "wins_above_expected": 0.405
     },
-    "Louisville": {
-      "actual_wins": 3,
-      "expected_wins": 2.119,
+    "Oklahoma State": {
+      "actual_wins": 2,
+      "expected_wins": 1.124,
       "games_with_forecasts": 3,
-      "wins_above_expected": 0.881
+      "wins_above_expected": 0.876
+    },
+    "Notre Dame": {
+      "actual_wins": 3,
+      "expected_wins": 2.584,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.416
+    },
+    "Georgia Southern": {
+      "actual_wins": 3,
+      "expected_wins": 1.727,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.273
+    },
+    "Bowling Green": {
+      "actual_wins": 1,
+      "expected_wins": 0.694,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.306
+    },
+    "UAB": {
+      "actual_wins": 2,
+      "expected_wins": 1.464,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.536
+    },
+    "Louisiana": {
+      "actual_wins": 3,
+      "expected_wins": 2.441,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.559
+    },
+    "Army": {
+      "actual_wins": 0,
+      "expected_wins": 1.331,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -1.331
+    },
+    "SMU": {
+      "actual_wins": 1,
+      "expected_wins": 1.274,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.274
+    },
+    "Ohio State": {
+      "actual_wins": 1,
+      "expected_wins": 2.486,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.486
+    },
+    "Rutgers": {
+      "actual_wins": 1,
+      "expected_wins": 0.511,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.489
+    },
+    "ULM": {
+      "actual_wins": 1,
+      "expected_wins": 0.324,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.676
+    },
+    "UNLV": {
+      "actual_wins": 2,
+      "expected_wins": 1.594,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.406
+    },
+    "Wake Forest": {
+      "actual_wins": 3,
+      "expected_wins": 2.394,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.606
+    },
+    "Virginia Tech": {
+      "actual_wins": 0,
+      "expected_wins": 1.188,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.188
+    },
+    "Louisiana Tech": {
+      "actual_wins": 3,
+      "expected_wins": 2.285,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.715
+    },
+    "Delaware": {
+      "actual_wins": 2,
+      "expected_wins": 1.663,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.337
+    },
+    "Alabama": {
+      "actual_wins": 3,
+      "expected_wins": 2.417,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.583
+    },
+    "Virginia": {
+      "actual_wins": 2,
+      "expected_wins": 1.307,
+      "games_with_forecasts": 2,
+      "wins_above_expected": 0.693
     },
     "Tulsa": {
       "actual_wins": 3,
@@ -18094,113 +18172,11 @@
       "games_with_forecasts": 3,
       "wins_above_expected": -0.483
     },
-    "Miami (FL)": {
-      "actual_wins": 2,
-      "expected_wins": 2.171,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.171
-    },
-    "Coastal Carolina": {
+    "Duke": {
       "actual_wins": 1,
-      "expected_wins": 1.388,
+      "expected_wins": 1.318,
       "games_with_forecasts": 3,
-      "wins_above_expected": -0.388
-    },
-    "Texas": {
-      "actual_wins": 3,
-      "expected_wins": 2.034,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.966
-    },
-    "Eastern Michigan": {
-      "actual_wins": 1,
-      "expected_wins": 0.792,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 0.208
-    },
-    "UAB": {
-      "actual_wins": 2,
-      "expected_wins": 1.464,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.536
-    },
-    "Central Michigan": {
-      "actual_wins": 1,
-      "expected_wins": 1.37,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.37
-    },
-    "Vanderbilt": {
-      "actual_wins": 1,
-      "expected_wins": 0.414,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.586
-    },
-    "Tulane": {
-      "actual_wins": 2,
-      "expected_wins": 1.598,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.402
-    },
-    "Iowa State": {
-      "actual_wins": 1,
-      "expected_wins": 1.106,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.106
-    },
-    "North Carolina": {
-      "actual_wins": 1,
-      "expected_wins": 1.53,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.53
-    },
-    "Liberty": {
-      "actual_wins": 3,
-      "expected_wins": 2.637,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.363
-    },
-    "Purdue": {
-      "actual_wins": 0,
-      "expected_wins": 1.236,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.236
-    },
-    "Toledo": {
-      "actual_wins": 2,
-      "expected_wins": 1.799,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 0.201
-    },
-    "Illinois": {
-      "actual_wins": 1,
-      "expected_wins": 1.034,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.034
-    },
-    "East Carolina": {
-      "actual_wins": 3,
-      "expected_wins": 1.64,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.36
-    },
-    "Delaware": {
-      "actual_wins": 2,
-      "expected_wins": 1.663,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.337
-    },
-    "Baylor": {
-      "actual_wins": 1,
-      "expected_wins": 1.667,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.667
-    },
-    "Michigan": {
-      "actual_wins": 1,
-      "expected_wins": 1.602,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.602
+      "wins_above_expected": -0.318
     },
     "Arkansas": {
       "actual_wins": 1,
@@ -18208,161 +18184,17 @@
       "games_with_forecasts": 3,
       "wins_above_expected": 0.555
     },
-    "Stanford": {
-      "actual_wins": 2,
-      "expected_wins": 0.429,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 1.571
-    },
-    "NC State": {
+    "Illinois": {
       "actual_wins": 1,
-      "expected_wins": 1.347,
+      "expected_wins": 1.034,
       "games_with_forecasts": 3,
-      "wins_above_expected": -0.347
+      "wins_above_expected": -0.034
     },
-    "Rutgers": {
-      "actual_wins": 1,
-      "expected_wins": 0.511,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.489
-    },
-    "Northern Illinois": {
+    "Colorado State": {
       "actual_wins": 0,
-      "expected_wins": 0.457,
+      "expected_wins": 0.5,
       "games_with_forecasts": 3,
-      "wins_above_expected": -0.457
-    },
-    "Virginia Tech": {
-      "actual_wins": 0,
-      "expected_wins": 1.188,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.188
-    },
-    "Georgia Tech": {
-      "actual_wins": 1,
-      "expected_wins": 0.521,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 0.479
-    },
-    "Western Michigan": {
-      "actual_wins": 2,
-      "expected_wins": 2.463,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.463
-    },
-    "UTEP": {
-      "actual_wins": 0,
-      "expected_wins": 0.753,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.753
-    },
-    "Duke": {
-      "actual_wins": 1,
-      "expected_wins": 1.318,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.318
-    },
-    "Appalachian State": {
-      "actual_wins": 2,
-      "expected_wins": 2.019,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.019
-    },
-    "Penn State": {
-      "actual_wins": 2,
-      "expected_wins": 2.005,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.005
-    },
-    "Cincinnati": {
-      "actual_wins": 1,
-      "expected_wins": 1.385,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.385
-    },
-    "Kentucky": {
-      "actual_wins": 0,
-      "expected_wins": 0.934,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.934
-    },
-    "Miami (OH)": {
-      "actual_wins": 3,
-      "expected_wins": 1.404,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.596
-    },
-    "Bowling Green": {
-      "actual_wins": 1,
-      "expected_wins": 0.694,
-      "games_with_forecasts": 2,
-      "wins_above_expected": 0.306
-    },
-    "James Madison": {
-      "actual_wins": 1,
-      "expected_wins": 1.356,
-      "games_with_forecasts": 2,
-      "wins_above_expected": -0.356
-    },
-    "Wyoming": {
-      "actual_wins": 2,
-      "expected_wins": 0.975,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.025
-    },
-    "TCU": {
-      "actual_wins": 1,
-      "expected_wins": 1.4,
-      "games_with_forecasts": 4,
-      "wins_above_expected": -0.4
-    },
-    "Texas A&M": {
-      "actual_wins": 0,
-      "expected_wins": 1.539,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.539
-    },
-    "Georgia Southern": {
-      "actual_wins": 3,
-      "expected_wins": 1.727,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.273
-    },
-    "Florida International": {
-      "actual_wins": 1,
-      "expected_wins": 1.429,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.429
-    },
-    "Middle Tennessee": {
-      "actual_wins": 2,
-      "expected_wins": 0.994,
-      "games_with_forecasts": 3,
-      "wins_above_expected": 1.006
-    },
-    "Western Kentucky": {
-      "actual_wins": 1,
-      "expected_wins": 1.101,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.101
-    },
-    "Kent State": {
-      "actual_wins": 0,
-      "expected_wins": 1.063,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.063
-    },
-    "Arkansas State": {
-      "actual_wins": 0,
-      "expected_wins": 1.624,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -1.624
-    },
-    "Southern Miss": {
-      "actual_wins": 0,
-      "expected_wins": 0.888,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.888
+      "wins_above_expected": -0.5
     },
     "Ohio": {
       "actual_wins": 1,
@@ -18370,23 +18202,101 @@
       "games_with_forecasts": 2,
       "wins_above_expected": -0.35
     },
-    "Missouri": {
-      "actual_wins": 1,
-      "expected_wins": 1.277,
-      "games_with_forecasts": 3,
-      "wins_above_expected": -0.277
-    },
-    "Temple": {
+    "South Florida": {
       "actual_wins": 0,
-      "expected_wins": 1.782,
+      "expected_wins": 1.788,
       "games_with_forecasts": 3,
-      "wins_above_expected": -1.782
+      "wins_above_expected": -1.788
     },
-    "Virginia": {
+    "Arizona": {
       "actual_wins": 2,
-      "expected_wins": 1.307,
+      "expected_wins": 1.841,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.159
+    },
+    "Florida Atlantic": {
+      "actual_wins": 2,
+      "expected_wins": 1.0,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.0
+    },
+    "Arizona State": {
+      "actual_wins": 2,
+      "expected_wins": 1.699,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.301
+    },
+    "UTEP": {
+      "actual_wins": 0,
+      "expected_wins": 0.753,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.753
+    },
+    "BYU": {
+      "actual_wins": 2,
+      "expected_wins": 1.611,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.389
+    },
+    "Vanderbilt": {
+      "actual_wins": 1,
+      "expected_wins": 0.414,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.586
+    },
+    "LSU": {
+      "actual_wins": 0,
+      "expected_wins": 1.611,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.611
+    },
+    "Hawai'i": {
+      "actual_wins": 1,
+      "expected_wins": 1.551,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.551
+    },
+    "Memphis": {
+      "actual_wins": 1,
+      "expected_wins": 1.176,
       "games_with_forecasts": 2,
-      "wins_above_expected": 0.693
+      "wins_above_expected": -0.176
+    },
+    "California": {
+      "actual_wins": 0,
+      "expected_wins": 0.89,
+      "games_with_forecasts": 2,
+      "wins_above_expected": -0.89
+    },
+    "UTSA": {
+      "actual_wins": 2,
+      "expected_wins": 1.993,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.007
+    },
+    "Texas A&M": {
+      "actual_wins": 0,
+      "expected_wins": 1.539,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.539
+    },
+    "Florida State": {
+      "actual_wins": 2,
+      "expected_wins": 1.829,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 0.171
+    },
+    "Middle Tennessee": {
+      "actual_wins": 2,
+      "expected_wins": 0.994,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.006
+    },
+    "Oklahoma": {
+      "actual_wins": 3,
+      "expected_wins": 1.211,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.789
     },
     "USC": {
       "actual_wins": 1,
@@ -18394,17 +18304,107 @@
       "games_with_forecasts": 2,
       "wins_above_expected": -0.19
     },
+    "South Carolina": {
+      "actual_wins": 1,
+      "expected_wins": 1.598,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.598
+    },
+    "Michigan": {
+      "actual_wins": 1,
+      "expected_wins": 1.602,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.602
+    },
+    "Missouri State": {
+      "actual_wins": 1,
+      "expected_wins": 1.119,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.119
+    },
+    "East Carolina": {
+      "actual_wins": 3,
+      "expected_wins": 1.64,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.36
+    },
+    "Kansas State": {
+      "actual_wins": 0,
+      "expected_wins": 1.296,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.296
+    },
+    "Purdue": {
+      "actual_wins": 0,
+      "expected_wins": 1.236,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.236
+    },
     "Akron": {
       "actual_wins": 1,
       "expected_wins": 0.584,
       "games_with_forecasts": 2,
       "wins_above_expected": 0.416
     },
-    "San Diego State": {
-      "actual_wins": 2,
-      "expected_wins": 0.693,
+    "Missouri": {
+      "actual_wins": 1,
+      "expected_wins": 1.277,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.277
+    },
+    "Texas State": {
+      "actual_wins": 3,
+      "expected_wins": 1.787,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.213
+    },
+    "NC State": {
+      "actual_wins": 1,
+      "expected_wins": 1.347,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.347
+    },
+    "James Madison": {
+      "actual_wins": 1,
+      "expected_wins": 1.356,
       "games_with_forecasts": 2,
-      "wins_above_expected": 1.307
+      "wins_above_expected": -0.356
+    },
+    "Air Force": {
+      "actual_wins": 3,
+      "expected_wins": 1.834,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.166
+    },
+    "Utah": {
+      "actual_wins": 3,
+      "expected_wins": 1.968,
+      "games_with_forecasts": 3,
+      "wins_above_expected": 1.032
+    },
+    "Ole Miss": {
+      "actual_wins": 1,
+      "expected_wins": 2.042,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -1.042
+    },
+    "Southern Miss": {
+      "actual_wins": 0,
+      "expected_wins": 0.888,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.888
+    },
+    "Wisconsin": {
+      "actual_wins": 2,
+      "expected_wins": 2.1,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.1
+    },
+    "Houston": {
+      "actual_wins": 2,
+      "expected_wins": 2.313,
+      "games_with_forecasts": 3,
+      "wins_above_expected": -0.313
     }
   },
   "prediction_accuracy": {
