@@ -14962,5 +14962,21 @@
     "scheduled_kickoff_at": "2026-12-05T19:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
+  },
+  "401869533": {
+    "game_id": 401869533,
+    "week": 14,
+    "home": "Utah",
+    "away": "Texas Tech",
+    "neutral_site": true,
+    "predicted_winner": "Utah",
+    "home_margin": 1.9824435652649584,
+    "home_win_probability": 0.5630616326120925,
+    "confidence": "Lean",
+    "forecast_recorded_at": "2026-11-27T14:02:59.877088+00:00",
+    "source_retrieved_at": "2026-11-27T14:02:57.315580+00:00",
+    "scheduled_kickoff_at": "2026-12-05T01:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "source": "generated_before_kickoff"
   }
 }

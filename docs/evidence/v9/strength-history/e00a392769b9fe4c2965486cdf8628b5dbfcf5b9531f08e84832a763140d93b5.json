@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "kind": "retained_report_observation",
+  "report_generated_at": "2026-11-27T14:02:59.877088+00:00",
+  "retained_at": "2026-11-27T14:03:05.800880+00:00",
+  "source_commit": "1c64ea5f304d0cf7875105f89200ca23cefea16e",
+  "source_sha256": "e00a392769b9fe4c2965486cdf8628b5dbfcf5b9531f08e84832a763140d93b5",
+  "source_receipt": "2026-11-27T14:02:57.315580+00:00",
+  "model_metadata": {
+    "model_id": "workbook_2026_baseline",
+    "model_status": "incumbent_not_v3_promoted",
+    "prediction_scale": 18.0,
+    "home_field_advantage": 3.0,
+    "historical_study": "retrospective_research_only"
+  },
+  "season": 2026,
+  "teams": [
+    {
+      "team": "Georgia",
+      "rank": 1,
+      "rating": 30.653712985939162,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Utah",
+      "rank": 2,
+      "rating": 20.729638586089663,
+      "wins": 11,
+      "losses": 0
+    },
+    {
+      "team": "Notre Dame",
+      "rank": 3,
+      "rating": 28.121670095225184,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Miami (FL)",
+      "rank": 4,
+      "rating": 23.55816041036899,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Alabama",
+      "rank": 5,
+      "rating": 26.165362182962966,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Texas Tech",
+      "rank": 6,
+      "rating": 18.747195020824705,
+      "wins": 11,
+      "losses": 1
+    },
+    {
+      "team": "Texas",
+      "rank": 7,
+      "rating": 25.964927898777763,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Wake Forest",
+      "rank": 8,
+      "rating": 18.999375060703024,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Tennessee",
+      "rank": 9,
+      "rating": 22.08429360084809,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Indiana",
+      "rank": 10,
+      "rating": 19.838750125207287,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "UCLA",
+      "rank": 11,
+      "rating": 13.892265675960376,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Oregon",
+      "rank": 12,
+      "rating": 21.517841718046043,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "BYU",
+      "rank": 13,
+      "rating": 16.78949551434413,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Iowa",
+      "rank": 14,
+      "rating": 16.45292235120796,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Ohio State",
+      "rank": 15,
+      "rating": 23.408813925020645,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Liberty",
+      "rank": 16,
+      "rating": 4.615969762943212,
+      "wins": 10,
+      "losses": 1
+    },
+    {
+      "team": "Boise State",
+      "rank": 17,
+      "rating": 8.295363579210687,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Louisville",
+      "rank": 18,
+      "rating": 16.159538141661532,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "Arizona",
+      "rank": 19,
+      "rating": 14.803117352326574,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "Ole Miss",
+      "rank": 20,
+      "rating": 18.353870367992215,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "USC",
+      "rank": 21,
+      "rating": 15.522265426474124,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "LSU",
+      "rank": 22,
+      "rating": 21.033366961207754,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Houston",
+      "rank": 23,
+      "rating": 12.638218550999806,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "New Mexico",
+      "rank": 24,
+      "rating": 6.53411195513815,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Oklahoma",
+      "rank": 25,
+      "rating": 16.554922039277002,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Missouri",
+      "rank": 26,
+      "rating": 15.474132084245769,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Florida",
+      "rank": 27,
+      "rating": 14.811008425828959,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Louisiana Tech",
+      "rank": 28,
+      "rating": 5.827808548888616,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Nebraska",
+      "rank": 29,
+      "rating": 14.106321833947758,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Wisconsin",
+      "rank": 30,
+      "rating": 11.333191183244672,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "UTSA",
+      "rank": 31,
+      "rating": 2.4185538302532685,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "James Madison",
+      "rank": 32,
+      "rating": 4.836615386198672,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "SMU",
+      "rank": 33,
+      "rating": 9.661281821270835,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Duke",
+      "rank": 34,
+      "rating": 12.029077295643395,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "North Dakota State",
+      "rank": 35,
+      "rating": 0.25843075459354736,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Auburn",
+      "rank": 36,
+      "rating": 12.087446383109487,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Memphis",
+      "rank": 37,
+      "rating": 3.540527867600572,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "Oklahoma State",
+      "rank": 38,
+      "rating": 9.375266934559018,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Kentucky",
+      "rank": 39,
+      "rating": 9.739900913354955,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "South Carolina",
+      "rank": 40,
+      "rating": 12.627481059830643,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Washington",
+      "rank": 41,
+      "rating": 9.941925046183565,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Baylor",
+      "rank": 42,
+      "rating": 13.13722909562377,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Northwestern",
+      "rank": 43,
+      "rating": 11.462836514316447,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Toledo",
+      "rank": 44,
+      "rating": -2.1727213697316277,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Clemson",
+      "rank": 45,
+      "rating": 7.56281687014563,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Penn State",
+      "rank": 46,
+      "rating": 10.780817437663416,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Texas State",
+      "rank": 47,
+      "rating": 5.799429517466735,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "North Texas",
+      "rank": 48,
+      "rating": 4.101940159837599,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Air Force",
+      "rank": 49,
+      "rating": -2.2979712101198833,
+      "wins": 9,
+      "losses": 2
+    },
+    {
+      "team": "Louisiana",
+      "rank": 50,
+      "rating": -0.06092365029508051,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "Pittsburgh",
+      "rank": 51,
+      "rating": 7.839797390021989,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Jacksonville State",
+      "rank": 52,
+      "rating": -2.834633287363821,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "UCF",
+      "rank": 53,
+      "rating": 6.812529790492949,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Michigan",
+      "rank": 54,
+      "rating": 8.996197182183607,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Illinois",
+      "rank": 55,
+      "rating": 8.002763125528226,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Virginia",
+      "rank": 56,
+      "rating": 6.8658040331355235,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Tulsa",
+      "rank": 57,
+      "rating": 2.102808745869172,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Georgia Southern",
+      "rank": 58,
+      "rating": 1.6444664500070667,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Arizona State",
+      "rank": 59,
+      "rating": 6.486610434487148,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Texas A&M",
+      "rank": 60,
+      "rating": 14.941310260770218,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Western Michigan",
+      "rank": 61,
+      "rating": -2.601600180331413,
+      "wins": 8,
+      "losses": 4
+    },
+    {
+      "team": "North Carolina",
+      "rank": 62,
+      "rating": 7.555787303540656,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Virginia Tech",
+      "rank": 63,
+      "rating": 3.637686031717316,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "UNLV",
+      "rank": 64,
+      "rating": -2.493065761191393,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Minnesota",
+      "rank": 65,
+      "rating": 4.514798544660099,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Cincinnati",
+      "rank": 66,
+      "rating": 4.576467662017745,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Florida Atlantic",
+      "rank": 67,
+      "rating": -1.6237208427156322,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "East Carolina",
+      "rank": 68,
+      "rating": -2.306239585189975,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Florida State",
+      "rank": 69,
+      "rating": 7.746179512747604,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Fresno State",
+      "rank": 70,
+      "rating": 1.754119043042681,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Oregon State",
+      "rank": 71,
+      "rating": 2.3947258686054442,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "UConn",
+      "rank": 72,
+      "rating": 1.0495657957127278,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "TCU",
+      "rank": 73,
+      "rating": 8.725294479290573,
+      "wins": 5,
+      "losses": 7
+    },
+    {
+      "team": "South Florida",
+      "rank": 74,
+      "rating": 0.20429004063361766,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Ohio",
+      "rank": 75,
+      "rating": -7.609340223702803,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "Iowa State",
+      "rank": 76,
+      "rating": 5.1012977177441226,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Mississippi State",
+      "rank": 77,
+      "rating": 6.860805019913801,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Miami (OH)",
+      "rank": 78,
+      "rating": -6.6990765464031234,
+      "wins": 8,
+      "losses": 4
+    },
+    {
+      "team": "Kansas",
+      "rank": 79,
+      "rating": 8.898872412930341,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "NC State",
+      "rank": 80,
+      "rating": 4.297541372866395,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Buffalo",
+      "rank": 81,
+      "rating": -11.248942360103488,
+      "wins": 8,
+      "losses": 3
+    },
+    {
+      "team": "San Diego State",
+      "rank": 82,
+      "rating": -2.3194851985059666,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Appalachian State",
+      "rank": 83,
+      "rating": -6.587819316599368,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "West Virginia",
+      "rank": 84,
+      "rating": 3.9644813092407216,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Army",
+      "rank": 85,
+      "rating": -2.4186025609222814,
+      "wins": 5,
+      "losses": 5
+    },
+    {
+      "team": "Syracuse",
+      "rank": 86,
+      "rating": 2.9664166429194765,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Stanford",
+      "rank": 87,
+      "rating": -3.026528733710551,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "South Alabama",
+      "rank": 88,
+      "rating": -5.2026849474215355,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Wyoming",
+      "rank": 89,
+      "rating": -8.470159068667126,
+      "wins": 7,
+      "losses": 4
+    },
+    {
+      "team": "Delaware",
+      "rank": 90,
+      "rating": -5.067713647453212,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Kansas State",
+      "rank": 91,
+      "rating": 4.372031876433749,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Vanderbilt",
+      "rank": 92,
+      "rating": 5.418117121179115,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Arkansas",
+      "rank": 93,
+      "rating": 4.9052581254323675,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Tulane",
+      "rank": 94,
+      "rating": -5.064680433468129,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "UAB",
+      "rank": 95,
+      "rating": -5.2699152766950785,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Maryland",
+      "rank": 96,
+      "rating": 2.1100656188329103,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Colorado",
+      "rank": 97,
+      "rating": 1.500997699562993,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Boston College",
+      "rank": 98,
+      "rating": -1.8189939445243342,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Middle Tennessee",
+      "rank": 99,
+      "rating": -10.167442780590848,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Marshall",
+      "rank": 100,
+      "rating": -10.20134963479477,
+      "wins": 6,
+      "losses": 5
+    },
+    {
+      "team": "Georgia State",
+      "rank": 101,
+      "rating": -4.779799984896384,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Kennesaw State",
+      "rank": 102,
+      "rating": -5.940432757809224,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Navy",
+      "rank": 103,
+      "rating": -5.642635657864061,
+      "wins": 4,
+      "losses": 6
+    },
+    {
+      "team": "Michigan State",
+      "rank": 104,
+      "rating": 0.7723426156677895,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Nevada",
+      "rank": 105,
+      "rating": -7.871041770722583,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Utah State",
+      "rank": 106,
+      "rating": -3.941700593816846,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Purdue",
+      "rank": 107,
+      "rating": 1.290679309799549,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Central Michigan",
+      "rank": 108,
+      "rating": -10.70551840118793,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Rutgers",
+      "rank": 109,
+      "rating": -1.3394069730325002,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "San Jos\u00e9 State",
+      "rank": 110,
+      "rating": -10.074743654266824,
+      "wins": 5,
+      "losses": 7
+    },
+    {
+      "team": "Georgia Tech",
+      "rank": 111,
+      "rating": 0.1800589097652061,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Florida International",
+      "rank": 112,
+      "rating": -8.282961327582164,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Arkansas State",
+      "rank": 113,
+      "rating": -8.41426077230861,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Western Kentucky",
+      "rank": 114,
+      "rating": -8.505746485678065,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Hawai'i",
+      "rank": 115,
+      "rating": -7.46779639606168,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Coastal Carolina",
+      "rank": 116,
+      "rating": -8.692197227178777,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Troy",
+      "rank": 117,
+      "rating": -10.308529786430302,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "California",
+      "rank": 118,
+      "rating": -5.553860181463923,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Washington State",
+      "rank": 119,
+      "rating": -2.7823874310042824,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "Eastern Michigan",
+      "rank": 120,
+      "rating": -14.507983506027307,
+      "wins": 5,
+      "losses": 7
+    },
+    {
+      "team": "Missouri State",
+      "rank": 121,
+      "rating": -10.719065830910992,
+      "wins": 4,
+      "losses": 7
+    },
+    {
+      "team": "Massachusetts",
+      "rank": 122,
+      "rating": -17.004979292110868,
+      "wins": 5,
+      "losses": 6
+    },
+    {
+      "team": "Old Dominion",
+      "rank": 123,
+      "rating": -9.270504162987677,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Southern Miss",
+      "rank": 124,
+      "rating": -11.122415106586182,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "New Mexico State",
+      "rank": 125,
+      "rating": -12.507967390373981,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Colorado State",
+      "rank": 126,
+      "rating": -11.843012804609915,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Rice",
+      "rank": 127,
+      "rating": -9.798731432434929,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "Temple",
+      "rank": 128,
+      "rating": -8.837964098877677,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "Bowling Green",
+      "rank": 129,
+      "rating": -17.17455678921642,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Ball State",
+      "rank": 130,
+      "rating": -18.267628839712298,
+      "wins": 3,
+      "losses": 8
+    },
+    {
+      "team": "Kent State",
+      "rank": 131,
+      "rating": -18.722208663750212,
+      "wins": 3,
+      "losses": 9
+    },
+    {
+      "team": "ULM",
+      "rank": 132,
+      "rating": -17.31543263273938,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "Akron",
+      "rank": 133,
+      "rating": -17.56740872960114,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "Sam Houston State",
+      "rank": 134,
+      "rating": -15.754181378312676,
+      "wins": 1,
+      "losses": 10
+    },
+    {
+      "team": "Charlotte",
+      "rank": 135,
+      "rating": -16.87360336252028,
+      "wins": 1,
+      "losses": 10
+    },
+    {
+      "team": "Sacramento State",
+      "rank": 136,
+      "rating": -21.318166831291222,
+      "wins": 2,
+      "losses": 9
+    },
+    {
+      "team": "UTEP",
+      "rank": 137,
+      "rating": -19.917268458367055,
+      "wins": 1,
+      "losses": 10
+    },
+    {
+      "team": "Northern Illinois",
+      "rank": 138,
+      "rating": -18.81987748587619,
+      "wins": 0,
+      "losses": 11
+    }
+  ]
+}

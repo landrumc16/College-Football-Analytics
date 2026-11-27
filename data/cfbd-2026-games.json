@@ -1,11 +1,11 @@
 {
   "season": 2026,
-  "retrieved_at": "2026-11-27T05:09:18.287734+00:00",
+  "retrieved_at": "2026-11-27T14:02:57.315580+00:00",
   "source": "collegefootballdata.com/games",
   "summary": {
-    "scheduled": 3767,
+    "scheduled": 3768,
     "completed": 3647,
-    "pending": 120
+    "pending": 121
   },
   "games": [
     {
@@ -44190,7 +44190,7 @@
       "home_score": null,
       "away_score": null,
       "neutral_site": false,
-      "start_date": "2026-11-27T17:00:00.000Z"
+      "start_date": "2026-11-27T17:08:00.000Z"
     },
     {
       "game_id": 401858537,
@@ -45141,6 +45141,18 @@
       "start_date": "2026-12-05T17:00:00.000Z"
     },
     {
+      "game_id": 401869533,
+      "season": 2026,
+      "week": 14,
+      "home": "Utah",
+      "away": "Texas Tech",
+      "completed": false,
+      "home_score": null,
+      "away_score": null,
+      "neutral_site": true,
+      "start_date": "2026-12-05T01:00:00.000Z"
+    },
+    {
       "game_id": 401869535,
       "season": 2026,
       "week": 14,
@@ -45213,5 +45225,5 @@
       "start_date": "2026-12-12T20:00:00.000Z"
     }
   ],
-  "data_changed_at": "2026-11-27T05:09:18.287734+00:00"
+  "data_changed_at": "2026-11-27T14:02:57.315580+00:00"
 }

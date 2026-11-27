@@ -440,10 +440,10 @@
   },
   "2026": {
    "coverage": {
-    "archive_games": 895,
+    "archive_games": 896,
     "completed": 825,
     "conflicting_duplicates": 0,
-    "matched": 895,
+    "matched": 896,
     "selected_spread_providers": {
      "DraftKings": 894
     },
@@ -452,7 +452,7 @@
     },
     "spread_consensus_replaced": 0,
     "spread_disputed": 4,
-    "spread_no_line": 1,
+    "spread_no_line": 2,
     "spread_ok": 890,
     "spread_open_available": 886,
     "spread_priority_replaced": 0,
@@ -460,7 +460,7 @@
     "spread_suspicious": 0,
     "total_consensus_replaced": 0,
     "total_disputed": 3,
-    "total_no_line": 1,
+    "total_no_line": 2,
     "total_ok": 891,
     "total_open_available": 828,
     "total_priority_replaced": 0,
@@ -468,14 +468,14 @@
     "unmatched": 0
    },
    "postseason": {
-    "retrieved_at": "2026-11-27T05:09:27.819556+00:00",
+    "retrieved_at": "2026-11-27T14:03:14.035447+00:00",
     "rows": 0,
     "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
    },
    "regular": {
-    "retrieved_at": "2026-11-27T05:09:27.722128+00:00",
-    "rows": 1553,
-    "sha256": "39156c2c4aa3cfcbbe3c433131fd2f31b4756107bcc4349ec546e85005d1c44f"
+    "retrieved_at": "2026-11-27T14:03:10.590019+00:00",
+    "rows": 1554,
+    "sha256": "0814fd5c6ae2b7b9ba8d16319fff02c7079693a7a6d5846ce60fc1ab8939f0aa"
    }
   }
  },
