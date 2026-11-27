@@ -1,0 +1,31 @@
+name: Shared acquisition coordination acceptance
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/cfb_analytics/quota_client.py'
+      - 'scripts/verify_shared_quota.py'
+      - '.github/workflows/shared-quota-acceptance.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  coordination:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify genuine concurrent-client coordination without any source calls
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: PYTHONPATH=src python scripts/verify_shared_quota.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shared-quota-acceptance
+          path: shared-quota-acceptance.json
+          if-no-files-found: ignore

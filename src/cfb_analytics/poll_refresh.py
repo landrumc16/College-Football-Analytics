@@ -3,7 +3,8 @@ import json
 import os
 from datetime import date, datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 from zoneinfo import ZoneInfo
 
 CFP_DATES = {(11, 10), (11, 17), (11, 24), (12, 1), (12, 6)}

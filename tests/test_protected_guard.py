@@ -95,7 +95,7 @@ def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "v7-development", "v9-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "fix/shared-acquisition-control", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -219,6 +219,8 @@ def test_freshness_alert_flapping_manifest_pins_only_the_monitor(monkeypatch):
 
 def test_game_day_final_detection_pins_current_content_and_preserves_rejection(monkeypatch):
     m = _manifest("fix/game-day-final-detection")
+    # Released fixture; current maintenance is pinned by its own manifest below.
+    monkeypatch.setattr(guard, "file_sha256", lambda p: m.get("modified_exact", {}).get(p, {}).get("sha256"))
     paths = {"src/cfb_analytics/event_watcher.py", "src/cfb_analytics/freshness_monitor.py",
              ".github/workflows/refresh-data.yml"}
     assert set(m["modified_exact"]) == paths
@@ -233,3 +235,15 @@ def test_game_day_final_detection_pins_current_content_and_preserves_rejection(m
     assert len(guard.evaluate(unauthorized, m, m["head_ref"], True, none_removed)[1]) == 3
     monkeypatch.setattr(guard, "file_sha256", lambda p: "0" * 64)
     assert len(guard.evaluate(rows, m, m["head_ref"], True, none_removed)[1]) == 3
+
+
+def test_shared_acquisition_manifest_pins_only_reviewed_transport_and_workflows(monkeypatch):
+    m = _manifest('fix/shared-acquisition-control')
+    assert set(m['added_files']) == {'src/cfb_analytics/quota_client.py'}
+    assert not m['added_file_patterns'] and not m['modified_additive_only']
+    rows = [('A', p) for p in m['added_files']] + [('M', p) for p in m['modified_exact']]
+    assert not guard.evaluate(rows, m, m['head_ref'], True, none_removed)[1]
+    assert len(guard.evaluate(rows, m, 'main', True, none_removed)[1]) == len(rows)
+    assert len(guard.evaluate(rows, m, m['head_ref'], False, none_removed)[1]) == len(rows)
+    monkeypatch.setattr(guard, 'file_sha256', lambda p: '0' * 64)
+    assert len(guard.evaluate([('M', p) for p in m['modified_exact']], m, m['head_ref'], True, none_removed)[1]) == len(m['modified_exact'])

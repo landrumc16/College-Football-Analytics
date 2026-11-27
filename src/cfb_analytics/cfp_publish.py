@@ -22,7 +22,8 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 from zoneinfo import ZoneInfo
 
 from .poll_refresh import CFP_DATES

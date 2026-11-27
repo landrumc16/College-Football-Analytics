@@ -9,7 +9,8 @@ from math import isfinite
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 from urllib.error import HTTPError, URLError
 import time
 from .v34_recruiting_ingestion import normalize_recruiting_classes

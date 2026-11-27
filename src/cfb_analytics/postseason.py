@@ -15,7 +15,8 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 
 from .ingestion import normalize_cfbd_games
 from .model import model_home_margin, win_probability_from_rating_gap

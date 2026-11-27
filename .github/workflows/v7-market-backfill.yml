@@ -27,6 +27,10 @@ permissions:
 concurrency:
   group: v7-market-archive
   cancel-in-progress: false
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '8'
+
 jobs:
   backfill:
     if: github.ref == 'refs/heads/v7-development'
@@ -81,10 +85,12 @@ jobs:
       - name: Dispute diagnostics (aggregate counts only; populates private runner cache)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.v7_market_archive --diagnose --backfill 2016-2025 --cache "$STORE"
       - name: Full rebuild 2016-2025 plus current season (history restored from the private store when present)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
           ACCEPT: ${{ github.event.inputs.accept_upstream_change == 'true' && '--accept-upstream-change' || '' }}
         run: python -m cfb_analytics.v7_market_archive --backfill 2016-2025 --season 2026 --cache "$STORE" $ACCEPT
       - name: Offline regeneration from private snapshots is byte-identical
@@ -92,6 +98,7 @@ jobs:
       - name: Incremental current-season refresh reproduces the full rebuild (2 calls, no history download)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           cp web/public/v7-team-market-history.json "$RUNNER_TEMP/full.json"
           python -m cfb_analytics.v7_market_archive --season 2026 --cache "$STORE"

@@ -1,0 +1,86 @@
+{
+  "kind": "scenario_estimate_not_measurement",
+  "source_calls_made": 0,
+  "free_monthly_limit": 1000,
+  "scenarios": {
+    "ordinary_saturday": {
+      "assumptions": {
+        "active_hours": 12,
+        "status_calls_per_check": 1,
+        "publication_waves": 15
+      },
+      "two_minute_checks": {
+        "status_checks": 360,
+        "essential_publication_calls": 30,
+        "total_calls": 390
+      },
+      "five_minute_checks": {
+        "status_checks": 144,
+        "essential_publication_calls": 30,
+        "total_calls": 174
+      }
+    },
+    "rivalry_weekend": {
+      "assumptions": {
+        "active_hours": 16,
+        "status_calls_per_check": 1,
+        "publication_waves": 24
+      },
+      "two_minute_checks": {
+        "status_checks": 480,
+        "essential_publication_calls": 48,
+        "total_calls": 528
+      },
+      "five_minute_checks": {
+        "status_checks": 192,
+        "essential_publication_calls": 48,
+        "total_calls": 240
+      }
+    },
+    "conference_championships": {
+      "assumptions": {
+        "active_hours": 8,
+        "status_calls_per_check": 2,
+        "publication_waves": 6
+      },
+      "two_minute_checks": {
+        "status_checks": 480,
+        "essential_publication_calls": 12,
+        "total_calls": 492
+      },
+      "five_minute_checks": {
+        "status_checks": 192,
+        "essential_publication_calls": 12,
+        "total_calls": 204
+      }
+    },
+    "postseason_month": {
+      "assumptions": {
+        "active_hours": 60,
+        "status_calls_per_check": 1,
+        "publication_waves": 20
+      },
+      "two_minute_checks": {
+        "status_checks": 1800,
+        "essential_publication_calls": 40,
+        "total_calls": 1840
+      },
+      "five_minute_checks": {
+        "status_checks": 720,
+        "essential_publication_calls": 40,
+        "total_calls": 760
+      }
+    }
+  },
+  "ordinary_four_week_month": {
+    "other_assumed_calls": 224,
+    "two_minute_total": 1784,
+    "five_minute_total": 920
+  },
+  "limitations": [
+    "These are assumed windows/waves, not observed event counts.",
+    "Provider lag, failed requests, schedule changes and retry costs add consumption.",
+    "No time-to-publish distribution or 95% success rate is inferred.",
+    "Even five-minute detection can exceed five-minute end-to-end publication."
+  ]
+}

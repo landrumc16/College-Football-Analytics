@@ -1,0 +1,75 @@
+{
+  "release": "Shared acquisition control \u2014 pending owner approval",
+  "head_ref": "fix/shared-acquisition-control",
+  "added_files": {
+    "src/cfb_analytics/quota_client.py": "Shared atomic quota reservations; no source payloads or model changes"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/v34_historical_snapshot_cli.py": {
+      "sha256": "9f70b001048124c1f0b6abe577c37934ecd3440205e04dcd32d080eedce7cd19",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/cfp_publish.py": {
+      "sha256": "58586f81fee7610beed6a831ccfb1a8640e3637671f3495f00c84707192ddf97",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/event_watcher.py": {
+      "sha256": "c4e3b17a871861136563388b6f4e3e91363e53596a9cd23bee7454415cd32d50",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/v34_recruiting_refresh.py": {
+      "sha256": "fc382929c3285bd24a534e92928614b8ac491a0733638c7fff074d251b2a4d6f",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/v8_sources.py": {
+      "sha256": "d1343a85bb025cb27395f882ed74a1798b17ac485ba64987db927c2e36f55d20",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/poll_refresh.py": {
+      "sha256": "6c3b8100cba4352844e6f0ca1f1954f40ffc81b5af5e3a9114c525fc58d3c748",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/postseason.py": {
+      "sha256": "e71d47ac8be76991219f1769f5a918b4139d00f13f9623b4d348fc48d2c8d65c",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    "src/cfb_analytics/refresh.py": {
+      "sha256": "ac3841854754c4d407d9edead8463c3e8f647cc36afa3f0455a10db30c01dc58",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/v8-sources.yml": {
+      "sha256": "410b75b3dddb688c1fca73bf0582c1286b140f9a798063fc4e79c5574f723b6d",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/refresh-polls.yml": {
+      "sha256": "0c6dcfa2fd68e1fe56131a978c66434e69c61962e84e07a3a7d0a2a79f999a34",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/v7-market-backfill.yml": {
+      "sha256": "c32a9f51b06238f43d5ad92bf296a76c63b629cc7449122e39d2fc023b3fff1c",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/v8-stats-refresh.yml": {
+      "sha256": "1b5692eddad0d09c26e739333d4d6451f34b2966db08fe08a1838502d3cfd98c",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/v34-historical-recruiting.yml": {
+      "sha256": "d0e524edc4a92f760a1e7ca1d97ab17ebbc80cfb0ad00f0da958736223f315e1",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/v5-acceptance.yml": {
+      "sha256": "c68195eded646a6e5e4a20f6b0317f18c180c92628df504cae8c22e084890466",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/event-watcher.yml": {
+      "sha256": "1712b4f4577c55815cec893fa0708454e65184ffa862373d746a746871156333",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    },
+    ".github/workflows/refresh-data.yml": {
+      "sha256": "2a8e9473bbde9755a410d11568ad9ebd5b5a54ec3b62c3b3d4bd1044d16c65eb",
+      "reason": "Coordinated acquisition and essential-only publication; pending owner approval"
+    }
+  }
+}

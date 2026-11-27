@@ -17,7 +17,7 @@ from test_event_driven import FakeProviders, T0, TEAMS, game, setup
 from cfb_analytics import event_calendar as cal
 from cfb_analytics import freshness_monitor as fm
 from cfb_analytics import poll_refresh
-from cfb_analytics.event_watcher import (CFP_CONFIRM_MAX, CFP_RELEASE_COST, MAX_STARTS_PER_HOUR, RELEASE_FLOOR, Watcher,
+from cfb_analytics.event_watcher import (CFP_CONFIRM_MAX, CFP_RELEASE_COST, MAX_STARTS_PER_HOUR, RELEASE_FLOOR, REFRESH_COST, Watcher,
                                          chain_successor, quota_plan)
 from cfb_analytics.watch_keeper import ensure_watcher
 
@@ -98,7 +98,7 @@ def test_end_of_day_wave_publishes_finals_when_the_discretionary_budget_is_empty
     w.run(T0 + timedelta(hours=8))
     [e] = [e for e in w.events if e.kind == "final"]
     assert e.status == "published" and e.priority and w.discretionary_spent == 0
-    assert p.cfbd_calls == 1 and w.release_spent == 1 + 4         # one check + one data refresh
+    assert p.cfbd_calls == 1 and w.release_spent == 1 + REFRESH_COST         # one check + one data refresh
 
 
 def test_poll_checks_use_the_priority_allowance_at_the_poll_interval():

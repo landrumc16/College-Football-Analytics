@@ -17,6 +17,10 @@ permissions:
 concurrency:
   group: v8-sources
   cancel-in-progress: false
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '7'
+
 jobs:
   acquire:
     if: github.ref == 'refs/heads/v8-development'
@@ -51,6 +55,7 @@ jobs:
       - name: Acquire 2016-2026 and derive per team-game counts (field names diagnostics only)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.v8_sources --seasons 2016-2026 --refresh 2026 --cache "$STORE" --diagnose
       - name: Offline re-derivation from the snapshots is byte-identical
         run: |

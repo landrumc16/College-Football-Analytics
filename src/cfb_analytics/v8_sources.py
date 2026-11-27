@@ -20,7 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 
 API = "https://api.collegefootballdata.com"
 OUT = Path("research/v8")

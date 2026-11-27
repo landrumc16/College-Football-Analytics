@@ -8,7 +8,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '8'
 
 jobs:
   python:
@@ -153,6 +157,7 @@ jobs:
       - name: Exercise live provider and incumbent report without publishing
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python -m cfb_analytics.refresh --season 2026
           PYTHONPATH=src python -m cfb_analytics.poll_refresh
