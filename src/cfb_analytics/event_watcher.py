@@ -98,6 +98,32 @@ class Providers:
         return _get_json(f"https://api.collegefootballdata.com/rankings?year={season}&seasonType=regular",
                          {"Authorization": f"Bearer {self.cfbd_key}"}, timeout=45)
 
+    def final_signals(self, games):
+        """Free ESPN final-status signals; never a source of published scores or model inputs.
+
+        CFBD uses ESPN event ids. Require both that id and the scheduled kickoff to match,
+        and a complete, non-tied score before spending scarce CFBD confirmation calls.
+        """
+        expected = {int(g["game_id"]): cal.parse_time(g["start_date"]) for g in games}
+        days = {k.astimezone(cal.CENTRAL).strftime("%Y%m%d") for k in expected.values() if k}
+        found = set()
+        for day in sorted(days):
+            payload = _get_json("https://site.api.espn.com/apis/site/v2/sports/football/college-football/"
+                                f"scoreboard?dates={day}&groups=80&limit=1000", timeout=15)
+            for event in payload.get("events", []):
+                try:
+                    gid = int(event["id"])
+                    if gid not in expected or cal.parse_time(event.get("date")) != expected[gid]:
+                        continue
+                    competition, = event["competitions"]
+                    sides = {c["homeAway"]: int(c["score"]) for c in competition["competitors"]}
+                    if (competition["status"]["type"]["completed"] is True and set(sides) == {"home", "away"}
+                            and min(sides.values()) >= 0 and sides["home"] != sides["away"]):
+                        found.add(gid)
+                except (KeyError, TypeError, ValueError):
+                    continue
+        return found
+
     def dispatch(self, workflow, inputs=None):
         body = json.dumps({"ref": "main", "inputs": inputs or {}}).encode()
         req = Request(f"https://api.github.com/repos/{self.repo}/actions/workflows/{workflow}/dispatches", data=body, method="POST",
@@ -274,9 +300,10 @@ def quota_plan(info, snapshot, now, polls=None, *, reserve_per_day=RESERVE_PER_D
     room = max(0, remaining - RELEASE_FLOOR)
     release_budget = min(room, CFP_RELEASE_COST * releases["cfp"] + POLL_RELEASE_COST * releases["polls"])
     wave_at = None
-    if windows and not cycles and room - release_budget >= cycle:
-        wave_at = max(b for _, b in windows)                 # after the last game of the day can have finished
-        release_budget += cycle
+    wave_games = [k for k in soon if k.astimezone(cal.CENTRAL).date() <= now.astimezone(cal.CENTRAL).date()]
+    if wave_games and not cycles and room - release_budget >= cycle:
+        wave_at = max(now, max(k + cal.LATE_FINISH for k in wave_games))  # tomorrow cannot postpone today's fallback
+        release_budget += min(room - release_budget, cycle + 2)  # at most three CFBD confirmations + refresh
     poll_interval = None
     if releases["polls"]:
         local = now.astimezone(cal.CENTRAL)
@@ -336,6 +363,8 @@ class Watcher:
         self._next_games_check = None
         self._next_poll_check = None
         self._last_monitor = None
+        self._next_final_signal = None
+        self._final_signal_attempts = 0
         self.cfp = {}                 # release day -> {rows, event, last_absent, attempts, next_page, next_confirm}
         self.dispatch_cost = 0
 
@@ -376,9 +405,9 @@ class Watcher:
         try:
             current = {}
             for kind in season_types:
-                rows = self.p.games(self.season) if kind == "regular" else self.p.postseason(self.season)
                 if priority:
                     self.release_spent += 1
+                rows = self.p.games(self.season) if kind == "regular" else self.p.postseason(self.season)
                 current.update(normalise(rows, self.season))
         except Exception as error:                      # outage, timeout, bad JSON: back off this source only
             h.fail(now, error, self.active_interval)
@@ -631,16 +660,42 @@ class Watcher:
         due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=max(self.watch_interval, RECONCILE_INTERVAL)))
         timer_ok = self._next_games_check is None or now >= self._next_games_check
         wave = bool(self.wave_at and not self.wave_done and now >= self.wave_at and self.priority_room(1 + REFRESH_COST))
+        # Under quota pressure, detect actual finals without CFBD polling. The free signal
+        # only wakes the existing authoritative confirmation -> refresh -> live verification path.
+        signalled = False
+        watched = [g for g in plan.games_due + plan.games_overdue if g.get("season_type", "regular") == "regular"]
+        if (watched and not self.can_check()
+                and self._final_signal_attempts < 3 and hasattr(self.p, "final_signals")
+                and (self._next_final_signal is None or now >= self._next_final_signal)):
+            self._next_final_signal = now + timedelta(seconds=MIN_INTERVAL)
+            try:
+                signalled = bool(self.p.final_signals(watched))
+            except Exception as error:
+                self._alert(f"Free final-status detection unavailable; timed CFBD fallback retained: {str(error)[:120]}")
+            if signalled:
+                if self.priority_room(1 + REFRESH_COST):
+                    self._final_signal_attempts += 1
+                    self.log("ESPN final status observed; confirming through CFBD before publication")
+                else:
+                    self._alert("ESPN reports a final but CFBD confirmation/publication reserve is unavailable")
+                    signalled = False
+        wave = wave or signalled
         finals = []
         if ((plan.monitors_games and timer_ok) or due_reconcile) and self.can_check() or wave:
             self._next_games_check = now + timedelta(seconds=plan.interval or self.watch_interval)
             watched = plan.games_due + plan.games_overdue
             kinds = {g.get("season_type", "regular") for g in watched} if watched else {"regular"}
+            if signalled:
+                kinds = {"regular"}  # signal adapter covers regular FBS games; reserve exactly one confirmation call
             if due_reconcile:
                 kinds |= {e.detail.get("season_type", "regular") for e in self.events if e.kind in ("final", "correction")}
             use_priority = wave and not self.can_check()
             finals = self.check_games(tuple(sorted(kinds, reverse=True)), priority=use_priority)
             self.wave_done = self.wave_done or use_priority
+            if signalled and not finals:
+                self._alert("ESPN reports a final awaiting CFBD confirmation; no secondary-source score was published")
+            elif signalled and finals:
+                self.alerts = [a for a in self.alerts if "final awaiting CFBD confirmation" not in a]
         polls = self.check_polls(plan)
         for e in polls:                                  # the poll workflow re-validates; mark expected week as seen
             self.polls["poll_weeks"][e.detail["poll"]] = e.detail["week"]
@@ -670,6 +725,8 @@ class Watcher:
                 waits.append((plan.next_event_at - now).total_seconds())
             if self.wave_at and not self.wave_done and self.wave_at > now:
                 waits.append((self.wave_at - now).total_seconds())
+            if self._next_final_signal and self.priority_room(1 + REFRESH_COST) and self._final_signal_attempts < 3:
+                waits.append(max(VERIFY_POLL, (self._next_final_signal - now).total_seconds()))
             cfp_wake = self.next_cfp_wake(now)
             if cfp_wake is not None and now + timedelta(seconds=cfp_wake) < deadline:
                 waits.append(cfp_wake)

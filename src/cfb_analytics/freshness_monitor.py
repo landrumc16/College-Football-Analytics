@@ -154,7 +154,8 @@ def assess(now, *, runs, crons, snapshot, live_report=None, live_polls=None, off
     if waiting and live_report is not None:
         names = ", ".join(f"{g.get('away')} at {g.get('home')}" for g in waiting[:3])
         alerts.append(_alert("games-awaiting", "Scores and records", "critical",
-                             f"{len(waiting)} finished game(s) not yet published ({names}{'…' if len(waiting) > 3 else ''})"))
+                             f"{len(waiting)} overdue game result(s) not yet published ({names}{'…' if len(waiting) > 3 else ''}); "
+                             "completion is not verified by this time-based check"))
     # CFBD budget.
     if quota and "remaining" in quota:
         if quota["remaining"] <= RELEASE_FLOOR:
@@ -173,7 +174,8 @@ def assess(now, *, runs, crons, snapshot, live_report=None, live_polls=None, off
             alerts.append(_alert("deploy-failed", "Publishing", "critical",
                                  f"The latest site deployment failed ({latest.get('html_url', 'run ' + str(latest.get('id')))})"))
     for text in watcher_alerts:
-        alerts.append(_alert(f"watcher:{text[:60]}", "Live monitoring", "warning", text))
+        severity = "critical" if text.startswith("ESPN reports a final") else "warning"
+        alerts.append(_alert(f"watcher:{text[:60]}", "Live monitoring", severity, text))
     return alerts
 
 
