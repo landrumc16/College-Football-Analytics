@@ -1,0 +1,8 @@
+{
+  "baseline": "b204bd6f38629540d45bfb4a885b20909b7f2c0b",
+  "beforeGzipJsBytes": 115358,
+  "afterGzipJsBytes": 124572,
+  "increaseBytes": 9214,
+  "limitBytes": 10240,
+  "environment": "Node 24.22.3; identical existing dependencies and public test fixture on both builds"
+}

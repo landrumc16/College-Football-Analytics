@@ -4,7 +4,7 @@
 // but not asserted on WebKit, whose headless Linux build crashes after a service worker registers (a test-engine
 // limitation; see docs/V9-DEVICE-TESTING.md). Exits non-zero on any journey defect, overflow or page error.
 // Usage: node web/tests/device-profiles.mjs <evidence-dir>   (after node scripts/v9_preview.mjs)
-import { writeFile } from 'node:fs/promises';
+import { writeFile, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, webkit, devices } from 'playwright';
@@ -16,6 +16,10 @@ const PORT = 4391, base = `http://127.0.0.1:${PORT}/`;
 const DEST = ['Home', 'Rankings', 'Teams', 'Playoffs', 'Research'];
 const PROFILES = [['iPhone SE', webkit], ['iPhone 13', webkit], ['iPhone 14 Pro Max', webkit], ['iPad Mini', webkit], ['Pixel 7', chromium], ['Galaxy S9+', chromium]];
 const server = spawn('npx', ['vite', 'preview', '--host', '127.0.0.1', '--port', String(PORT), '--strictPort'], { cwd: 'web', stdio: 'ignore', detached: true });
+// These are retained-data pregame fixtures; wall-clock kickoff must not expire the test case.
+const fixtureReport = JSON.parse(await readFile('web/dist/season-report.json', 'utf8'));
+const fixtureIntelligence = JSON.parse(await readFile('web/dist/team-intelligence.json', 'utf8'));
+const fixtureAccountability = JSON.parse(await readFile('web/dist/v9-accountability.json', 'utf8'));
 const results = {}, defects = [];
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 async function pick(page, label, team) {
@@ -32,7 +36,7 @@ try {
   for (const [name, engine] of PROFILES) {
     const browser = startAsDeclinedVisitor(await engine.launch());
     const ctx = await browser.newContext({ ...devices[name] });
-    const page = await ctx.newPage(); const errors = [];
+    const page = await ctx.newPage(); await page.clock.setFixedTime(fixtureReport.retrieved_at); const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     const R = { engine: engine.name(), viewport: devices[name].viewport, destinations: {}, journeys: {} };
     await page.goto(base, { waitUntil: 'networkidle' });
@@ -61,7 +65,7 @@ try {
     await page.getByLabel(/^Evaluation/).locator('visible=true').first().selectOption({ label: 'Current Playing Level · Last Three' });
     await pick(page, 'Find School in Intelligence', 'Texas Tech');
     await openDetails(page.locator('main details > summary', { hasText: 'Current Playing Level · Last Three' }).first());
-    J.rankingsFilter = /23\.2/.test(await page.locator('main').innerText());
+    J.rankingsFilter = (await page.locator('main').innerText()).includes(fixtureIntelligence.teams.find(t => t.team === 'Texas Tech').current_level.value.toFixed(1));
     // Teams: trajectory, matchup, projections.
     await openDestination(page, 'Teams'); await chooseSection(page, 'Teams sections', 'Team Profiles'); await pick(page, 'Choose School', 'Texas Tech');
     const traj = page.locator('details.profile-more', { hasText: 'Team Trajectory' }).first();
@@ -74,7 +78,7 @@ try {
     await chooseSection(page, 'Teams sections', 'Compare & What If');
     await pick(page, 'First School', 'Texas Tech'); await pick(page, 'Second School', 'Baylor');
     await page.getByLabel(/^game location$/i).selectOption('neutral'); await page.waitForTimeout(300);
-    J.matchup = /5\.12/.test(await page.locator('.matchup-result').innerText().catch(() => ''));
+    J.matchup = (await page.locator('.matchup-result').innerText()).includes(Math.abs(fixtureReport.rankings.find(t => t.team === 'Texas Tech').rating - fixtureReport.rankings.find(t => t.team === 'Baylor').rating).toFixed(2));
     await chooseSection(page, 'Teams sections', 'Model Projections');
     await page.locator('label', { hasText: 'Momentum' }).first().tap(); await page.waitForTimeout(300);
     J.projections = /Momentum/.test(await page.locator('main').innerText()) && await overflow(page) <= 1;
@@ -85,7 +89,7 @@ try {
     await openDetails(page.locator('details', { hasText: 'Three-Model Prediction Accountability' }).locator(':scope > summary', { hasText: 'Three-Model Prediction Accountability' }).first());
     const cal = page.locator('details.stat-explain', { hasText: 'Probability Calibration' }).first();
     await openDetails(cal.locator(':scope > summary'));
-    await cal.getByLabel('Model').selectOption('official'); J.calibration = /128 settled/.test(await cal.innerText());
+    await cal.getByLabel('Model').selectOption('official'); J.calibration = (await cal.innerText()).includes(`${fixtureAccountability.models.official.games} settled`);
     await chooseSection(page, 'Research sections', 'Market Intelligence'); await page.waitForTimeout(400);
     J.market = /Market/.test(await page.locator('main h2').first().innerText());
     // Playoffs what-if: override and exact reset.

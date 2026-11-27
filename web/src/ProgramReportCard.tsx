@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useState } from 'react'
 import { Takeaway } from './StatExplain'
@@ -72,7 +73,7 @@ export function ReportCardExplorer({ report, onTeam, conferenceTeams, view }: { 
   const [query, setQuery] = useState('')
   const [conference, setConference] = useState('all')
   const [poll, setPoll] = useState('AP')
-  const [selected, setSelected] = useState('')
+  const [selected,setSelected]=useFavoriteSelection({scope:'historical-report-card',eligible:report.programs.map(p=>p.team)})
   const [all, setAll] = useState(false)
   const category = view === 'hype' ? 'hype' : 'trajectory'
   const rows = report.programs.filter(p => p.team.toLowerCase().includes(query.toLowerCase()) && (conference === 'all' || conferenceTeams[conference]?.includes(p.team))).sort((a, b) => (b.categories[category].score ?? -1) - (a.categories[category].score ?? -1) || a.team.localeCompare(b.team))

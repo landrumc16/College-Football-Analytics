@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
@@ -71,12 +72,12 @@ function GameCard({ g, view, data }: { g: ProjectedGame; view: View; data: DualP
 export default function ModelProjections({ initialTeam = '', onTeam, onResearch }: { initialTeam?: string; onTeam?: (team: string) => void; onResearch?: () => void }) {
   const { data, failed } = useDualProjections()
   const [view, setView] = useState<View>('compare')
-  const [team, setTeam] = useState(initialTeam)
+  const [team,setTeam]=useFavoriteSelection({scope:'projections-school',eligible:data?Object.keys(data.teams):[],initial:initialTeam})
   const [week, setWeek] = useState<number | 'all'>('all')
   const [showAllGames, setShowAllGames] = useState(false)
   const [showAllTeams, setShowAllTeams] = useState(false)
   const allWeeks = useMemo(() => data ? weeks(data) : [], [data])
-  useEffect(() => { if (data && week === 'all' && allWeeks.length) setWeek(allWeeks[0]) }, [data])  // default: the next week
+  useEffect(() => { if (data && week === 'all' && allWeeks.length) setWeek(team ? (data.games.find(g=>g.home===team||g.away===team)?.week ?? allWeeks[0]) : allWeeks[0]) }, [data])  // default: the next week
   if (failed) return <section className="notice"><h2>Model Projections</h2><p role="status">Model projections are not available right now. Try again later.</p></section>
   if (!data) return <section className="notice"><h2>Model Projections</h2><p role="status">Loading model projections…</p></section>
   const schools = Object.keys(data.teams).sort((a, b) => a.localeCompare(b))

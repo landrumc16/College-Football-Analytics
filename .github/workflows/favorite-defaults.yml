@@ -1,0 +1,43 @@
+name: Favorite-team default acceptance
+on:
+  pull_request:
+    branches: [main]
+    paths: ['web/src/**', 'web/tests/favorite-defaults*', '.github/workflows/favorite-defaults.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  favorite-defaults:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install existing test tools
+        run: |
+          python -m pip install -e '.[dev]'
+          npm --prefix web install --no-package-lock
+          npm --prefix web install --no-save --package-lock=false playwright@1.56.1
+          cd web && npx playwright install --with-deps chromium
+      - name: Shared policy and real-data preview (no source API calls)
+        run: |
+          node web/tests/favorite-defaults-unit.mjs
+          node scripts/v9_preview.mjs
+          python -m cfb_analytics.backtest --output web/dist/historical-backtest.json
+      - name: Global personalization, direct navigation and persistence
+        run: node web/tests/favorite-defaults.mjs
+      - name: Existing five-width and Android PWA regression
+        run: node web/tests/mobile-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: favorite-defaults-browser-evidence
+          path: |
+            web/favorite-defaults-evidence/
+            web/mobile-evidence/
+          retention-days: 30

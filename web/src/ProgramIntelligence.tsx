@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import ProgramContext from './ProgramContext'
 import SchoolSearch from './SchoolSearch'
@@ -58,14 +59,13 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
   const verifiedCards = useReportCards()
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState('')
-  const [query, setQuery] = useState('')
+  const [query,setQuery]=useFavoriteSelection({scope:'program-lookup',eligible:['overview','stock','contenders'].includes(view)?currentRankings.map(t=>t.team):[],allowQuery:true})
   const [poll, setPoll] = useState<'AP' | 'Coaches'>('AP')
   const [conference, setConference] = useState('all')
   const [direction, setDirection] = useState('all')
   const [hypeOrder, setHypeOrder] = useState('dropouts')
   const [perceptionOrder, setPerceptionOrder] = useState<'poll' | 'disagreement'>('poll')
   const [perceptionConference, setPerceptionConference] = useState('all')
-  const [chartTeam, setChartTeam] = useState('')
   const [window, setWindow] = useState<'10' | '5' | '3'>('10')
   useEffect(() => {
     if (view === 'stock' || view === 'contenders') return
@@ -97,6 +97,7 @@ export default function ProgramIntelligence({ onTeam, onCompare, view = 'ranking
   // Bound initial table length on narrow screens; filtering and sorting still apply to the full dataset.
   const [showAll, setShowAll] = useState(false)
   const [overviewOrder, setOverviewOrder] = useState<'rank' | 'recent' | 'expectations' | 'cfp'>('rank')
+  const [chartTeam,setChartTeam]=useFavoriteSelection({scope:'historical-strength',eligible:verifiedCards?(data?.programs??[]).filter(p=>(p.season_strength_history||[]).length>=2).map(p=>p.team):programs.map(p=>p.team)})
   const visiblePrograms = showAll ? programs : programs.slice(0, 25)
   const morePrograms = programs.length > 25
   const discoverableTeams = [...new Set(teams)].filter(team => team.toLowerCase().includes(query.trim().toLowerCase())).sort((a, b) => a.localeCompare(b))

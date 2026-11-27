@@ -134,7 +134,8 @@ try {
       await page.getByRole('button', { name: 'Compare This Matchup with a Market Line in Market Analysis' }).click();
       await calc.getByText('Hypothetical matchup', { exact: true }).waitFor();
       assert.match(await page.locator('.market-selected-game').textContent(), new RegExp(game.home));
-      assert.equal(await calc.getByLabel(`${game.home} point spread`).inputValue(), '');
+      assert.ok(await calc.getByRole('radio', { name: game.away, exact: true }).isChecked(), 'explicit school perspective persists for this pair');
+      assert.equal(await calc.getByLabel(`${game.away} point spread`).inputValue(), '', 'entered odds still reset for the new venue');
     }
     await page.close();
     console.log(`Market calculator passed at ${width}px`);

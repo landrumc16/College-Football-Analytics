@@ -1,3 +1,5 @@
+import { eligibleSchool } from './favoriteDefaults'
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
@@ -119,7 +121,7 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
   const [boardMetric, setBoardMetric] = useState('epa')
   const [boardSide, setBoardSide] = useState<Side>('offense')
   const [showAll, setShowAll] = useState(false)
-  const [opponent, setOpponent] = useState(initialOpponent)
+  const [opponent,setOpponent]=useFavoriteSelection({scope:'statistics-opponent',eligible:data?Object.keys(data.teams).filter(t=>t!==(eligibleSchool(team,Object.keys(data.teams))??team)):[],initial:initialOpponent})
   const [leadersOpen, setLeadersOpen] = useState(() => showLeaders || !window.matchMedia('(max-width: 767px)').matches)
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   // Arriving from Rankings: open the national leaders and bring them into view once the data has loaded.
@@ -127,7 +129,7 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
   const schools = useMemo(() => data ? Object.keys(data.teams).sort((a, b) => a.localeCompare(b)) : [], [data])
   if (failed) return <section className="notice"><h2>Offense &amp; Defense</h2><p role="status">Offense and defense statistics are not available right now. Try again later.</p></section>
   if (!data) return <section className="notice"><h2>Offense &amp; Defense</h2><p role="status">Loading offense and defense statistics…</p></section>
-  const selected = data.teams[team] ? team : ''
+  const selected = eligibleSchool(team,schools) ?? ''
   const t = selected ? data.teams[selected] : null
   const powerViewUnavailable = view === 'power' && t && !t.power
   const board = leaderboard(data, boardMetric, boardSide, view)
