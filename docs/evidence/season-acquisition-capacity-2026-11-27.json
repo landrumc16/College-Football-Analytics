@@ -1,0 +1,110 @@
+{
+  "two_minute": {
+    "kind": "estimate_not_measurement",
+    "source_calls_made": 0,
+    "interval_seconds": 120,
+    "windows": {
+      "ordinary_saturdays": {
+        "windows": 12,
+        "hours_per_window": 12,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 15,
+        "calls": 4680
+      },
+      "weekday_windows": {
+        "windows": 14,
+        "hours_per_window": 4,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 3,
+        "calls": 1764
+      },
+      "rivalry_weekend": {
+        "windows": 1,
+        "hours_per_window": 16,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 24,
+        "calls": 528
+      },
+      "championships": {
+        "windows": 1,
+        "hours_per_window": 8,
+        "status_calls_per_check": 2,
+        "publication_waves_per_window": 6,
+        "calls": 492
+      },
+      "postseason": {
+        "windows": 1,
+        "hours_per_window": 60,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 20,
+        "calls": 1840
+      }
+    },
+    "poll_calls": 832,
+    "warm_statistics_calls": 90,
+    "daily_reconciliation_calls": 360,
+    "subtotal": 10586,
+    "with_20_percent_retry_delay_allowance": 12704,
+    "peak_month_two_minute_previous_scenario": 1784,
+    "limitations": [
+      "Assumed volumes/windows, not observed provider behavior.",
+      "Cold caches and mixed postseason statistics add cost.",
+      "Provider lag and deployment latency are not inferred.",
+      "Monthly limits cannot be pooled across the season."
+    ]
+  },
+  "five_minute": {
+    "kind": "estimate_not_measurement",
+    "source_calls_made": 0,
+    "interval_seconds": 300,
+    "windows": {
+      "ordinary_saturdays": {
+        "windows": 12,
+        "hours_per_window": 12,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 15,
+        "calls": 2088
+      },
+      "weekday_windows": {
+        "windows": 14,
+        "hours_per_window": 4,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 3,
+        "calls": 756
+      },
+      "rivalry_weekend": {
+        "windows": 1,
+        "hours_per_window": 16,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 24,
+        "calls": 240
+      },
+      "championships": {
+        "windows": 1,
+        "hours_per_window": 8,
+        "status_calls_per_check": 2,
+        "publication_waves_per_window": 6,
+        "calls": 204
+      },
+      "postseason": {
+        "windows": 1,
+        "hours_per_window": 60,
+        "status_calls_per_check": 1,
+        "publication_waves_per_window": 20,
+        "calls": 760
+      }
+    },
+    "poll_calls": 832,
+    "warm_statistics_calls": 90,
+    "daily_reconciliation_calls": 360,
+    "subtotal": 5330,
+    "with_20_percent_retry_delay_allowance": 6396,
+    "peak_month_two_minute_previous_scenario": 1784,
+    "limitations": [
+      "Assumed volumes/windows, not observed provider behavior.",
+      "Cold caches and mixed postseason statistics add cost.",
+      "Provider lag and deployment latency are not inferred.",
+      "Monthly limits cannot be pooled across the season."
+    ]
+  }
+}

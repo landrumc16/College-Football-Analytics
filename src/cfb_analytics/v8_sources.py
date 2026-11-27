@@ -88,7 +88,7 @@ class Fetcher:
 
 
 def acquire(season: int, fetch: Fetcher):
-    teams = fetch.get("/teams/fbs", season, year=season)
+    teams = fetch.get("/teams/fbs", season, force=False, year=season)
     games = []
     for kind in ("regular", "postseason"):
         games += [dict(g, seasonType=pick(g, "seasonType", "season_type", default=kind))
@@ -98,8 +98,10 @@ def acquire(season: int, fetch: Fetcher):
                                                         or pick(g, "awayTeam", "away_team") in fbs)]
     drives, plays = [], []
     for kind in ("regular", "postseason"):
-        drives += fetch.get("/drives", season, year=season, seasonType=kind)
         weeks = sorted({pick(g, "week") for g in played if pick(g, "seasonType") == kind})
+        if not weeks:
+            continue  # No completed games: no statistics exist to acquire for this season type.
+        drives += fetch.get("/drives", season, year=season, seasonType=kind)
         for week in weeks:
             # In-season refresh: earlier weeks' plays are final; re-download only the latest two weeks.
             recent = season in fetch.refresh and week >= (weeks[-1] - 1)

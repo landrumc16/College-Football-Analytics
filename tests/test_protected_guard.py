@@ -95,7 +95,7 @@ def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "fix/shared-acquisition-control", "v7-development", "v9-development"]
+    assert [m["head_ref"] for m in manifests] == ["freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "fix/shared-acquisition-control", "fix/timely-acquisition", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -239,6 +239,9 @@ def test_game_day_final_detection_pins_current_content_and_preserves_rejection(m
 
 def test_shared_acquisition_manifest_pins_only_reviewed_transport_and_workflows(monkeypatch):
     m = _manifest('fix/shared-acquisition-control')
+    # Released manifest validates the released transport, not later reviewed collector edits.
+    original = guard.file_sha256
+    monkeypatch.setattr(guard, 'file_sha256', lambda p: m['modified_exact'][p]['sha256'] if p == 'src/cfb_analytics/v8_sources.py' else original(p))
     assert set(m['added_files']) == {'src/cfb_analytics/quota_client.py'}
     assert not m['added_file_patterns'] and not m['modified_additive_only']
     rows = [('A', p) for p in m['added_files']] + [('M', p) for p in m['modified_exact']]
@@ -247,3 +250,14 @@ def test_shared_acquisition_manifest_pins_only_reviewed_transport_and_workflows(
     assert len(guard.evaluate(rows, m, m['head_ref'], False, none_removed)[1]) == len(rows)
     monkeypatch.setattr(guard, 'file_sha256', lambda p: '0' * 64)
     assert len(guard.evaluate([('M', p) for p in m['modified_exact']], m, m['head_ref'], True, none_removed)[1]) == len(m['modified_exact'])
+
+
+def test_timely_acquisition_manifest_is_narrow(monkeypatch):
+    m = _manifest('fix/timely-acquisition')
+    rows = [('M', 'src/cfb_analytics/v8_sources.py')]
+    assert len(m['modified_exact']) == 1
+    assert not guard.evaluate(rows, m, m['head_ref'], True, none_removed)[1]
+    assert guard.evaluate(rows, m, 'main', True, none_removed)[1]
+    assert guard.evaluate(rows, m, m['head_ref'], False, none_removed)[1]
+    monkeypatch.setattr(guard, 'file_sha256', lambda p: '0' * 64)
+    assert guard.evaluate(rows, m, m['head_ref'], True, none_removed)[1]
