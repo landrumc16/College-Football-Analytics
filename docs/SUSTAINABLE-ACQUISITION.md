@@ -51,3 +51,24 @@ Minimum infrastructure option is the existing chained GitHub watcher with enough
 - https://developer.sportradar.com/football/reference/ncaafb-rankings-current-week
 
 Unknown permissions, negotiated prices, rate limits and reliability commitments require provider confirmation; none were invented. This inventory does not claim exhaustive review of every university or conference contract.
+
+## Final monthly purchase assessment
+
+November27 owner requested all-application monthly budgeting. New reproducible monthly model supersedes the earlier minimal peak estimate for purchase sizing. All numbers are planning allowances, not actual future traffic or measured endpoint latency. Two/three/five-minute regular active union windows are115hours in November (overlapping games share batches). Daily two-call schedule/baseline and two-call markets are included; team/player boxscore allowance is two calls per publication wave; seven-call mixed postseason stats and five-call PR78 warm regular stats are explicit. Cold-cache/correction allowance100/month plus30% contingency. Individual boxscore allowance is future capacity, not a new production feature. Status uses one batch/check; mixed season-type periods can require more. Five-minute cadence cannot assure five-minute end-to-end publication.
+
+| Month | 2 minutes incl contingency | 3 minutes | 5 minutes |
+| --- | ---: | ---: | ---: |
+| August2026 | 1469 | 1118 | 838 |
+| September2026 | 4021 | 2929 | 2056 |
+| October2026 | 5342 | 3847 | 2651 |
+| November2026 | 5735 | 4136 | 2857 |
+| December2026 | 3452 | 2503 | 1744 |
+| January2027 | 1650 | 1234 | 901 |
+
+Busiest projected month November; peak-week stress case40activehours,40publicationwaves,2rankingwindows,5statscalls,14baseline,14market,80boxscore,25correction calls totals1482 before30% /1927 after. This weekly stress case can exceed a typical week; monthly allowance is not evenly prorated. Offseason February–July budget100calls/month plus30%=130/month for schedule/stat corrections, no intensive monitoring. Annual two-minute allowance22449 including these six offseason allowances (rounding monthly contingency separately).
+
+Tier1 $1/month ($12/year, or $6 for six active months) is insufficient for the above two-minute stress budget: November exceeds5000 by735. At3min it leaves864 calls beyond already-budgeted contingency but has less latency margin; it is a budget option, not a reliable SLO claim. Recommend Tier2 $5/month ($60/year, or $30 for six active months with free offseason) as the least expensive published tier covering this target scenario with substantial room: November uses19.1% of30000. No purchase. Still no source-first-availability SLA or verified95% performance; sufficient quota alone is not reliability.
+
+Verified published tiers: Free1000/$0; Academic3000/$0 (eligibility required); Tier1 5000/$1; Tier2 30000/$5; Tier3 75000/$10; Tier4 125000/$15; Tier5 200000/$20; Tier6 500000/$30 per month. Annual arithmetic12xmonthly is not a quoted annual billing discount; taxes/checkout charges unknown. Live scoreboard startsTier1, live play-by-play Tier2, GraphQL Tier3. Existing account reset receipt is2026-12-01T00:00:00Z. Future Jan1/Feb1 and subsequent calendar-month resets are planning assumptions: published pages do not establish exact UTC reset rules for every paid tier or whether an upgrade restores already-spent allowance. Verify actual /info.resetAt and entitlement after any owner-authorized upgrade. No new info request spent for this assessment. Shared CFBD/CBBD pool, no quota circumvention, private caching and derived-output use allowed; raw redistribution prohibited. Numeric per-minute API throttle not established by these pages; monthly allowance is not permission for unrestricted bursts.
+
+GitHub cron minimum five minutes, possible delayed/dropped starts and default-branch rules remain separate from API capacity. Existing long-running watcher can sleep at sub-five-minute intervals after it starts, but runner lifetime, queue/handoff, provider delays and Pages publication still have no five-minute guarantee. More quota does not remove these limits. Production quota currently at protected eight-call floor per retained ledger; no floor bypass.
