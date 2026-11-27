@@ -4,7 +4,7 @@ import vm from 'node:vm'
 import ts from 'typescript'
 const mod={exports:{}}
 vm.runInNewContext(ts.transpileModule(readFileSync('web/src/favoriteDefaults.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:mod.exports})
-const {primaryFavorite,defaultSchool,favoriteGame,resolveFavoriteSelection:r}=mod.exports
+const {primaryFavorite,defaultSchool,favoriteGame,eligibleSchool,withSchoolAliases,resolveFavoriteSelection:r}=mod.exports
 const eligible=['Texas Tech','Baylor','Georgia'], auto={value:null,primary:'Texas Tech'}
 assert.equal(primaryFavorite([]),null)
 assert.equal(primaryFavorite([null,'Baylor','Texas Tech']),'Baylor')
@@ -29,4 +29,11 @@ assert.equal(favoriteGame('Unknown',games),'')
 assert.equal(favoriteGame(null,games),'')
 assert.equal(r(auto,'Texas Tech',0,0,['1','2'],'',favoriteGame('Texas Tech',games)),'1')
 assert.equal(r({value:'3',primary:'Texas Tech'},'Texas Tech',5,0,['1','2','3'],'',favoriteGame('Texas Tech',games)),'3')
-console.log('Favorite defaults: 23 policy assertions passed')
+for(const [canonical,display] of [['Miami (FL)','Miami'],['Appalachian State','App State'],['Sam Houston State','Sam Houston'],['ULM','UL Monroe']]){
+ assert.equal(defaultSchool(canonical,[display]),display)
+ assert.equal(eligibleSchool(display,[canonical]),canonical)
+ assert.ok(withSchoolAliases([canonical]).includes(display))
+}
+assert.equal(eligibleSchool('Miami (OH)',['Miami']),null)
+assert.equal(favoriteGame('Miami (FL)',[{game_id:4,home:'Miami',away:'Baylor'}]),'4')
+console.log('Favorite defaults: 37 policy assertions passed')

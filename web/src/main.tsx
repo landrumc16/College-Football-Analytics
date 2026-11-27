@@ -1,5 +1,5 @@
 import { FavoriteDefaultsProvider, useFavoriteDefaults, useFavoriteSelection } from './FavoriteDefaults'
-import { favoriteGame, defaultSchool } from './favoriteDefaults'
+import { favoriteGame, defaultSchool, withSchoolAliases } from './favoriteDefaults'
 import PredictionAccountability from './PredictionAccountability'
 import { titleCase } from './titleCase'
 import { IntelligenceRankings, IntelligenceMatchup, IntelligenceResearch, PostseasonInterpretation } from './Intelligence'
@@ -111,7 +111,7 @@ export function App() {
   }
   const activeDestination = destinations.find(destination => destination.views.some(view => view.id === tab) || (EXTRA_VIEWS[destination.id] || []).some(view => view.id === tab))!
   const sectionItems = [...activeDestination.views, ...(EXTRA_VIEWS[activeDestination.id] || [])]
-  const [statsTeam, setStatsTeam] = useFavoriteSelection({scope:'statistics-team',eligible:schoolNames})
+  const [statsTeam, setStatsTeam] = useFavoriteSelection({scope:'statistics-team',eligible:withSchoolAliases(schoolNames)})
   const [statsOpponent, setStatsOpponent] = useState('')
   const [statsLeaders, setStatsLeaders] = useState(false)
   const openStats = (team: string, opponent = '', leaders = false) => { setStatsTeam(team); setStatsOpponent(opponent); setStatsLeaders(leaders); setSearch(''); setTab('stats'); window.scrollTo(0, 0) }

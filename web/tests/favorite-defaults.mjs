@@ -26,9 +26,10 @@ try{
  await mkdir(out,{recursive:true})
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break}catch{}await new Promise(r=>setTimeout(r,200))}
  // Explicit fallback populations, including a primary that cannot be selected.
- for(const [name,favorites,expected] of [['none',[],report.rankings[0].team],['one',['Texas Tech'],'Texas Tech'],['multiple',['Texas Tech','Baylor'],'Texas Tech'],['empty-first',[null,'Baylor'],'Baylor'],['ineligible',['Not an FBS School','Baylor'],report.rankings[0].team]]){
+ for(const [name,favorites,expected] of [['none',[],report.rankings[0].team],['one',['Texas Tech'],'Texas Tech'],['multiple',['Texas Tech','Baylor'],'Texas Tech'],['empty-first',[null,'Baylor'],'Baylor'],['alias-primary',['Miami (FL)'],'Miami (FL)'],['ineligible',['Not an FBS School','Baylor'],report.rankings[0].team]]){
   const ctx=await context(favorites);const p=await ctx.newPage();await p.clock.setFixedTime(report.retrieved_at);await p.goto(base+'#/profile',{waitUntil:'networkidle'});await value(p,'Choose School',expected)
   await section(p,'Teams','Compare & What If');await value(p,'First School',favorites.includes(expected)?expected:'');await value(p,'Second School','')
+  if(name==='alias-primary'){await section(p,'Teams','Offense & Defense');await value(p,'Choose Team','Miami')}
   results.push({case:name,passed:true});await ctx.close()
  }
  for(const width of [375,390,430,768,1536]){

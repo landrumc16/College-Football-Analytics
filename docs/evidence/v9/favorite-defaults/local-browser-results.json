@@ -17,6 +17,10 @@
       "passed": true
     },
     {
+      "case": "alias-primary",
+      "passed": true
+    },
+    {
       "case": "ineligible",
       "passed": true
     },
