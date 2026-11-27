@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useState } from 'react'
 import { StatExplain, Takeaway } from './StatExplain'
@@ -60,7 +61,7 @@ export function IntelligenceProfile({team}: {team: string}) {
   </section>
 }
 export function IntelligenceRankings({onTeam}: {onTeam:(team:string)=>void}) {
-  const {data,status}=useIntelligence(); const [measure,setMeasure]=useState('strength'); const [search,setSearch]=useState('')
+  const {data,status}=useIntelligence(); const [measure,setMeasure]=useState('strength'); const [search,setSearch]=useFavoriteSelection({scope:'intelligence-school',eligible:(data?.teams??[]).map(t=>t.team)})
   const labels: Record<string,string>={strength:'Underlying strength',current_level:'Current playing level · last three',offense:'Opponent-adjusted offense',defense:'Opponent-adjusted defense',schedule:'Played schedule context',accomplishment:'Season accomplishment · record only'}
   const metric=(t:TeamIntelligence)=>measure==='offense'||measure==='defense'?t.units[measure]:t[measure as 'strength'|'current_level'|'schedule']
   const rows=(data?.teams??[]).filter(t=>!search||t.team===search).slice().sort((a,b)=>measure==='accomplishment'?a.team.localeCompare(b.team):((metric(a)?.value ?? (measure==='defense'?Infinity:-Infinity))-(metric(b)?.value ?? (measure==='defense'?Infinity:-Infinity)))*(measure==='defense'?1:-1))

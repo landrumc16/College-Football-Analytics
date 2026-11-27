@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { useId, useState } from 'react'
 import {
   explainProbability, flipProbabilityInput, flipSpreadInput, headlineProbability,
@@ -12,7 +13,7 @@ type Props = { home: string; away: string; homeProbability: number; homeMargin: 
 export default function MarketCalculator({ home, away, homeProbability, homeMargin, source, headingLevel = 'h3' }: Props) {
   const id = useId()
   const Heading = headingLevel
-  const [team, setTeam] = useState(home)
+  const [team,setTeam]=useFavoriteSelection({scope:`market-perspective:${home}:${away}`,eligible:[home,away],fallback:home})
   const [spread, setSpread] = useState('')
   const [probability, setProbability] = useState('')
   const [moneyline, setMoneyline] = useState('')

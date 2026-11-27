@@ -1,0 +1,53 @@
+{
+  "results": [
+    {
+      "case": "none",
+      "passed": true
+    },
+    {
+      "case": "one",
+      "passed": true
+    },
+    {
+      "case": "multiple",
+      "passed": true
+    },
+    {
+      "case": "empty-first",
+      "passed": true
+    },
+    {
+      "case": "ineligible",
+      "passed": true
+    },
+    {
+      "width": 375,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "width": 430,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "width": 1536,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case": "cross-tab-and-standalone-persistence",
+      "passed": true
+    }
+  ]
+}

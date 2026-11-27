@@ -1,3 +1,5 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
+import { favoriteGame } from './favoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useRef, useState } from 'react'
 import { analyticsError, scenarioStarted, scenarioCompleted } from './analytics'
@@ -6,7 +8,9 @@ const pct=(n:number)=>`${(100*n).toFixed(1)}%`
 export default function PlayoffScenarios({ retrievedAt, favorites, published }: { retrievedAt?: string | null; favorites: (string|null)[]; published: {team:string;cfp_field:number}[] }) {
   const [input,setInput]=useState<ScenarioInput|null>(null),[error,setError]=useState(''),[open,setOpen]=useState(false)
   const [overrides,setOverrides]=useState<Record<string,string>>({}),[result,setResult]=useState<ScenarioResult|null>(null),[baseline,setBaseline]=useState<ScenarioResult|null>(null)
-  const [gameId,setGameId]=useState(''),[busy,setBusy]=useState(false),[showAll,setShowAll]=useState(false)
+  const [busy,setBusy]=useState(false),[showAll,setShowAll]=useState(false)
+  const future=input?.games.filter(g=>!g.completed && g.start_date && Date.parse(g.start_date)>Date.now())||[]
+  const [gameId,setGameId]=useFavoriteSelection({scope:'scenario-game',eligible:future.map(g=>String(g.game_id)),preferred:seed=>favoriteGame(seed,future)})
   const worker=useRef<Worker|null>(null)
   useEffect(()=>{
     let active=true
@@ -38,7 +42,7 @@ export default function PlayoffScenarios({ retrievedAt, favorites, published }: 
     w.postMessage({input,overrides,now:new Date().toISOString()})
     return()=>w.terminate()
   },[input,overrides,open])
-  const future=input?.games.filter(g=>!g.completed && g.start_date && Date.parse(g.start_date)>Date.now())||[]
+
   const selected=future.find(g=>String(g.game_id)===gameId)
   const rows=[...(result?.teams||[])].sort((a,b)=>Number(favorites.includes(b.team))-Number(favorites.includes(a.team))||b.cfp_field-a.cfp_field||a.team.localeCompare(b.team))
   return <section className="notice playoff-scenarios" aria-label="Playoff what-if scenarios"><p className="section-kicker">CHANGE THE RESULT</p><h2>Playoff What-If</h2>

@@ -1,3 +1,4 @@
+import { useFavoriteSelection } from './FavoriteDefaults'
 import { titleCase } from './titleCase'
 import { useEffect, useMemo, useState } from 'react'
 import SchoolSearch from './SchoolSearch'
@@ -119,7 +120,7 @@ export default function OffenseDefense({ team, onTeam, onProfile, initialOpponen
   const [boardMetric, setBoardMetric] = useState('epa')
   const [boardSide, setBoardSide] = useState<Side>('offense')
   const [showAll, setShowAll] = useState(false)
-  const [opponent, setOpponent] = useState(initialOpponent)
+  const [opponent,setOpponent]=useFavoriteSelection({scope:'statistics-opponent',eligible:data?Object.keys(data.teams).filter(t=>t!==team):[],initial:initialOpponent})
   const [leadersOpen, setLeadersOpen] = useState(() => showLeaders || !window.matchMedia('(max-width: 767px)').matches)
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   // Arriving from Rankings: open the national leaders and bring them into view once the data has loaded.
