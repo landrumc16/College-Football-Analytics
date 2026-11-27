@@ -21,6 +21,10 @@ on:
 permissions:
   contents: write
 
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '8'
+
 jobs:
   historical-recruiting:
     if: github.ref == 'refs/heads/v3.4-development'
@@ -36,6 +40,7 @@ jobs:
       - name: Collect completed-season historical inputs
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
           START: ${{ inputs.start || '2016' }}
           END: ${{ inputs.end || '2025' }}
         run: python -m cfb_analytics.v34_historical_snapshot_cli --start "$START" --end "$END" --output /tmp/v34-historical-input.json

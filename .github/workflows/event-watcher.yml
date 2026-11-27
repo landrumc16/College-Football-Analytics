@@ -16,7 +16,7 @@ on:
     - cron: '7 * * 1 *'
 
 permissions:
-  contents: read
+  contents: write
   actions: write      # workflow_dispatch of the refresh workflows and of the next watcher run (allowed from GITHUB_TOKEN)
   issues: write       # freshness alert issue
 
@@ -25,6 +25,10 @@ permissions:
 concurrency:
   group: event-watcher
   cancel-in-progress: false
+
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '400'
 
 jobs:
   watch:

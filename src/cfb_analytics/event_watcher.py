@@ -36,7 +36,8 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 
 from datetime import date
 
@@ -53,7 +54,7 @@ RECONCILE_INTERVAL = 1800                # ... every 30 minutes (any other check
 # CFBD quota (free tier: 1,000 calls a month, verified with GET /info). The watcher spends only what is left after
 # reserving the calls the scheduled workflows need until the monthly reset.
 RESERVE_PER_DAY = 6      # daily baseline refresh (games, lines x2, postseason) + poll and statistics refreshes
-REFRESH_COST = 4         # CFBD calls one dispatched data refresh spends
+REFRESH_COST = 2         # essential-only regular + postseason; optional market retrieval is excluded
 POLL_REFRESH_COST = 2    # poll refresh + CFP confirmation
 MIN_INTERVAL = 120       # never check more often than every 2 minutes
 # Releases (AP/Coaches polls, CFP rankings) have priority: their checks may spend down to this floor, which keeps one
@@ -191,7 +192,7 @@ def normalise(raw, season=2026):
     """CFBD /games rows -> {game_id: {completed, home_score, away_score, start_date}} via the pipeline's own ingestion."""
     out = {}
     for g in normalize_cfbd_games(raw or [], season):
-        out[int(g.game_id)] = {"completed": g.completed, "home_score": g.home_score, "away_score": g.away_score, "start_date": g.start_date}
+        out[int(g.game_id)] = dict(g.__dict__)
     return out
 
 
@@ -223,7 +224,10 @@ class Event:
                 "verification_seconds": lat(self.detected_at, self.confirmed_at) if self.confirmed_at else 0,
                 "publication_seconds": lat(verified, self.published_at),
                 "detection_to_publication_seconds": lat(self.detected_at, self.published_at),
-                "total_seconds_at_most": lat(self.available_after or self.detected_at, self.published_at)}
+                "total_seconds_at_most": lat(self.available_after, self.published_at),
+                "availability_evidence": "consecutive_source_observations" if self.available_after else "unknown",
+                "authoritative_first_available_at": None,
+                "source_received_at": verified.isoformat()}
 
 
 @dataclass
@@ -366,6 +370,8 @@ class Watcher:
         self.stale_signals = []
         self.alerts = []
         self._last_games_check = None
+        self._last_game_observation = {}
+        self.monitored_teams = None
         self._next_games_check = None
         self._next_poll_check = None
         self._last_monitor = None
@@ -419,7 +425,7 @@ class Watcher:
                 if priority:
                     self.release_spent += 1
                 rows = self.p.games(self.season) if kind == "regular" else self.p.postseason(self.season)
-                current.update(normalise(rows, self.season))
+                current.update({gid: dict(row, season_type=kind) for gid, row in normalise(rows, self.season).items()})
         except Exception as error:                      # outage, timeout, bad JSON: back off this source only
             h.fail(now, error, self.active_interval)
             self.log(f"games source failed ({h.failures}): {h.last_error}")
@@ -429,11 +435,24 @@ class Watcher:
         if not current:
             self.stale_signals.append({"at": now.isoformat(), "source": "games", "reason": "empty response"})
             return []
+        # Newly announced FBS matchups join the same calendar, without a second
+        # per-game API request or any invented participants/results.
+        if self.monitored_teams:
+            for gid, row in current.items():
+                if gid not in self.games and ({row['home'], row['away']} & self.monitored_teams):
+                    game = dict(row, completed=False, home_score=None, away_score=None)
+                    self.games[gid] = game
+                    self.snapshot['games'].append(game)
+                    event = self._add('calendar', f'calendar:{gid}', {'game_id': gid, 'start_date': row['start_date']}, 'cfbd/games')
+                    if event:
+                        event.status = 'recorded'
         finals = []
         for gid, game in self.games.items():
             src = current.get(gid)
             if src is None:
                 continue
+            previous = self._last_game_observation.get(gid)
+            self._last_game_observation[gid] = self.clock()
             if src["start_date"] and src["start_date"] != game.get("start_date") and not game.get("completed"):
                 self._add("reschedule", f"reschedule:{gid}:{src['start_date']}", {"game_id": gid, "from": game.get("start_date"), "to": src["start_date"]}, "cfbd/games")
                 game["start_date"] = src["start_date"]          # the calendar follows the new kickoff
@@ -564,7 +583,7 @@ class Watcher:
             self.health["rankings"].fail(now, error, 60)
             st["next_confirm"] = now + timedelta(minutes=1)
             return out
-        e.confirmed_at = now
+        e.confirmed_at = self.clock()
         e.detail["week"] = week
         return out
 
@@ -642,7 +661,7 @@ class Watcher:
 
     def redispatch(self):
         retry = [e for e in self.events if e.status == "detected" and e.kind in ("final", "correction")]
-        self.dispatch("refresh-data.yml", retry, {"season": str(self.season)})
+        self.dispatch("refresh-data.yml", retry, {"season": str(self.season), "essential_only": "true"})
         # A CFP release is dispatched only once CFBD has confirmed the official page (cfp_publish re-checks both).
         retry_polls = [e for e in self.events if e.status == "detected" and (e.kind == "poll" or (e.kind == "cfp" and e.confirmed_at))]
         self.dispatch("refresh-polls.yml", retry_polls)
@@ -772,7 +791,8 @@ class Watcher:
 
     def report(self):
         latencies = [e.record()["detection_to_publication_seconds"] for e in self.events if e.published_at]
-        totals = [e.record()["total_seconds_at_most"] for e in self.events if e.published_at]
+        totals = [e.record()["total_seconds_at_most"] for e in self.events
+                  if e.published_at and e.available_after]
         within = sum(1 for s in totals if s <= 300)
         return {"generated_at": self.clock().isoformat(), "dry_run": self.dry_run, "cfbd_calls": self.p.cfbd_calls,
                 "cfbd_calls_including_dispatched_refreshes": self.spent, "cfbd_budget": self.cfbd_budget,
@@ -781,6 +801,9 @@ class Watcher:
                 "source_health": {k: {"failures": v.failures, "last_error": v.last_error} for k, v in self.health.items()},
                 "latency": {"published": len(latencies), "within_5_minutes_total": within,
                             "median_detection_to_publication_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None,
+                            "published_with_observation_bound": len(totals),
+                            "published_without_availability_bound": len(latencies) - len(totals),
+                            "target_verified": False,
                             "median_total_seconds_at_most": sorted(totals)[len(totals) // 2] if totals else None}}
 
 
@@ -818,7 +841,15 @@ def main(argv=None):
     postseason = json.loads(post_path.read_text()) if post_path.exists() else None
     known = {t["team"] for t in json.loads(Path("data/season-2026-report.json").read_text())["rankings"]}
     providers = Providers(os.environ.get("CFBD_API_KEY", ""), os.environ.get("GITHUB_TOKEN", ""))
+    # Only FBS-related events compete for the FBS monitoring budget; retain the
+    # complete source archive unchanged for all existing analytical calculations.
+    from .postseason import ALIASES
+    monitored_names = known | {name for name, canonical in ALIASES.items() if canonical in known}
+    snapshot = dict(snapshot, games=[g for g in snapshot['games'] if {g['home'], g['away']} & monitored_names])
+    if postseason:
+        postseason = dict(postseason, games=[g for g in postseason['games'] if {g['home'], g['away']} & monitored_names])
     watcher = Watcher(snapshot, polls, providers, dry_run=args.dry_run, postseason=postseason, known_teams=known)
+    watcher.monitored_teams = monitored_names
     now = utcnow()
     # The published snapshot can be newer than the checkout (a refresh committed after this run started).
     try:

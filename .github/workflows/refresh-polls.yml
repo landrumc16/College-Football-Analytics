@@ -19,6 +19,10 @@ concurrency:
   group: official-poll-refresh
   cancel-in-progress: false
 
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '8'
+
 jobs:
   polls:
     runs-on: ubuntu-latest
@@ -30,6 +34,7 @@ jobs:
       - name: Poll verified published rankings
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: PYTHONPATH=src python -m cfb_analytics.poll_refresh
       - name: Publish official CFP rankings when dated and independently confirmed
@@ -37,6 +42,7 @@ jobs:
         # is published (with an evidence file). Anything else changes nothing and raises a warning.
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: PYTHONPATH=src python -m cfb_analytics.cfp_publish
       - name: Commit only changed verified poll data
         run: |

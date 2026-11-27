@@ -8,7 +8,7 @@ from cfb_analytics import event_watcher as ew
 
 
 def signal_setup(final_after=timedelta(hours=3)):
-    clock, p, w = setup([game(1, T0)], start=T0, budget=0, release_budget=7, deploy_minutes=3)
+    clock, p, w = setup([game(1, T0)], start=T0, budget=0, release_budget=3 + ew.REFRESH_COST, deploy_minutes=3)
     w.wave_at = T0 + cal.LATE_FINISH
     p.final_signals = lambda games: {1} if clock() >= T0 + final_after else set()
     return clock, p, w
@@ -21,7 +21,7 @@ def test_actual_final_wakes_priority_refresh_before_end_of_day():
     e, = [e for e in w.events if e.kind == "final"]
     assert e.status == "published" and e.source == "cfbd/games" and e.priority
     assert e.detected_at <= T0 + timedelta(hours=3, minutes=2)
-    assert p.cfbd_calls == 1 and w.release_spent == 5
+    assert p.cfbd_calls == 1 and w.release_spent == 1 + ew.REFRESH_COST
     assert e.published_at < w.wave_at
 
 
@@ -38,7 +38,7 @@ def test_delayed_cfbd_confirmation_recovers_without_waiting_for_late_finish():
     p.finals[1] = (T0 + timedelta(hours=3, minutes=3), 48, 27)
     w.run(T0 + timedelta(hours=5))
     e, = [e for e in w.events if e.kind == "final"]
-    assert e.status == "published" and p.cfbd_calls == 2 and w.release_spent == 6
+    assert e.status == "published" and p.cfbd_calls == 2 and w.release_spent == 2 + ew.REFRESH_COST
 
 
 def test_failed_cfbd_requests_count_against_priority_cap():
@@ -63,7 +63,7 @@ def test_free_source_failure_keeps_timed_fallback():
 
 def test_no_refresh_reserve_means_no_paid_calls():
     clock, p, w = signal_setup()
-    w.release_budget = 4
+    w.release_budget = ew.REFRESH_COST
     w.run(T0 + timedelta(hours=5))
     assert p.cfbd_calls == 0 and not p.dispatches
     assert any("reserve is unavailable" in a for a in w.alerts)
@@ -73,7 +73,7 @@ def test_late_start_still_funds_authoritative_confirmation_above_floor():
     now = T0 + timedelta(hours=5)
     snapshot = {"season": 2026, "games": [game(1, T0)]}
     q = ew.quota_plan({"remainingCalls": 20, "resetAt": "2026-12-01T00:00:00Z"}, snapshot, now)
-    assert q["budget"] == 0 and q["priority_budget"] == 11
+    assert q["budget"] == 0 and q["priority_budget"] == 3 + 2 * ew.REFRESH_COST
     assert cal.parse_time(q["wave_at"]) == now
     q = ew.quota_plan({"remainingCalls": 8, "resetAt": "2026-12-01T00:00:00Z"}, snapshot, now)
     assert q["priority_budget"] == 0
@@ -106,7 +106,7 @@ def test_weekday_finals_receive_the_same_priority_latency_and_quota_protection(d
     w.run(kickoff + timedelta(hours=5))
     e, = [e for e in w.events if e.kind == "final"]
     assert e.status == "published" and e.published_at - final <= timedelta(minutes=5)
-    assert w.release_spent == 5 and w.release_spent <= q["priority_budget"] <= 20 - ew.RELEASE_FLOOR
+    assert w.release_spent == 1 + ew.REFRESH_COST and w.release_spent <= q["priority_budget"] <= 20 - ew.RELEASE_FLOOR
     assert w.wave_at == kickoff + cal.LATE_FINISH
 
 
@@ -123,13 +123,13 @@ def test_observed_final_forces_immediate_monitor_pass_instead_of_ten_minute_wait
 
 @pytest.mark.parametrize("priority", [False, True])
 def test_failed_publication_cannot_spend_an_unfunded_retry(priority):
-    clock, p, w = setup([game(1, T0 - timedelta(hours=3))], budget=0 if priority else 5,
-                        release_budget=5 if priority else 0, deploy_minutes=10000)
+    clock, p, w = setup([game(1, T0 - timedelta(hours=3))], budget=0 if priority else 1 + ew.REFRESH_COST,
+                        release_budget=1 + ew.REFRESH_COST if priority else 0, deploy_minutes=10000)
     if priority:
         w.wave_at = T0
     p.finals[1] = (T0, 48, 27)
     w.run(T0 + timedelta(hours=2))
-    assert len(p.dispatches) == 1 and w.spent == 5
+    assert len(p.dispatches) == 1 and w.spent == 1 + ew.REFRESH_COST
     assert w.events[0].status == "alerted" and any("quota exhausted" in a for a in w.alerts)
 
 
@@ -145,7 +145,7 @@ def test_funded_failed_publication_recovers_once_within_priority_cap():
     p.dispatch = fail_first_publication
     w.run(T0 + timedelta(hours=1))
     assert w.events[0].status == "published" and len(p.dispatches) == 2
-    assert w.release_spent == 9 <= w.release_budget
+    assert w.release_spent == 1 + 2 * ew.REFRESH_COST <= w.release_budget
 
 
 def test_game_retry_guard_preserves_existing_discretionary_cfp_publication():
@@ -181,7 +181,7 @@ def test_early_signal_exhaustion_preserves_funded_timed_fallback():
     w.run(T0 + timedelta(hours=5))
     e, = [e for e in w.events if e.kind == "final"]
     assert e.status == "published" and e.detected_at >= w.wave_at
-    assert p.cfbd_calls == 4 and w.release_spent == 8
+    assert p.cfbd_calls == 4 and w.release_spent == 4 + ew.REFRESH_COST
 
 
 def test_later_game_has_independent_confirmation_attempts_and_clears_recovered_alert():
@@ -223,7 +223,7 @@ def test_independent_monitor_detects_actual_early_final_with_newer_incomplete_sn
 
 def test_mixed_season_confirmation_reserves_all_source_calls_plus_publication():
     clock, p, w = signal_setup()
-    w.release_budget = 5  # one source + refresh, insufficient for two sources + refresh
+    w.release_budget = 1 + ew.REFRESH_COST  # one source + refresh, insufficient for two sources + refresh
     assert w.check_games(("regular", "postseason"), priority=True) == []
     assert p.cfbd_calls == 0 and w.release_spent == 0
     assert any("multi-source" in a for a in w.alerts)

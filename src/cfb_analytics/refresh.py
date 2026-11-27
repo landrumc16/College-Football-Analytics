@@ -7,7 +7,8 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from .quota_client import urlopen
 from .ingestion import normalize_cfbd_games, snapshot_summary
 
 

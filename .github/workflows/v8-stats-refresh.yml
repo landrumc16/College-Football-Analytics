@@ -20,6 +20,10 @@ permissions:
 concurrency:
   group: v8-stats-refresh
   cancel-in-progress: false
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '7'
+
 jobs:
   budget:
     if: github.ref == 'refs/heads/main'
@@ -31,6 +35,7 @@ jobs:
       - id: quota
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/optional_source_budget.py --priority core --cost 7
   refresh:
     needs: budget
@@ -63,6 +68,7 @@ jobs:
       - name: Refresh current-season counts
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.v8_sources --seasons "$SEASON" --refresh "$SEASON" --cache "$STORE"
       - name: Publish the Offense & Defense file and verify
         run: |

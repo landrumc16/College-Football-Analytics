@@ -6,6 +6,10 @@ on:
     paths: ['.github/workflows/refresh-data.yml']
   workflow_dispatch:
     inputs:
+      essential_only:
+        description: Publish essential results without optional market acquisition
+        type: boolean
+        default: false
       season:
         description: Season to refresh
         required: true
@@ -26,6 +30,10 @@ concurrency:
   group: cfb-2026-refresh
   cancel-in-progress: false
 
+env:
+  CFBD_SHARED_QUOTA: github
+  CFBD_ACQUISITION_LIMIT: '8'
+
 jobs:
   game_day_gate:
     runs-on: ubuntu-latest
@@ -43,6 +51,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           SCHEDULE: ${{ github.event.schedule }}
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: PYTHONPATH=src python -m cfb_analytics.game_completion_gate
   refresh:
     needs: game_day_gate
@@ -67,12 +76,14 @@ jobs:
       - name: Refresh validated CFBD snapshot
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.refresh --season "$SEASON"
       - name: Refresh 2026 recruiting research snapshot (development branch only)
         if: github.ref == 'refs/heads/v3.4-development'
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.v34_recruiting_refresh --year 2026
       - name: Verify live kickoff timestamps are available
         run: |
@@ -148,8 +159,10 @@ jobs:
           PY
       - name: Reserve quota for essential results before optional market retrieval
         id: optional_budget
+        if: inputs.essential_only != true
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/optional_source_budget.py
       - name: Refresh V7 current-season market statistics (isolated; failure keeps last verified archive)
         id: v7_market
@@ -157,6 +170,7 @@ jobs:
         continue-on-error: true
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.v7_market_archive --season 2026 --cache "$RUNNER_TEMP/v7-private"
       - name: Report V7 market refresh failure without blocking football results
         if: steps.v7_market.outcome == 'failure'
@@ -177,6 +191,7 @@ jobs:
       - name: Refresh postseason games (conference championships filed as postseason, bowls, CFP)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.postseason
       - name: Validate exactly the data about to be published
         # Runs on the refreshed snapshot, report and derived files, so a bad refresh is never committed. The
