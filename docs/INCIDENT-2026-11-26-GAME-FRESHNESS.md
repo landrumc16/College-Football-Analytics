@@ -221,8 +221,8 @@ Corrections retain the existing watcher and publication path:
   evidence, not permission to publish ESPN scores or an availability guarantee.
 
 Verification actually executed in this continuation:
-- 62 focused watcher, monitor, lifecycle and Git publication recovery tests passed.
-- Full local Python regression: **864 passed, 5 skipped**, Python 3.12. The prior
+- 63 focused watcher, monitor, lifecycle and Git publication recovery tests passed.
+- Full local Python regression: **865 passed, 5 skipped**, Python 3.12. The prior
   candidate's 863/2 was a different environment; skips are reported, not hidden.
 - Public HTTP/content observation at 13:20:53 UTC (7:20:53 AM Central): Texas Tech
   48–27 TCU; 11–1; rating 18.747195020824705, rank 8; receipt 05:09:18 UTC.
@@ -259,3 +259,19 @@ coordination and durable cross-session source-availability bounds remain open.
 Actual rivalry-weekend behavior is required. Existing postseason results do not
 feed ratings; no model behavior changed in this correction. No merge approval
 has been recorded for this replacement candidate; main remains unchanged.
+
+
+### Source authorization correction (supersedes earlier ESPN rollout descriptions)
+
+The official Disney terms cover ESPN and section 2.B.x restricts automated
+access/monitoring without express written permission:
+https://disneytermsofuse.com/english/ (read November 27, 2026).
+No source-specific authorization has been established in this project record.
+The real ESPN adapter therefore makes **no requests by default**; only explicit
+`ESPN_FINAL_SIGNALS_AUTHORIZED=true` after established written permission enables
+it. No production workflow sets that flag. Synthetic adapter/lifecycle tests do
+not establish permission or production performance. The corrected authoritative
+CFBD path and timed fallback remain; rapid secondary detection and independent
+secondary-final alerts are conditional capabilities, not active guarantees.
+Do not recommend production enablement of the adapter based on public access,
+third-party libraries, or a permissive software license for client code.

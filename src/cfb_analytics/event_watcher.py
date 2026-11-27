@@ -104,6 +104,10 @@ class Providers:
         CFBD uses ESPN event ids. Require both that id and the scheduled kickoff to match,
         and a complete, non-tied score before spending scarce CFBD confirmation calls.
         """
+        # Public accessibility is not permission for automated monitoring. Enable only
+        # when the operator has established written source authorization.
+        if os.environ.get("ESPN_FINAL_SIGNALS_AUTHORIZED") != "true":
+            return set()
         expected = {int(g["game_id"]): cal.parse_time(g["start_date"]) for g in games}
         days = {k.astimezone(cal.CENTRAL).strftime("%Y%m%d") for k in expected.values() if k}
         found = set()

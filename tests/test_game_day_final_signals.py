@@ -158,6 +158,7 @@ def test_game_retry_guard_preserves_existing_discretionary_cfp_publication():
 
 
 def test_scoreboard_requires_known_id_kickoff_complete_valid_score(monkeypatch):
+    monkeypatch.setenv("ESPN_FINAL_SIGNALS_AUTHORIZED", "true")
     event = {"id": "1", "date": game(1, T0)["start_date"], "competitions": [{
         "status": {"type": {"completed": True}}, "competitors": [
             {"homeAway": "home", "score": "48"}, {"homeAway": "away", "score": "27"}]}]}
@@ -226,3 +227,11 @@ def test_mixed_season_confirmation_reserves_all_source_calls_plus_publication():
     assert w.check_games(("regular", "postseason"), priority=True) == []
     assert p.cfbd_calls == 0 and w.release_spent == 0
     assert any("multi-source" in a for a in w.alerts)
+
+
+def test_unapproved_secondary_adapter_never_requests_the_source(monkeypatch):
+    monkeypatch.delenv("ESPN_FINAL_SIGNALS_AUTHORIZED", raising=False)
+    def unexpected(*args, **kwargs):
+        raise AssertionError("Source request requires established permission")
+    monkeypatch.setattr(ew, "_get_json", unexpected)
+    assert ew.Providers("", "").final_signals([game(1, T0)]) == set()
