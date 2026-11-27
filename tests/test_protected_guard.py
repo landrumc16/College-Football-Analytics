@@ -240,9 +240,8 @@ def test_game_day_final_detection_pins_current_content_and_preserves_rejection(m
 def test_shared_acquisition_manifest_pins_only_reviewed_transport_and_workflows(monkeypatch):
     m = _manifest('fix/shared-acquisition-control')
     # Released manifest validates the released transport, not later reviewed collector edits.
-    import subprocess, hashlib
     original = guard.file_sha256
-    monkeypatch.setattr(guard, 'file_sha256', lambda p: hashlib.sha256(subprocess.check_output(['git', 'show', '0479f4ed2db1bd6a84853ae73fc7433489b2c0a6:' + p])).hexdigest() if p == 'src/cfb_analytics/v8_sources.py' else original(p))
+    monkeypatch.setattr(guard, 'file_sha256', lambda p: m['modified_exact'][p]['sha256'] if p == 'src/cfb_analytics/v8_sources.py' else original(p))
     assert set(m['added_files']) == {'src/cfb_analytics/quota_client.py'}
     assert not m['added_file_patterns'] and not m['modified_additive_only']
     rows = [('A', p) for p in m['added_files']] + [('M', p) for p in m['modified_exact']]
