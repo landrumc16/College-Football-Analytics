@@ -146,9 +146,14 @@ jobs:
           assert len(accuracy['calibration']) == 5
           print(f"Verified {len(history)} immutable pregame forecasts")
           PY
+      - name: Reserve quota for essential results before optional market retrieval
+        id: optional_budget
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python scripts/optional_source_budget.py
       - name: Refresh V7 current-season market statistics (isolated; failure keeps last verified archive)
         id: v7_market
-        if: hashFiles('data/v7-market-receipts.json') != ''
+        if: steps.optional_budget.outputs.allowed == 'true' && hashFiles('data/v7-market-receipts.json') != ''
         continue-on-error: true
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}

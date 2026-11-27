@@ -15,7 +15,7 @@
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     },
     ".github/workflows/refresh-data.yml": {
-      "sha256": "f764c50c514b3fe497d2b76e11e822a607c34c1a82bb7c12d395cf356119a90b",
+      "sha256": "5c5346d0f8b9ecd3666f994afb95a617a1eb4cdd82c660d55759039329ad0dc4",
       "reason": "Bounded final-status wake-up, current-day fallback, critical observed-final alerts and safe current-head refresh reruns; pending owner approval"
     }
   }
