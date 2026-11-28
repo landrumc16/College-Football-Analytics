@@ -2,6 +2,11 @@ name: Refresh official college football polls
 
 on:
   workflow_dispatch:
+    inputs:
+      publication:
+        description: One planned publication read that may spend the protected CFBD floor (watcher floor plan)
+        type: boolean
+        default: false
   schedule:
     # Poll publication windows, 15-minute intervals, UTC.
     - cron: '*/15 16-22 * 8-12 0'
@@ -34,6 +39,7 @@ jobs:
       - name: Poll verified published rankings
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFBD_ACQUISITION_ROLE: ${{ inputs.publication == true && 'publication' || 'detection' }}
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: PYTHONPATH=src python -m cfb_analytics.poll_refresh
