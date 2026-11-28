@@ -128,4 +128,14 @@ def export_confirmed(state, directory):
         if path.exists():
             if path.read_bytes() != data: raise ValueError('Immutable archive mismatch')
         else:
-            with path.open('xb') as f: f.write(data)
+            fd, temporary = tempfile.mkstemp(dir=root)
+            try:
+                with os.fdopen(fd, 'wb') as f:
+                    f.write(data); f.flush(); os.fsync(f.fileno())
+                try:
+                    os.link(temporary, path)  # expose only complete bytes; never replace an archive
+                except FileExistsError:
+                    if path.read_bytes() != data:
+                        raise ValueError('Immutable archive mismatch')
+            finally:
+                os.unlink(temporary)

@@ -156,3 +156,19 @@ def test_cli_pinned_batch_and_reconcile_ignore_mutable_pointer(tmp_path, monkeyp
     assert out['events'][0]['status'] == 'corrected'
     monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'batch-a'), '--expected-batch', 'batch-b'])
     with pytest.raises(ValueError, match='batch ID mismatch'): main()
+
+
+def test_archive_interrupted_export_is_retryable_without_partial_final(tmp_path, monkeypatch):
+    from cfb_analytics import rapid_results
+    state = transition(None, verified(), SCHEDULE, SOURCES, authoritative=True)
+    link = rapid_results.os.link
+    def interrupted(*args):
+        raise OSError('simulated interruption before atomic publication')
+    monkeypatch.setattr(rapid_results.os, 'link', interrupted)
+    with pytest.raises(OSError):
+        export_confirmed(state, tmp_path)
+    assert list(tmp_path.iterdir()) == []
+    monkeypatch.setattr(rapid_results.os, 'link', link)
+    export_confirmed(state, tmp_path)
+    assert len(list(tmp_path.iterdir())) == 1
+    assert json.loads(next(tmp_path.iterdir()).read_text())['authoritative']
