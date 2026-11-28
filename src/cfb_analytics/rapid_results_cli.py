@@ -6,6 +6,7 @@ from .v5_fast_updates import _timestamp
 import json
 from pathlib import Path
 from .rapid_results import transition, save_state, public_snapshot, export_confirmed
+from .ai_research import authorized_sources
 
 
 def main():
@@ -20,7 +21,6 @@ def main():
     schedule = json.loads(a.schedule.read_text())
     if isinstance(schedule, dict): schedule = schedule['schedule']
     registry = json.loads(a.sources.read_text())
-    sources = registry.get('sources', {}) if registry.get('enabled') is True else {}
     state = json.loads(a.state.read_text()) if a.state.exists() else None
     revision = state['revision'] if state else 0
     inbox = json.loads(a.inbox.read_text()) if not a.reconcile_only and a.inbox.exists() else {'batch_id': None, 'observations': []}
@@ -28,6 +28,8 @@ def main():
         from .rapid_monitor import valid_batch_id
         if not valid_batch_id(a.expected_batch) or inbox.get('batch_id') != a.expected_batch:
             raise ValueError('Expected immutable batch ID mismatch')
+    # Exact registry URLs, plus re-verified AI research citations only when the owner enabled that adapter.
+    sources = authorized_sources(registry, [e.get('observation', {}) for e in inbox.get('observations', [])])
     batch_id = inbox.get('batch_id')
     digest = hashlib.sha256(json.dumps(inbox, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     prior_digest = (state or {}).get('batch_digests', {}).get(batch_id)

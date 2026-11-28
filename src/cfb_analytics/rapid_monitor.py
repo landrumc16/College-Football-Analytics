@@ -60,11 +60,12 @@ class RapidInboxMonitor:
                 return
             # The publisher performs full identity/payload validation. The watcher
             # refuses disabled/unapproved sources and privileged CFBD attestations.
-            allowed = registry.get('sources', {})
+            from .ai_research import authorized_sources
+            allowed = authorized_sources(registry, [e.get('observation', {}) for e in inbox['observations']])
             for envelope in inbox['observations']:
                 source = envelope.get('observation', {}).get('source')
-                if allowed.get(source) != 'licensed' or envelope.get('authoritative'):
-                    raise ValueError('Rapid inbox source is not licensed or attempts authoritative promotion')
+                if allowed.get(source) not in ('licensed', 'ai_research') or envelope.get('authoritative'):
+                    raise ValueError('Rapid inbox source is not licensed or verified research, or attempts authoritative promotion')
             event = {'batch_id': batch, 'status': 'detected', 'detected_at': now.isoformat(), 'attempts': 0}
             self.events.append(event)
             self.pending = event

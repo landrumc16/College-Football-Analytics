@@ -410,6 +410,7 @@ class Watcher:
         from .rapid_monitor import RapidInboxMonitor
         self.rapid = RapidInboxMonitor(providers, clock, dry_run=dry_run,
                                       enabled=os.environ.get("RAPID_RESULTS_ENABLED") == "true")
+        self.research = None             # optional AI research adapter (issue #74); attached by main() when enabled
 
     @property
     def spent(self):
@@ -723,6 +724,10 @@ class Watcher:
         return None
 
     def step(self):
+        if self.research is not None:
+            self.research.step()
+            for alert in self.research.alerts:
+                self._alert(alert)
         self.rapid.step()
         for alert in self.rapid.alerts:
             self._alert(alert)
@@ -812,6 +817,8 @@ class Watcher:
             cfp_wake = self.next_cfp_wake(now)
             if cfp_wake is not None and now + timedelta(seconds=cfp_wake) < deadline:
                 waits.append(cfp_wake)
+            if self.research is not None and self.research.enabled:
+                waits.append(60)   # research runs every 5 minutes in event windows; a queued batch is dispatched promptly
             if self.rapid.enabled:
                 waits.append(120)  # authorized inbox batches share this watcher, including CFBD quota pauses
             if self.stay_alive:
@@ -833,7 +840,8 @@ class Watcher:
         return {"generated_at": self.clock().isoformat(), "dry_run": self.dry_run, "cfbd_calls": self.p.cfbd_calls,
                 "cfbd_calls_including_dispatched_refreshes": self.spent, "cfbd_budget": self.cfbd_budget,
                 "priority_spent": self.release_spent, "priority_budget": self.release_budget,
-                "events": [e.record() for e in self.events], "rapid_results": self.rapid.record(), "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
+                "events": [e.record() for e in self.events], "rapid_results": self.rapid.record(),
+                "ai_research": self.research.record() if self.research is not None else None, "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
                 "source_health": {k: {"failures": v.failures, "last_error": v.last_error} for k, v in self.health.items()},
                 "latency": {"published": len(latencies), "within_5_minutes_total": within,
                             "median_detection_to_publication_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None,
@@ -886,6 +894,18 @@ def main(argv=None):
         postseason = dict(postseason, games=[g for g in postseason['games'] if {g['home'], g['away']} & monitored_names])
     watcher = Watcher(snapshot, polls, providers, dry_run=args.dry_run, postseason=postseason, known_teams=known)
     watcher.monitored_teams = monitored_names
+    if os.environ.get("AI_RESEARCH_ENABLED") == "true" and os.environ.get("RAPID_RESULTS_ENABLED") == "true":
+        from . import ai_research
+        try:
+            researcher = ai_research.AnthropicResearcher(os.environ.get("AI_RESEARCH_MODEL") or "claude-opus-5-5")
+        except Exception as error:   # missing SDK or key: the watcher continues without research
+            researcher = None
+            watcher._alert(f"AI research unavailable: {str(error)[:120]}")
+        report_schedule = json.loads(Path("data/season-2026-report.json").read_text())["schedule"]
+        watcher.research = ai_research.ResearchStep(
+            providers, watcher.clock, ai_research.research_schedule(report_schedule, snapshot["games"]), researcher,
+            enabled=True, dry_run=args.dry_run, max_requests=int(os.environ.get("AI_RESEARCH_MAX_REQUESTS", 120)),
+            on_batch=lambda: setattr(watcher.rapid, "next_check", None))
     now = utcnow()
     # The published snapshot can be newer than the checkout (a refresh committed after this run started).
     try:
