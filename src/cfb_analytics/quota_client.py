@@ -42,7 +42,7 @@ def reserve(state, info, run_id, limit, level, now):
     if reset_time.tzinfo is None or reset_time <= now:
         raise QuotaUnavailable('Provider quota reset is not current')
     reset = reset_time.astimezone(timezone.utc).isoformat()
-    if level not in ('essential', 'core', 'supplemental') or not 0 < limit <= 400:
+    if level not in ('publication', 'essential', 'core', 'supplemental') or not 0 < limit <= 400:
         raise QuotaUnavailable('Invalid acquisition policy')
     s = copy.deepcopy(state) if state and state.get('reset_at') == reset else {
         'schema_version': 1, 'reset_at': reset, 'remaining': remaining, 'runs': {}}
@@ -50,7 +50,9 @@ def reserve(state, info, run_id, limit, level, now):
     # provider reading can lower capacity but cannot erase existing reservations.
     s['remaining'] = min(s['remaining'], remaining)
     used = s['runs'].get(run_id, {}).get('attempts', 0)
-    protected = FLOOR if level == 'essential' else FLOOR + 12 + (7 if level == 'supplemental' else 0)
+    # The floor exists for score publication: detection checks stop at it, publication may spend it to zero.
+    # (Before 2026-11-28 publication was also held at the floor, so the last FLOOR calls could never be spent.)
+    protected = {'publication': 0, 'essential': FLOOR}.get(level, FLOOR + 12 + (7 if level == 'supplemental' else 0))
     if used >= limit or s['remaining'] <= protected:
         raise QuotaUnavailable(f'{level} acquisition withheld: remaining={s["remaining"]}, protected={protected}, attempts={used}/{limit}')
     s['remaining'] -= 1
@@ -111,6 +113,19 @@ def coordinate(ledger, info, run_id, limit, level, now, attempts=8):
     raise QuotaUnavailable('Shared acquisition ledger is busy; retry later')
 
 
+def read_info(headers, attempts=4, pause=10):
+    """The quota reading is free but was the first casualty of provider strain (2026-11-28: timeouts and 502s
+    blocked every refresh before any metered call). Retry it with backoff instead of failing the publication."""
+    for attempt in range(attempts):
+        try:
+            with network_open(Request('https://api.collegefootballdata.com/info', headers=headers), timeout=30) as response:
+                return json.load(response)
+        except (OSError, ValueError) as error:  # URLError/HTTPError/timeouts are OSError subclasses
+            if attempt == attempts - 1 or getattr(error, 'code', 500) in (401, 403):
+                raise
+            time.sleep(pause * (attempt + 1))
+
+
 def urlopen(request, *args, **kwargs):
     url = request.full_url if isinstance(request, Request) else str(request)
     parsed = urlsplit(url)
@@ -126,9 +141,10 @@ def urlopen(request, *args, **kwargs):
     if not token or not repo or not run:
         raise QuotaUnavailable('Shared quota credentials or run identity unavailable')
     headers = {'Authorization': 'Bearer ' + os.environ['CFBD_API_KEY'], 'Accept': 'application/json'}
-    with network_open(Request('https://api.collegefootballdata.com/info', headers=headers), timeout=15) as response:
-        info = json.load(response)
+    info = read_info(headers)
     level = priority(url, int(os.environ.get('CFBD_SEASON', '2026')))
+    if level == 'essential' and os.environ.get('CFBD_ACQUISITION_ROLE') == 'publication':
+        level = 'publication'  # a refresh that publishes scores/rankings, not a detection check
     coordinate(GitHubLedger(repo, token), info, run, int(os.environ.get('CFBD_ACQUISITION_LIMIT', '8')),
                level, datetime.now(timezone.utc))
     return network_open(request, *args, **kwargs)

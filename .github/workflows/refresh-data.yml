@@ -10,6 +10,10 @@ on:
         description: Publish essential results without optional market acquisition
         type: boolean
         default: false
+      skip_postseason:
+        description: Keep the retained postseason snapshot (saves one CFBD call when the quota is nearly exhausted)
+        type: boolean
+        default: false
       season:
         description: Season to refresh
         required: true
@@ -76,6 +80,7 @@ jobs:
       - name: Refresh validated CFBD snapshot
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFBD_ACQUISITION_ROLE: publication   # may spend the protected floor; detection checks may not
           GITHUB_TOKEN: ${{ github.token }}
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.refresh --season "$SEASON"
@@ -189,8 +194,13 @@ jobs:
         continue-on-error: true
         run: python -m cfb_analytics.v7_validation
       - name: Refresh postseason games (conference championships filed as postseason, bowls, CFP)
+        if: inputs.skip_postseason != true
+        # An essential publication must not lose its refreshed regular-season scores because the postseason call
+        # could not be made; the retained postseason snapshot is kept instead.
+        continue-on-error: ${{ inputs.essential_only == true }}
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFBD_ACQUISITION_ROLE: publication
           GITHUB_TOKEN: ${{ github.token }}
         run: python -m cfb_analytics.postseason
       - name: Validate exactly the data about to be published
