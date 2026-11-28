@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import { parseFastResults, type FastResults as Feed } from './fastResults'
+import { parseFastResults, type FastResults as Feed, type FastScheduleGame } from './fastResults'
 
-export default function FastResults({ teams }: { teams: string[] }) {
+export default function FastResults({ schedule }: { schedule: FastScheduleGame[] }) {
   const [feed, setFeed] = useState<Feed | null>(null)
   // A missing optional feed is normal until an authorized rapid source is configured.
-  const identity = teams.join('\n')
+  const identity = JSON.stringify(schedule.map(({game_id, home, away}) => ({game_id, home, away})))
   useEffect(() => {
     const controller = new AbortController()
     let stopped = false
     const load = () => fetch(import.meta.env.BASE_URL + 'fast-results.json', { cache: 'no-store', signal: controller.signal })
       .then(r => { if (!r.ok) throw new Error('Optional feed unavailable'); return r.json() })
-      .then(value => { if (!stopped) setFeed(parseFastResults(value, identity.split('\n'))) })
+      .then(value => { if (!stopped) setFeed(parseFastResults(value, JSON.parse(identity))) })
       .catch(() => { if (!stopped) setFeed(null) })
     void load()
     const timer = window.setInterval(load, 60_000)

@@ -355,7 +355,7 @@ export function App() {
       {tab === 'market' && <MarketAnalysis games={customGame ? [customGame, ...marketGames as MarketGame[]] : marketGames as MarketGame[]} selectedId={marketGame} onSelect={setMarketGame}
         sourceFor={g => g.game_id < 0 ? hypotheticalSource : publishedSource(g)}
         onCustom={() => { setHomeTeam(defaultSchool(primary,schoolNames)); setAwayTeam(''); setVenue('home'); setTab('compare') }} />}
-      {tab === 'home' && <FastResults teams={report.rankings.map(team => team.team)} />}
+      {tab === 'home' && <FastResults schedule={report.schedule ?? []} />}
       {tab === 'home' && <EditorialHome report={report} games={futurePredictions} favorites={favorites} poll={pollSnapshot} favoriteControls={favoriteControls}
         onGame={game => { setPredictionSchool(game.home); setWeek(String(game.week)); setTab('predictions') }}
         onTeam={team => { setScheduleTeam(team); setTab('profile') }} onRankings={() => { setSearch(''); setTab('rankings') }}

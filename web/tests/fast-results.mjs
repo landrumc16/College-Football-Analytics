@@ -1,6 +1,7 @@
 // Controlled fixtures only; never contact or impersonate a production data source.
 import assert from 'node:assert/strict'
 import {spawn} from 'node:child_process'
+import {readFile} from 'node:fs/promises'
 import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from 'playwright'
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4198','--strictPort'],{cwd:'web',stdio:'ignore',detached:true})
@@ -12,7 +13,10 @@ try {
   const context=await browser.newContext({viewport:{width,height:900}})
   await context.route('**/*',r=>['127.0.0.1','localhost'].includes(new URL(r.request().url()).hostname)?r.continue():r.abort())
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message))
-  const event={game_id:999,home:'Texas Tech',away:'TCU',home_score:48,away_score:27,status:'provisional',observed_at:'2026-11-26T20:00:00Z',verified_at:null,statistics_pending:true,source:'https://authorized.example/game/999',model_ingestion_allowed:false,basic_stats:{home:{total_yards:400}}}
+  const report=JSON.parse(await readFile('web/dist/season-report.json','utf8'))
+  const retained=report.schedule.find(g=>g.home==='Texas Tech' && g.away==='TCU')
+  assert.ok(retained)
+  const event={game_id:retained.game_id,home:'Texas Tech',away:'TCU',home_score:48,away_score:27,status:'provisional',observed_at:'2026-11-26T20:00:00Z',verified_at:null,statistics_pending:true,source:'https://authorized.example/game/999',model_ingestion_allowed:false,basic_stats:{home:{total_yards:400}}}
   const feed={schema_version:1,revision:1,generated_at:'2026-11-26T20:01:00Z',events:[event],records:{'Texas Tech':{wins:11,losses:1,provisional_games:1}}}
   await page.route('**/fast-results.json',r=>r.fulfill({json:feed}))
   await page.goto('http://127.0.0.1:4198/',{waitUntil:'networkidle'})

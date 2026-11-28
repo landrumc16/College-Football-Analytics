@@ -103,3 +103,33 @@ def test_cfbd_known_aliases(tmp_path, monkeypatch):
  for k in ('inbox','schedule','sources','state','output','archive','cfbd-snapshot'):args+=['--'+k,str(tmp_path/('cfbd' if k=='cfbd-snapshot' else k))]
  monkeypatch.setattr(sys,'argv',args);main()
  assert json.loads((tmp_path/'output').read_text())['events'][0]['status']=='confirmed'
+
+
+def test_archived_game_lifecycle_reuses_existing_analytics_without_mutating_inputs():
+    from pathlib import Path
+    from cfb_analytics.parity import load_baseline
+    from cfb_analytics.pipeline import build_season_report
+    root = Path(__file__).resolve().parents[1]
+    path = root / 'data/cfbd-2026-games.json'
+    original = path.read_bytes()
+    snapshot = json.loads(original)
+    retained = copy.deepcopy(snapshot)
+    target = next(g for g in retained['games'] if g['home'] == 'Texas Tech' and g['away'] == 'TCU')
+    target.update(completed=False, home_score=None, away_score=None)
+    roster, _ = load_baseline()
+    before = build_season_report(retained, roster)
+    observation = row()
+    observation['game_id'] = target['game_id']
+    observation.update(published_at='2026-11-27T04:00:00Z', observed_at='2026-11-27T04:01:00Z')
+    provisional = transition(None, observation, retained['games'], SOURCES)
+    assert public_snapshot(provisional, retained['games'])['records']['Texas Tech']['provisional_games'] == 1
+    # The canonical pipeline still sees the unchanged retained snapshot until CFBD arrives.
+    assert build_season_report(retained, roster)['rankings'] == before['rankings']
+    authoritative = verified()
+    authoritative['game_id'] = target['game_id']
+    confirmed = transition(provisional, authoritative, retained['games'], SOURCES, authoritative=True)
+    after = build_season_report(snapshot, roster)
+    team = lambda report: next(r for r in report['rankings'] if r['team'] == 'Texas Tech')
+    assert team(after)['wins'] == team(before)['wins'] + 1
+    assert confirmed['events'][0]['model_ingestion_allowed']
+    assert path.read_bytes() == original
