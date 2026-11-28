@@ -6,6 +6,10 @@ on:
     paths: ['.github/workflows/refresh-data.yml']
   workflow_dispatch:
     inputs:
+      rapid_batch:
+        description: Immutable authorized rapid batch ID
+        type: string
+        default: ''
       rapid_only:
         description: Publish the authorized rapid inbox without CFBD acquisition
         type: boolean
@@ -130,7 +134,7 @@ jobs:
                   '--inbox', 'operations/rapid-inbox.json', '--schedule', 'data/season-2026-report.json',
                   '--sources', 'operations/rapid-sources.json', '--state', 'operations/rapid-state.json',
                   '--output', 'web/public/fast-results.json', '--archive', 'research/archive/rapid-confirmed',
-                  '--cfbd-snapshot', 'data/cfbd-2026-games.json'], check=True)
+                  '--cfbd-snapshot', 'data/cfbd-2026-games.json', '--reconcile-only'], check=True)
           PYCODE
       - name: Refresh dual projections from retained inputs without changing models
         continue-on-error: true
@@ -255,9 +259,18 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install -e '.[dev]'
       - name: Validate and publish licensed rapid observations without provider requests
+        env:
+          RAPID_BATCH: ${{ inputs.rapid_batch }}
         run: |
+          python - <<'PYCODE'
+          import os
+          from cfb_analytics.rapid_monitor import valid_batch_id
+          if not valid_batch_id(os.environ['RAPID_BATCH']):
+              raise SystemExit('Invalid immutable rapid batch ID')
+          PYCODE
           python -m cfb_analytics.rapid_results_cli \
-            --inbox operations/rapid-inbox.json --schedule data/season-2026-report.json \
+            --inbox "operations/rapid-inbox/${RAPID_BATCH}.json" --expected-batch "$RAPID_BATCH" \
+            --schedule data/season-2026-report.json \
             --sources operations/rapid-sources.json --state operations/rapid-state.json \
             --output web/public/fast-results.json --archive research/archive/rapid-confirmed
           python -m pytest -q tests/test_rapid_results.py tests/test_rapid_monitor.py

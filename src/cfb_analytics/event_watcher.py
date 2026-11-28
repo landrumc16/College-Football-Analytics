@@ -175,12 +175,23 @@ class Providers:
         """The official release page, or None while it does not exist yet (404). No CFBD call."""
         return cfp_publish.fetch_page(url)
 
-    def rapid_inbox(self):
+    def rapid_inbox(self, published=()):
         base = f"https://raw.githubusercontent.com/{self.repo}/main/operations/"
         registry = _get_json(base + "rapid-sources.json")
         if registry.get("enabled") is not True:
             return registry, {}
-        return registry, _get_json(base + "rapid-inbox.json")
+        pointer = _get_json(base + "rapid-inbox.json")
+        from .rapid_monitor import valid_batch_id
+        batch_ids = pointer.get("batch_ids", [pointer.get("batch_id")])
+        if not isinstance(batch_ids, list) or any(not valid_batch_id(value) for value in batch_ids):
+            raise ValueError("Rapid inbox batch ID is invalid")
+        batch_id = next((value for value in batch_ids if value not in published), None)
+        if batch_id is None:
+            return registry, {}
+        inbox = _get_json(base + f"rapid-inbox/{batch_id}.json")
+        if inbox.get("batch_id") != batch_id:
+            raise ValueError("Immutable inbox batch ID mismatch")
+        return registry, inbox
 
     def live_fast_results(self):
         try:

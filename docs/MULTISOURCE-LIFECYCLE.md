@@ -71,3 +71,26 @@ The public provisional view never replaces authentic pregame forecasts or
 canonical model input files. Source availability is not inferred from inbox or
 workflow timestamps. The offline CI job exercises controlled fixtures and makes
 no claim of live permission, source latency or production deployment.
+
+Rapid batches are immutable files `operations/rapid-inbox/<batch_id>.json`.
+The `rapid-inbox.json` pointer identifies the next batch; write the immutable
+file before advancing it. IDs contain only letters, digits, underscores and
+hyphens, start with a letter/digit, and have at most128 characters. Never reuse
+an ID with different bytes. The watcher resolves the pointer to that file and
+passes `rapid_batch` to publication. A queued publication therefore processes
+exactly its detected batch even when the pointer advances. Later ordinary CFBD
+refreshes use `--reconcile-only`, ignoring inbox contents. Pending batches must
+remain discoverable to the authorized adapter until publicly acknowledged;
+do not discard an unobserved batch when advancing a pointer.
+
+Use `rapid-inbox.json` as the durable append-only index
+`{"batch_ids":["batch-a","batch-b"]}` rather than replacing a latest pointer.
+The watcher chooses the first ID not acknowledged by the public artifact and
+loads its immutable file. Thus even a batch arriving entirely between watcher
+checks remains discoverable. Retain every index ID and immutable batch file;
+never remove queued IDs merely because a newer result arrived. Legacy single
+`batch_id` is accepted for migration but is not the production adapter contract.
+
+A batch that fails both publication attempts alerts and is skipped for the
+remainder of that watcher session, allowing unrelated indexed batches to proceed.
+The immutable batch remains in the index for a later session's recovery attempt.

@@ -10,7 +10,7 @@
   "modified_additive_only": {},
   "modified_exact": {
     "src/cfb_analytics/event_watcher.py": {
-      "sha256": "5c15a3f01b660a70c5f24b8f9b1db87513e94eab3574cd5034293159cf2d4fa9",
+      "sha256": "24dfb6adf51230419242d8140cfb954e657e8e780815cbc06fdb55e35bbdd516",
       "reason": "Connect existing watcher and safe publication; preserve models and quota"
     },
     "src/cfb_analytics/v8_sources.py": {
@@ -18,7 +18,7 @@
       "reason": "Connect existing watcher and safe publication; preserve models and quota"
     },
     ".github/workflows/refresh-data.yml": {
-      "sha256": "7c5b10a3ffb1fe4cec799ca003159d864c8a6fedb9282d5a11232837c979ca00",
+      "sha256": "9f7945e1c220baa0dcdb0fa971c1f0d2d231113b192116204d49709a9a98f6a6",
       "reason": "Connect existing watcher and safe publication; preserve models and quota"
     }
   }

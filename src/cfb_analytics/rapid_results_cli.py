@@ -13,6 +13,8 @@ def main():
     for name in ('inbox', 'schedule', 'sources', 'state', 'output', 'archive'):
         p.add_argument('--'+name, required=True, type=Path)
     p.add_argument('--cfbd-snapshot', type=Path)
+    p.add_argument('--expected-batch')
+    p.add_argument('--reconcile-only', action='store_true')
     p.add_argument('--confirmed-games', type=Path)
     a = p.parse_args()
     schedule = json.loads(a.schedule.read_text())
@@ -21,7 +23,11 @@ def main():
     sources = registry.get('sources', {}) if registry.get('enabled') is True else {}
     state = json.loads(a.state.read_text()) if a.state.exists() else None
     revision = state['revision'] if state else 0
-    inbox = json.loads(a.inbox.read_text()) if a.inbox.exists() else {'batch_id': None, 'observations': []}
+    inbox = json.loads(a.inbox.read_text()) if not a.reconcile_only and a.inbox.exists() else {'batch_id': None, 'observations': []}
+    if a.expected_batch:
+        from .rapid_monitor import valid_batch_id
+        if not valid_batch_id(a.expected_batch) or inbox.get('batch_id') != a.expected_batch:
+            raise ValueError('Expected immutable batch ID mismatch')
     batch_id = inbox.get('batch_id')
     digest = hashlib.sha256(json.dumps(inbox, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     prior_digest = (state or {}).get('batch_digests', {}).get(batch_id)

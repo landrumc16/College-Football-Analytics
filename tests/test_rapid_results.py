@@ -133,3 +133,26 @@ def test_archived_game_lifecycle_reuses_existing_analytics_without_mutating_inpu
     assert team(after)['wins'] == team(before)['wins'] + 1
     assert confirmed['events'][0]['model_ingestion_allowed']
     assert path.read_bytes() == original
+
+
+def test_cli_pinned_batch_and_reconcile_ignore_mutable_pointer(tmp_path, monkeypatch):
+    from cfb_analytics.rapid_results_cli import main
+    import sys
+    for name, value in [('schedule', {'schedule': SCHEDULE}), ('sources', {'enabled': True, 'sources': SOURCES}),
+                        ('batch-a', {'batch_id': 'batch-a', 'observations': [{'observation': row()}]}),
+                        ('pointer', {'batch_id': 'batch-b', 'observations': [{'observation': dict(row(), home='Unauthorized')}]})]:
+        (tmp_path/name).write_text(json.dumps(value))
+    args = ['rapid']
+    for key in ('schedule', 'sources', 'state', 'output', 'archive'):
+        args += ['--'+key, str(tmp_path/key)]
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'batch-a'), '--expected-batch', 'batch-a']); main()
+    assert json.loads((tmp_path/'output').read_text())['processed_batch_ids'] == ['batch-a']
+    # New pointer B must neither replace queued A nor block later CFBD verification.
+    snapshot = {'retrieved_at': '2026-11-27T20:00:00Z', 'games': [dict(SCHEDULE[0], completed=True, home_score=20, away_score=27)]}
+    (tmp_path/'cfbd').write_text(json.dumps(snapshot))
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'pointer'), '--reconcile-only', '--cfbd-snapshot', str(tmp_path/'cfbd')]); main()
+    out = json.loads((tmp_path/'output').read_text())
+    assert out['processed_batch_ids'] == ['batch-a']
+    assert out['events'][0]['status'] == 'corrected'
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'batch-a'), '--expected-batch', 'batch-b'])
+    with pytest.raises(ValueError, match='batch ID mismatch'): main()

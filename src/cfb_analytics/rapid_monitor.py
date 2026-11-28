@@ -4,6 +4,11 @@ Only the trusted main-branch registry may enable an authorized adapter's inbox.
 Publication is acknowledged from the public artifact, never a workflow exit code.
 """
 from datetime import timedelta
+import re
+
+
+def valid_batch_id(value):
+    return isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", value) is not None
 
 
 class RapidInboxMonitor:
@@ -35,15 +40,19 @@ class RapidInboxMonitor:
                         message = 'Rapid results not publicly visible after two publication attempts'
                         if message not in self.alerts:
                             self.alerts.append(message)
+                        self.pending = None
                     else:
                         self._dispatch(self.pending, now)
                 if self.pending:
                     return
-            registry, inbox = self.provider.rapid_inbox()
+            excluded = published | {event['batch_id'] for event in self.events if event['status'] == 'alerted'}
+            registry, inbox = self.provider.rapid_inbox(published=excluded)
             if registry.get('enabled') is not True:
                 return
+            if not inbox:
+                return
             batch = inbox.get('batch_id')
-            if not isinstance(batch, str) or not batch.strip():
+            if not valid_batch_id(batch):
                 raise ValueError('Rapid inbox requires immutable batch_id')
             if batch in published or any(e['batch_id'] == batch for e in self.events):
                 return
@@ -67,7 +76,7 @@ class RapidInboxMonitor:
 
     def _dispatch(self, event, now):
         event.update(status='dispatched', attempts=event['attempts'] + 1, last_dispatch=now)
-        self.provider.dispatch('refresh-data.yml', {'season': '2026', 'essential_only': 'true', 'rapid_only': 'true'})
+        self.provider.dispatch('refresh-data.yml', {'season': '2026', 'essential_only': 'true', 'rapid_only': 'true', 'rapid_batch': event['batch_id']})
 
     def record(self):
         return {'events': [{k: (v.isoformat() if hasattr(v, 'isoformat') else v) for k, v in e.items()} for e in self.events],
