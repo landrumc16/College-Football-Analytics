@@ -14978,5 +14978,21 @@
     "scheduled_kickoff_at": "2026-12-05T01:00:00.000Z",
     "model_id": "workbook_2026_baseline",
     "source": "generated_before_kickoff"
+  },
+  "401869536": {
+    "game_id": 401869536,
+    "week": 14,
+    "home": "Buffalo",
+    "away": "Toledo",
+    "neutral_site": true,
+    "predicted_winner": "Toledo",
+    "home_margin": -8.913806981180764,
+    "home_win_probability": 0.24227141345616815,
+    "confidence": "Likely",
+    "forecast_recorded_at": "2026-11-28T13:16:14.119823+00:00",
+    "source_retrieved_at": "2026-11-28T13:16:12.754658+00:00",
+    "scheduled_kickoff_at": "2026-12-05T17:00:00.000Z",
+    "model_id": "workbook_2026_baseline",
+    "source": "generated_before_kickoff"
   }
 }

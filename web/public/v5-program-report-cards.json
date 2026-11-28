@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-27T20:01:55.185502+00:00",
+  "as_of": "2026-11-28T13:16:12.754658+00:00",
   "coverage": {
     "hype": {
       "eligible": 138,
@@ -34,7 +34,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 37.956204379562045
+          "score": 32.846715328467155
         },
         "trajectory": {
           "grade": "F",
@@ -60,7 +60,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 36.85841733286989,
+      "overall_score": 35.155254315838256,
       "team": "Air Force",
       "trajectory": {
         "annual_slopes": {
@@ -142,7 +142,7 @@
         },
         "strength": {
           "grade": "A+",
-          "score": 98.54014598540147
+          "score": 97.81021897810218
         },
         "trajectory": {
           "grade": "F",
@@ -168,7 +168,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 42.899625381377206,
+      "overall_score": 42.65631637894412,
       "team": "Alabama",
       "trajectory": {
         "annual_slopes": {
@@ -196,7 +196,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 24.817518248175183
+          "score": 24.087591240875913
         },
         "trajectory": {
           "grade": "F",
@@ -222,7 +222,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 36.84393465415363,
+      "overall_score": 36.60062565172054,
       "team": "Appalachian State",
       "trajectory": {
         "annual_slopes": {
@@ -304,7 +304,7 @@
         },
         "strength": {
           "grade": "D",
-          "score": 63.503649635036496
+          "score": 64.23357664233576
         },
         "trajectory": {
           "grade": "A-",
@@ -330,7 +330,7 @@
         }
       },
       "overall_grade": "C",
-      "overall_score": 75.26841231220793,
+      "overall_score": 75.51172131464102,
       "team": "Arizona State",
       "trajectory": {
         "annual_slopes": {
@@ -412,7 +412,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 20.437956204379564
+          "score": 19.708029197080293
         },
         "trajectory": {
           "grade": "C+",
@@ -438,7 +438,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 46.8920171474916,
+      "overall_score": 46.648708145058514,
       "team": "Arkansas State",
       "trajectory": {
         "annual_slopes": {
@@ -466,7 +466,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 35.76642335766423
+          "score": 36.496350364963504
         },
         "trajectory": {
           "grade": "C-",
@@ -492,7 +492,7 @@
         }
       },
       "overall_grade": "D",
-      "overall_score": 65.36129455837485,
+      "overall_score": 65.60460356080794,
       "team": "Army",
       "trajectory": {
         "annual_slopes": {
@@ -574,7 +574,7 @@
         },
         "strength": {
           "grade": "B+",
-          "score": 89.78102189781022
+          "score": 89.05109489051095
         },
         "trajectory": {
           "grade": "A",
@@ -600,7 +600,7 @@
         }
       },
       "overall_grade": "A",
-      "overall_score": 94.47727184953463,
+      "overall_score": 94.23396284710152,
       "team": "BYU",
       "trajectory": {
         "annual_slopes": {
@@ -682,7 +682,7 @@
         },
         "strength": {
           "grade": "B-",
-          "score": 81.75182481751825
+          "score": 82.48175182481752
         },
         "trajectory": {
           "grade": "F",
@@ -708,7 +708,7 @@
         }
       },
       "overall_grade": "C",
-      "overall_score": 75.66330668520449,
+      "overall_score": 75.90661568763758,
       "team": "Baylor",
       "trajectory": {
         "annual_slopes": {
@@ -898,7 +898,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 10.218978102189782
+          "score": 10.94890510948905
         },
         "trajectory": {
           "grade": "D",
@@ -924,7 +924,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 45.73436836210559,
+      "overall_score": 45.977677364538685,
       "team": "Buffalo",
       "trajectory": {
         "annual_slopes": {
@@ -1222,7 +1222,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 18.248175182481752
+          "score": 17.51824817518248
         },
         "trajectory": {
           "grade": null,
@@ -1351,7 +1351,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 29.197080291970803
+          "score": 29.927007299270073
         },
         "trajectory": {
           "grade": null,
@@ -1372,7 +1372,7 @@
         },
         "strength": {
           "grade": "C+",
-          "score": 78.83211678832117
+          "score": 78.10218978102189
         },
         "trajectory": {
           "grade": "C",
@@ -1398,7 +1398,7 @@
         }
       },
       "overall_grade": "D",
-      "overall_score": 65.29853628393775,
+      "overall_score": 65.05522728150466,
       "team": "Duke",
       "trajectory": {
         "annual_slopes": {
@@ -1534,7 +1534,7 @@
         },
         "strength": {
           "grade": "B",
-          "score": 84.67153284671532
+          "score": 86.13138686131387
         },
         "trajectory": {
           "grade": "F",
@@ -1560,7 +1560,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 45.684161742555894,
+      "overall_score": 46.17077974742208,
       "team": "Florida",
       "trajectory": {
         "annual_slopes": {
@@ -1642,7 +1642,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 21.16788321167883
+          "score": 20.437956204379564
         },
         "trajectory": {
           "grade": "B",
@@ -1668,7 +1668,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 48.987178001776535,
+      "overall_score": 48.74386899934345,
       "team": "Florida International",
       "trajectory": {
         "annual_slopes": {
@@ -1695,8 +1695,8 @@
           "score": 3.9682539682539684
         },
         "strength": {
-          "grade": "D+",
-          "score": 68.61313868613139
+          "grade": "D",
+          "score": 66.42335766423358
         },
         "trajectory": {
           "grade": "F",
@@ -1722,7 +1722,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 24.722898080562317,
+      "overall_score": 23.992971073263046,
       "team": "Florida State",
       "trajectory": {
         "annual_slopes": {
@@ -2074,7 +2074,7 @@
         },
         "strength": {
           "grade": "B-",
-          "score": 81.02189781021897
+          "score": 80.2919708029197
         },
         "trajectory": {
           "grade": "C+",
@@ -2100,7 +2100,7 @@
         }
       },
       "overall_grade": "C",
-      "overall_score": 74.62634688912061,
+      "overall_score": 74.38303788668752,
       "team": "Houston",
       "trajectory": {
         "annual_slopes": {
@@ -2236,7 +2236,7 @@
         },
         "strength": {
           "grade": "B+",
-          "score": 88.32116788321167
+          "score": 89.78102189781022
         },
         "trajectory": {
           "grade": "F",
@@ -2262,7 +2262,7 @@
         }
       },
       "overall_grade": "C-",
-      "overall_score": 71.10705596107056,
+      "overall_score": 71.59367396593673,
       "team": "Iowa",
       "trajectory": {
         "annual_slopes": {
@@ -2344,7 +2344,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 32.846715328467155
+          "score": 33.57664233576642
         },
         "trajectory": {
           "grade": null,
@@ -2440,7 +2440,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 56.2043795620438
+          "score": 56.934306569343065
         },
         "trajectory": {
           "grade": "F",
@@ -2466,7 +2466,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 31.83003128258603,
+      "overall_score": 32.07334028501912,
       "team": "Kansas State",
       "trajectory": {
         "annual_slopes": {
@@ -3022,7 +3022,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 52.55474452554745
+          "score": 51.09489051094891
         },
         "trajectory": {
           "grade": "F",
@@ -3047,8 +3047,8 @@
           "seasons": 10
         }
       },
-      "overall_grade": "D",
-      "overall_score": 63.285443942378244,
+      "overall_grade": "D-",
+      "overall_score": 62.79882593751207,
       "team": "Memphis",
       "trajectory": {
         "annual_slopes": {
@@ -3130,7 +3130,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 24.087591240875913
+          "score": 24.817518248175183
         },
         "trajectory": {
           "grade": "F",
@@ -3156,7 +3156,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 31.97099602209091,
+      "overall_score": 32.214305024524,
       "team": "Miami (OH)",
       "trajectory": {
         "annual_slopes": {
@@ -3346,7 +3346,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 56.934306569343065
+          "score": 54.74452554744526
         },
         "trajectory": {
           "grade": "F",
@@ -3372,7 +3372,7 @@
         }
       },
       "overall_grade": "D",
-      "overall_score": 64.61302282470166,
+      "overall_score": 63.883095817402385,
       "team": "Minnesota",
       "trajectory": {
         "annual_slopes": {
@@ -3400,7 +3400,7 @@
         },
         "strength": {
           "grade": "D",
-          "score": 65.69343065693431
+          "score": 63.503649635036496
         },
         "trajectory": {
           "grade": "F",
@@ -3426,7 +3426,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 53.908392229560114,
+      "overall_score": 53.17846522226085,
       "team": "Mississippi State",
       "trajectory": {
         "annual_slopes": {
@@ -3454,7 +3454,7 @@
         },
         "strength": {
           "grade": "B",
-          "score": 86.13138686131387
+          "score": 86.86131386861314
         },
         "trajectory": {
           "grade": "F",
@@ -3480,7 +3480,7 @@
         }
       },
       "overall_grade": "C-",
-      "overall_score": 70.50940408604642,
+      "overall_score": 70.75271308847951,
       "team": "Missouri",
       "trajectory": {
         "annual_slopes": {
@@ -3529,7 +3529,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 55.47445255474452
+          "score": 56.2043795620438
         },
         "trajectory": {
           "grade": "F",
@@ -3555,7 +3555,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 37.53910323253389,
+      "overall_score": 37.782412234966976,
       "team": "NC State",
       "trajectory": {
         "annual_slopes": {
@@ -3636,8 +3636,8 @@
           "score": 22.61904761904762
         },
         "strength": {
-          "grade": "B",
-          "score": 83.21167883211679
+          "grade": "B-",
+          "score": 81.75182481751825
         },
         "trajectory": {
           "grade": "C",
@@ -3663,7 +3663,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 59.615533155679145,
+      "overall_score": 59.128915150812965,
       "team": "Nebraska",
       "trajectory": {
         "annual_slopes": {
@@ -3691,7 +3691,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 21.8978102189781
+          "score": 21.16788321167883
         },
         "trajectory": {
           "grade": "F",
@@ -3717,7 +3717,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 32.03471980844244,
+      "overall_score": 31.79141080600935,
       "team": "Nevada",
       "trajectory": {
         "annual_slopes": {
@@ -3744,8 +3744,8 @@
           "score": 42.46031746031746
         },
         "strength": {
-          "grade": "D",
-          "score": 64.23357664233576
+          "grade": "D+",
+          "score": 67.15328467153284
         },
         "trajectory": {
           "grade": "A",
@@ -3771,7 +3771,7 @@
         }
       },
       "overall_grade": "D+",
-      "overall_score": 67.31066311358282,
+      "overall_score": 68.28389912331518,
       "team": "New Mexico",
       "trajectory": {
         "annual_slopes": {
@@ -3853,7 +3853,7 @@
         },
         "strength": {
           "grade": "D+",
-          "score": 67.15328467153284
+          "score": 68.61313868613139
         },
         "trajectory": {
           "grade": "F",
@@ -3879,7 +3879,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 28.9981848376009,
+      "overall_score": 29.484802842467076,
       "team": "North Carolina",
       "trajectory": {
         "annual_slopes": {
@@ -3907,7 +3907,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 43.7956204379562
+          "score": 43.065693430656935
         },
         "trajectory": {
           "grade": null,
@@ -3928,7 +3928,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 54.74452554744526
+          "score": 55.47445255474452
         },
         "trajectory": {
           "grade": "A",
@@ -3954,7 +3954,7 @@
         }
       },
       "overall_grade": "C-",
-      "overall_score": 70.8936778279844,
+      "overall_score": 71.13698683041748,
       "team": "North Texas",
       "trajectory": {
         "annual_slopes": {
@@ -4036,7 +4036,7 @@
         },
         "strength": {
           "grade": "C+",
-          "score": 78.10218978102189
+          "score": 77.37226277372262
         },
         "trajectory": {
           "grade": "F",
@@ -4062,7 +4062,7 @@
         }
       },
       "overall_grade": "C",
-      "overall_score": 76.56316378944116,
+      "overall_score": 76.31985478700807,
       "team": "Northwestern",
       "trajectory": {
         "annual_slopes": {
@@ -4252,7 +4252,7 @@
         },
         "strength": {
           "grade": "B+",
-          "score": 89.05109489051095
+          "score": 88.32116788321167
         },
         "trajectory": {
           "grade": "F",
@@ -4278,7 +4278,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 47.27629088942958,
+      "overall_score": 47.03298188699648,
       "team": "Oklahoma",
       "trajectory": {
         "annual_slopes": {
@@ -4414,7 +4414,7 @@
         },
         "strength": {
           "grade": "A-",
-          "score": 90.51094890510949
+          "score": 91.97080291970804
         },
         "trajectory": {
           "grade": "C-",
@@ -4440,7 +4440,7 @@
         }
       },
       "overall_grade": "B",
-      "overall_score": 85.32904646043332,
+      "overall_score": 85.8156644652995,
       "team": "Ole Miss",
       "trajectory": {
         "annual_slopes": {
@@ -4942,7 +4942,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 36.496350364963504
+          "score": 37.956204379562045
         },
         "trajectory": {
           "grade": "D+",
@@ -4968,7 +4968,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 57.00671996292434,
+      "overall_score": 57.493337967790524,
       "team": "San Diego State",
       "trajectory": {
         "annual_slopes": {
@@ -5050,7 +5050,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 28.467153284671532
+          "score": 29.197080291970803
         },
         "trajectory": {
           "grade": "F",
@@ -5076,7 +5076,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 32.37264897848839,
+      "overall_score": 32.615957980921486,
       "team": "South Alabama",
       "trajectory": {
         "annual_slopes": {
@@ -5104,7 +5104,7 @@
         },
         "strength": {
           "grade": "B-",
-          "score": 80.2919708029197
+          "score": 81.02189781021897
         },
         "trajectory": {
           "grade": "F",
@@ -5130,7 +5130,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 45.01795852160816,
+      "overall_score": 45.261267524041244,
       "team": "South Carolina",
       "trajectory": {
         "annual_slopes": {
@@ -5158,7 +5158,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 43.065693430656935
+          "score": 43.7956204379562
         },
         "trajectory": {
           "grade": "B",
@@ -5184,7 +5184,7 @@
         }
       },
       "overall_grade": "D+",
-      "overall_score": 67.6621094504306,
+      "overall_score": 67.90541845286371,
       "team": "South Florida",
       "trajectory": {
         "annual_slopes": {
@@ -5212,7 +5212,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 10.94890510948905
+          "score": 10.218978102189782
         },
         "trajectory": {
           "grade": "C",
@@ -5238,7 +5238,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 43.464449851311166,
+      "overall_score": 43.22114084887807,
       "team": "Southern Miss",
       "trajectory": {
         "annual_slopes": {
@@ -5320,7 +5320,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 51.824817518248175
+          "score": 52.55474452554745
         },
         "trajectory": {
           "grade": "F",
@@ -5346,7 +5346,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 57.22202911983934,
+      "overall_score": 57.465338122272435,
       "team": "Syracuse",
       "trajectory": {
         "annual_slopes": {
@@ -5428,7 +5428,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 17.51824817518248
+          "score": 21.8978102189781
         },
         "trajectory": {
           "grade": "D+",
@@ -5454,7 +5454,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 42.4796276986058,
+      "overall_score": 43.93948171320434,
       "team": "Temple",
       "trajectory": {
         "annual_slopes": {
@@ -5536,7 +5536,7 @@
         },
         "strength": {
           "grade": "A+",
-          "score": 97.81021897810218
+          "score": 98.54014598540147
         },
         "trajectory": {
           "grade": "D",
@@ -5562,7 +5562,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 57.20658092920866,
+      "overall_score": 57.449889931641756,
       "team": "Texas",
       "trajectory": {
         "annual_slopes": {
@@ -5590,7 +5590,7 @@
         },
         "strength": {
           "grade": "B",
-          "score": 85.4014598540146
+          "score": 84.67153284671532
         },
         "trajectory": {
           "grade": "B+",
@@ -5616,7 +5616,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 59.41953423705249,
+      "overall_score": 59.1762252346194,
       "team": "Texas A&M",
       "trajectory": {
         "annual_slopes": {
@@ -5698,7 +5698,7 @@
         },
         "strength": {
           "grade": "A-",
-          "score": 91.24087591240875
+          "score": 90.51094890510949
         },
         "trajectory": {
           "grade": "A-",
@@ -5724,7 +5724,7 @@
         }
       },
       "overall_grade": "A-",
-      "overall_score": 92.05383694434789,
+      "overall_score": 91.8105279419148,
       "team": "Texas Tech",
       "trajectory": {
         "annual_slopes": {
@@ -5860,7 +5860,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 29.927007299270073
+          "score": 28.467153284671532
         },
         "trajectory": {
           "grade": "B-",
@@ -5886,7 +5886,7 @@
         }
       },
       "overall_grade": "D+",
-      "overall_score": 69.36720349129108,
+      "overall_score": 68.8805854864249,
       "team": "Tulane",
       "trajectory": {
         "annual_slopes": {
@@ -5989,7 +5989,7 @@
         },
         "strength": {
           "grade": "D",
-          "score": 64.96350364963503
+          "score": 65.69343065693431
         },
         "trajectory": {
           "grade": "F",
@@ -6015,7 +6015,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 58.162437724481514,
+      "overall_score": 58.40574672691461,
       "team": "UCF",
       "trajectory": {
         "annual_slopes": {
@@ -6042,8 +6042,8 @@
           "score": 22.61904761904762
         },
         "strength": {
-          "grade": "B-",
-          "score": 82.48175182481752
+          "grade": "B",
+          "score": 83.21167883211679
         },
         "trajectory": {
           "grade": "F",
@@ -6069,7 +6069,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 37.414552195574096,
+      "overall_score": 37.65786119800718,
       "team": "UCLA",
       "trajectory": {
         "annual_slopes": {
@@ -6259,7 +6259,7 @@
         },
         "strength": {
           "grade": "B",
-          "score": 86.86131386861314
+          "score": 85.4014598540146
         },
         "trajectory": {
           "grade": "D",
@@ -6285,7 +6285,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 51.17599351175994,
+      "overall_score": 50.68937550689376,
       "team": "USC",
       "trajectory": {
         "annual_slopes": {
@@ -6367,7 +6367,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 51.09489051094891
+          "score": 51.824817518248175
         },
         "trajectory": {
           "grade": "F",
@@ -6393,7 +6393,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 37.79882593751207,
+      "overall_score": 38.04213493994516,
       "team": "UTSA",
       "trajectory": {
         "annual_slopes": {
@@ -6583,7 +6583,7 @@
         },
         "strength": {
           "grade": "D",
-          "score": 66.42335766423358
+          "score": 64.96350364963503
         },
         "trajectory": {
           "grade": "A",
@@ -6609,7 +6609,7 @@
         }
       },
       "overall_grade": "B-",
-      "overall_score": 82.98768006797204,
+      "overall_score": 82.50106206310585,
       "team": "Virginia",
       "trajectory": {
         "annual_slopes": {
@@ -6691,7 +6691,7 @@
         },
         "strength": {
           "grade": "A-",
-          "score": 91.97080291970804
+          "score": 91.24087591240875
         },
         "trajectory": {
           "grade": "C",
@@ -6717,7 +6717,7 @@
         }
       },
       "overall_grade": "B-",
-      "overall_score": 80.78920943884448,
+      "overall_score": 80.54590043641139,
       "team": "Wake Forest",
       "trajectory": {
         "annual_slopes": {
@@ -6799,7 +6799,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 33.57664233576642
+          "score": 34.306569343065696
         },
         "trajectory": {
           "grade": "F",
@@ -6825,7 +6825,7 @@
         }
       },
       "overall_grade": "D-",
-      "overall_score": 60.134013053721084,
+      "overall_score": 60.37732205615418,
       "team": "Washington State",
       "trajectory": {
         "annual_slopes": {
@@ -6907,7 +6907,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 18.978102189781023
+          "score": 18.248175182481752
         },
         "trajectory": {
           "grade": "D-",
@@ -6933,7 +6933,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 40.5852933225196,
+      "overall_score": 40.34198432008651,
       "team": "Western Kentucky",
       "trajectory": {
         "annual_slopes": {
@@ -6961,7 +6961,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 34.306569343065696
+          "score": 35.76642335766423
         },
         "trajectory": {
           "grade": "B",
@@ -6987,7 +6987,7 @@
         }
       },
       "overall_grade": "D+",
-      "overall_score": 67.38790406673618,
+      "overall_score": 67.87452207160236,
       "team": "Western Michigan",
       "trajectory": {
         "annual_slopes": {
@@ -7015,7 +7015,7 @@
         },
         "strength": {
           "grade": "C+",
-          "score": 77.37226277372262
+          "score": 78.83211678832117
         },
         "trajectory": {
           "grade": "F",
@@ -7041,7 +7041,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 30.023558490711775,
+      "overall_score": 30.510176495577955,
       "team": "Wisconsin",
       "trajectory": {
         "annual_slopes": {
@@ -7069,7 +7069,7 @@
         },
         "strength": {
           "grade": "F",
-          "score": 19.708029197080293
+          "score": 18.978102189781023
         },
         "trajectory": {
           "grade": "F",
@@ -7095,7 +7095,7 @@
         }
       },
       "overall_grade": "F",
-      "overall_score": 22.310083806434175,
+      "overall_score": 22.06677480400108,
       "team": "Wyoming",
       "trajectory": {
         "annual_slopes": {

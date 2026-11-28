@@ -18,8 +18,8 @@
       "reason": "Connect existing watcher and safe publication; preserve models and quota"
     },
     ".github/workflows/refresh-data.yml": {
-      "sha256": "9f7945e1c220baa0dcdb0fa971c1f0d2d231113b192116204d49709a9a98f6a6",
-      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+      "sha256": "357bbcafce294be7a89758571d116c3d231bfab5bcf49497e6c6f82445e447de",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota; reconciled with PR #80 quota-floor correction"
     }
   }
 }
