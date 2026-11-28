@@ -95,7 +95,7 @@ def test_reviewed_release_manifests_and_selection_are_per_branch():
     # Temporary v7-development event-driven release manifest (release preparation); remove after that merge.
     # The freshness-reliability manifest is the reviewed exception for that pull request (see the test below).
     manifests = guard.load_manifests(MANIFEST_DIR)
-    assert [m["head_ref"] for m in manifests] == ["fix/essential-quota-floor", "freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "fix/shared-acquisition-control", "v7-development", "v9-development"]
+    assert [m["head_ref"] for m in manifests] == ["fix/essential-quota-floor", "fix/floor-publication-waves", "freshness-alert-flapping", "freshness-reliability", "fix/game-day-final-detection", "fix/shared-acquisition-control", "v7-development", "v9-development"]
     release = next(m for m in manifests if m["head_ref"] == "v7-development")
     assert release["added_file_patterns"] == {} and release["modified_additive_only"] == {} and release["modified_exact"] == {}
     assert guard.select_manifest(manifests, "v7-development", True) is release
@@ -263,3 +263,14 @@ def test_essential_quota_floor_manifest_pins_only_the_quota_correction(monkeypat
     assert len(guard.evaluate(others, m, m['head_ref'], True, none_removed)[1]) == 3
     monkeypatch.setattr(guard, 'file_sha256', lambda p: '0' * 64)                # any later edit fails
     assert len(guard.evaluate(rows, m, m['head_ref'], True, none_removed)[1]) == 2
+
+
+def test_floor_publication_manifest_pins_only_the_watcher_and_poll_workflow(monkeypatch):
+    m = _manifest('fix/floor-publication-waves')
+    assert set(m['added_files']) == {'src/cfb_analytics/floor_publication.py'}
+    assert set(m['modified_exact']) == {'src/cfb_analytics/event_watcher.py', '.github/workflows/refresh-polls.yml'}
+    rows = [('A', p) for p in m['added_files']] + [('M', p) for p in m['modified_exact']]
+    assert not guard.evaluate(rows, m, m['head_ref'], True, none_removed)[1]
+    assert len(guard.evaluate(rows, m, 'main', True, none_removed)[1]) == len(rows)
+    monkeypatch.setattr(guard, 'file_sha256', lambda p: '0' * 64)
+    assert len(guard.evaluate([('M', p) for p in m['modified_exact']], m, m['head_ref'], True, none_removed)[1]) == 2

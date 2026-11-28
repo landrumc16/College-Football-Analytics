@@ -238,3 +238,30 @@ def test_free_quota_reading_is_retried_but_authentication_failures_are_not(monke
     with pytest.raises(HTTPError):
         q.read_info({})
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize('remaining', [9, 8, 7, 1, 0])
+def test_quota_boundaries_by_level(remaining):
+    info = {'remainingCalls': remaining, 'resetAt': '2026-12-01T00:00:00Z'}
+    def allowed(level):
+        try:
+            return reserve(None, info, 'run', 8, level, NOW)['remaining'] == remaining - 1
+        except QuotaUnavailable:
+            return False
+    assert allowed('publication') == (remaining >= 1)          # publication may spend the designated reserve
+    assert allowed('essential') == (remaining > 8)             # detection checks stop at the floor
+    assert not allowed('core') and not allowed('supplemental')  # optional requests never touch the reserve
+
+
+def test_concurrent_publication_at_the_floor_cannot_overspend():
+    ledger = Ledger()
+    info = {'remainingCalls': 3, 'resetAt': '2026-12-01T00:00:00Z'}
+    def attempt(i):
+        try:
+            coordinate(ledger, info, str(i), 8, 'publication', NOW, attempts=200)
+            return True
+        except QuotaUnavailable:
+            return False
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(attempt, range(12)))
+    assert sum(results) == 3 and ledger.state['remaining'] == 0

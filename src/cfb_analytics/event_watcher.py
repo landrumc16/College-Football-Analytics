@@ -379,6 +379,7 @@ class Watcher:
         self._final_signal_attempts = {}
         self.cfp = {}                 # release day -> {rows, event, last_absent, attempts, next_page, next_confirm}
         self.dispatch_cost = 0
+        self.floor = None                # time-based essential publication at the quota floor (floor_publication)
 
     @property
     def spent(self):
@@ -692,6 +693,10 @@ class Watcher:
         return None
 
     def step(self):
+        if self.floor is not None:
+            self.floor.step()
+            for alert in self.floor.alerts:
+                self._alert(alert)
         now = self.clock()
         plan = cal.plan(self.snapshot, self.polls, now, active_interval=self.active_interval, watch_interval=self.watch_interval)
         due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=max(self.watch_interval, RECONCILE_INTERVAL)))
@@ -778,6 +783,8 @@ class Watcher:
             cfp_wake = self.next_cfp_wake(now)
             if cfp_wake is not None and now + timedelta(seconds=cfp_wake) < deadline:
                 waits.append(cfp_wake)
+            if self.floor is not None and self.floor.pending():
+                waits.append(self.floor.next_wait(now))  # planned floor publication (never shorter than VERIFY_POLL)
             if self.stay_alive:
                 waits.append(MONITOR_INTERVAL)           # a chained run stays alive until its deadline
             waits = [w for w in waits if w is not None]
@@ -797,7 +804,8 @@ class Watcher:
         return {"generated_at": self.clock().isoformat(), "dry_run": self.dry_run, "cfbd_calls": self.p.cfbd_calls,
                 "cfbd_calls_including_dispatched_refreshes": self.spent, "cfbd_budget": self.cfbd_budget,
                 "priority_spent": self.release_spent, "priority_budget": self.release_budget,
-                "events": [e.record() for e in self.events], "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
+                "events": [e.record() for e in self.events],
+                "floor_publication": self.floor.record() if self.floor is not None else None, "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
                 "source_health": {k: {"failures": v.failures, "last_error": v.last_error} for k, v in self.health.items()},
                 "latency": {"published": len(latencies), "within_5_minutes_total": within,
                             "median_detection_to_publication_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None,
@@ -874,8 +882,10 @@ def main(argv=None):
         watcher.stay_alive = action in ("queued", "already queued")
     print("chain:", chain)
     # Pace CFBD calls to the live monthly quota; an unreadable quota falls back to a conservative session.
+    info = None
     try:
-        quota = quota_plan(providers.info(), watcher.snapshot, now, watcher.polls)
+        info = providers.info()
+        quota = quota_plan(info, watcher.snapshot, now, watcher.polls)
     except Exception as error:
         quota = {"error": str(error)[:200], "budget": 12, "interval_seconds": 1800, "priority_budget": CFP_RELEASE_COST,
                  "poll_interval_seconds": None, "wave_at": None}
@@ -885,6 +895,13 @@ def main(argv=None):
     if quota.get("interval_seconds"):
         watcher.active_interval = max(int(os.environ.get("WATCH_ACTIVE_SECONDS", MIN_INTERVAL)), quota["interval_seconds"])
     watcher.poll_interval = quota.get("poll_interval_seconds") or watcher.active_interval
+    # At the protected floor no detection check is affordable, so publish on the calendar instead (Nov 27 incident).
+    if (info and not args.dry_run and quota.get("budget", 0) <= 0 and quota.get("priority_budget", 0) <= 0
+            and os.environ.get("FLOOR_PUBLICATION", "true") == "true"):
+        from . import floor_publication
+        events = floor_publication.plan(watcher.snapshot, now, int(info["remainingCalls"]), cal.parse_time(info["resetAt"]))
+        watcher.floor = floor_publication.FloorPublisher(providers, watcher.clock, events)
+        print("floor publication plan:", json.dumps([(t.isoformat(), k) for t, k in events]))
     watcher.monitor = lambda w: freshness_monitor.run_pass(providers, now=w.clock(), snapshot=w.snapshot, quota=quota,
                                                            watcher_alerts=w.alerts, log=w.log)
     start_plan = cal.plan(watcher.snapshot, watcher.polls, now, active_interval=watcher.active_interval)
@@ -920,7 +937,8 @@ def main(argv=None):
             except Exception as error:
                 checks[name] = {"ok": False, "error": str(error)[:200], "seconds": round(time.monotonic() - started, 2)}
         result = {**watcher.report(), "quota": quota, "provider_checks": checks}
-    elif watcher.cfbd_budget <= 0 and watcher.release_budget <= 0 and not watcher.stay_alive and watcher.cfp_due(now) is None:
+    elif (watcher.cfbd_budget <= 0 and watcher.release_budget <= 0 and not watcher.stay_alive and watcher.cfp_due(now) is None
+          and not (watcher.floor is not None and watcher.floor.pending())):
         watcher._alert(f"Monitoring paused to protect the CFBD quota ({quota.get('remaining')} calls left, "
                        f"{quota.get('days_to_reset')} days to reset); the daily baseline refresh still reconciles results")
         result = {**watcher.report(), "quota": quota}

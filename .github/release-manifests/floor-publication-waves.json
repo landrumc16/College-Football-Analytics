@@ -1,0 +1,19 @@
+{
+  "release": "Floor publication waves (follow-up to PR #80) - pending owner approval",
+  "head_ref": "fix/floor-publication-waves",
+  "added_files": {
+    "src/cfb_analytics/floor_publication.py": "Planned essential refreshes when no detection budget remains; no model changes"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/event_watcher.py": {
+      "sha256": "7283aaef27ce5c4ca12ce0c3060b7389681b94d445c77157ccc5b12bb03c736a",
+      "reason": "Calendar-based essential publication at the CFBD floor, one poll read reserved (Nov 27 follow-up)"
+    },
+    ".github/workflows/refresh-polls.yml": {
+      "sha256": "9eeb836e9dfb93b3312e0223ef2358fbbcceb60fe213f6fa64ce08fe127b3a96",
+      "reason": "Calendar-based essential publication at the CFBD floor, one poll read reserved (Nov 27 follow-up)"
+    }
+  }
+}
