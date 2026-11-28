@@ -1,0 +1,13 @@
+{
+  "release": "Statistics acquisition reuse \u2014 pending approval",
+  "head_ref": "fix/timely-acquisition",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/v8_sources.py": {
+      "sha256": "14a5fa41bce0ea7401c0e270db734dd75da3c286cea9871fe5fb93fa6d7d3033",
+      "reason": "Reuse season membership cache and skip unplayed season-type drives; no calculation changes"
+    }
+  }
+}

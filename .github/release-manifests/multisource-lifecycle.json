@@ -1,0 +1,25 @@
+{
+  "release": "Existing multiple-source lifecycle \u2014 pending owner approval",
+  "head_ref": "fix/multisource-lifecycle",
+  "added_files": {
+    "src/cfb_analytics/rapid_monitor.py": "Provider-neutral rapid lifecycle with default-disabled acquisition",
+    "src/cfb_analytics/rapid_results.py": "Provider-neutral rapid lifecycle with default-disabled acquisition",
+    "src/cfb_analytics/rapid_results_cli.py": "Provider-neutral rapid lifecycle with default-disabled acquisition"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/event_watcher.py": {
+      "sha256": "5c15a3f01b660a70c5f24b8f9b1db87513e94eab3574cd5034293159cf2d4fa9",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+    },
+    "src/cfb_analytics/v8_sources.py": {
+      "sha256": "14a5fa41bce0ea7401c0e270db734dd75da3c286cea9871fe5fb93fa6d7d3033",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+    },
+    ".github/workflows/refresh-data.yml": {
+      "sha256": "7c5b10a3ffb1fe4cec799ca003159d864c8a6fedb9282d5a11232837c979ca00",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+    }
+  }
+}

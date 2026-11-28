@@ -1,0 +1,329 @@
+{
+  "kind": "planning_estimate_not_measurement",
+  "source_calls_made": 0,
+  "intervals": {
+    "2": {
+      "August": {
+        "active_hours_assumed": 24,
+        "waves_assumed": 20,
+        "components": {
+          "status": 720,
+          "score_publication": 40,
+          "ranking_detection": 90,
+          "ranking_publication": 6,
+          "advanced_stats": 10,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 40,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 1130,
+        "with_30_percent_contingency": 1469
+      },
+      "September": {
+        "active_hours_assumed": 80,
+        "waves_assumed": 80,
+        "components": {
+          "status": 2400,
+          "score_publication": 160,
+          "ranking_detection": 120,
+          "ranking_publication": 8,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 160,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 3093,
+        "with_30_percent_contingency": 4021
+      },
+      "October": {
+        "active_hours_assumed": 110,
+        "waves_assumed": 100,
+        "components": {
+          "status": 3300,
+          "score_publication": 200,
+          "ranking_detection": 150,
+          "ranking_publication": 10,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 200,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 4109,
+        "with_30_percent_contingency": 5342
+      },
+      "November": {
+        "active_hours_assumed": 115,
+        "waves_assumed": 115,
+        "components": {
+          "status": 3450,
+          "score_publication": 230,
+          "ranking_detection": 240,
+          "ranking_publication": 16,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 230,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 4411,
+        "with_30_percent_contingency": 5735
+      },
+      "December": {
+        "active_hours_assumed": 70,
+        "waves_assumed": 50,
+        "components": {
+          "status": 2100,
+          "score_publication": 100,
+          "ranking_detection": 90,
+          "ranking_publication": 6,
+          "advanced_stats": 35,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 100,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 2655,
+        "with_30_percent_contingency": 3452
+      },
+      "January": {
+        "active_hours_assumed": 30,
+        "waves_assumed": 15,
+        "components": {
+          "status": 900,
+          "score_publication": 30,
+          "ranking_detection": 60,
+          "ranking_publication": 4,
+          "advanced_stats": 21,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 30,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 1269,
+        "with_30_percent_contingency": 1650
+      }
+    },
+    "3": {
+      "August": {
+        "active_hours_assumed": 24,
+        "waves_assumed": 20,
+        "components": {
+          "status": 480,
+          "score_publication": 40,
+          "ranking_detection": 60,
+          "ranking_publication": 6,
+          "advanced_stats": 10,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 40,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 860,
+        "with_30_percent_contingency": 1118
+      },
+      "September": {
+        "active_hours_assumed": 80,
+        "waves_assumed": 80,
+        "components": {
+          "status": 1600,
+          "score_publication": 160,
+          "ranking_detection": 80,
+          "ranking_publication": 8,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 160,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 2253,
+        "with_30_percent_contingency": 2929
+      },
+      "October": {
+        "active_hours_assumed": 110,
+        "waves_assumed": 100,
+        "components": {
+          "status": 2200,
+          "score_publication": 200,
+          "ranking_detection": 100,
+          "ranking_publication": 10,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 200,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 2959,
+        "with_30_percent_contingency": 3847
+      },
+      "November": {
+        "active_hours_assumed": 115,
+        "waves_assumed": 115,
+        "components": {
+          "status": 2300,
+          "score_publication": 230,
+          "ranking_detection": 160,
+          "ranking_publication": 16,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 230,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 3181,
+        "with_30_percent_contingency": 4136
+      },
+      "December": {
+        "active_hours_assumed": 70,
+        "waves_assumed": 50,
+        "components": {
+          "status": 1400,
+          "score_publication": 100,
+          "ranking_detection": 60,
+          "ranking_publication": 6,
+          "advanced_stats": 35,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 100,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 1925,
+        "with_30_percent_contingency": 2503
+      },
+      "January": {
+        "active_hours_assumed": 30,
+        "waves_assumed": 15,
+        "components": {
+          "status": 600,
+          "score_publication": 30,
+          "ranking_detection": 40,
+          "ranking_publication": 4,
+          "advanced_stats": 21,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 30,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 949,
+        "with_30_percent_contingency": 1234
+      }
+    },
+    "5": {
+      "August": {
+        "active_hours_assumed": 24,
+        "waves_assumed": 20,
+        "components": {
+          "status": 288,
+          "score_publication": 40,
+          "ranking_detection": 36,
+          "ranking_publication": 6,
+          "advanced_stats": 10,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 40,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 644,
+        "with_30_percent_contingency": 838
+      },
+      "September": {
+        "active_hours_assumed": 80,
+        "waves_assumed": 80,
+        "components": {
+          "status": 960,
+          "score_publication": 160,
+          "ranking_detection": 48,
+          "ranking_publication": 8,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 160,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 1581,
+        "with_30_percent_contingency": 2056
+      },
+      "October": {
+        "active_hours_assumed": 110,
+        "waves_assumed": 100,
+        "components": {
+          "status": 1320,
+          "score_publication": 200,
+          "ranking_detection": 60,
+          "ranking_publication": 10,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 200,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 2039,
+        "with_30_percent_contingency": 2651
+      },
+      "November": {
+        "active_hours_assumed": 115,
+        "waves_assumed": 115,
+        "components": {
+          "status": 1380,
+          "score_publication": 230,
+          "ranking_detection": 96,
+          "ranking_publication": 16,
+          "advanced_stats": 25,
+          "schedule_and_baseline": 60,
+          "market": 60,
+          "individual_and_team_boxscores": 230,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 2197,
+        "with_30_percent_contingency": 2857
+      },
+      "December": {
+        "active_hours_assumed": 70,
+        "waves_assumed": 50,
+        "components": {
+          "status": 840,
+          "score_publication": 100,
+          "ranking_detection": 36,
+          "ranking_publication": 6,
+          "advanced_stats": 35,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 100,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 1341,
+        "with_30_percent_contingency": 1744
+      },
+      "January": {
+        "active_hours_assumed": 30,
+        "waves_assumed": 15,
+        "components": {
+          "status": 360,
+          "score_publication": 30,
+          "ranking_detection": 24,
+          "ranking_publication": 4,
+          "advanced_stats": 21,
+          "schedule_and_baseline": 62,
+          "market": 62,
+          "individual_and_team_boxscores": 30,
+          "cold_cache_and_corrections": 100
+        },
+        "subtotal": 693,
+        "with_30_percent_contingency": 901
+      }
+    }
+  },
+  "peak_week_assumption": {
+    "hours": 40,
+    "waves": 40,
+    "poll_windows": 2,
+    "two_minute_with_30_percent_contingency": 1927
+  },
+  "limitations": [
+    "Future event durations are assumptions, not actual endpoint measurements.",
+    "New boxscore consumers are reserved allowances, not implemented features.",
+    "No source availability, billing reset policy or SLO is inferred."
+  ]
+}

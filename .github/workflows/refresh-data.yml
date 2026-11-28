@@ -6,6 +6,10 @@ on:
     paths: ['.github/workflows/refresh-data.yml']
   workflow_dispatch:
     inputs:
+      rapid_only:
+        description: Publish the authorized rapid inbox without CFBD acquisition
+        type: boolean
+        default: false
       essential_only:
         description: Publish essential results without optional market acquisition
         type: boolean
@@ -36,6 +40,7 @@ env:
 
 jobs:
   game_day_gate:
+    if: inputs.rapid_only != true
     runs-on: ubuntu-latest
     outputs:
       run_refresh: ${{ steps.decide.outputs.run_refresh }}
@@ -114,6 +119,19 @@ jobs:
         env:
           SEASON: ${{ github.event.inputs.season || '2026' }}
         run: python -m cfb_analytics.report --season "$SEASON"
+      - name: Reconcile rapid results from the already retrieved CFBD snapshot
+        if: hashFiles('operations/rapid-state.json') != ''
+        run: |
+          python - <<'PYCODE'
+          import json, subprocess
+          from pathlib import Path
+          if json.loads(Path('operations/rapid-sources.json').read_text()).get('enabled') is True:
+              subprocess.run(['python', '-m', 'cfb_analytics.rapid_results_cli',
+                  '--inbox', 'operations/rapid-inbox.json', '--schedule', 'data/season-2026-report.json',
+                  '--sources', 'operations/rapid-sources.json', '--state', 'operations/rapid-state.json',
+                  '--output', 'web/public/fast-results.json', '--archive', 'research/archive/rapid-confirmed',
+                  '--cfbd-snapshot', 'data/cfbd-2026-games.json'], check=True)
+          PYCODE
       - name: Refresh dual projections from retained inputs without changing models
         continue-on-error: true
         run: |
@@ -211,6 +229,10 @@ jobs:
           if [ "$GITHUB_REF" = "refs/heads/v3.4-development" ]; then
             git add data/cfbd-recruiting-*.json
           fi
+          if [ -f operations/rapid-state.json ]; then
+            git add operations/rapid-state.json web/public/fast-results.json
+            if [ -d research/archive/rapid-confirmed ]; then git add research/archive/rapid-confirmed; fi
+          fi
           bash scripts/publish_refresh_snapshot.sh
       - name: Keep the event watcher running and report freshness problems
         # GitHub can start scheduled runs hours late, so every run of this workflow also restarts a stopped watcher
@@ -220,3 +242,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: PYTHONPATH=src python -m cfb_analytics.watch_keeper
+
+  rapid_publication:
+    if: inputs.rapid_only == true && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - name: Validate and publish licensed rapid observations without provider requests
+        run: |
+          python -m cfb_analytics.rapid_results_cli \
+            --inbox operations/rapid-inbox.json --schedule data/season-2026-report.json \
+            --sources operations/rapid-sources.json --state operations/rapid-state.json \
+            --output web/public/fast-results.json --archive research/archive/rapid-confirmed
+          python -m pytest -q tests/test_rapid_results.py tests/test_rapid_monitor.py
+      - name: Commit rapid presentation state with existing concurrent-change protection
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ -f operations/rapid-state.json ]; then
+            git add operations/rapid-state.json web/public/fast-results.json
+            if [ -d research/archive/rapid-confirmed ]; then git add research/archive/rapid-confirmed; fi
+          fi
+          bash scripts/publish_refresh_snapshot.sh
