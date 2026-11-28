@@ -1,0 +1,17 @@
+{
+  "release": "November 27 publication quota-floor correction (PR #80) - owner-approved conditional on checks",
+  "head_ref": "fix/essential-quota-floor",
+  "added_files": {},
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/quota_client.py": {
+      "sha256": "389f34e0924f90af328d046323a019f55040f5ab0cee74152e17204b9968358b",
+      "reason": "Score publication may spend the protected CFBD floor; free quota reading retried (Nov 27 incident, PR #80)"
+    },
+    ".github/workflows/refresh-data.yml": {
+      "sha256": "df153c772e340b24b7aa37fa6fe9c2cc134306a5bbe762604498e19bf8fe5afb",
+      "reason": "Score publication may spend the protected CFBD floor; free quota reading retried (Nov 27 incident, PR #80)"
+    }
+  }
+}

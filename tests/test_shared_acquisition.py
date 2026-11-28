@@ -169,3 +169,72 @@ def test_equivalent_reset_timestamp_does_not_erase_existing_reservations():
     state = reserve(None, INFO, 'one', 8, 'essential', NOW)
     info = {**INFO, 'resetAt': '2026-12-01T00:00:00+00:00'}
     assert reserve(state, info, 'two', 8, 'essential', NOW)['remaining'] == 12
+
+
+def test_publication_can_spend_the_floor_that_detection_must_preserve():
+    # Production 2026-11-28: 8 calls left; the floor refused even the score refresh, so nothing could publish.
+    info = {'remainingCalls': 8, 'resetAt': '2026-12-01T00:00:00Z'}
+    with pytest.raises(QuotaUnavailable):
+        reserve(None, info, 'watcher', 8, 'essential', NOW)
+    state = None
+    for n in range(8):
+        state = reserve(state, info, f'refresh-{n}', 8, 'publication', NOW)
+    assert state['remaining'] == 0
+    with pytest.raises(QuotaUnavailable):
+        reserve(state, info, 'refresh-9', 8, 'publication', NOW)
+    for level in ('core', 'supplemental'):
+        with pytest.raises(QuotaUnavailable):
+            reserve(None, {**info, 'remainingCalls': 20}, 'x', 8, level, NOW)
+
+
+def test_only_a_declared_publication_refresh_gets_the_publication_level(monkeypatch):
+    import io
+    from cfb_analytics import quota_client as q
+    levels = []
+    for key, value in {'GITHUB_ACTIONS': 'true', 'CFBD_API_KEY': 'test', 'GITHUB_TOKEN': 'test',
+                       'GITHUB_REPOSITORY': 'owner/repo', 'GITHUB_RUN_ID': '1', 'CFBD_SHARED_QUOTA': 'github'}.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(q, 'GitHubLedger', lambda *args: Ledger())
+    monkeypatch.setattr(q, 'coordinate', lambda ledger, info, run, limit, level, now: levels.append(level))
+    monkeypatch.setattr(q, 'network_open', lambda req, **kw: io.BytesIO(b'{"remainingCalls":8,"resetAt":"2099-01-01T00:00:00Z"}'))
+    q.urlopen('https://api.collegefootballdata.com/games?year=2026')
+    monkeypatch.setenv('CFBD_ACQUISITION_ROLE', 'publication')
+    q.urlopen('https://api.collegefootballdata.com/games?year=2026')
+    q.urlopen('https://api.collegefootballdata.com/lines?year=2026')
+    assert levels == ['essential', 'publication', 'supplemental']
+
+
+def test_refresh_workflow_marks_only_score_acquisition_as_publication():
+    from pathlib import Path
+    workflow = Path('.github/workflows/refresh-data.yml').read_text()
+    assert workflow.count('CFBD_ACQUISITION_ROLE: publication') == 2
+    snapshot = workflow.split('- name: Refresh validated CFBD snapshot', 1)[1].split('- name:', 1)[0]
+    postseason = workflow.split('- name: Refresh postseason games', 1)[1].split('- name:', 1)[0]
+    assert 'CFBD_ACQUISITION_ROLE: publication' in snapshot and 'CFBD_ACQUISITION_ROLE: publication' in postseason
+    assert "continue-on-error: ${{ inputs.essential_only == true }}" in postseason
+    assert 'inputs.skip_postseason != true' in postseason
+    market = workflow.split('- name: Refresh V7 current-season market statistics', 1)[1].split('- name:', 1)[0]
+    assert 'publication' not in market
+
+
+def test_free_quota_reading_is_retried_but_authentication_failures_are_not(monkeypatch):
+    import io
+    from urllib.error import HTTPError
+    from cfb_analytics import quota_client as q
+    monkeypatch.setattr(q.time, 'sleep', lambda s: None)
+    calls = []
+    def flaky(req, **kw):
+        calls.append(req.full_url)
+        if len(calls) < 3:
+            raise HTTPError(req.full_url, 502, 'Bad Gateway', {}, None) if len(calls) == 2 else TimeoutError('read timed out')
+        return io.BytesIO(b'{"remainingCalls":8,"resetAt":"2099-01-01T00:00:00Z"}')
+    monkeypatch.setattr(q, 'network_open', flaky)
+    assert q.read_info({})['remainingCalls'] == 8 and len(calls) == 3
+    calls.clear()
+    def denied(req, **kw):
+        calls.append(1)
+        raise HTTPError(req.full_url, 401, 'Unauthorized', {}, None)
+    monkeypatch.setattr(q, 'network_open', denied)
+    with pytest.raises(HTTPError):
+        q.read_info({})
+    assert len(calls) == 1
