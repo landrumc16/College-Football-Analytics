@@ -3,7 +3,7 @@ export type FastEvent = {
   game_id: string | number; home: string; away: string; home_score: number; away_score: number
   status: 'provisional' | 'confirmed' | 'corrected' | 'disputed'
   observed_at: string; verified_at?: string | null; statistics_pending: boolean
-  source: string; basic_stats?: Record<string, unknown>; model_ingestion_allowed: boolean
+  source: string; statistics_verified?: boolean; statistics_source?: string; basic_stats?: Record<string, unknown>; model_ingestion_allowed: boolean
 }
 export type FastResults = {
   schema_version: 1; generated_at: string; events: FastEvent[]
