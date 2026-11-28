@@ -1,0 +1,6 @@
+{
+  "enabled": false,
+  "sources": {
+    "https://api.collegefootballdata.com/games": "cfbd"
+  }
+}

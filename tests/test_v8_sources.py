@@ -110,3 +110,20 @@ def test_partial_run_merges_membership_and_coverage(tmp_path, monkeypatch):
     assert membership["2025"] == {"A": "SEC"} and membership["2026"] == {"A": "SEC", "N": "Mountain West"}
     seasons = [c["season"] for c in json.loads((tmp_path / "sources-receipt.json").read_text())["coverage"]]
     assert seasons == [2025, 2026]
+
+
+def test_refresh_reuses_membership_and_skips_unplayed_postseason(tmp_path):
+    calls = []
+    class Source:
+        refresh = {2026}
+        def get(self, path, season, force=None, **params):
+            calls.append((path, force, params))
+            if path == "/teams/fbs":
+                return [{"school": "A"}]
+            if path == "/games" and params["seasonType"] == "regular":
+                return [{"id": 1, "week": 13, "completed": True, "homeTeam": "A", "awayTeam": "B", "seasonType": "regular"}]
+            return []
+    teams, games, drives, plays = s.acquire(2026, Source())
+    assert calls[0][0:2] == ("/teams/fbs", False)
+    assert [(p, args.get("seasonType")) for p, _, args in calls if p in ("/drives", "/plays")] == [("/drives", "regular"), ("/plays", "regular")]
+    assert games[0]["id"] == 1

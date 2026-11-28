@@ -175,6 +175,34 @@ class Providers:
         """The official release page, or None while it does not exist yet (404). No CFBD call."""
         return cfp_publish.fetch_page(url)
 
+    def rapid_inbox(self, published=()):
+        base = f"https://raw.githubusercontent.com/{self.repo}/main/operations/"
+        registry = _get_json(base + "rapid-sources.json")
+        if registry.get("enabled") is not True:
+            return registry, {}
+        pointer = _get_json(base + "rapid-inbox.json")
+        from .rapid_monitor import valid_batch_id
+        batch_ids = pointer.get("batch_ids", [pointer.get("batch_id")])
+        if not isinstance(batch_ids, list) or any(not valid_batch_id(value) for value in batch_ids):
+            raise ValueError("Rapid inbox batch ID is invalid")
+        batch_id = next((value for value in batch_ids if value not in published), None)
+        if batch_id is None:
+            return registry, {}
+        inbox = _get_json(base + f"rapid-inbox/{batch_id}.json")
+        if inbox.get("batch_id") != batch_id:
+            raise ValueError("Immutable inbox batch ID mismatch")
+        return registry, inbox
+
+    def live_fast_results(self):
+        try:
+            return _get_json(self.site + f"fast-results.json?t={int(time.time())}")
+        except Exception as error:
+            # Before the first rapid publication a 404 is expected; other failures
+            # must not be mistaken for an empty, successfully observed artifact.
+            if getattr(error, "code", None) == 404:
+                return {}
+            raise
+
     def live_report(self):
         return _get_json(self.site + f"season-report.json?t={int(time.time())}")
 
@@ -379,6 +407,9 @@ class Watcher:
         self._final_signal_attempts = {}
         self.cfp = {}                 # release day -> {rows, event, last_absent, attempts, next_page, next_confirm}
         self.dispatch_cost = 0
+        from .rapid_monitor import RapidInboxMonitor
+        self.rapid = RapidInboxMonitor(providers, clock, dry_run=dry_run,
+                                      enabled=os.environ.get("RAPID_RESULTS_ENABLED") == "true")
 
     @property
     def spent(self):
@@ -692,6 +723,9 @@ class Watcher:
         return None
 
     def step(self):
+        self.rapid.step()
+        for alert in self.rapid.alerts:
+            self._alert(alert)
         now = self.clock()
         plan = cal.plan(self.snapshot, self.polls, now, active_interval=self.active_interval, watch_interval=self.watch_interval)
         due_reconcile = self.reconciling() and (self._last_games_check is None or now - self._last_games_check >= timedelta(seconds=max(self.watch_interval, RECONCILE_INTERVAL)))
@@ -778,6 +812,8 @@ class Watcher:
             cfp_wake = self.next_cfp_wake(now)
             if cfp_wake is not None and now + timedelta(seconds=cfp_wake) < deadline:
                 waits.append(cfp_wake)
+            if self.rapid.enabled:
+                waits.append(120)  # authorized inbox batches share this watcher, including CFBD quota pauses
             if self.stay_alive:
                 waits.append(MONITOR_INTERVAL)           # a chained run stays alive until its deadline
             waits = [w for w in waits if w is not None]
@@ -797,7 +833,7 @@ class Watcher:
         return {"generated_at": self.clock().isoformat(), "dry_run": self.dry_run, "cfbd_calls": self.p.cfbd_calls,
                 "cfbd_calls_including_dispatched_refreshes": self.spent, "cfbd_budget": self.cfbd_budget,
                 "priority_spent": self.release_spent, "priority_budget": self.release_budget,
-                "events": [e.record() for e in self.events], "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
+                "events": [e.record() for e in self.events], "rapid_results": self.rapid.record(), "alerts": self.alerts, "stale_signals": self.stale_signals[-50:],
                 "source_health": {k: {"failures": v.failures, "last_error": v.last_error} for k, v in self.health.items()},
                 "latency": {"published": len(latencies), "within_5_minutes_total": within,
                             "median_detection_to_publication_seconds": sorted(latencies)[len(latencies) // 2] if latencies else None,

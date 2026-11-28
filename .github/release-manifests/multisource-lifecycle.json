@@ -1,0 +1,25 @@
+{
+  "release": "Existing multiple-source lifecycle \u2014 pending owner approval",
+  "head_ref": "fix/multisource-lifecycle",
+  "added_files": {
+    "src/cfb_analytics/rapid_monitor.py": "Provider-neutral rapid lifecycle with default-disabled acquisition",
+    "src/cfb_analytics/rapid_results.py": "Provider-neutral rapid lifecycle with default-disabled acquisition",
+    "src/cfb_analytics/rapid_results_cli.py": "Provider-neutral rapid lifecycle with default-disabled acquisition"
+  },
+  "added_file_patterns": {},
+  "modified_additive_only": {},
+  "modified_exact": {
+    "src/cfb_analytics/event_watcher.py": {
+      "sha256": "24dfb6adf51230419242d8140cfb954e657e8e780815cbc06fdb55e35bbdd516",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+    },
+    "src/cfb_analytics/v8_sources.py": {
+      "sha256": "14a5fa41bce0ea7401c0e270db734dd75da3c286cea9871fe5fb93fa6d7d3033",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota"
+    },
+    ".github/workflows/refresh-data.yml": {
+      "sha256": "357bbcafce294be7a89758571d116c3d231bfab5bcf49497e6c6f82445e447de",
+      "reason": "Connect existing watcher and safe publication; preserve models and quota; reconciled with PR #80 quota-floor correction"
+    }
+  }
+}

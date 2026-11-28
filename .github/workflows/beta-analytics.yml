@@ -91,6 +91,10 @@ jobs:
           PYTHON
       - name: Verify explicit events and consent at five widths with intercepted ingestion
         run: node web/tests/beta-analytics.mjs
+      - name: Verify rapid-result validation and controlled publication lifecycle
+        run: |
+          node web/tests/fast-results-unit.mjs
+          node web/tests/fast-results.mjs
       - name: Existing browser, historical and PWA regressions
         if: always()
         run: |

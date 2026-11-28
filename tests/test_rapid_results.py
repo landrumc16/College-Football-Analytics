@@ -1,0 +1,174 @@
+import copy
+import json
+import pytest
+from cfb_analytics.rapid_results import transition, public_snapshot, save_state, export_confirmed
+
+SCHEDULE=[{'game_id':1,'home':'Texas Tech','away':'TCU','completed':False}]
+SOURCES={'https://licensed.example/finals':'licensed','https://api.collegefootballdata.com/games':'cfbd'}
+def row(score=48):
+ return dict(kind='game_final',game_id=1,home='Texas Tech',away='TCU',home_score=score,away_score=27,status='final',source='https://licensed.example/finals',published_at='2026-11-26T20:00:00Z',observed_at='2026-11-26T20:01:00Z',basic_stats={'home':{'total_yards':400}})
+def verified(score=48):
+ r=row(score);r.update(source='https://api.collegefootballdata.com/games',observed_at='2026-11-27T20:00:00Z');return r
+
+def test_entire_lifecycle_and_immutable_corrections(tmp_path):
+ state=transition(None,row(),SCHEDULE,SOURCES)
+ assert state['events'][0]['status']=='provisional'
+ assert not state['events'][0]['model_ingestion_allowed']
+ assert public_snapshot(state,SCHEDULE)['records']['Texas Tech']==dict(wins=1,losses=0,provisional_games=1)
+ path=tmp_path/'state.json';save_state(path,state,expected_revision=0)
+ confirmed=transition(state,verified(),SCHEDULE,SOURCES,authoritative=True)
+ save_state(path,confirmed,expected_revision=1);export_confirmed(confirmed,tmp_path/'archive')
+ original={p.name:p.read_bytes() for p in (tmp_path/'archive').iterdir()}
+ corrected=verified(20);corrected['observed_at']='2026-11-28T00:00:00Z'
+ final=transition(confirmed,corrected,SCHEDULE,SOURCES,authoritative=True)
+ assert final['events'][0]['status']=='corrected'
+ assert public_snapshot(final,SCHEDULE)['records']['Texas Tech']['losses']==1
+ export_confirmed(final,tmp_path/'archive')
+ assert all((tmp_path/'archive'/n).read_bytes()==b for n,b in original.items())
+ assert len(list((tmp_path/'archive').iterdir()))==2
+ assert transition(final,corrected,SCHEDULE,SOURCES,authoritative=True)==final
+ assert SCHEDULE[0]['completed'] is False
+
+def test_admission_identity_stats_and_upstream():
+ for patch in ({'source':'https://unauthorized.example/'},{'home':'Unknown'},{'home_score':27},{'basic_stats':{'home':{'total_yards':-1}}}):
+  r=row();r.update(patch)
+  with pytest.raises(ValueError):transition(None,r,SCHEDULE,SOURCES)
+ with pytest.raises(ValueError,match='requires CFBD'):transition(None,row(),SCHEDULE,SOURCES,authoritative=True)
+
+def test_concurrent_and_archive_rewrite_fail_closed(tmp_path):
+ s=transition(None,row(),SCHEDULE,SOURCES);p=tmp_path/'state';save_state(p,s,expected_revision=0)
+ with pytest.raises(ValueError,match='Concurrent'):save_state(p,s,expected_revision=0)
+ s['history']=[]
+ with pytest.raises(ValueError,match='history rewrite'):save_state(p,s,expected_revision=1)
+
+def test_verified_score_not_displaced_by_secondary():
+ s=transition(None,verified(),SCHEDULE,SOURCES,authoritative=True)
+ r=row(20);r['observed_at']='2026-11-28T00:00:00Z'
+ s=transition(s,r,SCHEDULE,SOURCES)
+ assert s['events'][0]['status']=='disputed'
+ assert s['events'][0]['home_score']==48
+
+def test_cli_restart_reconcile_and_replay(tmp_path, monkeypatch):
+ from cfb_analytics.rapid_results_cli import main
+ import sys
+ report={'retrieved_at':'2026-11-27T20:00:00Z','schedule':SCHEDULE}
+ for name,value in [('schedule',report),('sources',{'enabled':True,'sources':SOURCES}),('inbox',{'batch_id':'fixture-1','observations':[{'observation':row()}]}),('cfbd',{'retrieved_at':'2026-11-27T20:00:00Z','games':[dict(SCHEDULE[0],completed=True,home_score=20,away_score=27)]})]:
+  (tmp_path/name).write_text(json.dumps(value))
+ args=['rapid']
+ for k in ('inbox','schedule','sources','state','output','archive'):args+=['--'+k,str(tmp_path/k)]
+ monkeypatch.setattr(sys,'argv',args);main()
+ public=json.loads((tmp_path/'output').read_text())
+ assert public['records']['Texas Tech']['wins']==1
+ assert public['events'][0]['statistics_pending']
+ monkeypatch.setattr(sys,'argv',args+['--cfbd-snapshot',str(tmp_path/'cfbd'),'--confirmed-games',str(tmp_path/'confirmed')]);main()
+ public=json.loads((tmp_path/'output').read_text())
+ assert public['records']['Texas Tech']['losses']==1
+ assert public['events'][0]['status']=='corrected'
+ assert json.loads((tmp_path/'confirmed').read_text())[0]['home_score']==20
+ before=(tmp_path/'state').read_bytes();main()
+ assert (tmp_path/'state').read_bytes()==before
+ assert json.loads((tmp_path/'schedule').read_text())==report
+ assert len(list((tmp_path/'archive').glob('*.json')))==1
+
+def test_cli_processed_batch_survives_corrected_schedule_and_stale_cfbd(tmp_path, monkeypatch):
+ from cfb_analytics.rapid_results_cli import main
+ import sys
+ for name,value in [('schedule',{'schedule':SCHEDULE}),('sources',{'enabled':True,'sources':SOURCES}),('inbox',{'batch_id':'stable','observations':[{'observation':row()}]})]:
+  (tmp_path/name).write_text(json.dumps(value))
+ args=['rapid']
+ for k in ('inbox','schedule','sources','state','output','archive'):args+=['--'+k,str(tmp_path/k)]
+ monkeypatch.setattr(sys,'argv',args);main()
+ cfbd={'retrieved_at':'2026-11-26T19:00:00Z','games':[dict(SCHEDULE[0],completed=True,home_score=20,away_score=27)]}
+ (tmp_path/'cfbd').write_text(json.dumps(cfbd))
+ monkeypatch.setattr(sys,'argv',args+['--cfbd-snapshot',str(tmp_path/'cfbd')]);main()
+ assert json.loads((tmp_path/'output').read_text())['events'][0]['status']=='provisional'
+ cfbd['retrieved_at']='2026-11-27T20:00:00Z';(tmp_path/'cfbd').write_text(json.dumps(cfbd));main()
+ (tmp_path/'schedule').write_text(json.dumps({'schedule':cfbd['games']}));main()
+ event=json.loads((tmp_path/'output').read_text())['events'][0]
+ assert event['home_score']==20
+ assert event['basic_stats']==row()['basic_stats']
+ assert event['statistics_verified'] is False
+ assert event['statistics_source']==row()['source']
+ inbox=json.loads((tmp_path/'inbox').read_text());inbox['observations'][0]['observation']['home_score']=49
+ (tmp_path/'inbox').write_text(json.dumps(inbox))
+ with pytest.raises(ValueError,match='different content'):main()
+
+def test_cfbd_known_aliases(tmp_path, monkeypatch):
+ from cfb_analytics.rapid_results_cli import main
+ import sys
+ schedule=[dict(SCHEDULE[0],home='Miami (FL)')];r=row();r['home']='Miami (FL)'
+ for name,value in [('schedule',schedule),('sources',{'enabled':True,'sources':SOURCES}),('inbox',{'batch_id':'alias','observations':[{'observation':r}]}),('cfbd',{'retrieved_at':'2026-11-27T20:00:00Z','games':[dict(schedule[0],home='Miami',completed=True,home_score=48,away_score=27)]})]:
+  (tmp_path/name).write_text(json.dumps(value))
+ args=['rapid']
+ for k in ('inbox','schedule','sources','state','output','archive','cfbd-snapshot'):args+=['--'+k,str(tmp_path/('cfbd' if k=='cfbd-snapshot' else k))]
+ monkeypatch.setattr(sys,'argv',args);main()
+ assert json.loads((tmp_path/'output').read_text())['events'][0]['status']=='confirmed'
+
+
+def test_archived_game_lifecycle_reuses_existing_analytics_without_mutating_inputs():
+    from pathlib import Path
+    from cfb_analytics.parity import load_baseline
+    from cfb_analytics.pipeline import build_season_report
+    root = Path(__file__).resolve().parents[1]
+    path = root / 'data/cfbd-2026-games.json'
+    original = path.read_bytes()
+    snapshot = json.loads(original)
+    retained = copy.deepcopy(snapshot)
+    target = next(g for g in retained['games'] if g['home'] == 'Texas Tech' and g['away'] == 'TCU')
+    target.update(completed=False, home_score=None, away_score=None)
+    roster, _ = load_baseline()
+    before = build_season_report(retained, roster)
+    observation = row()
+    observation['game_id'] = target['game_id']
+    observation.update(published_at='2026-11-27T04:00:00Z', observed_at='2026-11-27T04:01:00Z')
+    provisional = transition(None, observation, retained['games'], SOURCES)
+    assert public_snapshot(provisional, retained['games'])['records']['Texas Tech']['provisional_games'] == 1
+    # The canonical pipeline still sees the unchanged retained snapshot until CFBD arrives.
+    assert build_season_report(retained, roster)['rankings'] == before['rankings']
+    authoritative = verified()
+    authoritative['game_id'] = target['game_id']
+    confirmed = transition(provisional, authoritative, retained['games'], SOURCES, authoritative=True)
+    after = build_season_report(snapshot, roster)
+    team = lambda report: next(r for r in report['rankings'] if r['team'] == 'Texas Tech')
+    assert team(after)['wins'] == team(before)['wins'] + 1
+    assert confirmed['events'][0]['model_ingestion_allowed']
+    assert path.read_bytes() == original
+
+
+def test_cli_pinned_batch_and_reconcile_ignore_mutable_pointer(tmp_path, monkeypatch):
+    from cfb_analytics.rapid_results_cli import main
+    import sys
+    for name, value in [('schedule', {'schedule': SCHEDULE}), ('sources', {'enabled': True, 'sources': SOURCES}),
+                        ('batch-a', {'batch_id': 'batch-a', 'observations': [{'observation': row()}]}),
+                        ('pointer', {'batch_id': 'batch-b', 'observations': [{'observation': dict(row(), home='Unauthorized')}]})]:
+        (tmp_path/name).write_text(json.dumps(value))
+    args = ['rapid']
+    for key in ('schedule', 'sources', 'state', 'output', 'archive'):
+        args += ['--'+key, str(tmp_path/key)]
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'batch-a'), '--expected-batch', 'batch-a']); main()
+    assert json.loads((tmp_path/'output').read_text())['processed_batch_ids'] == ['batch-a']
+    # New pointer B must neither replace queued A nor block later CFBD verification.
+    snapshot = {'retrieved_at': '2026-11-27T20:00:00Z', 'games': [dict(SCHEDULE[0], completed=True, home_score=20, away_score=27)]}
+    (tmp_path/'cfbd').write_text(json.dumps(snapshot))
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'pointer'), '--reconcile-only', '--cfbd-snapshot', str(tmp_path/'cfbd')]); main()
+    out = json.loads((tmp_path/'output').read_text())
+    assert out['processed_batch_ids'] == ['batch-a']
+    assert out['events'][0]['status'] == 'corrected'
+    monkeypatch.setattr(sys, 'argv', args+['--inbox', str(tmp_path/'batch-a'), '--expected-batch', 'batch-b'])
+    with pytest.raises(ValueError, match='batch ID mismatch'): main()
+
+
+def test_archive_interrupted_export_is_retryable_without_partial_final(tmp_path, monkeypatch):
+    from cfb_analytics import rapid_results
+    state = transition(None, verified(), SCHEDULE, SOURCES, authoritative=True)
+    link = rapid_results.os.link
+    def interrupted(*args):
+        raise OSError('simulated interruption before atomic publication')
+    monkeypatch.setattr(rapid_results.os, 'link', interrupted)
+    with pytest.raises(OSError):
+        export_confirmed(state, tmp_path)
+    assert list(tmp_path.iterdir()) == []
+    monkeypatch.setattr(rapid_results.os, 'link', link)
+    export_confirmed(state, tmp_path)
+    assert len(list(tmp_path.iterdir())) == 1
+    assert json.loads(next(tmp_path.iterdir()).read_text())['authoritative']
